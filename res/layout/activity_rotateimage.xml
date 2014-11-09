@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/background_style" >
+    <RelativeLayout
+        android:id="@+id/showZoomInOutLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ImageView
+            android:id="@+id/imageview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/desc"
+            android:scaleType="centerInside" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/imageprogress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/imageviewer_relativelayout_top"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="7dip" >
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dip"
+        android:layout_marginTop="4dip" >
+
+        <LinearLayout
+            android:id="@+id/imageviewer_toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="90dip"
+            android:layout_marginRight="90dip"
+            android:background="@drawable/imageviewer_toolbar_background" >
+
+            <ImageView
+                android:id="@+id/imageviewer_imageview_rotateleft"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc"
+                android:paddingBottom="8dip"
+                android:paddingTop="8dip"
+                android:src="@drawable/rotate_left" />
+
+            <ImageView
+                android:id="@+id/imageviewer_imageview_rotateright"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc"
+                android:paddingBottom="8dip"
+                android:paddingTop="8dip"
+                android:src="@drawable/rotate_right" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="selected_view" type="id"/>
+    <item name="gridview" type="id"/>
+    <item name="webview" type="id"/>
+    <item name="scrollview" type="id"/>
+    
+    <item name="ab_logo" type="id"/>
+    <item name="ab_title" type="id"/>
+    <item name="ab_search" type="id"/>
+    <item name="ab_add" type="id"/>
+    <item name="ab_setting" type="id"/>
+    
+    <item name="ab_complete" type="id"/>
+    
+    
+
+</resources>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_bar" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp" >
+
+                <ImageView
+                    android:id="@+id/iv_header"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginRight="10dp"
+                    android:contentDescription="@string/desc"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/iv_header"
+                    android:layout_toRightOf="@id/iv_header"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="厚度和"
+                    android:textColor="@color/one_word_prompt_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_user_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_user_name"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@id/iv_header"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="厚度和"
+                    android:textColor="@color/content_gray_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_my_collect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="共同好友" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_my_collect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="他的圈子" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_my_collect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="邮箱地址" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_user_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="手机号码" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_my_collect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="微信号码" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_my_collect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="15dp"
+                android:text="人脉标签" />
+
+            <com.gaopai.guiren.view.FlowLayout
+                android:id="@+id/flow_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="中华人吗"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="阿萨德fag"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="asdf"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="罗马里亚"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="阿萨德发"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="给客户"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="体育"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="男保姆"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/tag_bg"
+                    android:text="哦i"
+                    android:textColor="#ffffff" />
+            </com.gaopai.guiren.view.FlowLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true" >
+        <Button 
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="加好友"/>
+        <Button 
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/btn_send_msg"
+            android:layout_height="wrap_content"
+            android:text="发消息"/>
+        <Button 
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="扩散"/>
+        <Button 
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="评论"/>
+    </LinearLayout>
+
+</RelativeLayout>

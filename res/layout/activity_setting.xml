@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/setting_background"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="10dp"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:paddingLeft="10dp" >
+
+        <TextView
+            android:id="@+id/tv_receive_msg_background"
+            style="@style/setting_text"
+            android:text="后台接送消息通知" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_clear_cache"
+            style="@style/setting_text"
+            android:text="@string/clear_cache" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_check_update"
+            style="@style/setting_text"
+            android:text="@string/check_for_updates" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_send_feedback"
+            style="@style/setting_text"
+            android:text="@string/feedback" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_send_parise"
+            style="@style/setting_text"
+            android:text="@string/give_nice" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_about_us"
+            style="@style/setting_text"
+            android:text="@string/about_us" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_help"
+            style="@style/setting_text"
+            android:text="@string/help" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="10dp"
+        android:background="@color/divider" />
+
+    <TextView
+        android:id="@+id/tv_privacy_setting"
+        style="@style/setting_text"
+        android:paddingLeft="10dp"
+        android:background="@color/white"
+        android:text="@string/private_setting" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider" />
+
+    <Button
+        android:id="@+id/btn_login_out"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_height="40dp"
+        android:background="@color/setting_btn_red"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:text="退出登录" />
+
+</LinearLayout>

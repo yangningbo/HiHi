@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/background_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/profile_favorite_bg" >
+
+                <ImageView
+                    android:id="@+id/top_bg"
+                    android:layout_width="fill_parent"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/desc"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/voice_top_blue_bg" />
+
+                <ImageView
+                    android:id="@+id/header"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_below="@id/top_bg"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-45dp"
+                    android:contentDescription="@string/desc"
+                    android:src="@drawable/default_header" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/header"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/one_word_prompt_color"
+                    android:textSize="18sp" />
+                
+                <LinearLayout 
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/username"
+                    android:id="@+id/numslayout"
+                    android:layout_marginTop="10dp">
+                    
+                    <TextView 
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/title_right_text_color"
+                        android:textSize="18sp"
+                        android:id="@+id/currentNums"/>
+                    
+                    <TextView 
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/totalNums"
+                        android:textSize="18sp"
+                        android:textColor="@color/content_gray_color"/>
+                </LinearLayout>
+                
+                <LinearLayout 
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/play_menu_bg"
+                    android:paddingTop="15dp"
+                    android:layout_below="@id/numslayout"
+                    android:paddingBottom="15dp"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp">
+                    
+                    <LinearLayout 
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_weight="1">
+                        
+                        <ImageView 
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/voice_backward"
+                            android:id="@+id/backward"
+                            android:contentDescription="@string/desc"/>
+                        
+                    </LinearLayout>
+                    
+                    <LinearLayout 
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_weight="1">
+                        
+                        <ImageView 
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/voice_play"
+                            android:id="@+id/play"
+                            android:contentDescription="@string/desc"/>
+                        
+                    </LinearLayout>
+                    
+                    <LinearLayout 
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_weight="1">
+                        
+                        <ImageView 
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/voice_forward"
+                            android:id="@+id/forward"
+                            android:contentDescription="@string/desc"/>
+                        
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

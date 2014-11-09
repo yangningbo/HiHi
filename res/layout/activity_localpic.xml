@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/background_style"  >
+    <GridView
+        android:id="@+id/gv_pic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@color/transparent"
+        android:gravity="center_vertical"
+        android:horizontalSpacing="2dip"
+        android:listSelector="@color/transparent"
+        android:numColumns="4"
+        android:scrollbars="none"
+        android:verticalSpacing="2dip" >
+    </GridView>
+
+</RelativeLayout>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/background_style"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:id="@+id/rl_top"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:visibility="gone" >
+
+            <EditText
+                android:id="@+id/et_search"
+                style="@style/login_edit_box_style"
+                android:layout_width="0px"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:hint="@string/search_user_keyword"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/iv_search"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@null"
+                android:contentDescription="@string/desc"
+                android:src="@drawable/title_search_btn" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/industry_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/rl_top"
+            android:divider="@color/devider_color"
+            android:dividerHeight="0.6dp"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="true"
+            android:scrollbars="none" />
+
+        <TextView
+            android:id="@+id/no_data"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/profile_item_height"
+            android:layout_below="@+id/rl_top"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="@dimen/profile_margin_top"
+            android:background="@drawable/list_round_selector"
+            android:gravity="center"
+            android:textColor="@color/one_word_prompt_color"
+            android:textSize="@dimen/text_size"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="content_gray_text_color">#6F6F6F</color>
+    <color name="content_gray_time_color">#AFAFAF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#8e8e8e</color>
+    <color name="hint_color">#C7C7C7</color>
+    <color name="backgroud_color">#ECECEC</color>
+    <color name="transparent">#00000000</color>
+    <color name="tab_text_d_color">#23bbd7</color>
+    <color name="tab_text_n_color">#888888</color>
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_frame">#ff000000</color>
+    <color name="viewfinder_laser">#ffff0000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="search_dialog_bg">#b0000000</color>
+    <color name="title_bar_text_color">#000000</color>
+    <color name="devider_color">#C8C7CC</color>
+    <color name="high_lighted_color">#23bbd7</color>
+    <color name="profile_sign_color">#AFAFAF</color>
+    <color name="discuzze_name_color">#6F6F6F</color>
+    <color name="discuzze_nums_color">#BEBEBE</color>
+    <color name="comment_content_color">#787878</color>
+    <color name="discuzze_detail_content_color">#010101</color>
+    <color name="title_right_text_color">#23bbd7</color>
+    <color name="reply_parent_comment_bg_color">#E6E6E6</color>
+    <color name="send_discuzze_choosed_color">#AEAEAE</color>
+    <color name="public_discuzze_text_color">#577B9E</color>
+    <color name="private_discuzze_color">#C37169</color>
+    <color name="is_visible_text_color">#749988</color>
+    <color name="friend_name_text_color">#D5D5D5</color>
+    <color name="unvisible_text_color">#A2A2A2</color>
+    <color name="unvisible_send_discuzze_choosed_color">#50AEAEAE</color>
+    <color name="unvisible_friend_name_text_color">#D5D5D5</color>
+    <color name="public_discuzze_bg_color">#D7D7D7</color>
+    <color name="one_word_prompt_color">#333333</color>
+    <color name="login_one_word_prompt">#757575</color>
+    <color name="title_color">#333333</color>
+    <color name="content_gray_color">#999999</color>
+    <color name="create_tribe_divider_line">#e5e5e5</color>
+    <color name="message_list_bg_color">#f9f9f9</color>
+    <color name="report_msg_bg_color">#fafafa</color>
+    <color name="meeting_count_color">#FFA800</color>
+    <color name="level_bg_color">#80000000</color>
+    <color name="copyright_text_color">#7D7D7D</color>
+    <color name="about_blue_text_color">#197caf</color>
+    <color name="welcome_bg_color">#f1f4f9</color>
+    <color name="dialog_btn_d_color">#E0CCCCCC</color>
+    <color name="dialog_btn_n_color">#E0ffffff</color>
+    <color name="avene_btn_d_color">#E9E9E9</color>
+    <color name="blue_dongtai_name">#4e9dab</color>
+    <color name="blue_dongtai_names">#769aa1</color>
+    <color name="red_dongtai_bg">#f65b5b</color>
+    <color name="bg_gray_init">#f0f0f0</color>
+    <color name="bg_gray_people">#f6f6f6</color>
+    <color name="dark_blue">#7874b8</color>
+    <color name="holo_blue_light">#33b5e5</color>
+    <color name="u_text_gray">#B1B1B1</color>
+    <color name="u_text_blue">#2FB2E2</color>
+    <color name="u_blue">#2FB2E2</color>
+    <color name="u_yellow">#FFC600</color>
+    <color name="u_login_bg">#EFEFF4</color>
+    <color name="u_recomend_bg">#F9F9F9</color>
+    <color name="u_light_gray">#e2e2e2</color>
+    <color name="dy_user_name">#2FB2E2</color>
+    <color name="dy_user_info">#B1B1B1</color>
+    <color name="dy_blue">#2FB2E2</color>
+    <color name="divider">#C5C4C4</color>
+    
+    <color name="setting_background">#F1F0F5</color>
+    <color name="setting_tv_gray">#A5A5A5</color>
+    <color name="setting_btn_red">#E73542</color>
+    
+    <color name="slide_background">#232a30</color>
+    <color name="slide_item_divider">#5a5a5a</color>
+    <color name="slide_item_text_color">#a8a7a7</color>
+    <color name="slide_text_name">#cdcdcd</color>
+    <color name="slide_divider_top">#646464</color>
+    <color name="slide_item_background_normal">#19232b</color>
+    <color name="slide_item_background_active">#0b1721</color>
+    
+    <color name="title_background">#f7f7f7</color>
+    
+    
+    <color name="notification_dot_red">#df0000</color>
+    <color name="notification_item_divider">#DFDFDF</color>
+    
+    <color name="profile_background">#F1F0F5</color>
+    <color name="profile_name">#306DAB</color>
+    <color name="profile_renmai_topbar">#F7F7F7</color>
+    <color name="profile_renmai_divider">#CFCDCD</color>
+    
+    <color name="connection_title_name">#306DAB</color>
+    <color name="connection_linkfy">#306DAB</color>
+    <color name="connection_item_background">#ECECEC</color>
+    <color name="connection_item_text_black">#59595B</color>
+
+</resources>

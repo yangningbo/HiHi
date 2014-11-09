@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_change_voice_play_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/view_text_version" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_play_sequence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/play_by_sequence" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_tribe_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/tribe_setting" />
+
+
+</LinearLayout>

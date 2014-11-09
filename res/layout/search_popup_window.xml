@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_creat_meeting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="创建会议" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_creat_tribe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="创建圈子" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_add_friends"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="添加好友" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_start_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="发起聊天" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_send_dynamic_"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="发表动态" />
+
+</LinearLayout>

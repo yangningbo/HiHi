@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/half_transparent_white_btn"
+        android:gravity="center|left"
+        android:orientation="vertical" >
+
+
+       <Button
+            android:id="@+id/sendType"
+            android:layout_width="fill_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/top_half_transparent_btn"
+            android:textColor="@color/title_right_text_color"
+            android:textSize="19sp" />
+
+        <LinearLayout
+            android:id="@+id/firstline"
+            android:layout_width="fill_parent"
+            android:layout_height="0.6dp"
+            android:background="@color/devider_color"
+            android:orientation="vertical" />
+
+
+        <Button
+            android:id="@+id/camera"
+            android:layout_width="fill_parent"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:background="@drawable/center_half_transparent_btn"
+            android:textColor="@color/title_right_text_color"
+            android:textSize="19sp" />
+
+        <LinearLayout
+            android:id="@+id/applyLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/devider_color"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/applyBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:background="@drawable/bottom_half_transparent_btn"
+                android:textColor="@color/title_right_text_color"
+                android:textSize="19sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/galleryLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/lastline"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/devider_color"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/gallery"
+                android:layout_width="fill_parent"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:background="@drawable/bottom_half_transparent_btn"
+                android:textColor="@color/title_right_text_color"
+                android:textSize="19sp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/deleteLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/devider_color"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="42dp"
+                android:text="@string/delete"
+                android:gravity="center"
+                android:background="@drawable/center_half_transparent_btn"
+                android:textColor="@color/title_right_text_color"
+                android:textSize="19sp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/forwardLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/devider_color"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/forwardBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:text="@string/retrweet"
+                android:background="@drawable/center_half_transparent_btn"
+                android:textColor="@color/title_right_text_color"
+                android:textSize="19sp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/communicationLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/devider_color"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/communicationBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="42dp"
+                android:text="@string/communication"
+                android:gravity="center"
+                android:background="@drawable/bottom_half_transparent_btn"
+                android:textColor="@color/title_right_text_color"
+                android:textSize="19sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/cancelbtn"
+        android:layout_width="fill_parent"
+        android:layout_height="42dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:background="@drawable/round_half_transparent_btn"
+        android:textColor="@color/title_right_text_color"
+        android:textSize="19sp" />
+
+</LinearLayout>

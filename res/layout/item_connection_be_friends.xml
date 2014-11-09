@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/iv_header"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="10dp"
+        android:contentDescription="@string/desc"
+        android:src="@drawable/default_header" />
+
+    <TextView
+        android:id="@+id/tv_dynamic_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_header"
+        android:text="你的好友马虎疼和周忽然成为好友"
+        android:textColor="@color/connection_item_text_black" />
+
+    <RelativeLayout
+        android:id="@+id/rl_person1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_dynamic_info"
+        android:layout_below="@id/tv_dynamic_info"
+        android:layout_marginTop="10dp"
+        android:background="@color/connection_item_background"
+        android:padding="@dimen/connection_header1_padding" >
+
+        <ImageView
+            android:id="@+id/iv_header1"
+            style="@style/connection_item_header1"
+            android:contentDescription="@string/desc" />
+
+        <TextView
+            android:id="@+id/tv_user_name1"
+            style="@style/connection_item_title1"
+            android:layout_toRightOf="@id/iv_header1"
+            android:text="马虎疼" />
+
+        <TextView
+            android:id="@+id/tv_user_info1"
+            style="@style/connection_item_info1"
+            android:layout_alignLeft="@id/tv_user_name1"
+            android:layout_below="@id/tv_user_name1"
+            android:text="疼惜总裁" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_be_friends_icon"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignLeft="@id/tv_dynamic_info"
+        android:layout_below="@id/rl_person1"
+        android:scaleType="fitCenter"
+        android:src="@drawable/add_btn_d" />
+
+    <RelativeLayout
+        android:id="@+id/rl_person2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_dynamic_info"
+        android:layout_below="@id/iv_be_friends_icon"
+        android:background="@color/connection_item_background"
+        android:padding="@dimen/connection_header1_padding" >
+
+        <ImageView
+            android:id="@+id/iv_header2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="@dimen/connection_header1_padding"
+            android:contentDescription="@string/desc"
+            android:src="@drawable/default_header" />
+
+        <TextView
+            android:id="@+id/tv_user_name2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_header2"
+            android:text="阿斯蒂芬"
+            android:textColor="@color/connection_title_name"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_user_info2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_user_name2"
+            android:layout_below="@id/tv_user_name2"
+            android:layout_marginTop="@dimen/connection_info1_margin_top"
+            android:text="疼惜噶总裁dsfsdf"
+            android:textColor="@color/connection_item_text_black" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_date_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_dynamic_info"
+        android:layout_below="@id/rl_person2"
+        android:layout_marginTop="5dp"
+        android:text="2天前        系统提示"
+        android:textColor="@color/u_text_gray" />
+
+</RelativeLayout>

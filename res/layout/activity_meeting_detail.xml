@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_meeting_setting"
+        android:layout_alignParentTop="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <com.gaopai.guiren.view.RoundImageView
+                android:id="@+id/iv_meeeting_header"
+                android:layout_width="fill_parent"
+                android:layout_height="120dp"
+                android:contentDescription="@string/desc"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo" />
+
+            <TextView
+                android:id="@+id/tv_meeting_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="后会无期营销价值"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_meeting_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="10-2 10:13" />
+
+            <TextView
+                android:id="@+id/tv_meeting_host"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="主持人：" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_meeting_guest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="嘉宾：无" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_meeting_join_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="参会人员：无" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:id="@+id/tv_meeting_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="4"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="我的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@id/ll_meeting_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/grid_view_holder"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/bottom_in_meeting"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btn_enter_meeting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="进入会议" />
+
+            <Button
+                android:id="@+id/btn_invite_to_meeting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="邀请参会" />
+
+            <Button
+                android:id="@+id/btn_more"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="更多" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_not_in_meeting"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btn_want_in_meeting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="报名参会" />
+
+            <Button
+                android:id="@+id/btn_on_look"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="围观" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/grid_view_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:orientation="vertical" >
+
+       
+    </LinearLayout>
+
+</RelativeLayout>

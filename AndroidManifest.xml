@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gaopai.guiren"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="com.gaopai.guiren.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!-- 录音 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+
+    <application
+        android:name="com.gaopai.guiren.DamiApp"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.gaopai.guiren.activity.WelcomeActivity"
+            android:label="@string/app_name"
+            android:theme="@style/WelcomeAlphaBackground" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.gaopai.guiren.activity.MainActivity"
+            android:clearTaskOnLaunch="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true" />
+        <activity
+            android:name="com.gaopai.guiren.activity.GuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.UserProtocalActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.InvitationVerifyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.RealVerifyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.RecommendTribeListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.RecommendActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.SearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.MeetingDetailActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="guiren.meeting" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.gaopai.guiren.activity.CreatMeetingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.CreatTribeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.TribeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.UserInfoActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="guiren.user" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.gaopai.guiren.activity.SendDynamicMsgActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.LocalPicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.LocalPicPathActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.CountryCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.chat.ChatTribeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.chat.ChatMessageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.FriendsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.AddReasonActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.TribeDetailActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="guiren.tribe" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.gaopai.guiren.activity.ShowImagesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.RotateImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.DynamicDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.SequencePlayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.ContactActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.PrivacySettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.NotifySystemActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.ApplyListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.share.ShareActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name="com.gaopai.guiren.activity.WebActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="guiren.web" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.SnsService"
+            android:label="SnsService"
+            android:process=":push" >
+            <intent-filter android:priority="1000" >
+            </intent-filter>
+        </service>
+
+        <!-- ###################注册SDK使用的Activity###################### -->
+        <!-- 分享编辑页 -->
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="53906fb656240b01ad029336" >
+        </meta-data>
+
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent101061639" /> <!-- 100380359 100381104 222222 -->
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+</manifest>

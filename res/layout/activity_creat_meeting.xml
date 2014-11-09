@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <EditText
+        android:id="@+id/et_meeting_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入会议标题" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/tv_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="开始时间" />
+
+        <TextView
+            android:id="@+id/tv_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="结束时间" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
+
+        <TextView
+            android:id="@+id/tv_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="隐私设置" />
+
+        <Spinner 
+            android:layout_alignParentRight="true"
+            android:id="@+id/sp_privacy_setting"
+            android:layout_width="120dp"
+            android:layout_height="60dp"/>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/et_meeting_tags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="编辑会议标签" />
+
+    <Button 
+     	android:id="@+id/btn_upload_pic"
+     	android:text="+"
+     	android:gravity="center"
+     	android:background="@color/bg_gray_people"
+     	android:layout_width="70dp"
+     	android:layout_height="70dp"/>
+
+    <EditText
+        android:id="@+id/et_meeting_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入会议详细介绍" />
+
+    <EditText
+        android:id="@+id/et_meeting_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="设置会议加入密码" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <Button
+            android:id="@+id/btn_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="预览" />
+
+        <Button
+            android:id="@+id/btn_creat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="创建" />
+    </RelativeLayout>
+
+</LinearLayout>

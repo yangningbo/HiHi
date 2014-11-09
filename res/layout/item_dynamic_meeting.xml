@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/iv_header"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="10dp"
+        android:contentDescription="@string/desc"
+        android:src="@drawable/default_header" />
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_header"
+        android:text="马虎疼"
+        android:textColor="@color/u_blue"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_user_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_user_name"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/tv_user_name"
+        android:text="疼惜总裁"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_spread_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_user_name"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/tv_user_info"
+        android:text="参加了一个会议"
+        android:textColor="@color/u_text_gray"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_meeting_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_user_name"
+        android:layout_marginTop="7dp"
+        android:layout_toRightOf="@id/iv_header"
+        android:background="@color/u_light_gray"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/tv_meeting_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="360是伟大的，同时也是渺小的！"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_meeting_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10-2 20:00~21:00" />
+
+        <TextView
+            android:id="@+id/tv_meeting_guest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="嘉宾：韩寒，方方" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_date_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/ll_meeting_holder"
+        android:layout_marginTop="7dp"
+        android:text="2天前        朋友的朋友"
+        android:textColor="@color/u_text_gray" />
+
+    <Button
+        android:id="@+id/btn_dynamic_ation"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignBottom="@id/tv_date_info"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/add_btn_d" />
+
+   <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_date_info"
+        layout="@layout/item_dynamic_comment_layout" />
+
+</RelativeLayout>

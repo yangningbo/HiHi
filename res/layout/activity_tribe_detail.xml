@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_bar"
+        android:layout_alignParentTop="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="圈子成员" />
+
+            <com.gaopai.guiren.view.MyGridLayout
+                android:id="@+id/ml_tribe_users"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                custom:columns="4" >
+            </com.gaopai.guiren.view.MyGridLayout>
+
+            <TextView
+                android:id="@+id/tv_tibe_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="后会无期营销价值"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_tribe_host"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="圈子群主：" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_tribe_guest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/profile_tab_arrow"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="嘉宾：" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:text="圈子图片：" />
+
+                <ImageView
+                    android:id="@+id/iv_tribe_logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_tribe_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:maxLines="4"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="我的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴的圈子点点滴滴" />
+
+            <com.gaopai.guiren.view.FlowLayout
+                android:id="@+id/tribe_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </com.gaopai.guiren.view.FlowLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible" >
+            <Button
+            android:id="@+id/btn_enter_tribe"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="进入" />
+
+        <Button
+            android:id="@+id/btn_spread"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="扩散" />
+
+        <Button
+            android:id="@+id/btn_want_in_tribe"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="申请加入" />
+
+        <Button
+            android:id="@+id/btn_on_look"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="围观" />
+    </LinearLayout>
+
+</RelativeLayout>

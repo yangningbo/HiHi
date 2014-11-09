@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/btn_spread"
+   android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_dynamic_popup_spread"
+        android:textColor="@color/white"
+        android:text="扩散" />
+    <Button
+        android:id="@+id/btn_zan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_dynamic_popup_zan"
+        android:textColor="@color/white"
+        android:text="赞" />
+
+    <Button
+        android:id="@+id/btn_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_dynamic_popup_comment"
+        android:text="评论"
+        android:textColor="@color/white" />
+
+</LinearLayout>

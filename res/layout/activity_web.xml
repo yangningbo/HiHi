@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/background_style"
+    android:orientation="vertical" >
+    
+    <WebView 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none"
+        android:id="@+id/webview"/>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:id="@+id/bottomlayout"
+        android:layout_alignParentBottom="true"
+        android:background="#a0000000">
+        
+        <ImageView 
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:src="@drawable/backward"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/desc"
+            android:id="@+id/backward"/>
+        
+        <ImageView 
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:src="@drawable/forward"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/desc"
+            android:id="@+id/forward"/>
+        
+        <ImageView 
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/refresh_icon"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/desc"
+            android:id="@+id/refresh"/>
+        
+    </LinearLayout>
+
+</RelativeLayout>

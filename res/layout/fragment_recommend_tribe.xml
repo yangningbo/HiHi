@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/u_recomend_bg" >
+
+    <Button
+        android:id="@+id/btn_jump_over"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#2FB2E2"
+        android:text="直接进入贵人"
+        android:textColor="@color/white"
+        android:textSize="@dimen/u_recommend_btn_text_size" />
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/rec_people_next_icon"
+        android:layout_alignBottom="@id/btn_jump_over"
+        android:scaleType="centerInside"
+        android:layout_marginRight="10dp"
+        android:layout_alignTop="@id/btn_jump_over"/>
+
+    <Button
+        android:id="@id/btn_add_all"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_above="@id/btn_jump_over"
+        android:layout_centerHorizontal="true"
+        android:background="@color/u_yellow"
+        android:text="全部申请加入"
+        android:textColor="@color/white"
+        android:textSize="@dimen/u_recommend_btn_text_size" />
+
+    <com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_add_all"
+        android:layout_alignParentTop="true" >
+    </com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView>
+
+</RelativeLayout>

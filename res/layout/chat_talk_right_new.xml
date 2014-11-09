@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingBottom="5dp" >
+
+    <TextView
+        android:id="@+id/tv_shide"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/shide_msg_prompt"
+        android:textColor="@color/one_word_prompt_color"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_msg_holder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/tv_chat_talk_time"
+            style="@style/chat_talk_style_txt_time"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_chat_talk_img_head"
+            style="@style/chat_talk_style_txt_img_head"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_chat_talk_time"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/default_header" />
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_chat_talk_time"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@id/iv_chat_talk_img_head"
+            android:text="你好"
+            android:textColor="@color/content_gray_color"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/rl_msg_info_holder"
+            style="@style/chat_talk_style_txt_msg_info"
+            android:layout_below="@id/tv_user_name"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/iv_chat_talk_img_head"
+            android:background="@drawable/common_message_bg"
+            android:minHeight="45dp" >
+
+            <ImageView
+                android:id="@+id/iv_chat_voice"
+                style="@style/chat_talk_style_txt_msg_info_msg_right_voice"
+                android:layout_centerVertical="true"
+                android:scaleType="fitEnd"
+                android:src="@drawable/anim_btn_audio_play2"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_chat_photo"
+                style="@style/chat_talk_style_txt_msg_info_msg_photo"
+                android:layout_centerVertical="true"
+                android:layout_margin="3dp"
+                android:adjustViewBounds="true"
+                android:maxHeight="150dp"
+                android:maxWidth="150dp"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:id="@+id/iv_chat_text"
+                style="@style/chat_talk_style_txt_msg_info_right_text"
+                android:layout_centerVertical="true"
+                android:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/pb_chat_progress"
+                android:layout_width="43.399994dip"
+                android:layout_height="43.399994dip"
+                android:layout_centerInParent="true"
+                android:indeterminate="false"
+                android:indeterminateDrawable="@drawable/progressbar"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_chat_voice_time_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:visibility="visible"
+                android:text="asdf"
+                android:layout_toLeftOf="@id/iv_chat_voice"
+                android:textColor="@color/content_gray_color"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <!-- resend button -->
+
+        <ImageView
+            android:id="@+id/iv_chat_resend_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignTop="@+id/rl_msg_info_holder"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/rl_msg_info_holder"
+            android:src="@drawable/resend_btn"
+            android:visibility="gone" />
+
+        <!-- comment icon and number -->
+
+        <LinearLayout
+            android:id="@+id/countlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/rl_msg_info_holder"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/favoritecountlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible" >
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:contentDescription="@string/desc"
+                    android:src="@drawable/report_zan_icon" />
+
+                <TextView
+                    android:id="@+id/favoritecount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/content_gray_color"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/commentcountlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible" >
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:contentDescription="@string/desc"
+                    android:src="@drawable/report_comment_icon" />
+
+                <TextView
+                    android:id="@+id/commentcount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/content_gray_color"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/agreecountlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible" >
+
+                <ImageView
+                    android:id="@+id/iv_zan"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:contentDescription="@string/desc"
+                    android:src="@drawable/zan_btn" />
+
+                <TextView
+                    android:id="@+id/agreecount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/content_gray_color"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
