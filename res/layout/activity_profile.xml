@@ -215,7 +215,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/connection_horizon_divider" />
+                android:background="@color/general_horizon_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -241,7 +241,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/connection_horizon_divider" />
+                android:background="@color/general_horizon_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -267,7 +267,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/connection_horizon_divider" />
+                android:background="@color/general_horizon_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -317,7 +317,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawableRight="@drawable/icon_slide_right_arrow"
+                    android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical|right"
                     android:text="ww@hhhh.com"
                     android:textColor="@color/profile_text_gray" />
@@ -326,7 +326,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/connection_horizon_divider" />
+                android:background="@color/general_horizon_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -344,7 +344,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawableRight="@drawable/icon_slide_right_arrow"
+                    android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical|right"
                     android:text="1262358456"
                     android:textColor="@color/profile_text_gray" />
@@ -353,7 +353,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/connection_horizon_divider" />
+                android:background="@color/general_horizon_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -371,7 +371,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawableRight="@drawable/icon_slide_right_arrow"
+                    android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical|right"
                     android:text="2kj"
                     android:textColor="@color/profile_text_gray" />
@@ -380,7 +380,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/connection_horizon_divider" />
+                android:background="@color/general_horizon_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -398,7 +398,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawableRight="@drawable/icon_slide_right_arrow"
+                    android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical|right"
                     android:text="jkhj"
                     android:textColor="@color/profile_text_gray" />

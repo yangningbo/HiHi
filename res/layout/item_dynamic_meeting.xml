@@ -15,12 +15,9 @@
 
     <TextView
         android:id="@+id/tv_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/dynamic_item_title_name"
         android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼"
-        android:textColor="@color/u_blue"
-        android:textSize="18sp" />
+        android:text="马虎疼" />
 
     <TextView
         android:id="@+id/tv_user_info"
@@ -30,6 +27,7 @@
         android:layout_marginLeft="2dp"
         android:layout_toRightOf="@id/tv_user_name"
         android:text="疼惜总裁"
+        android:textColor="@color/general_text_black"
         android:textSize="14sp" />
 
     <TextView
@@ -40,7 +38,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/tv_user_info"
         android:text="参加了一个会议"
-        android:textColor="@color/u_text_gray"
+        android:textColor="@color/general_text_gray"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -59,6 +57,7 @@
             android:id="@+id/tv_meeting_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/connection_linkfy"
             android:text="360是伟大的，同时也是渺小的！"
             android:textSize="16sp" />
 
@@ -85,15 +84,16 @@
         android:text="2天前        朋友的朋友"
         android:textColor="@color/u_text_gray" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_dynamic_ation"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_alignBottom="@id/tv_date_info"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/add_btn_d" />
+        android:layout_alignRight="@id/ll_meeting_holder"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/icon_dynamic_comment_action" />
 
-   <include
+    <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"

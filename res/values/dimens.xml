@@ -68,8 +68,16 @@
     <dimen name="notification_item_dot_size">16dp</dimen>
     <dimen name="notification_item_dot_radius">6dp</dimen>
     
-    <dimen name="connection_header1_padding">8dp</dimen>
-    <dimen name="connection_info1_margin_top">3dp</dimen>
+
+    
+    <dimen name="tribe_detail_thick_divider">2px</dimen>
+    <dimen name="tribe_detail_btn_radius">10dp</dimen>
+    
+    <dimen name="creat_tribe_small_gap">5dp</dimen>
+    <dimen name="creat_tribe_large_gap">15dp</dimen>
     
 
+    <dimen name="general_paading">10dp</dimen>
+    <dimen name="general_header_padding">8dp</dimen>
+    <dimen name="general_info_margin_top">3dp</dimen>
 </resources>

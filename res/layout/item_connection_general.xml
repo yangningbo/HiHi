@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/iv_header"
         android:text="马虎疼加入你的圈子【形同陌路】"
-        android:textColor="@color/connection_item_text_black" />
+        android:textColor="@color/general_text_black" />
 
     <RelativeLayout
         android:id="@+id/rl_info_holder"
@@ -29,7 +29,7 @@
         android:layout_below="@id/tv_title"
         android:layout_marginTop="10dp"
         android:background="@color/u_light_gray"
-        android:padding="@dimen/connection_header1_padding" >
+        android:padding="@dimen/general_header_padding" >
 
         <ImageView
             android:id="@+id/iv_user_header"

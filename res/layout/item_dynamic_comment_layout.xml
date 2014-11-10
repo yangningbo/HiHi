@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:background="@color/u_light_gray"
+    android:background="@drawable/icon_comment_holder"
     android:orientation="vertical"
     android:paddingLeft="5dp"
     android:paddingRight="5dp" >
@@ -19,13 +19,14 @@
             android:id="@+id/tv_spread"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_dynamic_spread"
             android:padding="3dp"
             android:text="360" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/u_text_gray" />
+            android:background="@color/dynamic_horizon_divider" />
     </LinearLayout>
 
     <LinearLayout
@@ -38,13 +39,14 @@
             android:id="@+id/tv_zan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_dynamic_favourite"
             android:padding="3dp"
             android:text="百度" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/u_text_gray" />
+            android:background="@color/dynamic_horizon_divider" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,6 +63,6 @@
         android:layout_gravity="right"
         android:padding="3dp"
         android:text="点击查看全部评论"
-        android:textColor="@color/u_blue" />
+        android:textColor="@color/connection_linkfy" />
 
 </LinearLayout>

@@ -15,12 +15,9 @@
 
     <TextView
         android:id="@+id/tv_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/dynamic_item_title_name"
         android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼"
-        android:textColor="@color/u_blue"
-        android:textSize="18sp" />
+        android:text="马虎疼" />
 
     <TextView
         android:id="@+id/tv_user_info"
@@ -40,7 +37,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/tv_user_info"
         android:text="扩散了一个连接"
-        android:textColor="@color/u_text_gray"
+        android:textColor="@color/general_text_gray"
         android:textSize="14sp" />
 
     <RelativeLayout
@@ -51,24 +48,21 @@
         android:layout_below="@id/tv_user_name"
         android:layout_marginTop="10dp"
         android:background="@color/u_light_gray"
-        android:padding="5dp" >
+        android:padding="@dimen/general_header_padding" >
 
         <ImageView
             android:id="@+id/iv_header1"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/general_header_padding"
             android:contentDescription="@string/desc"
             android:src="@drawable/default_header" />
 
         <TextView
             android:id="@+id/tv_title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/dynamic_item_title_name"
             android:layout_toRightOf="@id/iv_header1"
-            android:text="马虎疼"
-            android:textColor="@color/u_blue"
-            android:textSize="18sp" />
+            android:text="马虎疼" />
 
         <TextView
             android:id="@+id/tv_info1"
@@ -76,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_title1"
             android:layout_below="@id/tv_title1"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/general_info_margin_top"
             android:text="疼惜总裁" />
     </RelativeLayout>
 
@@ -97,15 +91,16 @@
         android:layout_below="@id/iv_picture"
         android:layout_marginTop="7dp"
         android:text="2天前        朋友的朋友"
-        android:textColor="@color/u_text_gray" />
+        android:textColor="@color/general_text_gray" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_dynamic_ation"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_alignBottom="@id/tv_date_info"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/add_btn_d" />
+        android:layout_alignRight="@id/rl_spread_holder"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/icon_dynamic_comment_action" />
 
     <include
         android:layout_width="match_parent"

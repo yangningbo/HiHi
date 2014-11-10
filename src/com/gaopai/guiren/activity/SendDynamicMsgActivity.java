@@ -65,7 +65,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
-		setAbContentView(R.layout.activity_send_dynamicm_sg);
+		setAbContentView(R.layout.activity_send_dynamic);
 		mTitleBar.setTitleText("发布动态");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.addRightButtonView("发布");

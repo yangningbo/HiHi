@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/iv_header"
         android:text="你的好友马虎疼和周忽然成为好友"
-        android:textColor="@color/connection_item_text_black" />
+        android:textColor="@color/general_text_black" />
 
     <RelativeLayout
         android:id="@+id/rl_person1"
@@ -29,7 +29,7 @@
         android:layout_below="@id/tv_dynamic_info"
         android:layout_marginTop="10dp"
         android:background="@color/connection_item_background"
-        android:padding="@dimen/connection_header1_padding" >
+        android:padding="@dimen/general_header_padding" >
 
         <ImageView
             android:id="@+id/iv_header1"
@@ -66,13 +66,13 @@
         android:layout_alignLeft="@id/tv_dynamic_info"
         android:layout_below="@id/iv_be_friends_icon"
         android:background="@color/connection_item_background"
-        android:padding="@dimen/connection_header1_padding" >
+        android:padding="@dimen/general_header_padding" >
 
         <ImageView
             android:id="@+id/iv_header2"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginRight="@dimen/connection_header1_padding"
+            android:layout_marginRight="@dimen/general_header_padding"
             android:contentDescription="@string/desc"
             android:src="@drawable/default_header" />
 
@@ -91,9 +91,9 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_user_name2"
             android:layout_below="@id/tv_user_name2"
-            android:layout_marginTop="@dimen/connection_info1_margin_top"
+            android:layout_marginTop="@dimen/general_info_margin_top"
             android:text="疼惜噶总裁dsfsdf"
-            android:textColor="@color/connection_item_text_black" />
+            android:textColor="@color/general_text_black" />
     </RelativeLayout>
 
     <TextView

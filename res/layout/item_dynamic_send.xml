@@ -15,12 +15,9 @@
 
     <TextView
         android:id="@+id/tv_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/dynamic_item_title_name"
         android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼"
-        android:textColor="@color/dy_user_name"
-        android:textSize="18sp" />
+        android:text="马虎疼" />
 
     <TextView
         android:id="@+id/tv_user_info"
@@ -30,7 +27,7 @@
         android:layout_marginLeft="2dp"
         android:layout_toRightOf="@id/tv_user_name"
         android:text="疼惜总裁"
-        android:textColor="@color/dy_user_info"
+        android:textColor="@color/general_text_gray"
         android:textSize="14sp" />
 
     <TextView
@@ -101,13 +98,14 @@
         android:text="2天前        朋友的朋友"
         android:textColor="@color/u_text_gray" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_dynamic_ation"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignBottom="@id/tv_date_info"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/add_btn_d" />
+        android:layout_alignRight="@id/tv_content"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/icon_dynamic_comment_action" />
 
     <include
         android:layout_width="match_parent"
