@@ -143,6 +143,10 @@ public class MainActivity extends BaseActivity {
 		view = (View) findViewById(R.id.slide_btn_setting);
 		view.setOnClickListener(slideMenuClickListener);
 
+		
+	}
+	
+	private void bindUserView() {
 		User mUser = DamiCommon.getLoginResult(this);
 		ImageView ivHeader = (ImageView) findViewById(R.id.iv_user_header);
 		Picasso.with(mContext).load(mUser.headsmall).placeholder(R.drawable.default_header)
@@ -519,6 +523,7 @@ public class MainActivity extends BaseActivity {
 				return;
 			} else if (resultCode == RESULT_OK) {
 				initPage();
+				bindUserView();
 				FeatureFunction.startService(mContext);
 			} else if (resultCode == UNLOGIN_REQUEST) {
 				initPage();

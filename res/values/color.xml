@@ -92,10 +92,13 @@
     <color name="profile_name">#306DAB</color>
     <color name="profile_renmai_topbar">#F7F7F7</color>
     <color name="profile_renmai_divider">#CFCDCD</color>
+    <color name="profile_text_gray">#9A9A9A</color>
+    <color name="profile_vertical_divider">#B2B2B2</color>
     
     <color name="connection_title_name">#306DAB</color>
     <color name="connection_linkfy">#306DAB</color>
     <color name="connection_item_background">#ECECEC</color>
     <color name="connection_item_text_black">#59595B</color>
+    <color name="connection_horizon_divider">#ECECEC</color>
 
 </resources>

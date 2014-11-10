@@ -36,4 +36,12 @@
         android:textColor="@color/content_gray_color"
         android:textSize="14sp" />
 
+    <ImageView
+        android:id="@+id/btn_add"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/logo" />
 </RelativeLayout>
