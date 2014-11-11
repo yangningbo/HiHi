@@ -56,7 +56,7 @@
             android:layout_below="@id/tv_user_name"
             android:layout_marginTop="5dp"
             android:layout_toLeftOf="@+id/iv_chat_talk_img_head"
-            android:background="@drawable/common_message_bg"
+            android:background="@drawable/icon_chat_right_normal"
             android:minHeight="45dp" >
 
             <ImageView

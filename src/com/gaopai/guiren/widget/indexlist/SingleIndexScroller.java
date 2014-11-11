@@ -16,6 +16,8 @@
 
 package com.gaopai.guiren.widget.indexlist;
 
+import com.gaopai.guiren.R;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -78,13 +80,13 @@ public class SingleIndexScroller extends View {
 		super.onDraw(canvas);
 
 		Paint indexbarPaint = new Paint();
-		indexbarPaint.setColor(Color.RED);
-		indexbarPaint.setAlpha((int) (64 * mAlphaRate));
+//		indexbarPaint.setColor(Color.RED);
+//		indexbarPaint.setAlpha((int) (64 * mAlphaRate));
 		indexbarPaint.setAntiAlias(true);
 		canvas.drawRect(mIndexbarRect, indexbarPaint);
 		if (mSections != null && mSections.length > 0) {
 			Paint indexPaint = new Paint();
-			indexPaint.setColor(Color.BLUE);
+			indexPaint.setColor(getResources().getColor(R.color.general_btn_blue_normal));
 			indexPaint.setAntiAlias(true);
 			indexPaint.setTextSize(12 * mScaledDensity);
 

@@ -91,6 +91,7 @@
         android:layout_alignBottom="@id/tv_date_info"
         android:layout_alignRight="@id/ll_meeting_holder"
         android:layout_marginRight="12dp"
+        android:background="@color/transparent"
         android:src="@drawable/icon_dynamic_comment_action" />
 
     <include

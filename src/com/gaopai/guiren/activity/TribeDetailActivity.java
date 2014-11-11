@@ -66,7 +66,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		tvTribeTitle = (TextView) findViewById(R.id.tv_tibe_title);
 		tvTribeInfo = (TextView) findViewById(R.id.tv_tribe_detail);
 		tvTribeHost = (TextView) findViewById(R.id.tv_tribe_host);
-		tvTribeGuest = (TextView) findViewById(R.id.tv_tribe_guest);
+//		tvTribeGuest = (TextView) findViewById(R.id.tv_tribe_guest);
 		fyTribeTags = (FlowLayout) findViewById(R.id.tribe_tags);
 
 		ivTribeLogo = (ImageView) findViewById(R.id.iv_tribe_logo);
@@ -76,8 +76,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		btnSpread = (Button) findViewById(R.id.btn_spread);
 		btnSpread.setOnClickListener(this);
 
-		btnEnter = (Button) findViewById(R.id.btn_enter_tribe);
-		btnEnter.setOnClickListener(this);
+//		btnEnter = (Button) findViewById(R.id.btn_enter_tribe);
+//		btnEnter.setOnClickListener(this);
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(TribeActivity.ACTION_KICK_TRIBE);
@@ -130,7 +130,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		tvTribeTitle.setText(mTribe.name);
 		tvTribeInfo.setText(mTribe.content);
 		tvTribeHost.setText("圈子群主：" + mTribe.realname);
-		tvTribeGuest.setText("嘉宾: " + mTribe.guest);
+//		tvTribeGuest.setText("嘉宾: " + mTribe.guest);
 		ImageLoaderUtil.displayImage(mTribe.logosmall, ivTribeLogo);
 		bindMemberView();
 	}
@@ -194,13 +194,13 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		case R.id.btn_spread:
 			spreadTribe();
 			break;
-		case R.id.btn_enter_tribe:
-			Intent intent = new Intent();
-			intent.setClass(mContext, ChatTribeActivity.class);
-			intent.putExtra(ChatTribeActivity.KEY_TRIBE, mTribe);
-			intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, ChatTribeActivity.CHAT_TYPE_TRIBE);
-			startActivity(intent);
-			break;
+//		case R.id.btn_enter_tribe:
+//			Intent intent = new Intent();
+//			intent.setClass(mContext, ChatTribeActivity.class);
+//			intent.putExtra(ChatTribeActivity.KEY_TRIBE, mTribe);
+//			intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, ChatTribeActivity.CHAT_TYPE_TRIBE);
+//			startActivity(intent);
+//			break;
 
 		default:
 			break;

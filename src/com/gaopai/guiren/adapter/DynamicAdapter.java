@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -452,7 +453,7 @@ public class DynamicAdapter extends BaseAdapter {
 	};
 
 	static class ViewHolderCommon {
-		Button btnDynamicAction;
+		ImageButton btnDynamicAction;
 		LinearLayout rlDynamicInteractive;
 		LinearLayout layoutSpread;
 		TextView tvSpread;
@@ -476,7 +477,7 @@ public class DynamicAdapter extends BaseAdapter {
 			viewHolder.layoutComment = (LinearLayout) view.findViewById(R.id.ll_comment);
 			viewHolder.layoutSpread = (LinearLayout) view.findViewById(R.id.ll_spread);
 			viewHolder.layoutZan = (LinearLayout) view.findViewById(R.id.ll_zan);
-			viewHolder.btnDynamicAction = (Button) view.findViewById(R.id.btn_dynamic_ation);
+			viewHolder.btnDynamicAction = (ImageButton) view.findViewById(R.id.btn_dynamic_ation);
 
 			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
 			viewHolder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);

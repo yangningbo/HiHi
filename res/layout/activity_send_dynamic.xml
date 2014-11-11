@@ -4,29 +4,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp" >
+        android:padding="@dimen/general_paading" >
 
-        <EditText
-            android:id="@+id/et_dynamic_msg"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_alignParentTop="true"
-            android:gravity="top|left"
-            android:hint="请输入500字以内的动态" />
+            android:layout_height="200dp" >
+
+            <EditText
+                android:id="@+id/et_dynamic_msg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:gravity="top|left"
+                android:hint="请输入500字以内的动态" />
+
+            <TextView
+                android:id="@+id/tv_num_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/et_dynamic_msg"
+                android:layout_alignRight="@id/et_dynamic_msg"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
+                android:text="还能输入500字"
+                android:textColor="@color/general_text_gray" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_num_limit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/et_dynamic_msg"
-            android:layout_alignRight="@id/et_dynamic_msg"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
-            android:text="还能输入500字" />
+            style="@style/tribe_detail_item_title"
+            android:layout_marginLeft="0dp"
+            android:drawableLeft="@drawable/icon_send_dynamic_add_tag"
+            android:text="添加标签" />
+
+        <View style="@style/tribe_detail_thin_divider" />
 
         <com.gaopai.guiren.view.FlowLayout
             android:id="@+id/flow_tags"
@@ -35,20 +49,44 @@
             android:layout_below="@id/et_dynamic_msg" >
         </com.gaopai.guiren.view.FlowLayout>
 
-        <EditText
-            android:id="@+id/et_tags"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/flow_tags"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="@dimen/general_small_gap"
+            android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/btn_add_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/et_tags"
-            android:layout_alignRight="@id/et_tags"
-            android:text="添加" />
+            <EditText
+                android:id="@+id/et_tags"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="3"
+                android:background="@drawable/shape_send_dynamic_edit_tag" />
+
+            <Button
+                android:id="@+id/btn_add_tag"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_send_dynamic_btn_add"
+                android:text="添加"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <View
+            style="@style/tribe_detail_thin_divider"
+            android:layout_marginTop="@dimen/general_large_gap" />
+
+        <TextView
+            style="@style/tribe_detail_item_title"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="@dimen/general_small_gap"
+            android:text="推荐标签" />
+
+        <com.gaopai.guiren.view.FlowLayout
+            android:id="@+id/suggest_flow_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.gaopai.guiren.view.FlowLayout>
 
         <com.gaopai.guiren.view.MyGridLayout
             android:id="@+id/gl_pic"
@@ -60,28 +98,14 @@
             custom:columns="4"
             custom:is_square="true" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="照片" />
+                android:background="@color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/selector_upload_pic_btn" />
         </com.gaopai.guiren.view.MyGridLayout>
-
-        <RelativeLayout
-            android:id="@+id/bottom_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/gl_pic"
-            android:minHeight="49dp" >
-
-            <Button
-                android:id="@+id/btn_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="匿名" />
-        </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </ScrollView>

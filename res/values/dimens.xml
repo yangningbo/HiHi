@@ -71,13 +71,18 @@
 
     
     <dimen name="tribe_detail_thick_divider">2px</dimen>
-    <dimen name="tribe_detail_btn_radius">10dp</dimen>
+    <dimen name="tribe_detail_btn_radius">5dp</dimen>
     
-    <dimen name="creat_tribe_small_gap">5dp</dimen>
-    <dimen name="creat_tribe_large_gap">15dp</dimen>
     
 
+    <dimen name="general_small_gap">5dp</dimen>
+    <dimen name="general_large_gap">15dp</dimen>
     <dimen name="general_paading">10dp</dimen>
     <dimen name="general_header_padding">8dp</dimen>
     <dimen name="general_info_margin_top">3dp</dimen>
+    
+    <dimen name="general_font_1">22sp</dimen>
+    <dimen name="general_font_2">18sp</dimen>
+    <dimen name="general_font_3">16sp</dimen>
+    <dimen name="general_font_4">14sp</dimen>
 </resources>

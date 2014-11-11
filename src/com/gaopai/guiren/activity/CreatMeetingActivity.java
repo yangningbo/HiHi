@@ -80,12 +80,12 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		tvStartTime.setOnClickListener(this);
 		tvEndTime = (TextView) findViewById(R.id.tv_end_time);
 		tvEndTime.setOnClickListener(this);
-		spPrivacy = (Spinner) findViewById(R.id.sp_privacy_setting);
-		spAdapter = ArrayAdapter.createFromResource(mContext, R.array.spinner_creat_meeting_item,
-				android.R.layout.simple_spinner_dropdown_item);
-		spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spPrivacy.setAdapter(spAdapter);
-		spPrivacy.setOnItemSelectedListener(new SpItemSelectedListener());
+//		spPrivacy = (Spinner) findViewById(R.id.sp_privacy_setting);
+//		spAdapter = ArrayAdapter.createFromResource(mContext, R.array.spinner_creat_meeting_item,
+//				android.R.layout.simple_spinner_dropdown_item);
+//		spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//		spPrivacy.setAdapter(spAdapter);
+//		spPrivacy.setOnItemSelectedListener(new SpItemSelectedListener());
 		btnUploadPic = (Button) findViewById(R.id.btn_upload_pic);
 		btnUploadPic.setOnClickListener(this);
 
@@ -96,8 +96,8 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 
 		etContent = (EditText) findViewById(R.id.et_meeting_info);
 		etTitle = (EditText) findViewById(R.id.et_meeting_title);
-		etPassword = (EditText) findViewById(R.id.et_meeting_password);
-		etTags = (EditText) findViewById(R.id.et_meeting_tags);
+//		etPassword = (EditText) findViewById(R.id.et_meeting_password);
+//		etTags = (EditText) findViewById(R.id.et_meeting_tags);
 	}
 
 	private class SpItemSelectedListener implements OnItemSelectedListener {

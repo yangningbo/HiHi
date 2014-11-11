@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/setting_background"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="10dp"
+        android:background="@color/divider" />
+
+    <RelativeLayout
+        android:id="@+id/tv_check_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
+
+        <TextView
+            android:id="@+id/tv_avoid_disturb_time_segment"
+            style="@style/tribe_detail_item_text_with_drawable"
+            android:background="@drawable/selector_btn_general"
+            android:drawableRight="@drawable/icon_switch_normal"
+            android:padding="10dp"
+            android:text="免打扰时间段" />
+
+        <View
+            android:id="@+id/view_line"
+            style="@style/tribe_detail_thin_divider"
+            android:layout_below="@id/tv_avoid_disturb_time_segment" />
+
+        <TextView
+            android:id="@+id/tv_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_line"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:text="从" />
+
+        <TextView
+            android:id="@+id/tv_from_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/view_line"
+            android:background="@drawable/selector_btn_general"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="下午10：00"
+            android:textColor="#1D91D4" />
+
+        <TextView
+            android:id="@+id/tv_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_from"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:text="至" />
+
+        <TextView
+            android:id="@+id/tv_to_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_from_time"
+            android:background="@drawable/selector_btn_general"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="下午10：00"
+            android:textColor="#1D91D4" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="@dimen/general_large_gap"
+        android:background="@color/divider" />
+
+    <TextView
+        style="@style/tribe_detail_item_text_with_drawable"
+        android:background="@drawable/selector_btn_general"
+        android:drawableRight="@drawable/icon_switch_normal"
+        android:padding="10dp"
+        android:text="提醒播放铃声" />
+
+    <View style="@style/tribe_detail_thin_divider" />
+
+    <TextView
+        style="@style/tribe_detail_item_text_with_drawable"
+        android:background="@drawable/selector_btn_general"
+        android:drawableRight="@drawable/icon_switch_normal"
+        android:padding="10dp"
+        android:text="提醒震动" />
+
+    <View style="@style/tribe_detail_thin_divider" />
+
+    <TextView
+        style="@style/tribe_detail_item_text_with_drawable"
+        android:background="@drawable/selector_btn_general"
+        android:drawableRight="@drawable/icon_switch_normal"
+        android:padding="10dp"
+        android:text="大蜜汇报提醒" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider" />
+
+</LinearLayout>

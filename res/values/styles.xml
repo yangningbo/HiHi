@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -261,20 +261,19 @@
         <item name="android:layout_marginTop">@dimen/general_info_margin_top</item>
     </style>
 
-    <style name="tribe_detail_thick_divider">
-        <item name="android:background">@color/tribe_detail_horizon_line</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2px</item>
-    </style>
-
     <style name="tribe_detail_thin_divider">
         <item name="android:background">@color/general_horizon_divider</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
     </style>
 
-    <style name="tribe_detail_item_title">
+    <style name="tribe_detail_thick_divider">
         <item name="android:background">@color/general_horizon_divider</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2px</item>
+    </style>
+
+    <style name="tribe_detail_item_title">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">5dp</item>
@@ -284,7 +283,7 @@
         <item name="android:drawablePadding">5dp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
-    
+
     <style name="tribe_detail_item_text_with_drawable">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -293,12 +292,45 @@
         <item name="android:drawableRight">@drawable/icon_right_arrow</item>
         <item name="android:gravity">center_vertical</item>
     </style>
-    
+
     <style name="dynamic_item_title_name">
-         <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/connection_title_name</item>
+    </style>
+
+    <style name="meeting_detail_item_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingLeft">50dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:drawableRight">@drawable/profile_tab_arrow</item>
+        <item name="android:background">@drawable/selector_btn_general</item>
+    </style>
+
+    <style name="meeting_detail_item_info_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:textColor">@color/general_text_gray</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="meeting_detail_divider" parent="@style/tribe_detail_thin_divider">
+        <item name="android:layout_marginLeft">@dimen/general_paading</item>
+        <item name="android:layout_marginRight">@dimen/general_paading</item>
+    </style>
+    
+    <style name="meeting_detail_btn">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources>

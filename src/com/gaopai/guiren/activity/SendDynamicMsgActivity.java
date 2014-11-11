@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -57,7 +58,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private TextView tvWordNumLimit;
 	private EditText etDynamicMsg;
 
-	private Button btnPhoto;
+	private ImageButton btnPhoto;
 	private MyGridLayout picGrid;
 
 	@Override
@@ -85,7 +86,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		etDynamicMsg.addTextChangedListener(numLimitWatcher);
 		etDynamicMsg.clearFocus();
 
-		btnPhoto = (Button) findViewById(R.id.btn_camera);
+		btnPhoto = (ImageButton) findViewById(R.id.btn_camera);
 		btnPhoto.setOnClickListener(this);
 		picGrid = (MyGridLayout) findViewById(R.id.gl_pic);
 	}

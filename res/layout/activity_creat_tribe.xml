@@ -17,33 +17,35 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:background="@drawable/selector_creat_tribe_upload_pic_btn"
+            android:background="@drawable/selector_upload_pic_btn"
             android:gravity="center" />
 
         <EditText
             android:id="@+id/et_tribe_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/creat_tribe_large_gap"
+            android:layout_marginTop="@dimen/general_large_gap"
             android:background="@drawable/shape_white_round_corner"
             android:hint="圈子名称2~15个字符"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textSize="@dimen/general_font_4" />
 
         <EditText
             android:id="@+id/et_tribe_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/creat_tribe_small_gap"
+            android:layout_marginTop="@dimen/general_small_gap"
             android:background="@drawable/shape_white_round_corner"
             android:gravity="top|left"
             android:hint="圈子说明，少于500字符"
             android:lines="6"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textSize="@dimen/general_font_4" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/creat_tribe_large_gap"
+            android:layout_marginTop="@dimen/general_large_gap"
             android:background="@drawable/shape_white_round_corner"
             android:orientation="horizontal" >
 
@@ -69,7 +71,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/creat_tribe_small_gap"
+            android:layout_marginTop="@dimen/general_small_gap"
             android:background="@drawable/shape_white_round_corner"
             android:orientation="vertical" >
 
@@ -81,14 +83,14 @@
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
                 android:padding="10dp"
-                android:text="编辑会议标签"
+                android:text="编辑圈子标签"
                 android:textColor="@color/general_text_black" />
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/creat_tribe_large_gap"
+            android:layout_marginTop="@dimen/general_large_gap"
             android:background="@drawable/shape_white_round_corner"
             android:drawableRight="@drawable/icon_switch_normal"
             android:gravity="center_vertical"
@@ -97,30 +99,33 @@
             android:textColor="@color/general_text_black" />
 
         <EditText
+            android:id="@+id/et_tribe_tags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/creat_tribe_small_gap"
+            android:layout_marginTop="@dimen/general_small_gap"
             android:background="@drawable/shape_white_round_corner"
             android:hint="请输入密码"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textSize="@dimen/general_font_4" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/creat_tribe_small_gap"
+            android:layout_marginTop="@dimen/general_small_gap"
             android:background="@drawable/shape_white_round_corner"
             android:hint="请再次输入密码"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textSize="@dimen/general_font_4" />
 
         <Button
             android:id="@+id/btn_creat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/white"
-            android:layout_marginTop="@dimen/creat_tribe_large_gap"
+            android:layout_marginTop="@dimen/general_large_gap"
             android:background="@drawable/selector_tribe_detail_btn_blue"
-            android:text="创建" />
+            android:text="创建"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </ScrollView>

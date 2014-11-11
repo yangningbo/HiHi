@@ -34,9 +34,7 @@ import com.gaopai.guiren.volley.SimpleResponseListener;
 public class MeetingDetailActivity extends BaseActivity implements OnClickListener {
 
 	private ViewGroup chatGridLayout;
-	private View vgDetailSetting;
 	private Button btnSetting;
-	private ViewGroup gridViewHolder;
 	private Button btnHideGrid;
 	private Button btnEnterMeeting;
 
@@ -103,8 +101,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		btnSetting = (Button) findViewById(R.id.btn_more);
 		viewNotJoinIn = findViewById(R.id.bottom_not_in_meeting);
 		viewJoinIn = findViewById(R.id.bottom_in_meeting);
-		vgDetailSetting = findViewById(R.id.ll_meeting_setting);
-		gridViewHolder = (ViewGroup) findViewById(R.id.grid_view_holder);
 
 		btnSetting.setOnClickListener(new OnClickListener() {
 
@@ -173,7 +169,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private void bindView() {
 		// TODO Auto-generated method stub
 		tvMeetingTitle.setText(mMeeting.name);
-		tvMeetingInfo.setText(mMeeting.content);
+//		tvMeetingInfo.setText(mMeeting.content);
 		tvMeetingTime.setText(FeatureFunction.getTime(mMeeting.start) + "~" + FeatureFunction.getTime(mMeeting.end));
 		tvMeetingHost.setText("主持人: " + mMeeting.hosts);
 		tvMeetingGuest.setText("嘉宾: " + mMeeting.guest);

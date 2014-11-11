@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/general_background"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/general_paading"
+        android:drawablePadding="5dp"
+        android:textColor="@color/general_text_gray"
+        android:gravity="center_vertical"
+        android:text="成员" />
+
+    <com.gaopai.guiren.view.MyGridLayout
+        android:layout_marginLeft="@dimen/general_paading"
+        android:layout_marginRight="@dimen/general_paading"
+        android:id="@+id/ml_tribe_users"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:columns="4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/general_paading"
+        android:paddingRight="@dimen/general_paading" >
+
+        <TextView
+            style="@style/tribe_detail_item_text_with_drawable"
+            android:drawableRight="@drawable/icon_switch_normal"
+            android:text="消息免打扰" />
+
+        <View style="@style/tribe_detail_thin_divider" />
+
+        <TextView
+            style="@style/tribe_detail_item_text_with_drawable"
+            android:text="清除本地消息记录" />
+
+        <View style="@style/tribe_detail_thin_divider" />
+
+        <TextView
+            style="@style/tribe_detail_item_text_with_drawable"
+            android:text="投诉" />
+    </LinearLayout>
+
+</LinearLayout>

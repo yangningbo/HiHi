@@ -2,12 +2,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true"><shape>
-            <solid android:color="@color/general_btn_red_active" />
+            <solid android:color="@color/general_btn_gray_active" />
 
             <corners android:radius="@dimen/tribe_detail_btn_radius" />
         </shape></item>
     <item android:state_pressed="false"><shape>
-            <solid android:color="@color/general_btn_red_normal" />
+            <solid android:color="@color/general_btn_gray_normal" />
 
             <corners android:radius="@dimen/tribe_detail_btn_radius" />
         </shape></item>

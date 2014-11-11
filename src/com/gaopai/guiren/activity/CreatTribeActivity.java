@@ -54,15 +54,15 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		spAdapter = ArrayAdapter.createFromResource(mContext, R.array.spinner_creat_meeting_item,
 				android.R.layout.simple_spinner_dropdown_item);
 		spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spPrivacy = (Spinner) findViewById(R.id.sp_privacy_setting);
-		spPrivacy.setAdapter(spAdapter);
-		spPrivacy.setOnItemSelectedListener(new SpItemSelectedListener());
+//		spPrivacy = (Spinner) findViewById(R.id.sp_privacy_setting);
+//		spPrivacy.setAdapter(spAdapter);
+//		spPrivacy.setOnItemSelectedListener(new SpItemSelectedListener());
 		btnCreat = (Button) findViewById(R.id.btn_creat);
 		btnCreat.setOnClickListener(this);
 
 		etInfo = (EditText) findViewById(R.id.et_tribe_info);
 		etTitle = (EditText) findViewById(R.id.et_tribe_title);
-		etPassword = (EditText) findViewById(R.id.et_tribe_password);
+//		etPassword = (EditText) findViewById(R.id.et_tribe_password);
 		etTags = (EditText) findViewById(R.id.et_tribe_tags);
 		
 	}
