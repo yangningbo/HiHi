@@ -685,7 +685,36 @@ public class FeatureFunction {
 		} catch (Exception e) {
 			return "";
 		}
-
+	}
+	
+	public static String getHumanReadTime(long online) {
+		try {
+			String timeStr = "";
+			long mtime = online;
+			if ((online + "").length() <= 10) {
+				mtime = online * 1000;
+			}
+			Calendar calendar = Calendar.getInstance(Locale.CHINA);
+			calendar.setTimeInMillis(mtime);
+			String str = timeOnlie(calendar);
+			if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
+					|| str.endsWith(DamiApp.getInstance().getString(
+							R.string.hour))) {
+				timeStr = str
+						+ DamiApp.getInstance().getString(R.string.before);
+			} else if (str.endsWith(DamiApp.getInstance().getString(
+					R.string.day))
+					|| str.endsWith(DamiApp.getInstance().getString(
+							R.string.long_ago))) {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = calendar.getTime();
+				timeStr = format.format(date);
+			}
+			
+			return timeStr;
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
 	public static String getSecondTime(long online) {

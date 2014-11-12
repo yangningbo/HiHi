@@ -5,24 +5,31 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.ConnectionDetailActivity;
+import com.gaopai.guiren.activity.UserInfoActivity;
 import com.gaopai.guiren.adapter.DynamicAdapter.ViewHolderSendDynamic;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
+import com.gaopai.guiren.db.NewMessageTable;
 import com.gaopai.guiren.fragment.ConnectionFragment;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
@@ -98,7 +105,7 @@ public class ConnectionAdapter extends BaseAdapter {
 			if (convertView == null) {
 				convertView = inflateItemView(TYPE_GENERAL);
 			}
-			buildJoinView((ViewHolderGeneral) convertView.getTag(), typeBean, position, type+1);
+			buildJoinView((ViewHolderGeneral) convertView.getTag(), typeBean, position, type + 1);
 			break;
 		}
 
@@ -107,12 +114,20 @@ public class ConnectionAdapter extends BaseAdapter {
 			if (convertView == null) {
 				convertView = inflateItemView(TYPE_PIC_GENERAL);
 			}
-			buildPicGridView((ViewHolderPicGridGeneral) convertView.getTag(), typeBean, position, type+1);
+			buildPicGridView((ViewHolderPicGridGeneral) convertView.getTag(), typeBean, position, type + 1);
 			break;
 		}
-
 		}
 		return convertView;
+	}
+
+	private void goToUserActivity(String uid) {
+		if (TextUtils.isEmpty(uid)) {
+			return;
+		}
+		Intent intent = new Intent(mContext, UserInfoActivity.class);
+		intent.putExtra(UserInfoActivity.KEY_UID, uid);
+		mContext.startActivity(intent);
 	}
 
 	private void buildPicGridView(ViewHolderPicGridGeneral viewHolder, TypeHolder typeBean, int position, int type) {
@@ -123,20 +138,43 @@ public class ConnectionAdapter extends BaseAdapter {
 			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
 		}
 
-		List<User> userList = typeBean.jsoncontent.user;
+		JsonContent jsonContent = typeBean.jsoncontent;
+		List<User> userList = jsonContent.user;
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		if (type == TYPE_SOMEONE_FOLLOW_ME) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionUserList(userList, "等"+userList.size()+"人关注了你"));
+			viewHolder.tvTitle.setText(MyTextUtils.addConnectionUserList(userList, "等" + userList.size() + "人关注了你"));
 		} else if (type == TYPE_SOMEONE_I_FOLLOW_FOLLOW) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionUserListExtra(userList, "莫须有", "13", "您的好友", "关注了", "等15人"));
+			viewHolder.tvTitle.setText(MyTextUtils.addConnectionUserListExtra(userList, jsonContent.realname,
+					jsonContent.uid, "您的好友", "关注了", "等" + userList.size() + "人"));
 		}
 		viewHolder.gridLayout.removeAllViews();
 		if (userList != null && userList.size() > 0) {
-			for (User user : userList) {
-				viewHolder.gridLayout.addView(getImageView(user.headsmall));
+			int length = userList.size();
+			if (userList.size() > 16) {
+				length = 16;
+			}
+			for (int i = 0; i < length; i++) {
+				viewHolder.gridLayout.addView(getImageView(userList.get(i).headsmall));
 			}
 		}
+		viewHolder.tvDateInfo.setText(FeatureFunction.getHumanReadTime(Long.valueOf(typeBean.addtime)));
+		viewHolder.tvViewDetail.setTag(typeBean);
+		viewHolder.tvViewDetail.setOnClickListener(viewDetialClickListener);
+		
+		viewHolder.gridLayout.setTag(typeBean);
+		viewHolder.gridLayout.setOnClickListener(viewDetialClickListener);
 	}
+
+	private OnClickListener viewDetialClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent();
+			intent.putExtra(ConnectionDetailActivity.KEY_TYPE_HOLDER, (TypeHolder) v.getTag());
+			intent.setClass(mContext, ConnectionDetailActivity.class);
+			mContext.startActivity(intent);
+		}
+	};
 
 	private void buildJoinView(ViewHolderGeneral viewHolder, TypeHolder typeBean, int position, int type) {
 		// TODO Auto-generated method stub
@@ -166,7 +204,6 @@ public class ConnectionAdapter extends BaseAdapter {
 			viewHolder.tvTitle.setText(typeBean.tips);
 		}
 
-
 		if (!TextUtils.isEmpty(typeBean.jsoncontent.headsmall)) {
 			ImageLoaderUtil.displayImage(typeBean.jsoncontent.headsmall, viewHolder.ivUserHeader);
 		} else {
@@ -174,7 +211,20 @@ public class ConnectionAdapter extends BaseAdapter {
 		}
 		viewHolder.tvUserName.setText(typeBean.jsoncontent.realname);
 		viewHolder.tvUserInfo.setText(typeBean.jsoncontent.company);
+		viewHolder.tvDateInfo.setText(FeatureFunction.getHumanReadTime(Long.valueOf(typeBean.addtime)));
+
+		viewHolder.rlInfoLayout.setTag(content.uid);
+		viewHolder.rlInfoLayout.setOnClickListener(infoClickListener);
 	}
+
+	private OnClickListener infoClickListener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			goToUserActivity((String) v.getTag());
+		}
+	};
 
 	private ImageView getImageView(String url) {
 		ImageView imageView = new ImageView(mContext);
@@ -257,6 +307,8 @@ public class ConnectionAdapter extends BaseAdapter {
 		ImageView ivUserHeader;
 		TextView tvUserName;
 		TextView tvUserInfo;
+		TextView tvDateInfo;
+		RelativeLayout rlInfoLayout;
 
 		public static ViewHolderGeneral getInstance(View view) {
 			// TODO Auto-generated method stub
@@ -266,6 +318,8 @@ public class ConnectionAdapter extends BaseAdapter {
 			viewHolder.ivUserHeader = (ImageView) view.findViewById(R.id.iv_user_header);
 			viewHolder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
 			viewHolder.tvUserInfo = (TextView) view.findViewById(R.id.tv_user_info);
+			viewHolder.tvDateInfo = (TextView) view.findViewById(R.id.tv_date_info);
+			viewHolder.rlInfoLayout = (RelativeLayout) view.findViewById(R.id.rl_info_holder);
 			return viewHolder;
 		}
 	}
@@ -274,6 +328,8 @@ public class ConnectionAdapter extends BaseAdapter {
 		ImageView ivHeader;
 		TextView tvTitle;
 		MyGridLayout gridLayout;
+		TextView tvDateInfo;
+		TextView tvViewDetail;
 
 		public static ViewHolderPicGridGeneral getInstance(View view) {
 			// TODO Auto-generated method stub
@@ -281,6 +337,8 @@ public class ConnectionAdapter extends BaseAdapter {
 			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
 			viewHolder.tvTitle = (TextView) view.findViewById(R.id.tv_title);
 			viewHolder.gridLayout = (MyGridLayout) view.findViewById(R.id.gl_pic);
+			viewHolder.tvDateInfo = (TextView) view.findViewById(R.id.tv_date_info);
+			viewHolder.tvViewDetail = (TextView) view.findViewById(R.id.tv_view_detail);
 			return viewHolder;
 		}
 	}
@@ -288,7 +346,6 @@ public class ConnectionAdapter extends BaseAdapter {
 	List<ImageView> imageCacheList = new ArrayList<ImageView>();
 
 	public void cacheImage() {
-
 	}
 
 }

@@ -18,8 +18,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼、罗永浩、锤子等15人关注了你" />
+        android:layout_toRightOf="@id/iv_header"/>
 
     <com.gaopai.guiren.view.MyGridLayout
         android:id="@+id/gl_pic"
@@ -28,7 +27,7 @@
         android:layout_alignLeft="@id/tv_title"
         android:layout_below="@id/tv_title"
         android:layout_marginTop="10dp"
-        android:background="@color/u_light_gray"
+        android:background="@drawable/selector_gray_blue_btn"
         android:padding="5dp"
         custom:columns="4"
         custom:is_square="true" >
@@ -41,13 +40,12 @@
         android:layout_alignLeft="@id/tv_title"
         android:layout_below="@id/gl_pic"
         android:layout_marginTop="7dp"
-        android:text="2天前        系统推荐"
-        android:textColor="@color/u_text_gray" />
+        android:textColor="@color/general_text_gray" />
     <TextView 
         android:id="@+id/tv_view_detail"
         android:text="点击查看详情"
-        android:textSize="16sp"
-        android:textColor="@color/u_text_blue"
+        android:textColor="@color/connection_linkfy"
+        android:background="@drawable/selector_btn_transparent_general"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

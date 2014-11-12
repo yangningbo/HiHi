@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/tv_message_count"
         android:minWidth="@dimen/notification_item_dot_size"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/notification_item_dot_size"
         android:layout_height="@dimen/notification_item_dot_size"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -59,6 +59,7 @@
         android:layout_marginTop="3dp"
         android:layout_toRightOf="@id/iv_header"
         android:ellipsize="end"
+        android:paddingRight="30dp"
         android:singleLine="true"
         android:text="厚度和"
         android:textColor="@color/content_gray_color"

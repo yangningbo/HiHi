@@ -56,19 +56,20 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 		mAdapter = new ConnectionAdapter(this);
 		mListView.setAdapter(mAdapter);
 		// mListView.doPullRefreshing(true, 0);
+		mListView.getRefreshableView().setSelector(getActivity().getResources().getDrawable(R.color.transparent));
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 				Log.d(TAG, "pulldown");
-				 getDynamicList(true);
+				getDynamicList(true);
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				// TODO Auto-generated method stub
 				Log.d(TAG, "pull up to");
-				 getDynamicList(false);
+				getDynamicList(false);
 			}
 		});
 		getDynamicList(false);

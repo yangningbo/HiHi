@@ -1,5 +1,6 @@
 package com.gaopai.guiren.bean.dynamic;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.gaopai.guiren.bean.net.BaseNetBean;
@@ -7,7 +8,7 @@ import com.gaopai.guiren.bean.net.BaseNetBean;
 public class ConnectionBean extends BaseNetBean {
 	public List<TypeHolder> data;
 
-	public static class TypeHolder {
+	public static class TypeHolder implements Serializable{
 		public String id;
 		public String uid;
 		public int type;
@@ -23,7 +24,7 @@ public class ConnectionBean extends BaseNetBean {
 		public String headsmall;
 	}
 
-	public static class JsonContent {
+	public static class JsonContent implements Serializable {
 
 		// type=1,2,3
 		public String uid;
@@ -40,7 +41,7 @@ public class ConnectionBean extends BaseNetBean {
 		public List<User> content;
 	}
 
-	public static class User {
+	public static class User implements Serializable {
 		public String uid;
 		public String realname;
 		public String headsmall;
@@ -49,7 +50,7 @@ public class ConnectionBean extends BaseNetBean {
 		public int bigV;
 	}
 
-	public static class ZanBean {
+	public static class ZanBean implements Serializable {
 		public String uid;
 		public String uname;
 	}

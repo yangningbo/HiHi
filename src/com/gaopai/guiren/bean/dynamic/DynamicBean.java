@@ -1,15 +1,16 @@
 package com.gaopai.guiren.bean.dynamic;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.gaopai.guiren.bean.net.BaseNetBean;
 
 public class DynamicBean extends BaseNetBean {
 	public List<TypeHolder> data;
-	
-	//缺少标签
 
-	public static class TypeHolder {
+	// 缺少标签
+
+	public static class TypeHolder implements Serializable {
 		public String id;
 		public String uid;
 		public int type;
@@ -33,9 +34,11 @@ public class DynamicBean extends BaseNetBean {
 		public String s_path;
 		public String company;
 		public String post;
+
+		public int isZan = 0;
 	}
 
-	public static class JsonContent {
+	public static class JsonContent implements Serializable {
 
 		// type=3 4扩散了会议
 		public String content;
@@ -74,19 +77,19 @@ public class DynamicBean extends BaseNetBean {
 		public List<PicBean> pic;
 	}
 
-	public static class GuestBean {
+	public static class GuestBean implements Serializable {
 		public String realname;
 		public String uid;
 	}
 
-	public static class PicBean {
+	public static class PicBean implements Serializable {
 		public String imagUrlS;
 		public String imagUrlL;
 		public int imgWidth;
 		public int imgHeight;
 	}
 
-	public static class CommentBean {
+	public static class CommentBean implements Serializable {
 		public String id;
 		public String uid;
 		public String uname;
@@ -98,12 +101,12 @@ public class DynamicBean extends BaseNetBean {
 		public String toname;
 		public String time;
 	}
-	
-	public static class CommentContetnHolder {
+
+	public static class CommentContetnHolder implements Serializable {
 		public String content;
 	}
 
-	public static class ZanBean {
+	public static class ZanBean implements Serializable {
 		public String uid;
 		public String uname;
 	}

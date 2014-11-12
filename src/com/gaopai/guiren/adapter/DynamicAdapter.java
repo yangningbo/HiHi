@@ -162,10 +162,11 @@ public class DynamicAdapter extends BaseAdapter {
 	}
 
 	private void buildCommonView(ViewHolderCommon viewHolder, TypeHolder typeBean, int position, int type) {
+		boolean isShowBottomLayout = false;
 		if (!TextUtils.isEmpty(typeBean.s_path)) {
 			ImageLoaderUtil.displayImage(typeBean.s_path, viewHolder.ivHeader);
 		} else {
-			viewHolder.ivHeader.setImageResource(R.drawable.default_tribe);
+			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
 		}
 		viewHolder.tvUserName.setText(typeBean.realname);
 		viewHolder.tvUserInfo.setText(typeBean.post);
@@ -178,20 +179,25 @@ public class DynamicAdapter extends BaseAdapter {
 		}
 
 		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)) + "     天山上的来客");
-		if (typeBean.commentlist.size() > 0) {
+		if (typeBean.commentlist != null && typeBean.commentlist.size() > 0) {
+			isShowBottomLayout = true;
+			viewHolder.layoutComment.setVisibility(View.VISIBLE);
 			buildCommentView(viewHolder.layoutComment, position, typeBean.commentlist);
+			isShowBottomLayout = true;
 		} else {
 			viewHolder.layoutComment.setVisibility(View.GONE);
 		}
-		
+
 		if (typeBean.totalcomment > 5) {
-			viewHolder.tvMoreComment.setTag(position);
+			viewHolder.tvMoreComment.setVisibility(View.VISIBLE);
+			viewHolder.tvMoreComment.setTag(typeBean);
 			viewHolder.tvMoreComment.setOnClickListener(moreCommentClickListener);
 		} else {
 			viewHolder.tvMoreComment.setVisibility(View.GONE);
 		}
 
 		if (typeBean.zanList.size() > 0) {
+			isShowBottomLayout = true;
 			viewHolder.layoutZan.setVisibility(View.VISIBLE);
 			viewHolder.tvZan.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			viewHolder.tvZan.setText(MyTextUtils.addZanUserList(typeBean.zanList));
@@ -200,6 +206,11 @@ public class DynamicAdapter extends BaseAdapter {
 		}
 		viewHolder.layoutSpread.setVisibility(View.GONE);
 
+		if (isShowBottomLayout) {
+			viewHolder.rlDynamicInteractive.setVisibility(View.VISIBLE);
+		} else {
+			viewHolder.rlDynamicInteractive.setVisibility(View.GONE);
+		}
 		viewHolder.btnDynamicAction.setTag(mData.get(position));
 		viewHolder.btnDynamicAction.setOnClickListener(moreWindowClickListener);
 	}
@@ -440,7 +451,9 @@ public class DynamicAdapter extends BaseAdapter {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			mContext.startActivity(new Intent(mContext, DynamicDetailActivity.class));
+			Intent intent = new Intent(mContext, DynamicDetailActivity.class);
+			intent.putExtra(DynamicDetailActivity.KEY_TYPEHOLDER, (TypeHolder)v.getTag());
+			mContext.startActivity(intent);
 		}
 	};
 	private OnClickListener moreWindowClickListener = new OnClickListener() {
@@ -572,7 +585,7 @@ public class DynamicAdapter extends BaseAdapter {
 	private int testPosition = -1;
 
 	List<CommentBean> currentCommentBeans = null;
-	
+
 	private String makeNameNotNull(String name) {
 		if (TextUtils.isEmpty(name)) {
 			return "匿名";
@@ -590,9 +603,11 @@ public class DynamicAdapter extends BaseAdapter {
 			commentBean.uname = makeNameNotNull(commentBean.uname);
 			commentBean.toname = makeNameNotNull(commentBean.toname);
 			textView.setText(MyTextUtils.addUserHttpLinks(commentBean.uname + "回复" + commentBean.toname + "："
-					+ commentBean.content.content, commentBean.uname, commentBean.toname, commentBean.uid, commentBean.toid));
-			
-//			textView.setText(commentBean.uname + "回复" + commentBean.toname + "：" + commentBean.content.content);
+					+ commentBean.content.content, commentBean.uname, commentBean.toname, commentBean.uid,
+					commentBean.toid));
+
+			// textView.setText(commentBean.uname + "回复" + commentBean.toname +
+			// "：" + commentBean.content.content);
 			textView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -620,6 +635,11 @@ public class DynamicAdapter extends BaseAdapter {
 		Button btnZan = (Button) v.findViewById(R.id.btn_zan);
 		Button btnComment = (Button) v.findViewById(R.id.btn_comment);
 		Button btnSpread = (Button) v.findViewById(R.id.btn_spread);
+		if (typeHolder.isZan == 0) {
+			btnZan.setText("赞");
+		} else {
+			btnZan.setText("取消赞");
+		}
 		btnComment.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -650,7 +670,7 @@ public class DynamicAdapter extends BaseAdapter {
 		ViewUtil.measure(v);
 		windowHeightPadding = (v.getMeasuredHeight() + anchor.getMeasuredHeight()) / 2;
 		windowWidthPadding = v.getMeasuredWidth() + FeatureFunction.dip2px(mContext, 5);
-		
+
 		if (actionWindow.isShowing()) {
 			actionWindow.dismiss();
 			return;
@@ -658,16 +678,28 @@ public class DynamicAdapter extends BaseAdapter {
 		actionWindow.showAsDropDown(anchor, -windowWidthPadding, -windowHeightPadding);
 	}
 
-	private void zanMessage(TypeHolder typeBean) {
+	private void zanMessage(final TypeHolder typeBean) {
 		final List<ZanBean> zanList = typeBean.zanList;
 		DamiInfo.zanOperation(DamiCommon.getUid(mContext), 1, typeBean.id, 0, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub]
-				ZanBean zanBean = new ZanBean();
-				zanBean.uid = DamiCommon.getUid(mContext);
-				zanBean.uname = DamiCommon.getLoginResult(mContext).realname;
-				zanList.add(zanBean);
+				if (typeBean.isZan == 0) {
+					ZanBean zanBean = new ZanBean();
+					zanBean.uid = DamiCommon.getUid(mContext);
+					zanBean.uname = DamiCommon.getLoginResult(mContext).realname;
+					typeBean.isZan = 1;
+					zanList.add(zanBean);
+					
+				} else {
+					for (ZanBean zanBean : zanList) {
+						if(zanBean.uid.equals(DamiCommon.getLoginResult(mContext).uid)) {
+							zanList.remove(zanBean);
+							typeBean.isZan = 0;
+							break;
+						}
+					}
+				}
 				notifyDataSetChanged();
 			}
 		});
@@ -700,9 +732,9 @@ public class DynamicAdapter extends BaseAdapter {
 							commentBean.uname = DamiCommon.getLoginResult(mContext).realname;
 							commentBean.type = commnetHolder.type;
 							if (typeHolder.commentlist == null) {
-								typeHolder.commentlist  = new ArrayList<CommentBean>(); 
+								typeHolder.commentlist = new ArrayList<CommentBean>();
 							}
-							Log.d("typeholder", "id==="+typeHolder.id);
+							Log.d("typeholder", "id===" + typeHolder.id);
 							typeHolder.commentlist.add(commentBean);
 							notifyDataSetChanged();
 						}
