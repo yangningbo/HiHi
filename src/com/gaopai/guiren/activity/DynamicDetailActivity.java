@@ -120,7 +120,7 @@ public class DynamicDetailActivity extends BaseActivity {
 			}
 		});
 	}
-
+	
 	private View getHeaderView() {
 		// TODO Auto-generated method stub
 		// DynamicBean.TypeHolder typeBean = mData.get(position);
@@ -397,7 +397,7 @@ public class DynamicDetailActivity extends BaseActivity {
 	private void buidImageViews(MyGridLayout gridLayout, List<PicBean> pics) {
 		// TODO Auto-generated method stub
 		for (PicBean bean : pics) {
-			gridLayout.addView(getImageView(bean.imagUrlS));
+			gridLayout.addView(getImageView(bean.imgUrlS));
 		}
 	}
 

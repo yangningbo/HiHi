@@ -2,6 +2,7 @@ package com.gaopai.guiren.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.animation.Animator;
@@ -35,20 +36,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.chat.ChatBaseActivity;
-import com.gaopai.guiren.bean.MessageType;
-import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.bean.net.SendDynamicResult;
+import com.gaopai.guiren.net.MorePicture;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class SendDynamicMsgActivity extends BaseActivity implements OnClickListener {
 
@@ -60,7 +62,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 	private ImageButton btnPhoto;
 	private MyGridLayout picGrid;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -69,7 +71,15 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		setAbContentView(R.layout.activity_send_dynamic);
 		mTitleBar.setTitleText("发布动态");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.addRightButtonView("发布");
+		View v = mTitleBar.addRightButtonView("发布");
+		v.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				sendDynamic();
+			}
+		});
 		initViews();
 	}
 
@@ -119,9 +129,48 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			tvWordNumLimit.setText("还能输入" + (20 - s.length()) + "字");
 		}
 	};
-	
+
 	private void sendDynamic() {
-		
+		List<MorePicture> fileList = new ArrayList<MorePicture>();
+		for (String pic : picList) {
+			if (!TextUtils.isEmpty(pic)) {
+				fileList.add(new MorePicture("pic", pic));
+			}
+		}
+		String tags = "";
+		List<String> tagList = getTagList();
+		if (tagList.size() > 0) {
+			StringBuilder builder = new StringBuilder();
+			for (String tag : tagList) {
+				builder.append(tag).append(",");
+			}
+			builder.substring(0, builder.length() - 1);
+			tags = builder.toString();
+		}
+
+		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, 0, tags,
+				new SimpleResponseListener(mContext, "正在发送") {
+
+					@Override
+					public void onSuccess(Object o) {
+						// TODO Auto-generated method stub
+						SendDynamicResult data = (SendDynamicResult) o;
+						if (data.state != null && data.state.code == 0) {
+							showToast("发送成功！");
+						} else {
+							otherCondition(data.state, SendDynamicMsgActivity.this);
+						}
+					}
+				});
+	}
+
+	private List<String> getTagList() {
+		List<String> tagList = new ArrayList<String>();
+		int count = flowLayout.getChildCount();
+		for (int j = 0; j < count; j++) {
+			tagList.add(((TextView) ((ViewGroup) flowLayout.getChildAt(j)).getChildAt(0)).getText().toString());
+		}
+		return tagList;
 	}
 
 	@Override
@@ -146,7 +195,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	}
 
 	private View creatTag(String text) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
+		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag_without_streach, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
 		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
@@ -299,13 +348,14 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		intent.setClass(mContext, LocalPicPathActivity.class);
 		startActivityForResult(intent, REQUEST_GET_BITMAP_LIST);
 	}
-	
+
 	private List<String> picList = new ArrayList<String>();
+
 	private void addPicture(String file) {
 		picList.add(file);
-		picGrid.addView(getImageView(file), picGrid.getChildCount()-1);
+		picGrid.addView(getImageView(file), picGrid.getChildCount() - 1);
 	}
-	
+
 	private ImageView getImageView(String url) {
 		ImageView imageView = new ImageView(mContext);
 		Bitmap bitmap = BitmapFactory.decodeFile(url);

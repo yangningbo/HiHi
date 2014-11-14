@@ -27,6 +27,7 @@ public class DynamicBean extends BaseNetBean {
 		public int isdelete;
 		public List<CommentBean> commentlist;
 		public List<ZanBean> zanList;
+		public List<SpreadBean> spread;
 
 		public String nickname;
 		public String realname;
@@ -41,6 +42,7 @@ public class DynamicBean extends BaseNetBean {
 	public static class JsonContent implements Serializable {
 
 		// type=3 4扩散了会议
+		public List<PicBean> pic;
 		public String content;
 		public String tid;
 		public String name;
@@ -74,7 +76,7 @@ public class DynamicBean extends BaseNetBean {
 		public String uid;
 		public String sid;
 		public String realname;
-		public List<PicBean> pic;
+	
 	}
 
 	public static class GuestBean implements Serializable {
@@ -83,8 +85,8 @@ public class DynamicBean extends BaseNetBean {
 	}
 
 	public static class PicBean implements Serializable {
-		public String imagUrlS;
-		public String imagUrlL;
+		public String imgUrlS;
+		public String imgUrlL;
 		public int imgWidth;
 		public int imgHeight;
 	}
@@ -109,6 +111,12 @@ public class DynamicBean extends BaseNetBean {
 	public static class ZanBean implements Serializable {
 		public String uid;
 		public String uname;
+	}
+	
+	public static class SpreadBean implements Serializable {
+		public String uid;
+		public String nickname;
+		public String realname;
 	}
 
 }

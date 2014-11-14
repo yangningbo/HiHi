@@ -31,7 +31,7 @@ public class TextFlowLayout extends FlowLayout {
 		TextView textView = new TextView(mContext);
 		textView.setBackgroundResource(R.drawable.tag_bg);
 		textView.setText(text);
-		textView.setTextColor(Color.WHITE);
+		textView.setTextColor(getResources().getColor(R.color.general_blue));
 		this.addView(textView, textLayoutParams);
 		return textView;
 	}

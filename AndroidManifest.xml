@@ -96,7 +96,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.ProfileActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="guiren.user" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.gaopai.guiren.activity.SettingActivity"
             android:screenOrientation="portrait" />
@@ -123,13 +131,6 @@
         <activity
             android:name="com.gaopai.guiren.activity.UserInfoActivity"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="guiren.user" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.gaopai.guiren.activity.SendDynamicMsgActivity"
@@ -207,6 +208,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.ChangeProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.TribeMemberActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.share.ShareActivity"

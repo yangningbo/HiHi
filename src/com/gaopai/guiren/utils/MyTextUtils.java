@@ -25,6 +25,7 @@ import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.GuestBean;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.widget.emotion.EmotionManager;
 
@@ -181,6 +182,30 @@ public class MyTextUtils {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (ZanBean user : userList) {
 			stringBuilder.append(user.uname);
+			stringBuilder.append("、");
+		}
+		String text = stringBuilder.substring(0, stringBuilder.length() - 1).toString();
+		SpannableString result = SpannableString.valueOf(text);
+		Linkify.addLinks(result, USER_PATTERN, USER_SCHEME);
+		URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+		WeiboTextUrlSpan weiboTextUrlSpan = null;
+		for (int i = 0; i < urlSpans.length; i++) {
+			URLSpan urlSpan = urlSpans[i];
+			int start = result.getSpanStart(urlSpan);
+			int end = result.getSpanEnd(urlSpan);
+			weiboTextUrlSpan = new WeiboTextUrlSpan(USER_SCHEME + userList.get(i / 2).uid,
+					WeiboTextUrlSpan.TYPE_CONNECTION);// USER_SCHEME+
+			// user.uid
+			result.removeSpan(urlSpan);
+			result.setSpan(weiboTextUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+		return result;
+	}
+	
+	public static Spannable addSpreadUserList(List<SpreadBean> userList) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (SpreadBean user : userList) {
+			stringBuilder.append(user.realname);
 			stringBuilder.append("、");
 		}
 		String text = stringBuilder.substring(0, stringBuilder.length() - 1).toString();

@@ -62,8 +62,9 @@ public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
 	// public static final String HOST =
-	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-	public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+//	public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
@@ -773,11 +774,15 @@ public class DamiInfo implements Serializable {
 	 *            1匿名，0实名
 	 * @param tag
 	 */
-	public static void sendDynamic(String content, File[] files, int isanonymous, String tag, IResponseListener listener) {
+	public static void sendDynamic(String content, List<MorePicture> fileList, int isanonymous, String tag,
+			IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("content", content);
 		bundle.add("isanonymous", String.valueOf(isanonymous));
 		bundle.add("tag", tag);
+		if (fileList != null) {
+			bundle.addPicture("fileList", fileList);
+		}
 		String url = SERVER + "/user/addDynamic";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, SendDynamicResult.class, listener);
 	}
@@ -811,7 +816,7 @@ public class DamiInfo implements Serializable {
 		bundle.add("url", url);
 		bundle.add("desc", desc);
 		String url_ = SERVER + "/user/spread";
-		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, SendDynamicResult.class, listener);
+		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
 	public static void getDynamic(int page, IResponseListener listener) {
@@ -1667,9 +1672,9 @@ public class DamiInfo implements Serializable {
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
-	public static void getFansList(int page, String keyword, IResponseListener listener) {
+	public static void getFansList(String uid, int page, String keyword, IResponseListener listener) {
 		Parameters bundle = new Parameters();
-		bundle.add("fuid", DamiCommon.getUid(DamiApp.getInstance()));
+		bundle.add("fuid", uid);
 		if (!TextUtils.isEmpty(keyword)) {
 			bundle.add("keyword", keyword);
 		}
@@ -1685,9 +1690,9 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void getFollowerList(int page, String keyword, IResponseListener listener) {
+	public static void getFollowerList(String fuid, int page, String keyword, IResponseListener listener) {
 		Parameters bundle = new Parameters();
-		bundle.add("fuid", DamiCommon.getUid(DamiApp.getInstance()));
+		bundle.add("fuid", fuid);
 		if (!TextUtils.isEmpty(keyword)) {
 			bundle.add("keyword", keyword);
 		}
@@ -1695,7 +1700,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/followlist";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
-	
+
 	/**
 	 * 获取收藏列表
 	 * 
@@ -1715,6 +1720,157 @@ public class DamiInfo implements Serializable {
 		bundle.add("paegSize", String.valueOf(LOAD_SIZE));
 		String url = SERVER + "user/favoriteList";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, FavoriteList.class, listener);
+	}
+
+	/**
+	 * 添加关注/取消关注
+	 * 
+	 * @param fuid
+	 *            关注用户ID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void follow(String fuid, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fuid", fuid);
+		String url = SERVER + "user/follow";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 部落用户接收消息设置
+	 * 
+	 * @param tid
+	 *            部落ID
+	 * @param type
+	 *            接收类型 1--接收消息并提醒 2--不提醒仅显示数目
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void setMsgType(String tid, String type, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("tid", tid);
+		bundle.add("getmsg", type);
+		String url = SERVER + "user/tribeSetting";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 退出部落
+	 * 
+	 * @param id
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void exitTribe(String id, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("tid", id);
+
+		String url = SERVER + "tribe/quit";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 申请加入部落
+	 * 
+	 * @param tid
+	 *            部落ID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void applyTribe(String tid, String content, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("tid", tid);
+		if (!TextUtils.isEmpty(content))
+			bundle.add("content", content);
+
+		String url = SERVER + "tribe/apply";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 移除部落成员
+	 * 
+	 * @param id
+	 *            部落ID 必传
+	 * @param fuid
+	 *            被移出用户ID 必传
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void kickTribePerson(String id, String fuid, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("tid", id);
+		bundle.add("fuid", fuid);
+
+		String url = SERVER + "tribe/remove";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 获取部落成员列表
+	 * 
+	 * @param tid
+	 *            部落ID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getTribeUserList(String tid, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		// bundle.add("page", String.valueOf(page));
+		// bundle.add("pageSize", String.valueOf(LOAD_SIZE));
+		bundle.add("tid", tid);
+
+		String url = SERVER + "tribe/tribeUserList";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
+	}
+
+	/**
+	 * 获取会议用户列表
+	 * 
+	 * @param id
+	 *            必传 会议ID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getMeetingUserList(String id, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("meetingid", id);
+
+		String url = SERVER + "meeting/meetingUserList";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
+	}
+
+	/**
+	 * 获取会议主持人列表
+	 * 
+	 * @param id
+	 *            必传 会议ID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void gethostsList(String id, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("meetingid", id);
+
+		String url = SERVER + "meeting/gethosts";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
+	}
+
+	/**
+	 * 获取会议嘉宾列表
+	 * 
+	 * @param id
+	 *            必传 会议ID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getguestsList(String id, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("meetingid", id);
+
+		String url = SERVER + "meeting/getguests";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
 
 }

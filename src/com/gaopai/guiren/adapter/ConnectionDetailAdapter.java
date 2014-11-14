@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.activity.UserInfoActivity;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
@@ -126,8 +127,8 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 		if (TextUtils.isEmpty(uid)) {
 			return;
 		}
-		Intent intent = new Intent(mContext, UserInfoActivity.class);
-		intent.putExtra(UserInfoActivity.KEY_UID, uid);
+		Intent intent = new Intent(mContext, ProfileActivity.class);
+		intent.putExtra(ProfileActivity.KEY_USER_ID, uid);
 		mContext.startActivity(intent);
 	}
 	

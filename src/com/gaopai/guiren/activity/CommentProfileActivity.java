@@ -27,7 +27,7 @@ public class CommentProfileActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
-		setAbContentView(R.layout.activity_change_profile);
+		setAbContentView(R.layout.activity_comment_profile);
 		mUser = DamiCommon.getLoginResult(mContext);
 
 		tUser = (User) getIntent().getSerializableExtra(KEY_USER);
@@ -46,7 +46,6 @@ public class CommentProfileActivity extends BaseActivity {
 					showToast(R.string.input_can_not_be_empty);
 					return;
 				}
-				
 			}
 		});
 

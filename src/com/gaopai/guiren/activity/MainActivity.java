@@ -61,6 +61,7 @@ public class MainActivity extends BaseActivity {
 	private Fragment page2;
 	private Fragment page3;
 	private Fragment page4;
+	private User mUser;
 
 	/** 左边滑动菜单 **/
 	public static SlidingMenu mSlidingMenu;
@@ -143,17 +144,16 @@ public class MainActivity extends BaseActivity {
 		view = (View) findViewById(R.id.slide_btn_setting);
 		view.setOnClickListener(slideMenuClickListener);
 
-		
 	}
-	
+
 	private void bindUserView() {
-		User mUser = DamiCommon.getLoginResult(this);
+		mUser = DamiCommon.getLoginResult(this);
 		ImageView ivHeader = (ImageView) findViewById(R.id.iv_user_header);
 		Picasso.with(mContext).load(mUser.headsmall).placeholder(R.drawable.default_header)
 				.error(R.drawable.default_header).into(ivHeader);
 		TextView textView = (TextView) findViewById(R.id.tv_user_name);
 		textView.setText(mUser.realname);
-		
+
 		textView = (TextView) findViewById(R.id.tv_slide_count_followers);
 		textView.setText(String.valueOf(mUser.followers));
 		textView = (TextView) findViewById(R.id.tv_slide_count_fans);
@@ -171,14 +171,17 @@ public class MainActivity extends BaseActivity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			switch (v.getId()) {
-			case R.id.slide_btn_my_profile:
-				startActivity(ProfileActivity.class);
+			case R.id.slide_btn_my_profile: {
+				Intent intent = new Intent(mContext, ProfileActivity.class);
+				intent.putExtra(ProfileActivity.KEY_USER_ID, mUser.uid);
+				startActivity(intent);
 				break;
+			}
 			case R.id.slide_btn_my_followers:
-				goToContact(ContactActivity.KEY_FOLLOWERS);
+				goToContact(ContactActivity.TYPE_FOLLOWERS);
 				break;
 			case R.id.slide_btn_my_fans:
-				goToContact(ContactActivity.KEY_FANS);
+				goToContact(ContactActivity.TYPE_FANS);
 				break;
 			case R.id.slide_btn_my_tribe:
 				startActivity(TribeActivity.class);
@@ -206,6 +209,7 @@ public class MainActivity extends BaseActivity {
 
 	private void goToContact(int type) {
 		Intent intent = new Intent();
+		intent.putExtra(ContactActivity.KEY_UID, mUser.uid);
 		intent.putExtra(ContactActivity.KEY_TYPE, type);
 		intent.setClass(mContext, ContactActivity.class);
 		startActivity(intent);

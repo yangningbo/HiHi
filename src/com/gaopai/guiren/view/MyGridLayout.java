@@ -83,21 +83,20 @@ public class MyGridLayout extends ViewGroup {
 
 	}
 
-	private OnClickListener mItemListener;
-
-	public void setOnItemClickListener(OnClickListener clickListener) {
-		mItemListener = clickListener;
-		for (int i = 0; i < getChildCount(); i++) {
-			View v = getChildAt(i);
-			v.setOnClickListener(clickListener);
-		}
-	}
+//	private OnClickListener mItemListener;
+//
+//	public void setOnItemClickListener(OnClickListener clickListener) {
+//		mItemListener = clickListener;
+//		for (int i = 0; i < getChildCount(); i++) {
+//			View v = getChildAt(i);
+//			v.setOnClickListener(clickListener);
+//		}
+//	}
 
 	@Override
 	public void addView(View child) {
 		// TODO Auto-generated method stub
 		super.addView(child);
-		child.setOnClickListener(mItemListener);
 	}
 
 }

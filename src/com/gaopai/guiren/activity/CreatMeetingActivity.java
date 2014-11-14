@@ -11,6 +11,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -62,6 +64,8 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 	private EditText etContent;
 	private EditText etPassword;
 	private EditText etTags;
+	
+	private ImageView ivHeader;
 
 	private int mPrivacy = 1;
 
@@ -98,6 +102,8 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		etTitle = (EditText) findViewById(R.id.et_meeting_title);
 //		etPassword = (EditText) findViewById(R.id.et_meeting_password);
 //		etTags = (EditText) findViewById(R.id.et_meeting_tags);
+		
+		ivHeader = (ImageView) findViewById(R.id.iv_meeeting_header);
 	}
 
 	private class SpItemSelectedListener implements OnItemSelectedListener {
@@ -149,7 +155,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
 				Drawable drawable = Drawable.createFromPath(pathList.get(0));
 				mFilePath = pathList.get(0);
-				btnUploadPic.setBackgroundDrawable(drawable);
+				ivHeader.setImageDrawable(drawable);
 			}
 		}
 	}

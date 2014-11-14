@@ -134,7 +134,7 @@
                     android:layout_height="70dp"
                     android:layout_marginRight="10dp"
                     android:contentDescription="@string/desc"
-                    android:src="@drawable/logo" />
+                    android:src="@drawable/default_header" />
 
                 <TextView
                     android:id="@+id/tv_user_name"
@@ -184,229 +184,347 @@
                 android:orientation="vertical"
                 android:padding="10dp" >
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/layout_profile_connection"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/icon_slide_tribe"
-                    android:drawablePadding="5dp"
-                    android:gravity="center_vertical"
-                    android:text="人脉" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="5dp"
-                    android:background="#F7F7F7"
-                    android:orientation="horizontal" >
+                    android:orientation="vertical" >
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="关注"
-                        android:textColor="@color/profile_text_gray" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/icon_slide_tribe"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:text="人脉" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="粉丝"
-                        android:textColor="@color/profile_text_gray" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="会议"
-                        android:textColor="@color/profile_text_gray" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="圈子"
-                        android:textColor="@color/profile_text_gray" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@+id/tv_my_followers_count"
-                        style="@style/profile_text_count" />
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="5dp"
+                        android:background="#F7F7F7"
                         android:orientation="horizontal" >
 
-                        <View
-                            style="@style/profile_text_count_divider"
-                            android:layout_alignParentLeft="true" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="关注"
+                            android:textColor="@color/profile_text_gray" />
 
                         <TextView
-                            android:id="@+id/tv_my_fans_count"
-                            style="@style/profile_text_count" />
-                    </RelativeLayout>
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="粉丝"
+                            android:textColor="@color/profile_text_gray" />
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="会议"
+                            android:textColor="@color/profile_text_gray" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="圈子"
+                            android:textColor="@color/profile_text_gray" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/white"
                         android:orientation="horizontal" >
 
-                        <View
-                            style="@style/profile_text_count_divider"
-                            android:layout_alignParentLeft="true" />
-
                         <TextView
-                            android:id="@+id/tv_my_meetings_count"
+                            android:id="@+id/tv_my_followers_count"
                             style="@style/profile_text_count" />
 
-                        <View
-                            style="@style/profile_text_count_divider"
-                            android:layout_alignParentRight="true" />
-                    </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal" >
 
-                    <TextView
-                        android:id="@+id/tv_my_tribes_count"
-                        style="@style/profile_text_count" />
+                            <View
+                                style="@style/profile_text_count_divider"
+                                android:layout_alignParentLeft="true" />
+
+                            <TextView
+                                android:id="@+id/tv_my_fans_count"
+                                style="@style/profile_text_count" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal" >
+
+                            <View
+                                style="@style/profile_text_count_divider"
+                                android:layout_alignParentLeft="true" />
+
+                            <TextView
+                                android:id="@+id/tv_my_meetings_count"
+                                style="@style/profile_text_count" />
+
+                            <View
+                                style="@style/profile_text_count_divider"
+                                android:layout_alignParentRight="true" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/tv_my_tribes_count"
+                            style="@style/profile_text_count" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <RelativeLayout
+                    android:id="@+id/layout_dynamic_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp" >
+                    android:orientation="vertical"
+                    android:visibility="visible" >
+
+                    <RelativeLayout
+                        android:id="@+id/layout_profile_dy_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:drawableLeft="@drawable/icon_profile_dy"
+                            android:drawablePadding="5dp"
+                            android:gravity="center_vertical"
+                            android:text="最新动态" />
+
+                        <TextView
+                            android:id="@+id/tv_profile_dy_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/selector_btn_transparent_general"
+                            android:gravity="center_vertical"
+                            android:text="点击 查看更多"
+                            android:textColor="@color/profile_name" />
+                    </RelativeLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_profile_dy_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:drawableLeft="@drawable/icon_profile_personal_file"
-                        android:drawablePadding="5dp"
-                        android:gravity="center_vertical"
-                        android:text="基本资料" />
+                        android:layout_below="@id/layout_profile_dy_title"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/white"
+                        android:padding="@dimen/general_paading"
+                        android:text="阿萨德发是" />
 
-                    <TextView
-                        android:id="@+id/tv_reverification"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/tv_profile_dy_content"
+                        android:background="@color/profile_renmai_topbar"
+                        android:paddingLeft="@dimen/general_paading" >
+
+                        <TextView
+                            android:id="@+id/tv_profile_dy_favorite"
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:drawableLeft="@drawable/icon_profile_dy_favorite"
+                            android:gravity="center_vertical" />
+
+                        <TextView
+                            android:id="@+id/tv_profile_dy_spread"
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:drawableLeft="@drawable/icon_profile_dy_spread"
+                            android:gravity="center_vertical" />
+
+                        <TextView
+                            android:id="@+id/tv_profile_dy_comment"
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:drawableLeft="@drawable/icon_profile_dy_comment"
+                            android:gravity="center_vertical" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/tv_profile_dy_content"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/selector_btn_transparent_general"
-                        android:gravity="center_vertical"
-                        android:text="点击重新认证"
-                        android:textColor="@color/profile_name" />
+                        android:layout_marginBottom="-26.666dp"
+                        android:layout_marginRight="@dimen/general_paading"
+                        android:background="@drawable/icon_profile_dy_calendar"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="14.6666dp"
+                            android:layout_marginTop="2.66dp"
+                            android:gravity="center"
+                            android:text="2014.10"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:layout_marginBottom="2dp"
+                            android:gravity="center"
+                            android:text="14"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_basic_profile"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:padding="7dp" >
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible" >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="真实姓名" />
-
-                    <TextView
-                        android:id="@+id/tv_profile_real_name"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:textColor="@color/profile_text_gray" />
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp" >
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/general_horizon_divider" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:drawableLeft="@drawable/icon_profile_personal_file"
+                            android:drawablePadding="5dp"
+                            android:gravity="center_vertical"
+                            android:text="基本资料" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:padding="7dp" >
+                        <TextView
+                            android:id="@+id/tv_reverification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/selector_btn_transparent_general"
+                            android:gravity="center_vertical"
+                            android:text="点击重新认证"
+                            android:textColor="@color/profile_name" />
+                    </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="所属公司" />
-
-                    <TextView
-                        android:id="@+id/tv_profile_company"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:textColor="@color/profile_text_gray" />
-                </LinearLayout>
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/white"
+                        android:orientation="horizontal"
+                        android:padding="7dp" >
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/general_horizon_divider" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="真实姓名" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:padding="7dp" >
+                        <TextView
+                            android:id="@+id/tv_profile_real_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|right"
+                            android:textColor="@color/profile_text_gray" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="所在部门" />
-
-                    <TextView
-                        android:id="@+id/tv_profile_partment"
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:textColor="@color/profile_text_gray" />
-                </LinearLayout>
+                        android:layout_height="2px"
+                        android:background="@color/general_horizon_divider" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/general_horizon_divider" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:padding="7dp" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="所属职业" />
-
-                    <TextView
-                        android:id="@+id/tv_profile_job"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|right"
-                        android:textColor="@color/profile_text_gray" />
+                        android:layout_height="40dp"
+                        android:background="@color/white"
+                        android:orientation="horizontal"
+                        android:padding="7dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="所属公司" />
+
+                        <TextView
+                            android:id="@+id/tv_profile_company"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|right"
+                            android:textColor="@color/profile_text_gray" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:background="@color/general_horizon_divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/white"
+                        android:orientation="horizontal"
+                        android:padding="7dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="所在部门" />
+
+                        <TextView
+                            android:id="@+id/tv_profile_partment"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|right"
+                            android:textColor="@color/profile_text_gray" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:background="@color/general_horizon_divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/white"
+                        android:orientation="horizontal"
+                        android:padding="7dp" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="所属职业" />
+
+                        <TextView
+                            android:id="@+id/tv_profile_job"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|right"
+                            android:textColor="@color/profile_text_gray" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <TextView

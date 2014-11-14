@@ -66,7 +66,7 @@ public class Tribe implements Serializable {
 	@Expose
 	public MessageInfo mMessageInfo;
 	@Expose
-	public int getmsg = 1; // 消息提醒类型
+	public int getmsg = 1; // 消息提醒类型 	1接受并提醒，2接受不提醒
 	@Expose
 	public int applyCount = 0; // 申请数
 	@Expose

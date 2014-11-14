@@ -46,6 +46,8 @@ public class AddReasonActivity extends BaseActivity {
 	public static final int TYPE_REFUSE_JOIN_MEETING = 31;
 	public static final int TYPE_REFUSE_BECOME_HOST = 32;
 	public static final int TYPE_REFUSE_BECOME_GUEST = 33;
+	
+	public static final int TYPE_TO_JOIN_TRIBE = 40;
 
 	private int type = -1;
 	private String meetingId;
@@ -99,6 +101,11 @@ public class AddReasonActivity extends BaseActivity {
 			title = getString(R.string.refuse_become_host);
 			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
 			user = (User) getIntent().getSerializableExtra(KEY_USER);
+			break;
+			
+		case TYPE_TO_JOIN_TRIBE:
+			title = getString(R.string.apply_into_tribe);
+			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
 			break;
 
 		default:
@@ -198,6 +205,11 @@ public class AddReasonActivity extends BaseActivity {
 		case TYPE_REFUSE_BECOME_HOST:
 			DamiInfo.refuseHost(meetingId, user.uid, etAddReason.getText().toString(), resultListener);
 			break;
+			
+		case TYPE_TO_JOIN_TRIBE:
+			DamiInfo.applyTribe(meetingId, etAddReason.getText().toString(), resultListener);
+			break;
+			
 		default:
 			break;
 		}

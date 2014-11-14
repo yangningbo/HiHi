@@ -52,7 +52,7 @@ public class FlowLayout extends ViewGroup {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		// super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
 		int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
 		int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
@@ -103,7 +103,7 @@ public class FlowLayout extends ViewGroup {
 				height += lineHeight;
 			}
 		}
-		setMeasuredDimension(sizeWidth, height + getPaddingTop()+getPaddingBottom());
+		setMeasuredDimension(sizeWidth, height + getPaddingTop() + getPaddingBottom());
 
 	}
 

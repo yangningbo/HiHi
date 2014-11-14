@@ -643,5 +643,11 @@
     
     <string name="please_input_reason">输入请求原因</string>
     <string name="private_setting">隐私设置</string>
+    
+    <string name="spread_success">扩散成功</string>
+    <string name="follow_success">关注成功</string>
+    <string name="cancel_follow_success">取消关注成功</string>
+    
+    <string name="profile_view_after_follow">添加好友后可查看</string>
 
 </resources>

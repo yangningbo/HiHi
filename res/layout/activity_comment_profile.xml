@@ -11,15 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@drawable/shape_white_round_corner_with_border"
+        android:gravity="top|left"
         android:padding="@dimen/general_paading" />
 
     <Button
         android:id="@+id/btn_send"
         android:layout_width="match_parent"
-        android:textColor="@color/white"
-        android:text="发表评论"
-        android:layout_marginTop="@dimen/general_large_gap"
         android:layout_height="40dp"
-        android:background="@drawable/selector_tribe_detail_btn_green" />
+        android:layout_marginTop="@dimen/general_large_gap"
+        android:background="@drawable/selector_tribe_detail_btn_green"
+        android:text="发表评论"
+        android:textColor="@color/white" />
 
 </LinearLayout>

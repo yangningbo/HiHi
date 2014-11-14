@@ -3,6 +3,8 @@ package com.gaopai.guiren.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jraf.android.backport.switchwidget.R.layout;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.Keyframe;
@@ -13,6 +15,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,29 +23,32 @@ import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.UserInfoBean;
+import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.view.FlowLayout;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends BaseActivity implements OnClickListener {
 
-	private User mUser;
 	private User tUser;
-	public final static String KEY_USER = "user";
-	
+	private User mUser;
+	public final static String KEY_USER_ID = "user_id";
+
+	private String tuid;
 	private boolean isSelf;
 
 	private ImageView ivHeader;
@@ -76,8 +82,23 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private View tvRevealAllTags;
 
 	private FlowLayout tagLayout;
-	private List<String> tagList = new ArrayList<String>();;
-	private List<String> recTagList = new ArrayList<String>();;
+	private List<String> tagList = new ArrayList<String>();
+	private List<String> recTagList = new ArrayList<String>();
+
+	private View layoutBasicProfile;
+	private View layoutDyProfile;
+	private View layoutBottom;
+	private View layoutConnection;
+
+	private TextView tvDyFavoriteCount;
+	private TextView tvDySpreadCount;
+	private TextView tvDyCommentCount;
+
+	private TextView tvDyMonthYear;
+	private TextView tvDyDay;
+
+	private TextView tvDyViewMore;
+	private TextView tvDyContent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +106,30 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_profile);
-		tUser = (User) getIntent().getSerializableExtra(KEY_USER);
+		tuid = getIntent().getStringExtra(KEY_USER_ID);
+		if (TextUtils.isEmpty(tuid)) {
+			Uri data = getIntent().getData();
+			tuid = data.toString().substring(data.toString().indexOf("//") + 2);
+		}
 		mUser = DamiCommon.getLoginResult(this);
-		isSelf = tUser.uid.equals(mUser.uid);
-		
-		initComponent();
-		bindView();
+		DamiInfo.getUserInfo(tuid, new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				final UserInfoBean data = (UserInfoBean) o;
+				if (data.state != null && data.state.code == 0) {
+					if (data.data != null) {
+						tUser = data.data;
+						isSelf = mUser.uid.equals(tUser.uid);
+						initComponent();
+						bindView();
+					}
+				} else {
+					otherCondition(data.state, ProfileActivity.this);
+				}
+			}
+		});
+
 		for (int i = 0; i < 10; i++) {
 			recTagList.add("推荐" + i);
 		}
@@ -154,28 +193,84 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		bottomView.setOnClickListener(this);
 		bottomView = findViewById(R.id.layout_profile_bottom_spread);
 		bottomView.setOnClickListener(this);
+
+		layoutBasicProfile = findViewById(R.id.layout_basic_profile);
+		layoutDyProfile = findViewById(R.id.layout_dynamic_profile);
+		layoutBottom = findViewById(R.id.bottom_bar);
+		layoutConnection = findViewById(R.id.layout_profile_connection);
+
+		tvDyFavoriteCount = (TextView) findViewById(R.id.tv_profile_dy_favorite);
+		tvDyCommentCount = (TextView) findViewById(R.id.tv_profile_dy_comment);
+		tvDySpreadCount = (TextView) findViewById(R.id.tv_profile_dy_spread);
+
+		tvDyFavoriteCount = (TextView) findViewById(R.id.tv_profile_dy_favorite);
+		tvDyViewMore = (TextView) findViewById(R.id.tv_profile_dy_more);
+		tvDyContent = (TextView) findViewById(R.id.tv_profile_dy_content);
 	}
 
 	private void bindView() {
-		tvFancyCount.setText(String.valueOf(mUser.integral));
-		tvUserName.setText(mUser.realname);
-		tvUserInfo.setText(mUser.company);
-		Picasso.with(mContext).load(mUser.headsmall).placeholder(R.drawable.default_header)
+		if (isSelf) {
+			layoutBasicProfile.setVisibility(View.VISIBLE);
+			layoutBottom.setVisibility(View.GONE);
+			layoutDyProfile.setVisibility(View.GONE);
+			layoutConnection.setVisibility(View.GONE);
+			bindProfileView();
+		} else {
+			layoutBasicProfile.setVisibility(View.GONE);
+			layoutDyProfile.setVisibility(View.VISIBLE);
+			layoutBottom.setVisibility(View.VISIBLE);
+			layoutConnection.setVisibility(View.VISIBLE);
+			bindConnectionView();
+		}
+
+		Picasso.with(mContext).load(tUser.headsmall).placeholder(R.drawable.default_header)
 				.error(R.drawable.default_header).into(ivHeader);
 
-		tvFollowersCount.setText(String.valueOf(mUser.followers));
-		tvFansCount.setText(String.valueOf(mUser.fansers));
+		tvUserName.setText(tUser.realname);
+		tvUserInfo.setText(tUser.company);
 
-		tvRealName.setText(mUser.realname);
-		tvCompany.setText(mUser.company);
-		tvJob.setText(mUser.post);
-
-		tvEmail.setText(mUser.email);
-		tvPhone.setText(mUser.phone);
-		// tvWeixin.setText(mUser)
-		// tvWeibo.setText(text)
-
+		bindContactView();
 		bindTags(tagLayout, false);
+	}
+
+	private void bindConnectionView() {
+		tvFancyCount.setText(String.valueOf(tUser.integral));
+		tvFollowersCount.setText(String.valueOf(tUser.followers));
+		tvFansCount.setText(String.valueOf(tUser.fansers));
+	}
+
+	private void bindProfileView() {
+		tvRealName.setText(tUser.realname);
+		tvCompany.setText(tUser.company);
+		tvJob.setText(tUser.post);
+	}
+
+	private void bindContactView() {
+		if (isSelf || tUser.relation == 1) {
+			tvEmail.setText(tUser.email);
+			tvPhone.setText(tUser.phone);
+			tvWeixin.setText(mUser.weixin);
+			tvWeibo.setText(mUser.weibo);
+		} else {
+			tvEmail.setText(R.string.profile_view_after_follow);
+			tvPhone.setText(R.string.profile_view_after_follow);
+			tvWeixin.setText(R.string.profile_view_after_follow);
+		}
+		if (!isSelf) {
+			removeTextDrawable(tvEmail);
+			removeTextDrawable(tvPhone);
+			removeTextDrawable(tvWeixin);
+			removeTextDrawable(tvWeibo);
+		}
+	}
+
+	private void removeTextDrawable(TextView textView) {
+		textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+		textView.setCompoundDrawablePadding(0);
+		((ViewGroup) textView.getParent()).setOnClickListener(null);
+	}
+	
+	private void bindDyView() {
 	}
 
 	private void bindTags(FlowLayout taLayoutPara, boolean isWithDelete) {
@@ -199,20 +294,35 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivity(SettingActivity.class);
 			break;
 		}
+		case R.id.tv_my_fans_count:{
+			Intent intent = new Intent(mContext, ContactActivity.class);
+			intent.putExtra(ContactActivity.KEY_TYPE, ContactActivity.TYPE_FANS);
+			intent.putExtra(ContactActivity.KEY_UID, tUser.uid);
+			startActivity(intent);
+			break;
+		}
+		case R.id.tv_my_followers_count:{
+			Intent intent = new Intent(mContext, ContactActivity.class);
+			intent.putExtra(ContactActivity.KEY_TYPE, ContactActivity.TYPE_FOLLOWERS);
+			intent.putExtra(ContactActivity.KEY_UID, tUser.uid);
+			startActivity(intent);
+			break;
+		}
+			
 		case R.id.tv_reverification:
 			startActivity(ReverificationActivity.class);
 			break;
 		case R.id.layout_profile_email:
-			changeContact(ChangeProfileActivity.TYPE_EMAIL, mUser.email);
+			changeContact(ChangeProfileActivity.TYPE_EMAIL, tUser.email);
 			break;
 		case R.id.layout_profile_phone_num:
-			changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone);
+			changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
 			break;
 		case R.id.layout_profile_weibo_num:
-			changeContact(ChangeProfileActivity.TYPE_WEIBO, mUser.weibo);
+			changeContact(ChangeProfileActivity.TYPE_WEIBO, tUser.weibo);
 			break;
 		case R.id.layout_profile_weixin_num:
-			changeContact(ChangeProfileActivity.TYPE_WEIXIN, mUser.weixin);
+			changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);
 			break;
 		case R.id.tv_reveal_all_tags:
 		case R.id.tv_add_tags:
@@ -231,24 +341,63 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivityWithUser(CommentProfileActivity.KEY_USER, CommentProfileActivity.class);
 			break;
 		case R.id.layout_profile_bottom_follow:
+			followUser();
 			break;
 		case R.id.layout_profile_bottom_msg:
 			startActivityWithUser(ChatMessageActivity.KEY_USER, ChatMessageActivity.class);
 			break;
 		case R.id.layout_profile_bottom_spread:
+			spreadUser();
 			break;
 		default:
 			break;
 		}
 	}
-	
+
+	private void followUser() {
+		DamiInfo.follow(tUser.uid, new SimpleResponseListener(mContext, R.string.request_internet_now) {
+
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					if (data.state.msg.equals(getString(R.string.cancel_follow_success))) {
+						showToast(R.string.cancel_follow_success);
+						tUser.relation = 0;
+					} else {
+						showToast(R.string.follow_success);
+						tUser.relation = 1;
+					}
+					bindContactView();
+				} else {
+					otherCondition(data.state, ProfileActivity.this);
+				}
+			}
+		});
+	}
+
+	private void spreadUser() {
+		DamiInfo.spreadDynamic(5, tUser.uid, "", "", "", "", new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.spread_success);
+				} else {
+					otherCondition(data.state, ProfileActivity.this);
+				}
+			}
+		});
+	}
+
 	private void startActivityWithUser(String key, Class clazz) {
 		Intent intent = new Intent();
 		intent.putExtra(key, tUser);
 		intent.setClass(mContext, clazz);
 		startActivity(intent);
 	}
-	
 
 	private void changeContact(int type, String text) {
 		if (TextUtils.isEmpty(text)) {
@@ -265,11 +414,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CHANGE_PROFILE) {
-				mUser = DamiCommon.getLoginResult(this);
-				tvEmail.setText(mUser.email);
-				tvPhone.setText(mUser.phone);
-				tvWeixin.setText(mUser.weixin);
-				tvWeibo.setText(mUser.weibo);
+				tUser = DamiCommon.getLoginResult(this);
+				tvEmail.setText(tUser.email);
+				tvPhone.setText(tUser.phone);
+				tvWeixin.setText(tUser.weixin);
+				tvWeibo.setText(tUser.weibo);
 			}
 		}
 	}

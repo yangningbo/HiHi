@@ -36,11 +36,13 @@ import com.gaopai.guiren.widget.indexlist.IndexableListView;
 import com.gaopai.guiren.widget.indexlist.SingleIndexScroller;
 
 public class ContactActivity extends BaseActivity {
-	public final static int KEY_FOLLOWERS = 0;
-	public final static int KEY_FANS = 1;
+	public final static int TYPE_FOLLOWERS = 0;
+	public final static int TYPE_FANS = 1;
 	public final static String KEY_TYPE = "type";
+	public final static String KEY_UID = "uid";
 
 	private int type;
+	private String uid;
 
 	private PullToRefreshIndexableListView mListView;
 	private CopyOfConnectionAdapter mAdapter;
@@ -57,11 +59,12 @@ public class ContactActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		type = getIntent().getIntExtra(KEY_TYPE, KEY_FANS);
+		type = getIntent().getIntExtra(KEY_TYPE, TYPE_FANS);
+		uid = getIntent().getStringExtra(KEY_UID);
 		initTitleBar();
 		setAbContentView(R.layout.activity_contact_list);
 
-		if (type == KEY_FANS) {
+		if (type == TYPE_FANS) {
 			mTitleBar.setTitleText(getString(R.string.fans));
 		} else {
 			mTitleBar.setTitleText(getString(R.string.follow));
@@ -154,8 +157,8 @@ public class ContactActivity extends BaseActivity {
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
 				String uid = ((Item) mAdapter.getItem(pos)).user.uid;
 				Intent intent = new Intent();
-				intent.putExtra(UserInfoActivity.KEY_UID, uid);
-				intent.setClass(mContext, UserInfoActivity.class);
+				intent.putExtra(ProfileActivity.KEY_USER_ID, uid);
+				intent.setClass(mContext, ProfileActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -175,10 +178,10 @@ public class ContactActivity extends BaseActivity {
 		if (isSearchMode) {
 			page = searchListPage;
 		}
-		if (type == KEY_FANS) {
-			DamiInfo.getFollowerList(page, etSearch.getText().toString(), new MyListener(mContext));
+		if (type == TYPE_FANS) {
+			DamiInfo.getFollowerList(uid, page, etSearch.getText().toString(), new MyListener(mContext));
 		} else {
-			DamiInfo.getFansList(page, etSearch.getText().toString(), new MyListener(mContext));
+			DamiInfo.getFansList(uid, page, etSearch.getText().toString(), new MyListener(mContext));
 		}
 	}
 
