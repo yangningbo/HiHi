@@ -266,6 +266,7 @@ public class DynamicAdapter extends BaseAdapter {
 		buildCommonView(viewHolder, typeBean, position, type);
 		viewHolder.tvContent.setText(jsonContent.content);
 
+		viewHolder.gridLayout.removeAllViews();
 		if (jsonContent.pic != null) {
 			buidImageViews(viewHolder.gridLayout, jsonContent.pic);
 		}
