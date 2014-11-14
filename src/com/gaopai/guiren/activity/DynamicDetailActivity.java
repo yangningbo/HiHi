@@ -669,7 +669,11 @@ public class DynamicDetailActivity extends BaseActivity {
 			} else {
 				tvComment = (TextView) convertView.getTag();
 			}
-			tvComment.setBackgroundResource(R.drawable.selector_gray_blue_btn);
+			if (position == getCount() - 1) {
+				tvComment.setBackgroundResource(R.drawable.fuck);
+			} else {
+				tvComment.setBackgroundResource(R.drawable.selector_gray_blue_btn);
+			}
 			tvComment.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			commentBean.uname = makeNameNotNull(commentBean.uname);
 			commentBean.toname = makeNameNotNull(commentBean.toname);

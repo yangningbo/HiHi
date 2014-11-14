@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:layout_marginRight="5dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="20dp"
     android:background="@drawable/tag_bg"
+    android:gravity="center_vertical"
     android:orientation="horizontal" >
-    <TextView 
+
+    <TextView
+        android:id="@+id/tv_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:layout_centerVertical="true"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:textSize="13sp"
         android:text="阿道夫"
-        android:layout_marginRight="3dp"
-        android:id="@+id/tv_tag"/>
-    <Button 
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@drawable/add_btn_d"
-        android:id="@+id/btn_delete_tag"/>
-</LinearLayout>
+        android:textColor="@color/general_blue" />
+
+    <Button
+        android:id="@+id/btn_delete_tag"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/icon_tag_delete" />
+
+</RelativeLayout>

@@ -80,7 +80,7 @@ public class SingleIndexScroller extends View {
 		super.onDraw(canvas);
 
 		Paint indexbarPaint = new Paint();
-//		indexbarPaint.setColor(Color.RED);
+		indexbarPaint.setColor(Color.TRANSPARENT);
 //		indexbarPaint.setAlpha((int) (64 * mAlphaRate));
 		indexbarPaint.setAntiAlias(true);
 		canvas.drawRect(mIndexbarRect, indexbarPaint);

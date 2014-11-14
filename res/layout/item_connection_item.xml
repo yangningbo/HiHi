@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:padding="@dimen/general_paading"
+    android:background="@drawable/selector_btn_general"
     android:layout_height="wrap_content" >
 
     <ImageView
@@ -14,7 +15,7 @@
 
     <TextView
         android:id="@+id/tv_user_name"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/iv_header"
         android:layout_toRightOf="@id/iv_header"
@@ -29,12 +30,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_user_name"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/iv_header"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="厚度和"
         android:textColor="@color/content_gray_color"
+        android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tv_user_fancy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_user_name"
+        android:layout_toRightOf="@id/tv_user_name"
+        android:text="魅力值："
+        android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tv_user_fancy_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_user_name"
+        android:layout_toRightOf="@id/tv_user_fancy"
+        android:textColor="@color/red_dongtai_bg"
         android:textSize="14sp" />
 
     <ImageView
@@ -44,5 +61,6 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="10dp"
+        android:visibility="gone"
         android:src="@drawable/logo" />
 </RelativeLayout>

@@ -32,8 +32,6 @@ public class ShareContactAdapter extends CopyOfConnectionAdapter implements Filt
 		super();
 		this.shareFragment = shareFragment;
 		shareActivity = (ShareActivity) shareFragment.getActivity();
-		mItems = new ArrayList<Item>();
-		mRows = new ArrayList<Row>();
 	}
 
 	@Override
@@ -88,84 +86,5 @@ public class ShareContactAdapter extends CopyOfConnectionAdapter implements Filt
 		notifyDataSetChanged();
 	}
 
-	private ArrayList<Item> mItems;
-	private ArrayList<Row> mRows;
-	public List<User> mUserList = new ArrayList<User>();
-	
-	public void addAndSort(List<User> userList){
-		mUserList.addAll(userList);
-		sortData(mUserList);
-	}
-
-	public void sortData(List<User> userList) {
-		int size = userList.size();
-		mItems.clear();
-		mRows.clear();
-		for (int i = 0; i < size; i++) {
-			mItems.add(new Item(userList.get(i)));
-		}
-		Collections.sort(mItems);
-		char character = '0';
-		for (int i = 0; i < mItems.size(); i++) {
-			Item item = mItems.get(i);
-			char first = item.pingYinText.charAt(0);
-			if (i == 0 && (first < 'A' || first > 'Z')) {
-				mRows.add(new Section("#"));
-			}
-			if (first >= 'A' && first <= 'Z') {
-				if (character != first) {
-					mRows.add(new Section(String.valueOf(first)));
-					character = first;
-				}
-			}
-			mRows.add(item);
-		}
-		addAll(mRows);
-	}
-
-	private ArrayFilter mFilter;
-
-	@Override
-	public Filter getFilter() {
-		// TODO Auto-generated method stub
-		if (mFilter == null) {
-			mFilter = new ArrayFilter();
-		}
-		return mFilter;
-	}
-
-	private class ArrayFilter extends Filter {
-
-		@Override
-		protected FilterResults performFiltering(CharSequence prefix) {
-			FilterResults results = new FilterResults();
-			if (prefix.length() == 0) {
-				results.values = mUserList;
-				results.count = mUserList.size();
-				return results;
-			}
-			List<User> users = new ArrayList<User>();
-			for (User user : mUserList) {
-				if (user.realname.contains(prefix.toString())) {
-					users.add(user);
-				}
-			}
-
-			results.values = users;
-			results.count = users.size();
-			return results;
-		}
-
-		@Override
-		protected void publishResults(CharSequence constraint, FilterResults results) {
-			// TODO Auto-generated method stub
-			if (results.count > 0) {
-				sortData((List<User>) results.values);
-			} else {
-				notifyDataSetInvalidated();
-			}
-		}
-
-	}
 
 }

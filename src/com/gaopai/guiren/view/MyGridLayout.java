@@ -41,6 +41,7 @@ public class MyGridLayout extends ViewGroup {
 
 		int childWidthSpec = MeasureSpec.makeMeasureSpec((width - getPaddingLeft() - getPaddingRight()) / mColumns,
 				MeasureSpec.EXACTLY);
+		
 		int childHeightSpec;
 		if (isSquare) {
 			childHeightSpec = childWidthSpec;

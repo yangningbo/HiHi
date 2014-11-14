@@ -17,7 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="70dp"
         android:layout_marginRight="10dp"
-        android:background="@color/u_light_gray"
         android:descendantFocusability="blocksDescendants"
         android:padding="5dp" >
     </TextView>

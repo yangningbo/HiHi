@@ -23,6 +23,7 @@ import com.android.volley.Request.Method;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.BaseBean;
+import com.gaopai.guiren.bean.FavoriteList;
 import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
@@ -60,7 +61,8 @@ import com.gaopai.guiren.volley.UIHelperUtil;
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
-//	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+	// public static final String HOST =
+	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
 	public static final String HOST = "http://192.168.1.239:8081/index.php/";
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
@@ -357,8 +359,6 @@ public class DamiInfo implements Serializable {
 		// listener, 2);
 		request(Method.GET, UserList.class, params, UserList.TYPE_FRIEND, listener, 2);
 	}
-	
-	
 
 	/**
 	 * 获取用户详情
@@ -1565,7 +1565,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "meeting/invitemeeting";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-	
+
 	/**
 	 * 获取邀请时关注列表
 	 * 
@@ -1573,7 +1573,8 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void getFollowerList2(int page, String tid, String role, String keyword, SimpleResponseListener listener) {
+	public static void getFollowerList2(int page, String tid, String role, String keyword,
+			SimpleResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("fuid", DamiCommon.getUid(DamiApp.getInstance()));
 		if (!TextUtils.isEmpty(keyword)) {
@@ -1585,7 +1586,6 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/followlist";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
-	
 
 	/**
 	 * 获取邀请时粉丝列表
@@ -1594,7 +1594,7 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void getFansList2(int page, String tid, String role, String keyword, SimpleResponseListener listener){
+	public static void getFansList2(int page, String tid, String role, String keyword, SimpleResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("fuid", DamiCommon.getUid(DamiApp.getInstance()));
 		if (!TextUtils.isEmpty(keyword)) {
@@ -1607,4 +1607,114 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/fanslist";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
+
+	/**
+	 * 重新认证接口
+	 * 
+	 * @param phone
+	 *            手机号
+	 * @param realname
+	 *            真实姓名
+	 * @param company
+	 *            公司
+	 * @param post
+	 *            职位
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void reAuth(String phone, String realname, String company, String post, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("phone", phone);
+		bundle.add("realname", realname);
+		bundle.add("company", company);
+		bundle.add("post", post);
+		String url = SERVER + "user/reAuth";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 编辑个人资料
+	 * 
+	 * @param pic
+	 *            头像路径
+	 * @param sign
+	 *            个性签名
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void editProfile(String pic, String sign, String email, String weibo, String weixin, String phone,
+			IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		List<MorePicture> fileList = new ArrayList<MorePicture>();
+		if (!TextUtils.isEmpty(pic)) {
+			fileList.add(new MorePicture("pic", pic));
+			bundle.addPicture("fileList", fileList);
+		}
+		if (!TextUtils.isEmpty(sign)) {
+			bundle.add("sign", sign);
+		}
+		if (!TextUtils.isEmpty(email)) {
+			bundle.add("email", email);
+		}
+		if (!TextUtils.isEmpty(weixin)) {
+			bundle.add("weibo", email);
+		}
+		if (!TextUtils.isEmpty(weibo)) {
+			bundle.add("weixin", email);
+		}
+
+		String url = SERVER + "user/edit";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	public static void getFansList(int page, String keyword, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fuid", DamiCommon.getUid(DamiApp.getInstance()));
+		if (!TextUtils.isEmpty(keyword)) {
+			bundle.add("keyword", keyword);
+		}
+		bundle.add("page", page + "");
+		String url = SERVER + "user/fanslist";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
+	}
+
+	/**
+	 * 获取关注列表
+	 * 
+	 * @param fuid
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getFollowerList(int page, String keyword, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fuid", DamiCommon.getUid(DamiApp.getInstance()));
+		if (!TextUtils.isEmpty(keyword)) {
+			bundle.add("keyword", keyword);
+		}
+		bundle.add("page", page + "");
+		String url = SERVER + "user/followlist";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
+	}
+	
+	/**
+	 * 获取收藏列表
+	 * 
+	 * @param sinceID
+	 * @param maxID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getFaoviteList(String sinceID, String maxID, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		if (!TextUtils.isEmpty(sinceID)) {
+			bundle.add("sinceID", sinceID);
+		}
+		if (!TextUtils.isEmpty(maxID)) {
+			bundle.add("maxID", maxID);
+		}
+		bundle.add("paegSize", String.valueOf(LOAD_SIZE));
+		String url = SERVER + "user/favoriteList";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, FavoriteList.class, listener);
+	}
+
 }

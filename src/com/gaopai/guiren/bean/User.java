@@ -84,7 +84,7 @@ public class User implements  Serializable {
 	@Expose
 	public Dynamic dynamic; // 最新动态
 	@Expose
-	public Favorite favorite; // 最新收藏
+	public FavoriteList favorite; // 最新收藏
 	@Expose
 	public int favoriteCount = 0; // 收藏数
 	@Expose
@@ -97,6 +97,9 @@ public class User implements  Serializable {
 	public int totalcomfriend;//和我有多少共同好友
 	
 	public String reason;
+	
+	public String weibo;
+	public String weixin;
 	
 	
 	public class RoomIds implements  Serializable{

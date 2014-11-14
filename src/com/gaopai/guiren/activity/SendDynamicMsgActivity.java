@@ -60,7 +60,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 	private ImageButton btnPhoto;
 	private MyGridLayout picGrid;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -70,7 +70,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		mTitleBar.setTitleText("发布动态");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.addRightButtonView("发布");
-
 		initViews();
 	}
 
@@ -120,6 +119,10 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			tvWordNumLimit.setText("还能输入" + (20 - s.length()) + "字");
 		}
 	};
+	
+	private void sendDynamic() {
+		
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -143,7 +146,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	}
 
 	private View creatTag(String text) {
-		ViewGroup v = (LinearLayout) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
+		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
 		Button button = (Button) v.findViewById(R.id.btn_delete_tag);

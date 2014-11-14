@@ -1,13 +1,10 @@
 package com.gaopai.guiren.view.slide;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.gaopai.guiren.R;
 import com.nineoldandroids.view.ViewHelper;

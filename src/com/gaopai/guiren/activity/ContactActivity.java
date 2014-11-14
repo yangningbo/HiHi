@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter;
@@ -26,8 +29,8 @@ import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Section;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
-import com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.widget.indexlist.IndexableListView;
 import com.gaopai.guiren.widget.indexlist.SingleIndexScroller;
@@ -43,10 +46,12 @@ public class ContactActivity extends BaseActivity {
 	private CopyOfConnectionAdapter mAdapter;
 	private SingleIndexScroller indexScroller;
 
-	private ArrayList<Item> mItems;
-	private ArrayList<Row> mRows;
-
 	private SimpleResponseListener listener;
+
+	private EditText etSearch;
+
+	private boolean isSearchMode = false;
+	public List<User> mSearchUserList = new ArrayList<User>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,23 +70,80 @@ public class ContactActivity extends BaseActivity {
 
 		mListView = (PullToRefreshIndexableListView) findViewById(R.id.listView);
 		indexScroller = (SingleIndexScroller) findViewById(R.id.scroller);
+		etSearch = (EditText) findViewById(R.id.et_search);
+		etSearch.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+				if (isSearchMode && s.length() > 0) {
+					return;
+				}
+				isSearchMode = false;
+				mAdapter.getFilter().filter(s);
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEND
+						|| (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+					Log.d(TAG, "event" + event.getAction());
+					if (event.getAction() == KeyEvent.ACTION_DOWN) {
+						if (etSearch.getText().length() == 0) {
+							ContactActivity.this.showToast(getString(R.string.input_can_not_be_empty));
+							return true;
+						}
+						isSearchMode = true;
+						searchListPage = 1;
+						isFullSearch = false;
+						mSearchUserList.clear();
+						getUserList();
+						return true;
+					}
+				}
+				return false;
+			}
+		});
 
 		mListView.getRefreshableView().addHeaderView(new View(mContext));
 		mListView.getRefreshableView().setVerticalScrollBarEnabled(false);
-		mListView.setPullRefreshEnabled(true);
+		mListView.setPullRefreshEnabled(false);
 		mListView.setPullLoadEnabled(false);
-		mListView.setScrollLoadEnabled(false);
+		mListView.setScrollLoadEnabled(true);
 		mListView.setOnRefreshListener(new OnRefreshListener<IndexableListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<IndexableListView> refreshView) {
 				// TODO Auto-generated method stub
-				getUserList(true);
+		
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<IndexableListView> refreshView) {
 				// TODO Auto-generated method stub
-				getUserList(false);
+				if (isSearchMode) {
+					if (isFullSearch) {
+						mListView.onPullComplete();
+						return;
+					}
+				} else {
+					if (isFullList) {
+						mListView.onPullComplete();
+						return;
+					}
+				}
+				getUserList();
 			}
 		});
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
@@ -103,45 +165,20 @@ public class ContactActivity extends BaseActivity {
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 
-		mItems = new ArrayList<Item>();
-		mRows = new ArrayList<Row>();
-
-		mListView.doPullRefreshing(true, 0);
+		getUserList();
 	}
 
 	private int page = 1;
-	private boolean isFull = false;
 
-	private void sortData(List<User> userList) {
-		int size = userList.size();
-		mItems.clear();
-		for (int i = 0; i < size; i++) {
-			mItems.add(new Item(userList.get(i)));
+	private void getUserList() {
+		page = listPage;
+		if (isSearchMode) {
+			page = searchListPage;
 		}
-		Collections.sort(mItems);
-		char character = '0';
-		for (int i = 0; i < mItems.size(); i++) {
-			Item item = mItems.get(i);
-			char first = item.pingYinText.charAt(0);
-			if (i == 0 && (first < 'A' || first > 'Z')) {
-				mRows.add(new Section("#"));
-			}
-			if (first >= 'A' && first <= 'Z') {
-				if (character != first) {
-					mRows.add(new Section(String.valueOf(first)));
-					character = first;
-				}
-			}
-			mRows.add(item);
-		}
-		mAdapter.addAll(mRows);
-	}
-
-	private void getUserList(final boolean isRefresh) {
 		if (type == KEY_FANS) {
-			DamiInfo.getFriendsList(new MyListener(mContext, isRefresh));
+			DamiInfo.getFollowerList(page, etSearch.getText().toString(), new MyListener(mContext));
 		} else {
-			DamiInfo.getFansList(new MyListener(mContext, isRefresh));
+			DamiInfo.getFansList(page, etSearch.getText().toString(), new MyListener(mContext));
 		}
 	}
 
@@ -149,13 +186,15 @@ public class ContactActivity extends BaseActivity {
 		indexScroller.hide();
 	}
 
+	private int searchListPage = 1;
+	private int listPage = 1;
+	private boolean isFullSearch = false;
+	private boolean isFullList = false;
+
 	class MyListener extends SimpleResponseListener {
 
-		private boolean isRefresh = false;
-
-		public MyListener(Context context, boolean isRefresh) {
+		public MyListener(Context context) {
 			super(context);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
@@ -163,17 +202,36 @@ public class ContactActivity extends BaseActivity {
 			// TODO Auto-generated method stub
 			final UserList data = (UserList) o;
 			if (data.state != null && data.state.code == 0) {
-				if (data.data != null && data.data.size() > 0) {
-					if (isRefresh) {
-						mAdapter.clear();
+				if (data.data != null) {
+					// sortData(data.data);
+					if (isSearchMode) {
+						mSearchUserList.addAll(data.data);
+						mAdapter.sortData(mSearchUserList);
+					} else {
+						mAdapter.addAndSort(data.data);
 					}
-					sortData(data.data);
 				}
-				mListView.setHasMoreData(!isFull);
+
+				if (data.pageInfo != null) {
+					if (isSearchMode) {
+						isFullSearch = (data.pageInfo.hasMore == 0);
+						if (!isFullSearch) {
+							searchListPage++;
+						}
+						mListView.setHasMoreData(!isFullSearch);
+					} else {
+						isFullList = (data.pageInfo.hasMore == 0);
+						if (!isFullList) {
+							listPage++;
+						}
+						mListView.setHasMoreData(!isFullList);
+					}
+				}
+
 			} else {
 				otherCondition(data.state, ContactActivity.this);
 			}
-
+			mListView.setHasMoreData(false);
 		}
 
 		@Override

@@ -80,6 +80,9 @@
             android:name="com.gaopai.guiren.activity.InvitationVerifyActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.CommentProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.RealVerifyActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -141,7 +144,13 @@
             android:name="com.gaopai.guiren.activity.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.MyFavoriteActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.CountryCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.MyMeetingActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.chat.ChatTribeActivity"
@@ -192,6 +201,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.ConnectionDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.ReverificationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.ChangeProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.share.ShareActivity"

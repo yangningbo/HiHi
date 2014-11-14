@@ -184,8 +184,10 @@ public class MainActivity extends BaseActivity {
 				startActivity(TribeActivity.class);
 				break;
 			case R.id.slide_btn_my_meeting:
+				startActivity(MyMeetingActivity.class);
 				break;
 			case R.id.slide_btn_my_favourite:
+				startActivity(MyFavoriteActivity.class);
 				break;
 			case R.id.slide_btn_my_dynamics:
 				break;
@@ -259,6 +261,8 @@ public class MainActivity extends BaseActivity {
 				startActivityForResult(loginIntent, LOGIN_REQUEST);
 
 			} else if (LOGIN_SUCCESS_ACTION.equals(action)) {
+				bindUserView();
+				dragLayout.close();
 				FeatureFunction.startService(MainActivity.this);
 				// refreshNotifyCount();
 				// refreshTribeCount();
@@ -443,7 +447,9 @@ public class MainActivity extends BaseActivity {
 							intent.putExtra("user", data.data);
 							startActivityForResult(intent, REAL_VERIFY_REQUEST);
 						}
-					} else {// 开启服务 刷新提示
+					} else {// 开启服务 刷新提示 隐登录成功
+						bindUserView();
+						dragLayout.close();
 						FeatureFunction.startService(MainActivity.this);
 						initPage();
 					}
@@ -524,6 +530,7 @@ public class MainActivity extends BaseActivity {
 			} else if (resultCode == RESULT_OK) {
 				initPage();
 				bindUserView();
+				dragLayout.close();
 				FeatureFunction.startService(mContext);
 			} else if (resultCode == UNLOGIN_REQUEST) {
 				initPage();

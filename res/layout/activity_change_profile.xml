@@ -10,17 +10,17 @@
         android:layout_marginTop="@dimen/general_large_gap" />
 
     <EditText
-        android:id="@+id/et_reason"
+        android:id="@+id/et_change_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/view_line1"
         android:background="@color/white"
-        android:hint="@string/please_input_reason"
         android:padding="@dimen/general_paading" />
     <ImageButton 
+        android:id="@+id/btn_delete"
         android:layout_alignTop="@id/et_reason"
-        android:layout_alignBottom="@id/et_reason"
-        android:layout_alignRight="@id/et_reason"
+        android:layout_alignBottom="@id/et_change_profile"
+        android:layout_alignRight="@id/et_change_profile"
         android:background="@color/transparent"
         android:src="@drawable/selector_change_profile_delete"
         android:layout_height="40dp"

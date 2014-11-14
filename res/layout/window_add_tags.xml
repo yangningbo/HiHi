@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_window_round_corner"
+    android:orientation="vertical"
+    android:padding="@dimen/general_paading" >
+
+    <TextView
+        style="@style/tribe_detail_item_title"
+        android:layout_marginLeft="0dp"
+        android:text="输入标签"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_small_gap"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/et_tags"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="3"
+            android:background="@drawable/shape_send_dynamic_edit_tag"
+            android:paddingLeft="15dp" />
+
+        <Button
+            android:id="@+id/btn_add_tag"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_send_dynamic_btn_add"
+            android:text="添加"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <View
+        style="@style/tribe_detail_thin_divider"
+        android:layout_marginTop="5dp"
+        android:background="@color/gray" />
+
+    <TextView
+        style="@style/tribe_detail_item_title"
+        android:layout_marginLeft="0dp"
+        android:text="已选标签"
+        android:textSize="16sp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="100dp" >
+
+        <com.gaopai.guiren.view.FlowLayout
+            android:id="@+id/flow_tags_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            custom:tag_columns="3" >
+        </com.gaopai.guiren.view.FlowLayout>
+    </ScrollView>
+
+    <View
+        style="@style/tribe_detail_thin_divider"
+        android:background="@color/gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/tribe_detail_item_title"
+            android:layout_marginLeft="0dp"
+            android:text="推荐标签"
+            android:textSize="16sp" />
+
+        <TextView
+            style="@style/tribe_detail_item_title"
+            android:layout_marginLeft="0dp"
+            android:text="（点击添加标签）"
+            android:textColor="@color/general_text_gray"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="100dp" >
+
+        <com.gaopai.guiren.view.FlowLayout
+            android:id="@+id/flow_tags_recommend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.gaopai.guiren.view.FlowLayout>
+    </ScrollView>
+
+    <View
+        style="@style/tribe_detail_thin_divider"
+        android:background="@color/gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tribe_detail_btn_gray"
+            android:text="取消"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tribe_detail_btn_blue"
+            android:text="保存"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>

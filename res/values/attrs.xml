@@ -31,5 +31,9 @@
         <attr format="integer" name="columns"></attr>
         <attr format="boolean" name="is_square"></attr>
     </declare-styleable>
+    
+    <declare-styleable name="TasFlowLayout">
+        <attr format="integer" name="tag_columns"></attr>
+    </declare-styleable>
 
 </resources>

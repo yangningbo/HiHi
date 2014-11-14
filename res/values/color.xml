@@ -95,6 +95,8 @@
     <color name="profile_text_gray">#9A9A9A</color>
     <color name="profile_vertical_divider">#B2B2B2</color>
     
+    <color name="profile_bottom_bar">#6E6F70</color>
+    
     <color name="connection_title_name">#306DAB</color>
     <color name="connection_linkfy">#306DAB</color>
     <color name="connection_item_background">#ECECEC</color>

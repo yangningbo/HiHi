@@ -230,6 +230,22 @@
         <item name="android:layout_width">match_parent</item>
     </style>
 
+    <style name="profile_text_count">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/selector_btn_general</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="profile_text_count_divider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/profile_renmai_divider</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginBottom">7dp</item>
+    </style>
+    
     <style name="privacy_setting_text">
         <item name="android:textSize">16sp</item>
         <item name="android:layout_width">wrap_content</item>

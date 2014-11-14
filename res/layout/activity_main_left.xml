@@ -39,7 +39,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_marginLeft="@dimen/slide_item_image_padding_left"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/default_header" />
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -47,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="40dp"
-                android:text="李彦宏"
                 android:textColor="@color/slide_text_name"
                 android:textSize="25sp" />
         </LinearLayout>
@@ -99,8 +98,7 @@
 
             <TextView
                 android:id="@+id/tv_slide_count_followers"
-                style="@style/slide_item_number"
-                android:text="1200" />
+                style="@style/slide_item_number" />
         </RelativeLayout>
 
         <View style="@style/slide_divider" />
@@ -123,8 +121,7 @@
 
             <TextView
                 android:id="@+id/tv_slide_count_fans"
-                style="@style/slide_item_number"
-                android:text="1200" />
+                style="@style/slide_item_number" />
         </RelativeLayout>
 
         <View style="@style/slide_divider" />
@@ -146,9 +143,7 @@
                 android:layout_height="wrap_content"
                 android:text="我的圈子" />
 
-            <TextView
-                style="@style/slide_item_number"
-                android:text="1200" />
+            <TextView style="@style/slide_item_number" />
         </RelativeLayout>
 
         <View style="@style/slide_divider" />
@@ -171,8 +166,7 @@
 
             <TextView
                 android:id="@+id/tv_slide_count_meetings"
-                style="@style/slide_item_number"
-                android:text="1200" />
+                style="@style/slide_item_number" />
         </RelativeLayout>
 
         <View style="@style/slide_divider" />
@@ -195,8 +189,7 @@
 
             <TextView
                 android:id="@+id/tv_slide_count_favourite"
-                style="@style/slide_item_number"
-                android:text="1200" />
+                style="@style/slide_item_number" />
         </RelativeLayout>
 
         <View style="@style/slide_divider" />
@@ -219,8 +212,7 @@
 
             <TextView
                 android:id="@+id/tv_slide_count_dynamics"
-                style="@style/slide_item_number"
-                android:text="1200" />
+                style="@style/slide_item_number" />
         </RelativeLayout>
 
         <View style="@style/slide_divider" />
