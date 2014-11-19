@@ -35,8 +35,8 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	private View chatBox;
 	@ViewInject(id = R.id.chat_box_edit_keyword)
 	private EditText etComment;
-	@ViewInject(id = R.id.send_text_btn)
-	private Button mSendTextBtn;
+//	@ViewInject(id = R.id.send_text_btn)
+//	private Button mSendTextBtn;
 
 	@Override
 	public void addChildView(ViewGroup contentLayout) {
@@ -76,20 +76,20 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		mAdapter = new DynamicAdapter(this);
 		mListView.setAdapter(mAdapter);
 		// mListView.doPullRefreshing(true, 0);
-		mSendTextBtn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (etComment.getText().length()==0) {
-					((BaseActivity) getActivity()).showToast(R.string.input_can_not_be_empty);
-					return;
-				}
-				String teString = etComment.getText().toString();
-				mAdapter.commentMessage(teString, (TypeHolder) etComment.getTag());
-				
-			}
-		});
+//		mSendTextBtn.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				if (etComment.getText().length()==0) {
+//					((BaseActivity) getActivity()).showToast(R.string.input_can_not_be_empty);
+//					return;
+//				}
+//				String teString = etComment.getText().toString();
+//				mAdapter.commentMessage(teString, (TypeHolder) etComment.getTag());
+//				
+//			}
+//		});
 		etComment.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {

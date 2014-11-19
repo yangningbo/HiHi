@@ -419,6 +419,9 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		isLight = false;
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if (pm.isScreenOn()) {
+			if (speexPlayerWrapper != null) {
+				speexPlayerWrapper.stop();
+			}
 		}
 	}
 

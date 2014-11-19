@@ -104,9 +104,9 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		initComponent();
 	}
 
-	private void initComponent() {
+	protected void initComponent() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mSwitchVoiceTextBtn = (Button) findViewById(R.id.chat_box_btn_text);
+		mSwitchVoiceTextBtn = (Button) findViewById(R.id.chat_box_btn_switch_voice_text);
 		mSwitchVoiceTextBtn.setOnClickListener(this);
 
 		mContentEdit = (EditText) findViewById(R.id.chat_box_edit_keyword);
@@ -164,7 +164,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 		mVoiceSendBtn = (Button) findViewById(R.id.chat_box_btn_voice);
 		mVoiceSendBtn.setText(mContext.getString(R.string.pressed_to_record));
-		mVoiceSendBtn.setVisibility(View.VISIBLE);
+//		mVoiceSendBtn.setVisibility(View.VISIBLE);
 		mVoiceSendBtn.setOnTouchListener(new OnVoice());
 
 		mAddBtn = (ImageView) findViewById(R.id.chat_box_btn_add);
@@ -179,6 +179,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		mListView.setPullRefreshEnabled(true); // 下拉刷新，启用
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
 		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
+		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
@@ -201,7 +202,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		return maxID;
 	}
 
-	private EditText.OnEditorActionListener mEditActionLister = new EditText.OnEditorActionListener() {
+	protected EditText.OnEditorActionListener mEditActionLister = new EditText.OnEditorActionListener() {
 		@Override
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 			if (actionId == EditorInfo.IME_ACTION_SEND && mContentEdit.getVisibility() == View.VISIBLE) {
@@ -219,8 +220,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	}
 
 	private boolean isChangeVoice = true;
-
-
 
 	@Override
 	public void onClick(View v) {
@@ -253,7 +252,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		case R.id.emotion_btn:
 			boxManager.emotionClick();
 			break;
-		case R.id.chat_box_btn_text:
+		case R.id.chat_box_btn_switch_voice_text:
 			boxManager.switchTextVoice();
 			break;
 		case R.id.chat_box_btn_add:

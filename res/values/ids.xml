@@ -14,6 +14,11 @@
     
     <item name="ab_complete" type="id"/>
     
+    <item name="ab_chat_more" type="id"/>
+    <item name="ab_chat_text" type="id"/>
+    <item name="ab_chat_avoid_disturb" type="id"/>
+    <item name="ab_chat_ear_phone" type="id"/>
+    
     
 
 </resources>

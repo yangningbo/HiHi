@@ -95,7 +95,7 @@ public class DynamicDetailActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		etContent = (EditText) findViewById(R.id.chat_box_edit_keyword);
 		chatBox = findViewById(R.id.chat_box);
-		mSendTextBtn = (Button) findViewById(R.id.send_text_btn);
+//		mSendTextBtn = (Button) findViewById(R.id.send_text_btn);
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
 		mListView.getRefreshableView().setDivider(null);
 		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
@@ -106,19 +106,19 @@ public class DynamicDetailActivity extends BaseActivity {
 		mAdapter = new MyAdapter(this);
 		mListView.setAdapter(mAdapter);
 
-		mSendTextBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (etContent.getText().length() == 0) {
-					showToast(R.string.input_can_not_be_empty);
-					return;
-				}
-				String teString = etContent.getText().toString();
-				commentMessage(teString);
-
-			}
-		});
+//		mSendTextBtn.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				if (etContent.getText().length() == 0) {
+//					showToast(R.string.input_can_not_be_empty);
+//					return;
+//				}
+//				String teString = etContent.getText().toString();
+//				commentMessage(teString);
+//
+//			}
+//		});
 	}
 	
 	private View getHeaderView() {

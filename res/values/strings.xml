@@ -480,7 +480,6 @@
     <string name="jiabin">嘉宾</string>
     <string name="meeting_center_content">晚朝大纲</string>
     <string name="joined_count">参会人数</string>
-    <string name="exit_meeting">退出晚朝</string>
     <string name="join_meeting_auth_prompt">您是未认证用户，不能加入晚朝</string>
     <string name="apply_meeting_reason">申请理由</string>
     <string name="refuse_meeting_reason">拒绝理由</string>
@@ -489,7 +488,7 @@
     <string name="refuse_become_host">拒绝成为主持人</string>
     <string name="refuse_become_guest">拒绝成为嘉宾</string>
     <string name="meeting_detail">晚朝详情</string>
-    <string name="enter_meeting">进入晚朝</string>
+    
     <string name="enter_tribe">进入部落</string>
     <string name="kick_out_meeting">踢出会场</string>
     <string name="talk">发言</string>
@@ -589,15 +588,7 @@
     <string name="save_error">保存失败，请重试</string>
     <string name="cant_save_sdcard">SD卡不存在,无法保存</string>
     <string name="has_save_to_address">图片已保存到</string>
-    <string name="apply_to_jiabin">申请成为嘉宾</string>
-    <string name="apply_to_host">申请成为主持人</string>
-    <string name="back_to_normal">恢复为普通参会人</string>
-    <string name="invite_jiabin">邀请嘉宾</string>
-    <string name="invite_host">邀请主持人</string>
-    <string name="deal_apply_jiabin">处理嘉宾申请</string>
-    <string name="deal_apply_host">处理主持人申请</string>
-    <string name="edit_meeting">修改会议</string>
-    <string name="destroy_meeting">解散会议</string>
+  
     <string name="invite_choose">全选</string>
     <string name="invite_all">邀请</string>
     <string name="edit_success">修改成功</string>
@@ -649,5 +640,24 @@
     <string name="cancel_follow_success">取消关注成功</string>
     
     <string name="profile_view_after_follow">添加好友后可查看</string>
-
+    
+    <string name="enter_meeting">进入会议</string>
+    <string name="exit_meeting">退出会议</string>
+    <string name="clear_local_msg">清除本地消息</string>
+    <string name="avoid_disturb">消息免打扰</string>
+    <string name="user_real_name">使用实名</string>
+    <string name="notify_meeting_start">会议开始提醒</string>
+    <string name="apply_to_jiabin">申请成为嘉宾</string>
+    <string name="apply_to_host">申请成为主持人</string>
+    <string name="back_to_normal">恢复为普通参会人</string>
+    <string name="invite_to_meeting">邀请参会</string>
+    <string name="invite_jiabin">邀请嘉宾</string>
+    <string name="invite_host">邀请主持人</string>
+    <string name="deal_apply_jiabin">处理嘉宾申请</string>
+    <string name="deal_apply_host">处理主持人申请</string>
+    <string name="edit_meeting">修改会议</string>
+    <string name="destroy_meeting">解散会议</string>
+    
+    <string name="message_detail">消息详情</string>
+    
 </resources>

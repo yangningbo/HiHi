@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -160,7 +161,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		
 		onBindView(viewHolder, messageInfo);
 		displayTime(viewHolder.tvChatTime, position);
-
 		
 		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
 			viewHolder.ivHead.setTag(messageInfo.headImgUrl);
@@ -349,9 +349,8 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 
 		RelativeLayout msgInfoLayout, msgLayout;
 		LinearLayout mCountLayout;
-		LinearLayout mFavoriteCountLayout, mCommentCountLayout, mAgreeCountLayout;
 		TextView mFavoriteCountView, mCommentCountView, mAgreeCountView, mMoreCommentBtn;
-
+		
 		public static Object getInstance(View view, ViewHolder holder) {
 			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_info_holder);
 			holder.msgLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_holder);
@@ -369,14 +368,10 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			holder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
 			
 			holder.mFavoriteCountView = (TextView) view.findViewById(R.id.favoritecount);
-			holder.mFavoriteCountLayout = (LinearLayout) view.findViewById(R.id.favoritecountlayout);
 			
 			holder.mCommentCountView = (TextView) view.findViewById(R.id.commentcount);
-			holder.mCommentCountLayout = (LinearLayout) view.findViewById(R.id.commentcountlayout);
 			
-			holder.ivZan = (ImageView) view.findViewById(R.id.iv_zan);
 			holder.mAgreeCountView = (TextView) view.findViewById(R.id.agreecount);
-			holder.mAgreeCountLayout = (LinearLayout) view.findViewById(R.id.agreecountlayout);
 			
 			holder.mCountLayout = (LinearLayout) view.findViewById(R.id.countlayout);
 			return holder;

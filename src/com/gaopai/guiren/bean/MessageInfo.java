@@ -46,7 +46,7 @@ public class MessageInfo extends SNSMessage {
 	@Expose
 	public String headImgUrl = ""; // 显示头像
 	@Expose
-	public int sendState = 0; // 消息发送成功与否的状态 1 成功, 2 正在发送， 4， 正在下载。0 失败
+	public int sendState = 0; // 消息发送成功与否的状态 1 成功, 2 正在发送， 4， 正在下载。0 失败 5失败
 	@Expose
 	public int readState = 0; // 读取消息的状态. 1--已读 0--未读
 	@Expose

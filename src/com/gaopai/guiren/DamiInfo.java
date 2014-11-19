@@ -1,6 +1,5 @@
 package com.gaopai.guiren;
 
-import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -1872,5 +1871,46 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "meeting/getguests";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
+	
+	/**
+	 * 获取部落消息的评论列表
+	 * 
+	 * @param tid
+	 * @param maxID
+	 * @param sinceID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getCommentList(String msgid, String maxID, String sinceID, IResponseListener listener){
+		Parameters bundle = new Parameters();
+		bundle.add("msgid", msgid);
+		if (!TextUtils.isEmpty(maxID)) {
+			bundle.add("maxID", maxID);
+		}
 
+		if (!TextUtils.isEmpty(sinceID)) {
+			bundle.add("sinceID", sinceID);
+		}
+		bundle.add("paegSize", String.valueOf(LOAD_SIZE));
+
+		String url = SERVER + "tribe/messageCommentList";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
+	}
+	
+	/**
+	 * 获取部落赞列表
+	 * 
+	 * @param tid
+	 * @param maxID
+	 * @param sinceID
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getMessageZanList(String msgid, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("msgid", msgid);
+
+		String url = SERVER + "user/messageAgreeList";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
+	}
 }

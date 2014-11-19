@@ -56,7 +56,7 @@
             android:layout_below="@id/tv_user_name"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/iv_chat_talk_img_head"
-            android:background="@drawable/icon_chat_left_normal"
+            android:background="@drawable/selector_chat_left"
             android:minHeight="45dp" >
 
             <ImageView
@@ -80,10 +80,10 @@
 
             <TextView
                 android:id="@+id/iv_chat_text"
-                android:visibility="visible"
-                android:layout_alignParentLeft="true"
                 style="@style/chat_talk_style_txt_msg_info_text"
-                android:layout_centerInParent="true" />
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:visibility="visible" />
 
             <ProgressBar
                 android:id="@+id/pb_chat_progress"
@@ -129,81 +129,34 @@
             android:gravity="center_vertical|right"
             android:orientation="horizontal" >
 
-            <LinearLayout
-                android:id="@+id/agreecountlayout"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/agreecount"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="visible" >
+                android:layout_marginLeft="3dp"
+                android:text="3"
+                android:textColor="@color/content_gray_color"
+                android:textSize="12sp" />
 
-                <ImageView
-                    android:id="@+id/iv_zan"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:contentDescription="@string/desc"
-                    android:src="@drawable/zan_btn" />
-
-                <TextView
-                    android:id="@+id/agreecount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:text="3"
-                    android:textColor="@color/content_gray_color"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/favoritecountlayout"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/favoritecount"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="visible" >
+                android:layout_marginLeft="3dp"
+                android:text="3"
+                android:textColor="@color/content_gray_color"
+                android:textSize="12sp" />
 
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:contentDescription="@string/desc"
-                    android:src="@drawable/report_zan_icon" />
-
-                <TextView
-                    android:id="@+id/favoritecount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:text="3"
-                    android:textColor="@color/content_gray_color"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/commentcountlayout"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/commentcount"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="7dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="visible" >
+                android:layout_marginLeft="3dp"
+                android:text="3"
+                android:textColor="@color/content_gray_color"
+                android:textSize="12sp" />
 
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:contentDescription="@string/desc"
-                    android:src="@drawable/report_comment_icon" />
 
-                <TextView
-                    android:id="@+id/commentcount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:text="3"
-                    android:textColor="@color/content_gray_color"
-                    android:textSize="12sp" />
-            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 

@@ -148,7 +148,7 @@
     <style name="background_style">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:background">@color/backgroud_color</item>
+        <item name="android:background">@color/general_background</item>
     </style>
 
     <style name="login_edit_box_style">
@@ -350,6 +350,20 @@
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+    
+    <style name="meeting_detail_more_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/chat_add_item_background</item>
+        <item name="android:descendantFocusability">blocksDescendants</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="meeting_detail_more_img">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
     </style>
 
 </resources>

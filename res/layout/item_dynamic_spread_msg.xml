@@ -60,19 +60,17 @@
 
         <TextView
             android:id="@+id/tv_title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/dynamic_item_title_name"
             android:layout_toRightOf="@id/iv_header1"
-            android:text="马虎疼"
-            android:textColor="@color/u_blue"
-            android:textSize="18sp" />
+            android:text="马虎疼" />
 
         <RelativeLayout
             android:id="@+id/ll_dynamic_msg_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_title1"
-            android:layout_below="@id/tv_title1" >
+            android:layout_below="@id/tv_title1"
+            android:background="@color/white" >
 
             <ImageView
                 android:id="@+id/iv_chat_voice"

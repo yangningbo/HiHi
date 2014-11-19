@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/bg_gray_people"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingBottom="10dp" >
 
     <Button
         android:id="@+id/btn_hide_grid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
         android:layout_gravity="center_horizontal"
-        android:text="隐藏" />
+        android:background="@drawable/icon_meeting_detail_popup_close_btn" />
 
     <com.gaopai.guiren.view.ChatGridLayout
         android:id="@+id/cgl_meeting_setting"
@@ -20,212 +21,142 @@
 
         <LinearLayout
             android:id="@+id/grid_enter_meeting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_emter_meeting" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="进入会场" />
+                android:text="@string/enter_meeting" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_restore_to_normal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_restore_to_normal" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="恢复为普通参会人员" />
+                android:text="@string/back_to_normal" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_invite_to_meeting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_invite" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="邀请参会" />
+                android:text="@string/invite_to_meeting" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_deal_apply_meeting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_deal_apply" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="处理参会申请" />
+                android:text="@string/deal_meeting_apply" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_deal_apply_guest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_deal_guest_apply" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="处理嘉宾申请" />
+                android:text="@string/deal_apply_jiabin" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_invite_guest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_invite_guest" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="邀请嘉宾" />
+                android:text="@string/invite_jiabin" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_notify_meeting_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/selector_switch" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_notify_meeting_start_on" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="会议开始提醒" />
+                android:text="@string/notify_meeting_start" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_avoid_disturb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/selector_switch" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_avoid_disturb_on" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="消息免打扰" />
+                android:text="@string/avoid_disturb" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_clear_local_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_clear_msg" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="清除消息" />
+                android:text="@string/clear_local_msg" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_login_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_add_item_background"
-            android:descendantFocusability="blocksDescendants"
-            android:gravity="center"
-            android:orientation="vertical" >
+            style="@style/meeting_detail_more_layout" >
 
             <ImageView
-                android:id="@+id/image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/logo" />
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_exit_meeting" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="退出会议" />
+                android:text="@string/exit_meeting" />
         </LinearLayout>
     </com.gaopai.guiren.view.ChatGridLayout>
 

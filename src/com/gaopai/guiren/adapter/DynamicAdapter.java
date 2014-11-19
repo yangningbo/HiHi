@@ -9,6 +9,7 @@ import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
@@ -46,8 +47,12 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.fragment.DynamicFragment;
+import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
+import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
@@ -86,6 +91,46 @@ public class DynamicAdapter extends BaseAdapter {
 		mFragment = fragment;
 		mContext = fragment.getActivity();
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
+			@Override
+			public void onSuccess(MessageInfo messageInfo) {
+				// TODO Auto-generated method stub
+				downVoiceSuccess(messageInfo);
+			}
+		});
+		mPlayerWrapper.setPlayCallback(new PlayCallback());
+	}
+	
+	private class PlayCallback extends MediaUIHeper.PlayCallback {
+
+		@Override
+		public void onStart() {
+			notifyDataSetChanged();
+		}
+
+		@Override
+		public void onStop(boolean stopAutomatic) {
+			// TODO Auto-generated method stub
+			notifyDataSetChanged();
+		}
+	}
+	
+	/**
+	 * 下载成功后修改消息状态，更新数据库并播放声音
+	 * 
+	 * @param msg
+	 * @param type
+	 */
+	private void downVoiceSuccess(final MessageInfo msg) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
+		MessageTable messageTable = new MessageTable(dbDatabase);
+		messageTable.update(msg);
+		if (mPlayerWrapper.getMessageTag().equals(msg.tag)) {
+			mPlayerWrapper.start(msg);
+			msg.isReadVoice = 1;
+			messageTable.update(msg);
+			notifyDataSetChanged();
+		}
 	}
 
 	public void addAll(List<TypeHolder> data) {

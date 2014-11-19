@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_meeting_setting"
+        android:fillViewport="true"
         android:layout_alignParentTop="true" >
 
         <LinearLayout
@@ -30,7 +31,6 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:padding="5dp"
-                android:text="后会无期营销价值"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -47,14 +47,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_meeting_detail_clock"
-                    android:text="10-2 10:13"
                     android:textColor="@color/general_text_gray" />
 
                 <TextView
+                    android:id="@+id/tv_meeting_time_difference"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:text="离会议开始还剩3天"
                     android:textColor="@color/general_text_gray" />
             </LinearLayout>
 
@@ -71,8 +70,7 @@
 
                     <TextView
                         android:id="@+id/tv_meeting_host"
-                        style="@style/meeting_detail_item_text"
-                        android:text="李逵，张三那份" />
+                        style="@style/meeting_detail_item_text"/>
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
@@ -87,8 +85,7 @@
 
                     <TextView
                         android:id="@+id/tv_meeting_guest"
-                        style="@style/meeting_detail_item_text"
-                        android:text="李逵，张三那份" />
+                        style="@style/meeting_detail_item_text"/>
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
@@ -103,8 +100,7 @@
 
                     <TextView
                         android:id="@+id/tv_meeting_join_in"
-                        style="@style/meeting_detail_item_text"
-                        android:text="李逵，张三那份" />
+                        style="@style/meeting_detail_item_text"/>
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
@@ -120,8 +116,7 @@
                     <TextView
                         android:id="@+id/tv_meeting_detail"
                         style="@style/meeting_detail_item_text"
-                        android:drawableRight="@color/transparent"
-                        android:text="利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁利好，请问你找谁？" />
+                        android:drawableRight="@color/transparent"/>
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"

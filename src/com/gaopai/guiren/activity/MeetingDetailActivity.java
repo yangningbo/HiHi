@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +45,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private View viewEnterMeeting;
 	private TextView tvMeetingTitle;
 	private TextView tvMeetingTime;
+	private TextView tvMeetingTimeDiff;
+
 	private TextView tvMeetingInfo;
 	private TextView tvMeetingHost;
 	private TextView tvMeetingGuest;
@@ -82,6 +85,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 		tvMeetingTitle = (TextView) findViewById(R.id.tv_meeting_title);
 		tvMeetingTime = (TextView) findViewById(R.id.tv_meeting_time);
+		tvMeetingTimeDiff = (TextView) findViewById(R.id.tv_meeting_time_difference);
 		tvMeetingTitle = (TextView) findViewById(R.id.tv_meeting_title);
 		tvMeetingInfo = (TextView) findViewById(R.id.tv_meeting_detail);
 		tvMeetingHost = (TextView) findViewById(R.id.tv_meeting_host);
@@ -169,10 +173,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private void bindView() {
 		// TODO Auto-generated method stub
 		tvMeetingTitle.setText(mMeeting.name);
-//		tvMeetingInfo.setText(mMeeting.content);
+		tvMeetingInfo.setText(mMeeting.content);
 		tvMeetingTime.setText(FeatureFunction.getTime(mMeeting.start) + "~" + FeatureFunction.getTime(mMeeting.end));
-		tvMeetingHost.setText("主持人: " + mMeeting.hosts);
-		tvMeetingGuest.setText("嘉宾: " + mMeeting.guest);
+		tvMeetingTimeDiff.setText(FeatureFunction.timeDifference(mMeeting.start));
+		tvMeetingHost.setText(mMeeting.hosts);
+		tvMeetingGuest.setText(mMeeting.guest);
+		// tvMeetingInfo.setText(mMeeting.j)
 		ImageLoaderUtil.displayImage(mMeeting.logosmall, ivMeetingHeader);
 		bindJoinInView(mMeeting.isjoin == 1);
 	}
@@ -266,8 +272,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 
 	}
-	
-	//处理申请
+
+	// 处理申请
 	private void dealApply(int type) {
 		Intent applyMeetingIntent = new Intent(mContext, ApplyListActivity.class);
 		applyMeetingIntent = new Intent(mContext, ApplyListActivity.class);
@@ -275,7 +281,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		applyMeetingIntent.putExtra("type", type);
 		startActivity(applyMeetingIntent);
 	}
-	
+
 	private void invite(int type) {
 		Intent intent = new Intent();
 		intent.setClass(mContext, ShareActivity.class);
@@ -366,7 +372,11 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		if (moreWindow == null) {
 			moreWindow = new PopupWindow(chatGridLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		}
-		moreWindow.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
+		// moreWindow.setBackgroundDrawable(new
+		// ColorDrawable(android.R.color.transparent));
+		moreWindow.setBackgroundDrawable(new BitmapDrawable());
+		moreWindow.setOutsideTouchable(true);
+		moreWindow.setFocusable(true);
 		moreWindow.setAnimationStyle(R.style.window_bottom_animation);
 		moreWindow.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 	}

@@ -64,7 +64,6 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		etTitle = (EditText) findViewById(R.id.et_tribe_title);
 //		etPassword = (EditText) findViewById(R.id.et_tribe_password);
 		etTags = (EditText) findViewById(R.id.et_tribe_tags);
-		
 	}
 
 	@Override

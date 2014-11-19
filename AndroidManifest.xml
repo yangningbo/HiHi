@@ -92,6 +92,9 @@
             android:name="com.gaopai.guiren.activity.RecommendActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.ChatCommentsActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.SearchActivity"
             android:screenOrientation="portrait" />
         <activity

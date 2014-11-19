@@ -21,6 +21,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +32,7 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.AddReasonActivity;
+import com.gaopai.guiren.activity.ChatCommentsActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.SequencePlayActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
@@ -67,15 +69,19 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	protected Identity mIdentity;
 
 	private MessageInfo messageInfo;
+	private ImageView ivDisturb;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mChatType = getIntent().getIntExtra(KEY_CHAT_TYPE, CHAT_TYPE_MEETING);
 		mTribe = (Tribe) getIntent().getSerializableExtra(KEY_TRIBE);// before
-		updateTribe();
-		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
-		getIdentity();
 		super.onCreate(savedInstanceState);
+		myOnCreat();
+	}
+
+	protected void myOnCreat() {
+		updateTribe();
+		getIdentity();
 		mAdapter = new TribeChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
 		mListView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -87,14 +93,43 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				return false;
 			}
 		});
-		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
-		mVoiceModeImage = (ImageView) mTitleBar.addLeftImageView(R.drawable.voice_mode_in_call_icon);
-		mVoiceModeImage.setVisibility(isModeInCall ? View.VISIBLE : View.GONE);
+		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 
-		View view = mTitleBar.addRightImageButtonView(android.R.drawable.ic_menu_add);
-		view.setId(R.id.ab_add);
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(ChatTribeActivity.this, ChatCommentsActivity.class);
+				intent.putExtra(ChatCommentsActivity.INTENT_CHATTYPE_KEY, mChatType);
+				intent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mTribe);
+				intent.putExtra(ChatCommentsActivity.INTENT_MESSAGE_KEY, messageInfos.get(position));
+				intent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY, mIdentity);
+				startActivity(intent);
+			}
+		});
+		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
+		ivDisturb = (ImageView) mTitleBar.addLeftImageView(R.drawable.icon_chat_title_avoid_disturb_on);
+		mTitleBar.setTitleText(mTribe.name);
+		int imgaeId = R.drawable.icon_chat_title_ear_phone;
+		if (!isModeInCall) {
+			imgaeId = R.drawable.icon_chat_title_speaker;
+		}
+		mVoiceModeImage = (ImageView) mTitleBar.addRightImageButtonView(imgaeId);
+		mVoiceModeImage.setId(R.id.ab_chat_ear_phone);
+		mVoiceModeImage.setOnClickListener(this);
+
+		imgaeId = R.drawable.icon_chat_title_mode_text;
+		if (mAdapter.getCurrentMode() == BaseChatAdapter.MODEL_VOICE) {
+			imgaeId = R.drawable.icon_chat_title_voice_mode;
+		}
+		View view = mTitleBar.addRightImageButtonView(imgaeId);
+		view.setId(R.id.ab_chat_text);
 		view.setOnClickListener(this);
 
+		view = mTitleBar.addRightImageButtonView(R.drawable.icon_chat_title_more);
+		view.setId(R.id.ab_chat_more);
+		view.setOnClickListener(this);
+
+		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		if (messageInfo != null) {
 			buildRetweetMessageInfo(messageInfo);
 			addSaveSendMessage(messageInfo);
@@ -141,7 +176,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		messageInfo.to = mTribe.id;
 	}
 
-	private void showItemLongClickDialog(final MessageInfo messageInfo) {
+	public void showItemLongClickDialog(final MessageInfo messageInfo) {
 		final List<String> strList = new ArrayList<String>();
 		strList.add(getString(R.string.comment));
 		strList.add(getString(R.string.favorite));
@@ -230,7 +265,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		dialog.show();
 	}
 
-	private void changePlayMode() {
+	public void changePlayMode() {
 		if (isModeInCall) {// 如果是听筒
 			setPlayMode(false);// 那么就喇叭
 			updateVoicePlayModeState(false);
@@ -245,7 +280,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 	}
 
-	private void zanMessage(final MessageInfo messageInfo) {
+	public void zanMessage(final MessageInfo messageInfo) {
 		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, new SimpleResponseListener(mContext,
 				getString(R.string.request_internet_now)) {
 			@Override
@@ -271,7 +306,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		});
 	}
 
-	private void favoriteMessage(final MessageInfo messageInfo) {
+	public void favoriteMessage(final MessageInfo messageInfo) {
 		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
 
 			@Override
@@ -644,11 +679,19 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	public void updateVoicePlayModeState(boolean isModeInCall) {
 		if (isModeInCall) {
-			mVoiceModeImage.setVisibility(View.VISIBLE);
+			mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_ear_phone);
 		} else {
-			mVoiceModeImage.setVisibility(View.GONE);
+			mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_speaker);
 		}
 	}
+
+	// public void updateVoicePlayModeState(boolean isModeInCall) {
+	// if (isModeInCall) {
+	// mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_avoid_disturb_on);
+	// } else {
+	// mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_avoid_disturb_off);
+	// }
+	// }
 
 	public void showVoiceModeToastAnimation() {
 		voiceModeToast.setVisibility(View.VISIBLE);
@@ -717,7 +760,27 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				// startActivity(intent);
 			}
 			break;
+		case R.id.ab_chat_text:
+			int imgaeId = R.drawable.icon_chat_title_mode_text;
+			if (mAdapter.getCurrentMode() == BaseChatAdapter.MODEL_VOICE) {
+				mAdapter.setCurrentMode(BaseChatAdapter.MODE_TEXT);
+			} else {
+				mAdapter.setCurrentMode(BaseChatAdapter.MODEL_VOICE);
+				imgaeId = R.drawable.icon_chat_title_voice_mode;
+			}
+			mAdapter.notifyDataSetChanged();
+			((ImageView) v).setImageResource(imgaeId);
+			break;
+		case R.id.ab_chat_more:
+			Intent intent = new Intent(this, MeetingDetailActivity.class);
+			intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, mTribe.id);
+			startActivity(intent);
+			break;
+		case R.id.ab_chat_ear_phone:
+			changePlayMode();
+			break;
 		}
+
 		super.onClick(v);
 	}
 
