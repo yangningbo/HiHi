@@ -123,7 +123,7 @@
 
             <ImageView
                 style="@style/meeting_detail_more_img"
-                android:src="@drawable/icon_meeting_detail_avoid_disturb_on" />
+                android:src="@drawable/level_meeting_detail_avoid_disturb" />
 
             <TextView
                 android:layout_width="wrap_content"

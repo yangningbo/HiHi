@@ -40,12 +40,25 @@ public class TribeMemberActivity extends BaseActivity {
 
 	private String mTribeID = "";
 	public static final String KEY_TRIBE_ID = "tribe_id";
+	
+	public static final int TYPE_MEETING_HOST = 1;
+	public static final int TYPE_MEETING_GUEST = 2;
+	public static final int TYPE_MEETING_USER = 3;
+	
+	public static final int TYPE_TRIBE_USER = 0;
+	
+	private int type;
+	public final static String KEY_TYPE = "type";
+	
+	private SimpleResponseListener listener;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.layout_general_refresh_listview);
+		type = getIntent().getIntExtra(KEY_TYPE, 0);
+		
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTribeID = getIntent().getStringExtra(KEY_TRIBE_ID);
 		mTitleBar.setTitleText("圈子成员");
@@ -58,7 +71,7 @@ public class TribeMemberActivity extends BaseActivity {
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				getTribeList();
+//				getTribeList();
 			}
 
 			@Override
@@ -80,18 +93,8 @@ public class TribeMemberActivity extends BaseActivity {
 				startActivity(intent);
 			}
 		});
-		getTribeList();
-	}
-
-	private int page = 1;
-	private boolean isFull = false;
-
-	private void getTribeList() {
-		if (isFull) {
-			mListView.setHasMoreData(!isFull);
-			return;
-		}
-		DamiInfo.getTribeUserList(mTribeID, new SimpleResponseListener(mContext) {
+		listener = new SimpleResponseListener(mContext) {
+			
 			@Override
 			public void onSuccess(Object o) {
 				final UserList data = (UserList) o;
@@ -108,8 +111,36 @@ public class TribeMemberActivity extends BaseActivity {
 			public void onFinish() {
 				mListView.onPullComplete();
 			}
+		};
+		getTribeList();
+	}
 
-		});
+	private int page = 1;
+	private boolean isFull = false;
+
+	private void getTribeList() {
+		if (isFull) {
+			mListView.setHasMoreData(!isFull);
+			return;
+		}
+		
+		switch (type) {
+		case TYPE_TRIBE_USER:
+			DamiInfo.getTribeUserList(mTribeID, listener);
+			break;
+		case TYPE_MEETING_HOST:
+			DamiInfo.gethostsList(mTribeID, listener);
+			break;
+		case TYPE_MEETING_GUEST:
+			DamiInfo.getguestsList(mTribeID, listener);
+			break;
+		case TYPE_MEETING_USER:
+			DamiInfo.getMeetingUserList(mTribeID, listener);
+			break;
+		default:
+			break;
+		}
+		
 	}
 
 	public class MyAdapter extends BaseAdapter {
@@ -169,9 +200,14 @@ public class TribeMemberActivity extends BaseActivity {
 				holder.mHeaderView.setImageResource(R.drawable.default_header);
 			}
 
-			holder.btnAction.setText(getString(R.string.kick_out_tribe));
-			holder.btnAction.setTag(user);
-			holder.btnAction.setOnClickListener(kickClickListener);
+			if (type == TYPE_TRIBE_USER) {
+				holder.btnAction.setText(getString(R.string.kick_out_tribe));
+				holder.btnAction.setTag(user);
+				holder.btnAction.setOnClickListener(kickClickListener);
+			} else {
+				holder.btnAction.setVisibility(View.GONE);
+			}
+			
 			return convertView;
 		}
 
@@ -227,6 +263,12 @@ public class TribeMemberActivity extends BaseActivity {
 					otherCondition(data.state, TribeMemberActivity.this);
 				}
 			}
+			
+			@Override
+			public void onFinish() {
+				mListView.onPullComplete();
+			}
+
 		});
 	}
 

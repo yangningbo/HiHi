@@ -398,7 +398,6 @@
     <string name="get_identity_loading">获取身份中...</string>
     <string name="comment">评论</string>
     <string name="favorite">收藏</string>
-    <string name="report">举报</string>
     <string name="favorite_failed">收藏失败</string>
     <string name="favorite_success">收藏成功</string>
     <string name="report_failed">举报失败</string>
@@ -488,7 +487,6 @@
     <string name="refuse_become_host">拒绝成为主持人</string>
     <string name="refuse_become_guest">拒绝成为嘉宾</string>
     <string name="meeting_detail">晚朝详情</string>
-    
     <string name="enter_tribe">进入部落</string>
     <string name="kick_out_meeting">踢出会场</string>
     <string name="talk">发言</string>
@@ -588,7 +586,6 @@
     <string name="save_error">保存失败，请重试</string>
     <string name="cant_save_sdcard">SD卡不存在,无法保存</string>
     <string name="has_save_to_address">图片已保存到</string>
-  
     <string name="invite_choose">全选</string>
     <string name="invite_all">邀请</string>
     <string name="edit_success">修改成功</string>
@@ -628,19 +625,14 @@
     <string name="not_change_voice">不变音</string>
     <string name="create_failed">创建失败</string>
     <string name="create_success">创建成功</string>
-    
     <string name="meeting_detail_title">会议详情</string>
     <string name="clear_cache">清空缓存</string>
-    
     <string name="please_input_reason">输入请求原因</string>
     <string name="private_setting">隐私设置</string>
-    
     <string name="spread_success">扩散成功</string>
     <string name="follow_success">关注成功</string>
     <string name="cancel_follow_success">取消关注成功</string>
-    
     <string name="profile_view_after_follow">添加好友后可查看</string>
-    
     <string name="enter_meeting">进入会议</string>
     <string name="exit_meeting">退出会议</string>
     <string name="clear_local_msg">清除本地消息</string>
@@ -657,7 +649,8 @@
     <string name="deal_apply_host">处理主持人申请</string>
     <string name="edit_meeting">修改会议</string>
     <string name="destroy_meeting">解散会议</string>
-    
     <string name="message_detail">消息详情</string>
-    
+    <string name="report">举报</string>
+    <string name="private_chat_setting">隐聊设置</string>
+
 </resources>

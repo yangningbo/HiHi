@@ -1,6 +1,5 @@
 package com.gaopai.guiren.activity.chat;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,31 +12,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.AddReasonActivity;
 import com.gaopai.guiren.activity.ChatCommentsActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
-import com.gaopai.guiren.activity.SequencePlayActivity;
-import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
-import com.gaopai.guiren.adapter.BaseChatAdapter;
 import com.gaopai.guiren.adapter.TribeChatAdapter;
 import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -51,6 +39,7 @@ import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
+import com.gaopai.guiren.db.SPConst;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -69,21 +58,24 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	protected Identity mIdentity;
 
 	private MessageInfo messageInfo;
-	private ImageView ivDisturb;
+
+	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		mChatType = getIntent().getIntExtra(KEY_CHAT_TYPE, CHAT_TYPE_MEETING);
 		mTribe = (Tribe) getIntent().getSerializableExtra(KEY_TRIBE);// before
-		super.onCreate(savedInstanceState);
-		myOnCreat();
-	}
-
-	protected void myOnCreat() {
 		updateTribe();
 		getIdentity();
+		initTribeComponent();
+	}
+
+	protected void initTribeComponent() {
 		mAdapter = new TribeChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
+		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0));
 		mListView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -106,29 +98,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				startActivity(intent);
 			}
 		});
-		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
-		ivDisturb = (ImageView) mTitleBar.addLeftImageView(R.drawable.icon_chat_title_avoid_disturb_on);
+		
 		mTitleBar.setTitleText(mTribe.name);
-		int imgaeId = R.drawable.icon_chat_title_ear_phone;
-		if (!isModeInCall) {
-			imgaeId = R.drawable.icon_chat_title_speaker;
-		}
-		mVoiceModeImage = (ImageView) mTitleBar.addRightImageButtonView(imgaeId);
-		mVoiceModeImage.setId(R.id.ab_chat_ear_phone);
-		mVoiceModeImage.setOnClickListener(this);
-
-		imgaeId = R.drawable.icon_chat_title_mode_text;
-		if (mAdapter.getCurrentMode() == BaseChatAdapter.MODEL_VOICE) {
-			imgaeId = R.drawable.icon_chat_title_voice_mode;
-		}
-		View view = mTitleBar.addRightImageButtonView(imgaeId);
-		view.setId(R.id.ab_chat_text);
-		view.setOnClickListener(this);
-
-		view = mTitleBar.addRightImageButtonView(R.drawable.icon_chat_title_more);
-		view.setId(R.id.ab_chat_more);
-		view.setOnClickListener(this);
-
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		if (messageInfo != null) {
 			buildRetweetMessageInfo(messageInfo);
@@ -264,21 +235,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}).create();
 		dialog.show();
 	}
-
-	public void changePlayMode() {
-		if (isModeInCall) {// 如果是听筒
-			setPlayMode(false);// 那么就喇叭
-			updateVoicePlayModeState(false);
-			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_speaker), Toast.LENGTH_SHORT).show();
-		} else {
-			setPlayMode(true);// 不然就听筒
-			updateVoicePlayModeState(true);
-			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_call), Toast.LENGTH_SHORT).show();
-		}
-		if (speexPlayerWrapper.isPlay()) {
-			DamiApp.getInstance().setPlayMode();
-		}
-	}
+	
 
 	public void zanMessage(final MessageInfo messageInfo) {
 		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, new SimpleResponseListener(mContext,
@@ -674,16 +631,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		builder.show();
 	}
 
-	private LinearLayout voiceModeToast;
-	private ImageView mVoiceModeImage;
-
-	public void updateVoicePlayModeState(boolean isModeInCall) {
-		if (isModeInCall) {
-			mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_ear_phone);
-		} else {
-			mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_speaker);
-		}
-	}
+	
 
 	// public void updateVoicePlayModeState(boolean isModeInCall) {
 	// if (isModeInCall) {
@@ -693,103 +641,23 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	// }
 	// }
 
-	public void showVoiceModeToastAnimation() {
-		voiceModeToast.setVisibility(View.VISIBLE);
-		Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.voice_palymode_anim);
-		animation.setAnimationListener(new AnimationListener() {
+	
 
-			@Override
-			public void onAnimationStart(Animation animation) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				// TODO Auto-generated method stub
-				voiceModeToast.setVisibility(View.GONE);
-			}
-		});
-		voiceModeToast.startAnimation(animation);
-	}
-
-	private ViewGroup dropDownView;
 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.ab_add:
-			if (dropDownView == null) {
-				dropDownView = (ViewGroup) mInflater.inflate(R.layout.chat_titlebar_more_popup_window, null);
-				initAddMoreViews(dropDownView, mInflater);
-			}
-			mTitleBar.showWindow(v, dropDownView);
-			break;
-		case R.id.tv_change_voice_play_state:
-			if (mAdapter.getCurrentMode() == BaseChatAdapter.MODEL_VOICE) {
-				mAdapter.setCurrentMode(BaseChatAdapter.MODE_TEXT);
-			} else {
-				mAdapter.setCurrentMode(BaseChatAdapter.MODEL_VOICE);
-			}
-			mAdapter.notifyDataSetChanged();
-			mTitleBar.closeWindow();
-			break;
-		case R.id.tv_play_sequence: {
-			Intent intent = new Intent(mContext, SequencePlayActivity.class);
-			intent.putExtra("msgList", (Serializable) messageInfos);
-			intent.putExtra("title", mTribe.name);
-			intent.putExtra("id", mTribe.id);
-			startActivity(intent);
-			break;
-		}
-
-		case R.id.tv_tribe_detail:
-			if (mChatType == CHAT_TYPE_TRIBE) {
-				Intent intent = new Intent(mContext, TribeDetailActivity.class);
-				intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, mTribe.id);
-				startActivity(intent);
-			} else if (mChatType == CHAT_TYPE_MEETING) {
-				// Intent intent = new Intent(mContext,
-				// OnlookerUserListActivity.class);
-				// intent.putExtra("id", mTribe.id);
-				// startActivity(intent);
-			}
-			break;
-		case R.id.ab_chat_text:
-			int imgaeId = R.drawable.icon_chat_title_mode_text;
-			if (mAdapter.getCurrentMode() == BaseChatAdapter.MODEL_VOICE) {
-				mAdapter.setCurrentMode(BaseChatAdapter.MODE_TEXT);
-			} else {
-				mAdapter.setCurrentMode(BaseChatAdapter.MODEL_VOICE);
-				imgaeId = R.drawable.icon_chat_title_voice_mode;
-			}
-			mAdapter.notifyDataSetChanged();
-			((ImageView) v).setImageResource(imgaeId);
-			break;
+		
 		case R.id.ab_chat_more:
 			Intent intent = new Intent(this, MeetingDetailActivity.class);
 			intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, mTribe.id);
 			startActivity(intent);
 			break;
-		case R.id.ab_chat_ear_phone:
-			changePlayMode();
-			break;
+
 		}
 
 		super.onClick(v);
 	}
 
-	private void initAddMoreViews(ViewGroup viewGroup, LayoutInflater inflater) {
-		View tvCreatMeeting = viewGroup.findViewById(R.id.tv_change_voice_play_state);
-		tvCreatMeeting.setOnClickListener(this);
-		View tvSendDynamicMsg = viewGroup.findViewById(R.id.tv_tribe_setting);
-		tvSendDynamicMsg.setOnClickListener(this);
-		View tvCreatTribe = viewGroup.findViewById(R.id.tv_play_sequence);
-		tvCreatTribe.setOnClickListener(this);
-	}
 }

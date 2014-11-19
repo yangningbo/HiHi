@@ -68,7 +68,6 @@ public class MeetingAdapter extends BaseAdapter {
 			holder.mMeetingIcon = (ImageView) convertView.findViewById(R.id.meetingIcon);
 			holder.mTimeTextView = (TextView) convertView.findViewById(R.id.time);
 			holder.mCountTextView = (TextView) convertView.findViewById(R.id.count);
-			holder.mMessageCount = (TextView) convertView.findViewById(R.id.tv_message_count);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -80,16 +79,6 @@ public class MeetingAdapter extends BaseAdapter {
 			holder.mMeetingIcon.setImageResource(R.drawable.default_tribe);
 		}
 
-		if (mData.get(position).mMessageCount == 0) {
-			holder.mMessageCount.setVisibility(View.GONE);
-		} else {
-			holder.mMessageCount.setVisibility(View.VISIBLE);
-			String countText = String.valueOf(mData.get(position).mMessageCount);
-			if (mData.get(position).mMessageCount > 99) {
-				countText = "99+";
-			}
-			holder.mMessageCount.setText(countText);
-		}
 
 		holder.mTitleTextView.setText(mData.get(position).name);
 		String time = FeatureFunction.getNoYearTime(mData.get(position).start * 1000) + "~"
@@ -112,12 +101,11 @@ public class MeetingAdapter extends BaseAdapter {
 		ImageView mMeetingIcon;
 		private TextView mTimeTextView;
 		private TextView mCountTextView;
-		private TextView mMessageCount;
 
 		@Override
 		public int hashCode() {
 			return this.mTitleTextView.hashCode() + mMeetingIcon.hashCode() + mTimeTextView.hashCode()
-					+ mCountTextView.hashCode() + mMessageCount.hashCode();
+					+ mCountTextView.hashCode() ;
 		}
 	}
 

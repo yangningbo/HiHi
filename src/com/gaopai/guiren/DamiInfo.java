@@ -1913,4 +1913,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/messageAgreeList";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
 	}
+	
+	
+	
 }

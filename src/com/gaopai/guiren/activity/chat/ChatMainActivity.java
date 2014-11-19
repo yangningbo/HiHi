@@ -12,6 +12,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -22,14 +25,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.BaseChatAdapter;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
+import com.gaopai.guiren.db.SPConst;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
 import com.gaopai.guiren.utils.ChatBoxManager;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.view.ChatGridLayout;
 import com.gaopai.guiren.view.RecordDialog;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
@@ -57,18 +63,26 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 	protected SimpleResponseListener getMessageListListener;
 
+	protected PreferenceOperateUtils spo;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_chat_main);
-		mLogin = DamiCommon.getLoginResult(mContext);
+		initComponent();
+		initTitleBarLocal();
+		initViewComponent();
+	}
 
+	private void initComponent() {
+		// TODO Auto-generated method stub
+		mLogin = DamiCommon.getLoginResult(mContext);
 		speexRecorder = new SpeexRecorderWrapper(this);
 		speexRecorder.setRecordallback(recordCallback);
 		recordDialog = new RecordDialog(this);
-
+		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		getMessageListListener = new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
@@ -93,19 +107,89 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 				mListView.onPullComplete();
 			}
 		};
+	}
 
+	protected ImageView ivDisturb;
+
+	protected void initAdapter(BaseChatAdapter chatAdapter) {
+		super.initAdapter(chatAdapter);
+		mListView.setAdapter(mAdapter);
 		if (messageInfos == null || messageInfos.size() == 0) {
 			getMessageList(false);
 		}
 	}
 
-	protected void initAdapter(BaseChatAdapter chatAdapter) {
-		super.initAdapter(chatAdapter);
-		initComponent();
+	public void updateVoicePlayModeState(boolean isModeInCall) {
+		if (isModeInCall) {
+			mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_ear_phone);
+		} else {
+			mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_speaker);
+		}
 	}
 
-	protected void initComponent() {
+	public void showVoiceModeToastAnimation() {
+		voiceModeToast.setVisibility(View.VISIBLE);
+		Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.voice_palymode_anim);
+		animation.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				voiceModeToast.setVisibility(View.GONE);
+			}
+		});
+		voiceModeToast.startAnimation(animation);
+	}
+
+	public void changePlayMode() {
+		if (isModeInCall) {// 如果是听筒
+			setPlayMode(false);// 那么就喇叭
+			updateVoicePlayModeState(false);
+			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_speaker), Toast.LENGTH_SHORT).show();
+		} else {
+			setPlayMode(true);// 不然就听筒
+			updateVoicePlayModeState(true);
+			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_call), Toast.LENGTH_SHORT).show();
+		}
+		if (speexPlayerWrapper.isPlay()) {
+			DamiApp.getInstance().setPlayMode();
+		}
+	}
+
+	private void initTitleBarLocal() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
+		ivDisturb = (ImageView) mTitleBar.addLeftImageView(R.drawable.level_meeting_detail_avoid_disturb);
+
+		int imageId = R.drawable.icon_chat_title_ear_phone;
+		if (!isModeInCall) {
+			imageId = R.drawable.icon_chat_title_speaker;
+		}
+		mVoiceModeImage = (ImageView) mTitleBar.addRightImageButtonView(imageId);
+		mVoiceModeImage.setId(R.id.ab_chat_ear_phone);
+		mVoiceModeImage.setOnClickListener(this);
+
+		imageId = R.drawable.icon_chat_title_voice_mode;
+		View view = mTitleBar.addRightImageButtonView(imageId);
+		view.setId(R.id.ab_chat_text);
+		view.setOnClickListener(this);
+
+		view = mTitleBar.addRightImageButtonView(R.drawable.icon_chat_title_more);
+		view.setId(R.id.ab_chat_more);
+		view.setOnClickListener(this);
+	}
+
+	protected void initViewComponent() {
 		mSwitchVoiceTextBtn = (Button) findViewById(R.id.chat_box_btn_switch_voice_text);
 		mSwitchVoiceTextBtn.setOnClickListener(this);
 
@@ -121,6 +205,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 		mSendTextBtn = (Button) findViewById(R.id.send_text_btn);
 		mSendTextBtn.setOnClickListener(this);
+		mSendTextBtn.setVisibility(View.GONE);
 		mContentEdit.setOnEditorActionListener(mEditActionLister);
 		mContentEdit.setVisibility(View.GONE);
 		mContentEdit.addTextChangedListener(new TextWatcher() {
@@ -164,18 +249,19 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 		mVoiceSendBtn = (Button) findViewById(R.id.chat_box_btn_voice);
 		mVoiceSendBtn.setText(mContext.getString(R.string.pressed_to_record));
-//		mVoiceSendBtn.setVisibility(View.VISIBLE);
+		mVoiceSendBtn.setVisibility(View.VISIBLE);
 		mVoiceSendBtn.setOnTouchListener(new OnVoice());
 
 		mAddBtn = (ImageView) findViewById(R.id.chat_box_btn_add);
 		mAddBtn.setOnClickListener(this);
+		mAddBtn.setVisibility(View.VISIBLE);
 
 		boxManager = new ChatBoxManager(this, mContentEdit, mSwitchVoiceTextBtn, mEmotionPicker, chatGridLayout,
 				mEmotionBtn, mVoiceSendBtn);
 
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
 		mListView.getRefreshableView().setDivider(null);
-		mListView.setAdapter(mAdapter);
+
 		mListView.setPullRefreshEnabled(true); // 下拉刷新，启用
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
 		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
@@ -258,13 +344,27 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		case R.id.chat_box_btn_add:
 			boxManager.addGridClick();
 			break;
-		
+
+		case R.id.ab_chat_text:
+			int imgaeId = R.drawable.icon_chat_title_mode_text;
+			if (mAdapter.getCurrentMode() == BaseChatAdapter.MODEL_VOICE) {
+				mAdapter.setCurrentMode(BaseChatAdapter.MODE_TEXT);
+			} else {
+				mAdapter.setCurrentMode(BaseChatAdapter.MODEL_VOICE);
+				imgaeId = R.drawable.icon_chat_title_voice_mode;
+			}
+			mAdapter.notifyDataSetChanged();
+			((ImageView) v).setImageResource(imgaeId);
+			break;
+
+		case R.id.ab_chat_ear_phone:
+			changePlayMode();
+			break;
+
 		default:
 			break;
 		}
 	}
-
-	
 
 	private boolean isFull = false;
 

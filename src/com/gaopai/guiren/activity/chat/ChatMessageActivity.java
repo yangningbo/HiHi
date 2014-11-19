@@ -4,17 +4,27 @@ import java.util.UUID;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
+import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.ChatCommentsActivity;
+import com.gaopai.guiren.activity.MeetingDetailActivity;
+import com.gaopai.guiren.activity.PrivacyChatSettingActivity;
 import com.gaopai.guiren.adapter.PrivateChatAdapter;
 import com.gaopai.guiren.adapter.TribeChatAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.db.SPConst;
 
 //私信界面
-public class ChatMessageActivity extends ChatMainActivity {
+public class ChatMessageActivity extends ChatMainActivity implements OnClickListener {
 	private User user;
 	public static final String KEY_USER= "user";
 	private MessageInfo messageInfo;
@@ -30,6 +40,7 @@ public class ChatMessageActivity extends ChatMainActivity {
 		super.initAdapter(mAdapter);
 		mTitleBar.setTitleText(user.displayName);
 		
+		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, user.uid), 0));
 
 		if (messageInfo != null) {
 			buildRetweetMessageInfo(messageInfo);
@@ -89,5 +100,21 @@ public class ChatMessageActivity extends ChatMainActivity {
 	protected void onOtherChatBroadCastAction(Intent intent) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		
+		case R.id.ab_chat_more:
+			Intent intent = new Intent(this, PrivacyChatSettingActivity.class);
+			intent.putExtra(PrivacyChatSettingActivity.KEY_UID, user.uid);
+			startActivity(intent);
+			break;
+
+		}
+
+		super.onClick(v);
 	}
 }

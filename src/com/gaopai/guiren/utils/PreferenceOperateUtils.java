@@ -18,7 +18,6 @@ public class PreferenceOperateUtils
 	private Context mContext;
 	private SharedPreferences mSharedPreferences = null;
 	private Editor edit = null;
-
 	/**
 	 * 创建 DefaultSharedPreferences
 	 * 
@@ -28,7 +27,7 @@ public class PreferenceOperateUtils
 	{
 		this(context, PreferenceManager.getDefaultSharedPreferences(context));
 	}
-
+	
 	/**
 	 * 通过文件名 创建 SharedPreferences
 	 * 

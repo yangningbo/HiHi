@@ -26,6 +26,7 @@ import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.chat.ChatBaseActivity;
+import com.gaopai.guiren.activity.chat.ChatMainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
@@ -393,7 +394,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		public void onStart() {
 			// TODO Auto-generated method stub
 			if (((ChatBaseActivity)mContext).isModeInCall) {
-				((ChatTribeActivity) mContext).showVoiceModeToastAnimation();
+				((ChatMainActivity) mContext).showVoiceModeToastAnimation();
 			}
 			notifyDataSetChanged();
 		}

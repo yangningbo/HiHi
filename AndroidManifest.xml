@@ -98,6 +98,9 @@
             android:name="com.gaopai.guiren.activity.SearchActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.PrivacyChatSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.ProfileActivity"
             android:screenOrientation="portrait" >
             <intent-filter>

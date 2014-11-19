@@ -222,7 +222,6 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				UserViewHolder holder = new UserViewHolder();
 				holder.tvUserName = (TextView) gridView.findViewById(R.id.tv_user_name);
 				holder.ivHeader = (ImageView) gridView.findViewById(R.id.iv_header);
-
 				if (i == size) {
 					gridView.removeViewAt(0);
 					holder.tvUserName.setText("查看其他" + (size - i) + "人");

@@ -29,7 +29,9 @@ import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.SimpleStateBean;
+import com.gaopai.guiren.db.SPConst;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class MeetingDetailActivity extends BaseActivity implements OnClickListener {
@@ -67,12 +69,15 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	public static final String ACTION_AGREE_ADD_MEETING = "com.gaopai.guiren.ACTION_AGREE_ADD_MEETING";
 	public static final String ACTION_MEETING_CANCEL = "com.gaopai.guiren.ACTION_MEETING_CANCEL";
 
+	private PreferenceOperateUtils spo;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_meeting_detail);
+		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 
 		mMeetingID = getIntent().getStringExtra(KEY_MEETING_ID);
 		if (TextUtils.isEmpty(mMeetingID)) {
@@ -89,8 +94,11 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		tvMeetingTitle = (TextView) findViewById(R.id.tv_meeting_title);
 		tvMeetingInfo = (TextView) findViewById(R.id.tv_meeting_detail);
 		tvMeetingHost = (TextView) findViewById(R.id.tv_meeting_host);
+		tvMeetingHost.setOnClickListener(this);
 		tvMeetingGuest = (TextView) findViewById(R.id.tv_meeting_guest);
+		tvMeetingGuest.setOnClickListener(this);
 		tvMeetingJoinIn = (TextView) findViewById(R.id.tv_meeting_join_in);
+		tvMeetingJoinIn.setOnClickListener(this);
 
 		ivMeetingHeader = (ImageView) findViewById(R.id.iv_meeeting_header);
 
@@ -197,6 +205,19 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.tv_meeting_guest:{
+			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_GUEST);
+			break;
+		}
+			
+		case R.id.tv_meeting_host:{
+			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_HOST);
+			break;
+		}
+		case R.id.tv_meeting_join_in:{
+			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_USER);		
+			break;
+		}
 		case R.id.btn_on_look:
 		case R.id.btn_enter_meeting:
 		case R.id.grid_enter_meeting: {
@@ -272,6 +293,13 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 
 	}
+	
+	private void goToMemberActivity(int type) {
+		Intent intent = new Intent(MeetingDetailActivity.this, TribeMemberActivity.class);
+		intent.putExtra(TribeMemberActivity.KEY_TRIBE_ID, mMeetingID);
+		intent.putExtra(TribeMemberActivity.KEY_TYPE, type);
+		startActivity(intent);		
+	}
 
 	// 处理申请
 	private void dealApply(int type) {
@@ -290,7 +318,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		startActivity(intent);
 	}
 
-	private void moreSetNotPush(int level, final View v) {
+	private void moreSetNotPush(final int level, final View v) {
 		DamiInfo.setNotPush(mMeetingID, 1 - level, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
@@ -298,6 +326,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				SimpleStateBean data = (SimpleStateBean) o;
 				if (data.state != null && data.state.code == 0) {
 					changeSwitchState(v);
+					spo.setInt(SPConst.getTribeUserId(mContext, mMeetingID), 1 - level);
 				} else {
 					otherCondition(data.state, MeetingDetailActivity.this);
 				}
@@ -307,7 +336,11 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 	private void changeSwitchState(View v) {
 		int level = ((ImageView) ((ViewGroup) v).getChildAt(0)).getDrawable().getLevel();
-		((ImageView) ((ViewGroup) v).getChildAt(0)).setImageLevel(1 - level);
+		setSwitchState(v, 1 - level);
+	}
+
+	private void setSwitchState(View v, int level) {
+		((ImageView) ((ViewGroup) v).getChildAt(0)).setImageLevel(level);
 	}
 
 	private int getSwitchStateLevel(View v) {
@@ -360,7 +393,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			}
 			break;
 		}
-
 	}
 
 	PopupWindow moreWindow;
@@ -404,6 +436,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view = viewGroup.findViewById(R.id.grid_want_to_be_guest);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
+			setSwitchState(view, spo.getInt(SPConst.getTribeUserId(mContext, mMeetingID), 0));
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_clear_local_msg);
 			view.setOnClickListener(this);
@@ -441,6 +474,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view.setOnClickListener(this);
 
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
+			setSwitchState(view, spo.getInt(SPConst.getTribeUserId(mContext, mMeetingID), 0));
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_clear_local_msg);
 			view.setOnClickListener(this);
@@ -462,6 +496,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
+			setSwitchState(view, spo.getInt(SPConst.getTribeUserId(mContext, mMeetingID), 0));
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_clear_local_msg);
 			view.setOnClickListener(this);
@@ -493,6 +528,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
+			setSwitchState(view, spo.getInt(SPConst.getTribeUserId(mContext, mMeetingID), 0));
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_clear_local_msg);
 			view.setOnClickListener(this);

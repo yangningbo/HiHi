@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/general_background"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_avoid_disturb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/selector_btn_general"
+        android:drawableRight="@drawable/icon_switch_normal"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:text="@string/avoid_disturb" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/general_horizon_divider" />
+
+    <TextView
+        android:id="@+id/tv_clear_local_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_btn_general"
+        android:drawableRight="@drawable/icon_right_arrow"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:text="@string/clear_local_msg" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/general_horizon_divider" />
+
+    <TextView
+        android:id="@+id/tv_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_btn_general"
+        android:drawableRight="@drawable/icon_right_arrow"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:text="@string/report" />
+
+</LinearLayout>

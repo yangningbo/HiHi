@@ -1,47 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="5dp"
-    android:paddingTop="5dp" >
+    android:paddingBottom="15dp"
+    android:paddingTop="15dp" >
 
     <ImageView
         android:id="@+id/meetingIcon"
         android:layout_width="fill_parent"
         android:layout_height="140dp"
         android:contentDescription="@string/desc"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_header" />
 
     <TextView
-        android:id="@+id/tv_message_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/message_count_bg"
-        android:gravity="center"
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@id/meetingIcon"
+        android:background="@drawable/item_meeting_text_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:text="asdfa"
         android:textColor="@color/white"
-        android:textSize="11sp" />
+        android:textSize="15sp" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
+        android:layout_below="@id/title"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:background="@drawable/item_meeting_text_bg"
         android:padding="5dp" >
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="asdfa"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/time"
@@ -50,7 +41,7 @@
             android:layout_marginTop="2dp"
             android:singleLine="true"
             android:text="asdfa"
-            android:textColor="@color/white"
+            android:textColor="@color/general_text_gray"
             android:textSize="13sp" />
 
         <TextView
@@ -60,8 +51,8 @@
             android:layout_marginTop="2dp"
             android:singleLine="true"
             android:text="asdfa"
-            android:textColor="@color/white"
+            android:textColor="@color/general_text_gray"
             android:textSize="13sp" />
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>
