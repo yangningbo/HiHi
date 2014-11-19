@@ -320,12 +320,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
+				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
 				mContentEdit.setHint(getString(R.string.comment_reply_info_colon)
-						+ messageInfos.get(position).displayname);
+						+ messageInfos.get(pos).displayname);
 				mVoiceSendBtn.setText(getString(R.string.comment_reply_info_colon)
-						+ messageInfos.get(position).displayname);
-				commenterid = messageInfos.get(position).from;
-				commenterName = messageInfos.get(position).displayname;
+						+ messageInfos.get(pos).displayname);
+				commenterid = messageInfos.get(pos).from;
+				commenterName = messageInfos.get(pos).displayname;
 			}
 		});
 		getZanList();

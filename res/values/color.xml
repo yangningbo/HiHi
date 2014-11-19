@@ -64,7 +64,6 @@
     <color name="u_yellow">#FFC600</color>
     <color name="u_login_bg">#EFEFF4</color>
     <color name="u_recomend_bg">#F9F9F9</color>
-    <color name="u_light_gray">#e2e2e2</color>
     <color name="dy_user_name">#2FB2E2</color>
     <color name="dy_user_info">#B1B1B1</color>
     <color name="dy_blue">#2FB2E2</color>
@@ -132,4 +131,5 @@
     <color name="general_blue">#2FB2E2</color>
     
     
+    <color name="general_light_gray">#ECECEC</color>
 </resources>

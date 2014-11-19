@@ -122,13 +122,9 @@ public class DynamicAdapter extends BaseAdapter {
 	 * @param type
 	 */
 	private void downVoiceSuccess(final MessageInfo msg) {
-		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
-		MessageTable messageTable = new MessageTable(dbDatabase);
-		messageTable.update(msg);
 		if (mPlayerWrapper.getMessageTag().equals(msg.tag)) {
 			mPlayerWrapper.start(msg);
 			msg.isReadVoice = 1;
-			messageTable.update(msg);
 			notifyDataSetChanged();
 		}
 	}
@@ -379,6 +375,7 @@ public class DynamicAdapter extends BaseAdapter {
 			MessageInfo messageInfo = new MessageInfo();
 			messageInfo.imgUrlS = content.imgUrlS;
 			messageInfo.imgUrlL = content.imgUrlL;
+			messageInfo.fileType = MessageType.PICTURE;
 			messageInfo.tag = content.sid;
 			ImageLoaderUtil.displayImage(path, viewHolder.ivPic);
 			if (path.startsWith("http://")) {
@@ -422,7 +419,7 @@ public class DynamicAdapter extends BaseAdapter {
 			List<MessageInfo> messageInfos = new ArrayList<MessageInfo>();
 			messageInfos.add((MessageInfo) v.getTag());
 			Intent intent = new Intent(mContext, ShowImagesActivity.class);
-			intent.putExtra("msgList", (Serializable) mData);
+			intent.putExtra("msgList", (Serializable) messageInfos);
 			intent.putExtra("position", 0);
 			mContext.startActivity(intent);
 		}

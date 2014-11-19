@@ -184,7 +184,7 @@
             android:id="@+id/zan_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/general_background_gray"
+            android:background="@color/general_light_gray"
             android:drawableLeft="@drawable/icon_dynamic_favourite"
             android:drawablePadding="5dp"
             android:padding="3dp" />

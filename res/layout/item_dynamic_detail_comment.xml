@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/u_text_gray" />
-
     <TextView
-        android:id="@+id/tv_comment_item"
+        android:id="@+id/tv_comment_item_fake"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="70dp"
@@ -20,5 +13,15 @@
         android:descendantFocusability="blocksDescendants"
         android:padding="5dp" >
     </TextView>
+    <TextView
+        android:id="@+id/tv_comment_item"
+        android:layout_width="match_parent"
+        android:background="@drawable/selector_gray_blue_btn"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="10dp"
+        android:descendantFocusability="blocksDescendants"
+        android:padding="5dp" >
+    </TextView>
 
-</LinearLayout>
+</FrameLayout>

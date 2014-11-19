@@ -49,7 +49,7 @@
         android:layout_below="@id/tv_user_name"
         android:layout_marginTop="7dp"
         android:layout_toRightOf="@id/iv_header"
-        android:background="@color/u_light_gray"
+        android:background="@color/general_light_gray"
         android:orientation="vertical"
         android:padding="10dp" >
 

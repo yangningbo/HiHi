@@ -1,8 +1,10 @@
 package com.gaopai.guiren.activity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -40,10 +42,13 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentContetnHolder;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.PicBean;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
+import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
@@ -95,7 +100,18 @@ public class DynamicDetailActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		etContent = (EditText) findViewById(R.id.chat_box_edit_keyword);
 		chatBox = findViewById(R.id.chat_box);
-//		mSendTextBtn = (Button) findViewById(R.id.send_text_btn);
+		mSendTextBtn = (Button) findViewById(R.id.send_text_btn);
+
+		// playerWrapper should initial before addHeaderView
+		mPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
+			@Override
+			public void onSuccess(MessageInfo messageInfo) {
+				// TODO Auto-generated method stub
+				downVoiceSuccess(messageInfo);
+			}
+		});
+		mPlayerWrapper.setPlayCallback(new PlayCallback());
+
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
 		mListView.getRefreshableView().setDivider(null);
 		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
@@ -106,21 +122,48 @@ public class DynamicDetailActivity extends BaseActivity {
 		mAdapter = new MyAdapter(this);
 		mListView.setAdapter(mAdapter);
 
-//		mSendTextBtn.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				if (etContent.getText().length() == 0) {
-//					showToast(R.string.input_can_not_be_empty);
-//					return;
-//				}
-//				String teString = etContent.getText().toString();
-//				commentMessage(teString);
-//
-//			}
-//		});
+		mSendTextBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (etContent.getText().length() == 0) {
+					showToast(R.string.input_can_not_be_empty);
+					return;
+				}
+				String teString = etContent.getText().toString();
+				commentMessage(teString);
+
+			}
+		});
+
 	}
-	
+
+	/**
+	 * @param msg
+	 * @param type
+	 */
+	private void downVoiceSuccess(final MessageInfo msg) {
+		if (mPlayerWrapper.getMessageTag().equals(msg.tag)) {
+			mPlayerWrapper.start(msg);
+			msg.isReadVoice = 1;
+			mAdapter.notifyDataSetChanged();
+		}
+	}
+
+	private class PlayCallback extends MediaUIHeper.PlayCallback {
+
+		@Override
+		public void onStart() {
+			mAdapter.notifyDataSetChanged();
+		}
+
+		@Override
+		public void onStop(boolean stopAutomatic) {
+			// TODO Auto-generated method stub
+			mAdapter.notifyDataSetChanged();
+		}
+	}
+
 	private View getHeaderView() {
 		// TODO Auto-generated method stub
 		// DynamicBean.TypeHolder typeBean = mData.get(position);
@@ -195,7 +238,10 @@ public class DynamicDetailActivity extends BaseActivity {
 	}
 
 	private void buildCommonView(ViewHolderCommon viewHolder) {
-		boolean isShowBottomLayout = false;
+		boolean isShowZan = false, isShowComment = false, isShowSpread = false;
+		viewHolder.lineZan.setVisibility(View.GONE);
+		viewHolder.lineSpread.setVisibility(View.GONE);
+
 		int type = typeBean.type;
 		if (!TextUtils.isEmpty(typeBean.s_path)) {
 			ImageLoaderUtil.displayImage(typeBean.s_path, viewHolder.ivHeader);
@@ -213,19 +259,38 @@ public class DynamicDetailActivity extends BaseActivity {
 		}
 
 		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)) + "     天山上的来客");
-		if (typeBean.commentlist != null && typeBean.commentlist.size() > 0) {
-			isShowBottomLayout = true;
+
+		if (typeBean.spread.size() > 0) {
+			isShowSpread = true;
+			viewHolder.tvSpread.setVisibility(View.VISIBLE);
+			viewHolder.tvSpread.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+			viewHolder.tvSpread.setText(MyTextUtils.addSpreadUserList(typeBean.spread));
+		} else {
+			viewHolder.tvSpread.setVisibility(View.GONE);
 		}
 
 		if (typeBean.zanList.size() > 0) {
-			isShowBottomLayout = true;
-			viewHolder.layoutZan.setVisibility(View.VISIBLE);
+			isShowZan = true;
+			viewHolder.lineSpread.setVisibility(isShowSpread ? View.VISIBLE : View.GONE);
+			viewHolder.tvZan.setVisibility(View.VISIBLE);
 			viewHolder.tvZan.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			viewHolder.tvZan.setText(MyTextUtils.addZanUserList(typeBean.zanList));
 		} else {
-			viewHolder.layoutZan.setVisibility(View.GONE);
+			viewHolder.tvZan.setVisibility(View.GONE);
 		}
-		viewHolder.layoutSpread.setVisibility(View.GONE);
+
+		if (typeBean.commentlist != null && typeBean.commentlist.size() > 0) {
+			isShowComment = true;
+			viewHolder.lineZan.setVisibility((isShowSpread || isShowZan) ? View.VISIBLE : View.GONE);
+			viewHolder.layoutCoverTop.setVisibility(View.VISIBLE);
+			isShowComment = true;
+		} 
+		
+		if (isShowComment||isShowSpread||isShowZan) {
+			viewHolder.layoutCoverTop.setVisibility(View.VISIBLE);
+		} else {
+			viewHolder.layoutCoverTop.setVisibility(View.GONE);
+		}
 
 		viewHolder.btnDynamicAction.setOnClickListener(new OnClickListener() {
 			@Override
@@ -269,6 +334,7 @@ public class DynamicDetailActivity extends BaseActivity {
 			messageInfo.imgUrlS = content.imgUrlS;
 			messageInfo.imgUrlL = content.imgUrlL;
 			messageInfo.tag = content.sid;
+			messageInfo.fileType = MessageType.PICTURE;
 			ImageLoaderUtil.displayImage(path, viewHolder.ivPic);
 			if (path.startsWith("http://")) {
 				ImageLoaderUtil.displayImage(path, viewHolder.ivPic);
@@ -290,14 +356,13 @@ public class DynamicDetailActivity extends BaseActivity {
 					mPlayerWrapper.start(messageInfo);
 				}
 			});
-
 			AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
-			// if (mPlayerWrapper.isPlay() && position == palyedPosition) {
-			// drawable.start();
-			// } else {
-			// drawable.stop();
-			// drawable.selectDrawable(0);
-			// }
+			if (mPlayerWrapper.isPlay()) {
+				drawable.start();
+			} else {
+				drawable.stop();
+				drawable.selectDrawable(0);
+			}
 			break;
 		}
 
@@ -311,7 +376,7 @@ public class DynamicDetailActivity extends BaseActivity {
 			List<MessageInfo> messageInfos = new ArrayList<MessageInfo>();
 			messageInfos.add((MessageInfo) v.getTag());
 			Intent intent = new Intent(mContext, ShowImagesActivity.class);
-			// intent.putExtra("msgList", (Serializable) mData);
+			intent.putExtra("msgList", (Serializable) messageInfos);
 			intent.putExtra("position", 0);
 			mContext.startActivity(intent);
 		}
@@ -472,11 +537,9 @@ public class DynamicDetailActivity extends BaseActivity {
 	static class ViewHolderCommon {
 		ImageButton btnDynamicAction;
 		LinearLayout rlDynamicInteractive;
-		LinearLayout layoutSpread;
 		TextView tvSpread;
-		LinearLayout layoutZan;
 		TextView tvZan;
-		LinearLayout layoutComment;
+		View layoutCoverTop;
 		TextView tvDateInfo;
 
 		ImageView ivHeader;
@@ -484,20 +547,25 @@ public class DynamicDetailActivity extends BaseActivity {
 		TextView tvUserInfo;
 		TextView tvAction;
 
+		View lineSpread;
+		View lineZan;
+
 		public void initialBottom(ViewHolderCommon viewHolder, View view) {
 			viewHolder.tvSpread = (TextView) view.findViewById(R.id.tv_spread);
 			viewHolder.tvZan = (TextView) view.findViewById(R.id.tv_zan);
 			viewHolder.tvDateInfo = (TextView) view.findViewById(R.id.tv_date_info);
 			viewHolder.rlDynamicInteractive = (LinearLayout) view.findViewById(R.id.rl_dynamic_interactive);
-			viewHolder.layoutComment = (LinearLayout) view.findViewById(R.id.ll_comment);
-			viewHolder.layoutSpread = (LinearLayout) view.findViewById(R.id.ll_spread);
-			viewHolder.layoutZan = (LinearLayout) view.findViewById(R.id.ll_zan);
 			viewHolder.btnDynamicAction = (ImageButton) view.findViewById(R.id.btn_dynamic_ation);
 
 			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
 			viewHolder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
 			viewHolder.tvUserInfo = (TextView) view.findViewById(R.id.tv_user_info);
 			viewHolder.tvAction = (TextView) view.findViewById(R.id.tv_spread_action);
+
+			viewHolder.lineSpread = view.findViewById(R.id.line_spread_bottom);
+			viewHolder.lineZan = view.findViewById(R.id.line_zan_bottom);
+
+			viewHolder.layoutCoverTop = view.findViewById(R.id.view_cover_top);
 		}
 	}
 
@@ -556,6 +624,15 @@ public class DynamicDetailActivity extends BaseActivity {
 				actionWindow.dismiss();
 			}
 		});
+		btnSpread.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				spread(typeBean);
+				actionWindow.dismiss();
+			}
+		});
 		btnZan.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -607,6 +684,30 @@ public class DynamicDetailActivity extends BaseActivity {
 		});
 	}
 
+	private void spread(final TypeHolder typeBean) {
+		DamiInfo.spreadDynamic(1, typeBean.id, "", "", "", "", new SimpleResponseListener(mContext) {
+
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					SpreadBean spreadBean = new SpreadBean();
+					spreadBean.uid = DamiCommon.getUid(mContext);
+					spreadBean.nickname = DamiCommon.getLoginResult(mContext).displayName;
+					spreadBean.realname = DamiCommon.getLoginResult(mContext).realname;
+					if (typeBean.spread == null) {
+						typeBean.spread = new ArrayList<SpreadBean>();
+					}
+					typeBean.spread.add(spreadBean);
+					buildCommonView((ViewHolderCommon) headerView.getTag());
+				} else {
+					otherCondition(data.state, (Activity) mContext);
+				}
+			}
+		});
+	}
+
 	private CommnetHolder commnetHolder = new CommnetHolder();
 
 	public void commentMessage(final String content) {
@@ -644,7 +745,10 @@ public class DynamicDetailActivity extends BaseActivity {
 
 		@Override
 		public int getCount() {
-			return typeBean.commentlist.size();
+			if (typeBean.commentlist.size() == 0) {
+				return 0;
+			}
+			return typeBean.commentlist.size() + 1;
 		}
 
 		@Override
@@ -660,27 +764,41 @@ public class DynamicDetailActivity extends BaseActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			TextView tvComment;
-			final CommentBean commentBean = typeBean.commentlist.get(position);
+			ViewHolder viewHolder;
+
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.item_dynamic_detail_comment, null);
-				tvComment = (TextView) convertView.findViewById(R.id.tv_comment_item);
-				convertView.setTag(tvComment);
+				viewHolder = new ViewHolder();
+				viewHolder.tvComment = (TextView) convertView.findViewById(R.id.tv_comment_item);
+				viewHolder.layoutFake = convertView.findViewById(R.id.tv_comment_item_fake);
+				convertView.setTag(viewHolder);
 			} else {
-				tvComment = (TextView) convertView.getTag();
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+
+			viewHolder.tvComment.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 5));
+			if (position == 0) {
+				viewHolder.tvComment.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_comment, 0, 0, 0);
+			} else {
+				viewHolder.tvComment.setCompoundDrawablesWithIntrinsicBounds(
+						R.drawable.icon_dynamic_comment_transparent, 0, 0, 0);
 			}
 			if (position == getCount() - 1) {
-				tvComment.setBackgroundResource(R.drawable.fuck);
+				viewHolder.tvComment.setVisibility(View.INVISIBLE);
+				viewHolder.layoutFake.setBackgroundResource(R.drawable.fuck);
+				return convertView;
 			} else {
-				tvComment.setBackgroundResource(R.drawable.selector_gray_blue_btn);
+				viewHolder.tvComment.setVisibility(View.VISIBLE);
 			}
-			tvComment.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+
+			final CommentBean commentBean = typeBean.commentlist.get(position);
+			viewHolder.tvComment.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			commentBean.uname = makeNameNotNull(commentBean.uname);
 			commentBean.toname = makeNameNotNull(commentBean.toname);
-			tvComment.setText(MyTextUtils.addUserHttpLinks(commentBean.uname + "回复" + commentBean.toname + "："
-					+ commentBean.content.content, commentBean.uname, commentBean.toname, commentBean.uid,
+			viewHolder.tvComment.setText(MyTextUtils.addUserHttpLinks(commentBean.uname + "回复" + commentBean.toname
+					+ "：" + commentBean.content.content, commentBean.uname, commentBean.toname, commentBean.uid,
 					commentBean.toid));
-			tvComment.setOnClickListener(new OnClickListener() {
+			viewHolder.tvComment.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					commnetHolder.toid = commentBean.uid;
@@ -706,6 +824,11 @@ public class DynamicDetailActivity extends BaseActivity {
 			InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
 		}
+	}
+
+	static class ViewHolder {
+		TextView tvComment;
+		View layoutFake;
 	}
 
 	public void showChatBox(String text) {

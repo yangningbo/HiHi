@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
-    android:padding="10dp" >
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp" >
 
     <ImageView
         android:id="@+id/iv_header"
@@ -108,56 +110,11 @@
         android:background="@color/transparent"
         android:src="@drawable/icon_dynamic_comment_action" />
 
-    <LinearLayout
+    <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
-        android:layout_below="@id/tv_date_info"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/icon_comment_holder"
-        android:orientation="vertical"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp" >
-
-        <LinearLayout
-            android:id="@+id/ll_spread"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tv_spread"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/icon_dynamic_spread"
-                android:padding="3dp"
-                android:text="360" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/dynamic_horizon_divider" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_zan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tv_zan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/icon_dynamic_favourite"
-                android:padding="3dp"
-                android:text="百度" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/dynamic_horizon_divider" />
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_below="@id/btn_dynamic_ation"
+        layout="@layout/layout_dynamic_detail_cover_top_bottom" />
 
 </RelativeLayout>
