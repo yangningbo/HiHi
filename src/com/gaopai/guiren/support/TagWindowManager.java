@@ -12,13 +12,12 @@ import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,16 +26,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.view.FlowLayout;
-import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class TagWindowManager implements OnClickListener {
 
-	private List<User.TagBean> tagList = new ArrayList<User.TagBean>();
+	private List<TagBean> tagList = new ArrayList<TagBean>();
 	private List<TagBean> recTagList = new ArrayList<TagBean>();
 
 	private BaseActivity mContext;
@@ -70,7 +67,7 @@ public class TagWindowManager implements OnClickListener {
 		this.isSelf = isSelf;
 	}
 
-	public void setTagList(List<User.TagBean> tagList) {
+	public void setTagList(List<TagBean> tagList) {
 		this.tagList = tagList;
 	}
 
@@ -113,7 +110,7 @@ public class TagWindowManager implements OnClickListener {
 				for (int i = 0; i < count; i++) {
 					String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).getChildAt(0)).getText()
 							.toString();
-					User.TagBean tagBean = new User.TagBean();
+					TagBean tagBean = new TagBean();
 					tagBean.tag = str;
 					tagList.add(tagBean);
 					tagStringBuilder.append(str).append(",");
@@ -226,9 +223,9 @@ public class TagWindowManager implements OnClickListener {
 		return false;
 	}
 
-	private void bindTags(FlowLayout taLayoutPara, boolean isWithDelete) {
+	public void bindTags(FlowLayout taLayoutPara, boolean isWithDelete) {
 		taLayoutPara.removeAllViews();
-		for (User.TagBean tag : tagList) {
+		for (TagBean tag : tagList) {
 			if (isWithDelete) {
 				taLayoutPara.addView(creatTag(tag.tag), taLayoutPara.getTextLayoutParams());
 			} else {

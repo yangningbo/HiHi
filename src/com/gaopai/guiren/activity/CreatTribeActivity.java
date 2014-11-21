@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -25,9 +26,14 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.net.AddMeetingResult;
+import com.gaopai.guiren.bean.net.TagResult;
+import com.gaopai.guiren.support.TagWindowManager;
+import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
+import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class CreatTribeActivity extends BaseActivity implements OnClickListener {
@@ -40,6 +46,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	private EditText etInfo;
 	private TextView tvEditTags;
 	private TextView tvNumLimit;
+	private FlowLayout layoutTags;
 
 	private TextView tvSetPassword;
 	private EditText etPassword;
@@ -51,6 +58,9 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	private boolean isSetPassword = true;
 	private int mPrivacy = 1;
 	private String mFilePath = "";
+	
+	private TagWindowManager tagWindowManager;
+	private List<TagBean> recTagList = new ArrayList<TagBean>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -60,7 +70,35 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText("创建圈子");
 		initComponent();
+		tagWindowManager = new TagWindowManager(this, true, tagCallback);
+		getTags();
 	}
+
+	private void getTags() {
+		DamiInfo.getTags(new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				TagResult data = (TagResult) o;
+				if (data.state != null && data.state.code == 0) {
+					recTagList = data.data;
+					tagWindowManager.setRecTagList(data.data);
+				} else {
+					this.otherCondition(data.state, CreatTribeActivity.this);
+				}
+			}
+		});
+	}
+	
+	private TagWindowManager.TagCallback tagCallback = new TagCallback() {
+		
+		@Override
+		public void onSave(String tags) {
+			// TODO Auto-generated method stub
+//			addRemoteTags(tags);
+			tagWindowManager.bindTags(layoutTags,false);
+		}
+	};
 	
 	private void initComponent() {
 		btnUploadPic = (Button) findViewById(R.id.btn_upload_pic);
@@ -72,6 +110,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		etInfo = (EditText) findViewById(R.id.et_tribe_info);
 		etTitle = (EditText) findViewById(R.id.et_tribe_title);
 		tvEditTags = ViewUtil.findViewById(this, R.id.tv_edit_tag);
+		tvEditTags.setOnClickListener(this);
 		tvSetPassword = ViewUtil.findViewById(this, R.id.tv_set_password);
 		tvSetPassword.setOnClickListener(this);
 		etPassword = ViewUtil.findViewById(this, R.id.et_enter_password);
@@ -83,6 +122,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		tvPrivacySetting = ViewUtil.findViewById(this, R.id.tv_privacy_setting);
 
 		tvNumLimit = ViewUtil.findViewById(this, R.id.tv_num_limit);
+		layoutTags = ViewUtil.findViewById(this, R.id.layout_tags);
 
 		etInfo.addTextChangedListener(ViewUtil.creatNumLimitWatcher(etInfo, 500, new OnTextChangedListener() {
 			@Override
@@ -112,6 +152,9 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		case R.id.tv_set_password:
 			isSetPassword = !isSetPassword;
 			showPasswordView();
+			break;
+		case R.id.tv_edit_tag:
+			tagWindowManager.showTagsWindow();
 			break;
 		default:
 			break;

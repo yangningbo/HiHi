@@ -140,11 +140,5 @@ public class User implements Serializable {
 		public String content;
 	}
 
-	public static class TagBean implements Serializable {
-		public String id;
-		public String uid;
-		public String tag;
-		public int num;
-	}
 	
 }

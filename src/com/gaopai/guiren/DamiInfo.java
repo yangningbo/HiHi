@@ -29,6 +29,7 @@ import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.MsgConfigResult;
 import com.gaopai.guiren.bean.NewUserList;
 import com.gaopai.guiren.bean.PrivacySettingResult;
+import com.gaopai.guiren.bean.TagResultBean;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.TribeList;
 import com.gaopai.guiren.bean.UserInfoBean;
@@ -1954,7 +1955,7 @@ public class DamiInfo implements Serializable {
 		bundle.add("fid", fid);
 		bundle.add("tag", tag);
 		String url = SERVER + "user/updateUserTag";
-		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, TagResultBean.class, listener);
 	}
 
 	/**

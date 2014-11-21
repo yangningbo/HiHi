@@ -37,6 +37,7 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.bean.TagBean;
+import com.gaopai.guiren.bean.TagResultBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.User.CommentBean;
 import com.gaopai.guiren.bean.User.SpreadBean;
@@ -92,7 +93,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private View tvRevealAllTags;
 
 	private FlowLayout tagLayout;
-	private List<User.TagBean> tagList = new ArrayList<User.TagBean>();
+	private List<TagBean> tagList = new ArrayList<TagBean>();
 	private List<TagBean> recTagList = new ArrayList<TagBean>();
 
 	private View layoutBasicProfile;
@@ -277,7 +278,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		bindDyView();
 		if (tUser.tag != null && tUser.tag.size() > 0) {
 			tagList = tUser.tag;
-			bindTags(tagLayout, false);
+			tagWindowManager.bindTags(tagLayout, false);
 		}
 		bindBottomDynamicView();
 	}
@@ -389,16 +390,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		return false;
 	}
 
-	private void bindTags(FlowLayout taLayoutPara, boolean isWithDelete) {
-		taLayoutPara.removeAllViews();
-		for (User.TagBean tag : tagList) {
-			if (isWithDelete) {
-				taLayoutPara.addView(creatTag(tag.tag), taLayoutPara.getTextLayoutParams());
-			} else {
-				taLayoutPara.addView(creatTagWithoutDelete(tag.tag), taLayoutPara.getTextLayoutParams());
-			}
-		}
-	}
 
 	public final static int REQUEST_CHANGE_PROFILE = 0;
 
@@ -442,17 +433,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_reveal_all_tags:
 		case R.id.tv_add_tags:
 			tagWindowManager.showTagsWindow();
-			break;
-		case R.id.btn_add_tag:
-			String str = etTags.getText().toString();
-			if (TextUtils.isEmpty(str)) {
-				showToast(R.string.input_can_not_be_empty);
-				return;
-			}
-			etTags.setText("");
-			if (!checkIsTagInList(str)) {
-				flowTagsAdd.addView(creatTag(str), flowTagsAdd.getTextLayoutParams());
-			}
 			break;
 		case R.id.layout_profile_bottom_comment:
 			startActivityWithUser(CommentProfileActivity.KEY_USER, CommentProfileActivity.class);
@@ -556,48 +536,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		});
 	}
 
-	private View creatTag(String text) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
-		button.setOnClickListener(tagDeleteClickListener);
-		return v;
-	}
-
-	private View creatTagWithoutDelete(String text) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		v.findViewById(R.id.btn_delete_tag).setVisibility(View.GONE);
-		return v;
-	}
-
-	private View creatTageWithAction(final String text) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		v.findViewById(R.id.btn_delete_tag).setVisibility(View.GONE);
-		v.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (!checkIsTagInList(text)) {
-					flowTagsAdd.addView(creatTag(text), flowTagsAdd.getTextLayoutParams());
-				}
-			}
-		});
-		return v;
-	}
-
-	private OnClickListener tagDeleteClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			flowTagsAdd.removeView((View) v.getParent());
-		}
-	};
 
 	// store tags in remote computer
 	private void addRemoteTags(String tags) {
@@ -607,14 +545,19 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				@Override
 				public void onSuccess(Object o) {
 					// TODO Auto-generated method stub
-					showToast(R.string.add_tags_success);
+					TagResultBean data = (TagResultBean) o;
+					if (data.state!=null && data.state.code == 0) {
+						tagList = data.data;
+						tagWindowManager.bindTags(tagLayout, false);
+						showToast(R.string.add_tags_success);
+					}
 				}
 			});
 		}
 	}
 
 	private boolean checkIsTagInList(String tag) {
-		for (User.TagBean tagBean : tagList) {
+		for (TagBean tagBean : tagList) {
 			if (tagBean.equals(tag)) {
 				showToast(R.string.tag_exist);
 				return true;
@@ -623,130 +566,4 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		return false;
 	}
 
-	private FlowLayout flowTagsAdd;
-	private EditText etTags;
-	private Button btnAddTags;
-
-	private void showTagsWindow() {
-		final Dialog dialog = new Dialog(this);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-		View view = mInflater.inflate(R.layout.window_add_tags, null);
-		flowTagsAdd = (FlowLayout) view.findViewById(R.id.flow_tags_add);
-		setTagTransition(flowTagsAdd);
-		FlowLayout flowTagsRec = (FlowLayout) view.findViewById(R.id.flow_tags_recommend);
-		etTags = (EditText) view.findViewById(R.id.et_tags);
-		btnAddTags = (Button) view.findViewById(R.id.btn_add_tag);
-		btnAddTags.setOnClickListener(this);
-		if (isSelf) {
-			bindTags(flowTagsAdd, true);
-		} else {
-			bindTags(flowTagsAdd, false);
-		}
-		for (TagBean tag : recTagList) {
-			flowTagsRec.addView(creatTageWithAction(tag.tag), flowTagsRec.getTextLayoutParams());
-		}
-		Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
-		btnCancel.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				dialog.cancel();
-			}
-		});
-		Button btnSave = (Button) view.findViewById(R.id.btn_save);
-		btnSave.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				int count = flowTagsAdd.getChildCount();
-				StringBuilder tagStringBuilder = new StringBuilder();
-				tagList.clear();
-				for (int i = 0; i < count; i++) {
-					String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).getChildAt(0)).getText()
-							.toString();
-					User.TagBean tagBean = new User.TagBean();
-					tagBean.tag = str;
-					tagList.add(tagBean);
-					tagStringBuilder.append(str).append(",");
-				}
-				tagStringBuilder.substring(0, tagStringBuilder.length() - 1);
-				addRemoteTags(tagStringBuilder.toString());
-				dialog.cancel();
-				bindTags(tagLayout, false);
-			}
-		});
-		dialog.setContentView(view);
-		Window dialogWindow = dialog.getWindow();
-		dialogWindow.setBackgroundDrawableResource(R.drawable.transparent);
-		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-		WindowManager m = getWindowManager();
-		Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
-		WindowManager.LayoutParams p = dialogWindow.getAttributes(); //
-		p.height = WindowManager.LayoutParams.WRAP_CONTENT; // 高度设置为屏幕的0.6
-		p.width = (int) (d.getWidth() * 0.9); // 宽度设置为屏幕的0.65
-		dialogWindow.setAttributes(p);
-
-		dialog.show();
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setTagTransition(ViewGroup viewGroup) {
-		if (Build.VERSION.SDK_INT > 11) {
-			LayoutTransition transition = new LayoutTransition();
-			setupCustomAnimations(transition);
-			viewGroup.setLayoutTransition(transition);
-		}
-	}
-
-	@SuppressLint("NewApi")
-	private void setupCustomAnimations(LayoutTransition mTransitioner) {
-		// Changing while Adding
-		PropertyValuesHolder pvhLeft = PropertyValuesHolder.ofInt("left", 0, 1);
-		PropertyValuesHolder pvhTop = PropertyValuesHolder.ofInt("top", 0, 1);
-		PropertyValuesHolder pvhRight = PropertyValuesHolder.ofInt("right", 0, 1);
-		PropertyValuesHolder pvhBottom = PropertyValuesHolder.ofInt("bottom", 0, 1);
-		PropertyValuesHolder pvhScaleX = PropertyValuesHolder.ofFloat("scaleX", 1f, 0f, 1f);
-		PropertyValuesHolder pvhScaleY = PropertyValuesHolder.ofFloat("scaleY", 1f, 0f, 1f);
-
-		// CHANGE_DISAPPEARING
-		Keyframe kf0 = Keyframe.ofFloat(0f, 0f);
-		Keyframe kf1 = Keyframe.ofFloat(.9999f, 360f);
-		Keyframe kf2 = Keyframe.ofFloat(1f, 0f);
-		PropertyValuesHolder pvhRotation = PropertyValuesHolder.ofKeyframe("rotation", kf0, kf1, kf2);
-		final ObjectAnimator changeOut = ObjectAnimator.ofPropertyValuesHolder(this, pvhLeft, pvhTop, pvhRight,
-				pvhBottom, pvhRotation).setDuration(mTransitioner.getDuration(LayoutTransition.CHANGE_DISAPPEARING));
-		mTransitioner.setAnimator(LayoutTransition.CHANGE_DISAPPEARING, changeOut);
-		changeOut.addListener(new AnimatorListenerAdapter() {
-			public void onAnimationEnd(Animator anim) {
-				View view = (View) ((ObjectAnimator) anim).getTarget();
-				view.setRotation(0f);
-			}
-		});
-
-		// APPEARING
-		ObjectAnimator animIn = ObjectAnimator.ofFloat(null, "rotationY", 90f, 0f).setDuration(
-				mTransitioner.getDuration(LayoutTransition.APPEARING));
-		mTransitioner.setAnimator(LayoutTransition.APPEARING, animIn);
-		animIn.addListener(new AnimatorListenerAdapter() {
-			public void onAnimationEnd(Animator anim) {
-				View view = (View) ((ObjectAnimator) anim).getTarget();
-				view.setRotationY(0f);
-			}
-		});
-
-		// DISAPPEARING
-		ObjectAnimator animOut = ObjectAnimator.ofFloat(null, "rotationX", 0f, 90f).setDuration(
-				mTransitioner.getDuration(LayoutTransition.DISAPPEARING));
-		mTransitioner.setAnimator(LayoutTransition.DISAPPEARING, animOut);
-		animOut.addListener(new AnimatorListenerAdapter() {
-			public void onAnimationEnd(Animator anim) {
-				View view = (View) ((ObjectAnimator) anim).getTarget();
-				view.setRotationX(0f);
-			}
-		});
-
-	}
 }
