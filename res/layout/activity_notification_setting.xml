@@ -11,24 +11,23 @@
         android:layout_marginTop="10dp"
         android:background="@color/divider" />
 
+    <TextView
+        android:id="@+id/tv_avoid_disturb_time_segment"
+        style="@style/tribe_detail_item_text_with_drawable"
+        android:background="@drawable/selector_btn_general"
+        android:drawableRight="@drawable/icon_switch_normal"
+        android:padding="10dp"
+        android:text="免打扰时间段" />
+
     <RelativeLayout
-        android:id="@+id/tv_check_phone_number"
+        android:id="@+id/layout_set_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white" >
 
-        <TextView
-            android:id="@+id/tv_avoid_disturb_time_segment"
-            style="@style/tribe_detail_item_text_with_drawable"
-            android:background="@drawable/selector_btn_general"
-            android:drawableRight="@drawable/icon_switch_normal"
-            android:padding="10dp"
-            android:text="免打扰时间段" />
-
         <View
             android:id="@+id/view_line"
-            style="@style/tribe_detail_thin_divider"
-            android:layout_below="@id/tv_avoid_disturb_time_segment" />
+            style="@style/tribe_detail_thin_divider" />
 
         <TextView
             android:id="@+id/tv_from"
@@ -91,6 +90,7 @@
         android:background="@color/divider" />
 
     <TextView
+        android:id="@+id/tv_play_ringtone"
         style="@style/tribe_detail_item_text_with_drawable"
         android:background="@drawable/selector_btn_general"
         android:drawableRight="@drawable/icon_switch_normal"
@@ -100,6 +100,7 @@
     <View style="@style/tribe_detail_thin_divider" />
 
     <TextView
+        android:id="@+id/tv_vibrate"
         style="@style/tribe_detail_item_text_with_drawable"
         android:background="@drawable/selector_btn_general"
         android:drawableRight="@drawable/icon_switch_normal"
@@ -109,6 +110,7 @@
     <View style="@style/tribe_detail_thin_divider" />
 
     <TextView
+        android:id="@+id/tv_dami_paper_notify"
         style="@style/tribe_detail_item_text_with_drawable"
         android:background="@drawable/selector_btn_general"
         android:drawableRight="@drawable/icon_switch_normal"

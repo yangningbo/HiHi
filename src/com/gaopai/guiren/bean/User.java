@@ -8,7 +8,7 @@ import com.gaopai.guiren.volley.GsonObj;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
-public class User implements  Serializable {
+public class User implements Serializable {
 
 	private static final long serialVersionUID = -1945455564L;
 
@@ -92,20 +92,59 @@ public class User implements  Serializable {
 	@Expose
 	public RoomIds roomids;
 	@Expose
-	public int relation;//和我有没有关系，有关系为1，没关系为0
+	public int relation;// 和我有没有关系，有关系为1，没关系为0
 	@Expose
-	public int totalcomfriend;//和我有多少共同好友
-	
+	public int totalcomfriend;// 和我有多少共同好友
+
 	public String reason;
-	
+
 	public String weibo;
 	public String weixin;
-	
-	
-	public class RoomIds implements  Serializable{
+
+	public List<SpreadBean> kuosanlist;
+	public List<ZanBean> zantaglist;
+	public List<CommentBean> commentlist;
+	public List<TagBean> tag;
+
+	public int kuosanlistnum;
+
+	public class RoomIds implements Serializable {
 		@Expose
 		public String tribelist; // 用户所加入的部落id
 		@Expose
 		public String meetinglist;// 用户所在的会议ID
 	}
+
+	public static class SpreadBean implements Serializable {
+		public String uid;
+		public String realname;
+	}
+
+	public static class ZanBean implements Serializable {
+		public String uid;
+		public String realname;
+		public String zantag;
+	}
+
+	public static class CommentBean implements Serializable {
+		public String id;
+		public String uid;
+		public String uname;
+		public String s_path;
+		public String addtime;
+		public CommentContent content;
+
+	}
+
+	public static class CommentContent implements Serializable {
+		public String content;
+	}
+
+	public static class TagBean implements Serializable {
+		public String id;
+		public String uid;
+		public String tag;
+		public int num;
+	}
+	
 }

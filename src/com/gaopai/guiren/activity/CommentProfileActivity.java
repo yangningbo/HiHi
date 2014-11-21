@@ -9,8 +9,11 @@ import android.widget.EditText;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class CommentProfileActivity extends BaseActivity {
 
@@ -46,8 +49,21 @@ public class CommentProfileActivity extends BaseActivity {
 					showToast(R.string.input_can_not_be_empty);
 					return;
 				}
+				DamiInfo.addProfileComment("0", 5, tUser.uid, etText.getText().toString(), 0, mUser.displayName,
+						tUser.displayName, "2", new SimpleResponseListener(mContext, R.string.request_internet_now) {
+
+							@Override
+							public void onSuccess(Object o) {
+								// TODO Auto-generated method stub
+								BaseNetBean data = (BaseNetBean) o;
+								if (data.state!=null && data.state.code == 0) {
+									showToast("successs");
+								} else {
+									otherCondition(data.state, CommentProfileActivity.this);
+								}
+							}
+						});
 			}
 		});
-
 	}
 }

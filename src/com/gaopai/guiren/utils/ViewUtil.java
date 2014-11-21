@@ -16,11 +16,13 @@
 package com.gaopai.guiren.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.text.Editable;
 import android.text.Selection;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnLongClickListener;
@@ -52,11 +54,9 @@ public class ViewUtil {
 	 * @param verticalSpace
 	 *            the vertical space
 	 */
-	public static void setAbsListViewHeight(AbsListView absListView,
-			int lineNumber, int verticalSpace) {
+	public static void setAbsListViewHeight(AbsListView absListView, int lineNumber, int verticalSpace) {
 
-		int totalHeight = getAbsListViewHeight(absListView, lineNumber,
-				verticalSpace);
+		int totalHeight = getAbsListViewHeight(absListView, lineNumber, verticalSpace);
 		ViewGroup.LayoutParams params = absListView.getLayoutParams();
 		params.height = totalHeight;
 		((MarginLayoutParams) params).setMargins(0, 0, 0, 0);
@@ -73,13 +73,10 @@ public class ViewUtil {
 	 * @param verticalSpace
 	 *            the vertical space
 	 */
-	public static int getAbsListViewHeight(AbsListView absListView,
-			int lineNumber, int verticalSpace) {
+	public static int getAbsListViewHeight(AbsListView absListView, int lineNumber, int verticalSpace) {
 		int totalHeight = 0;
-		int w = View.MeasureSpec.makeMeasureSpec(0,
-				View.MeasureSpec.UNSPECIFIED);
-		int h = View.MeasureSpec.makeMeasureSpec(0,
-				View.MeasureSpec.UNSPECIFIED);
+		int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+		int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 		absListView.measure(w, h);
 		ListAdapter mListAdapter = absListView.getAdapter();
 		if (mListAdapter == null) {
@@ -96,8 +93,7 @@ public class ViewUtil {
 			if (count == 0) {
 				totalHeight = verticalSpace;
 			} else {
-				totalHeight = totalHeight
-						+ (((ListView) absListView).getDividerHeight() * (count - 1));
+				totalHeight = totalHeight + (((ListView) absListView).getDividerHeight() * (count - 1));
 			}
 
 		} else if (absListView instanceof GridView) {
@@ -111,8 +107,7 @@ public class ViewUtil {
 				View listItem = mListAdapter.getView(0, null, absListView);
 				listItem.measure(w, h);
 				int line = count / lineNumber + remain;
-				totalHeight = line * listItem.getMeasuredHeight() + (line - 1)
-						* verticalSpace;
+				totalHeight = line * listItem.getMeasuredHeight() + (line - 1) * verticalSpace;
 			}
 
 		}
@@ -131,10 +126,8 @@ public class ViewUtil {
 		if (v == null) {
 			return;
 		}
-		int w = View.MeasureSpec.makeMeasureSpec(0,
-				View.MeasureSpec.UNSPECIFIED);
-		int h = View.MeasureSpec.makeMeasureSpec(0,
-				View.MeasureSpec.UNSPECIFIED);
+		int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+		int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 		v.measure(w, h);
 	}
 
@@ -149,8 +142,7 @@ public class ViewUtil {
 	 *            the text size
 	 * @return the int
 	 */
-	public static int resizeTextSize(int screenWidth, int screenHeight,
-			int textSize) {
+	public static int resizeTextSize(int screenWidth, int screenHeight, int textSize) {
 		float ratio = 1;
 		try {
 			float ratioWidth = (float) screenWidth / 480;
@@ -172,7 +164,7 @@ public class ViewUtil {
 	 */
 	public static int dip2px(Context context, float dipValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;
-		System.out.println("SCALE======================"+"scale");
+		System.out.println("SCALE======================" + "scale");
 		return (int) (dipValue * scale + 0.5f);
 	}
 
@@ -190,67 +182,82 @@ public class ViewUtil {
 		return (int) (pxValue / scale + 0.5f);
 	}
 
-	
 	/**
 	 * 获取一个LinearLayout
-	 * @param context 上下文
-	 * @param orientation 流向
-	 * @param width 宽
-	 * @param height 高
+	 * 
+	 * @param context
+	 *            上下文
+	 * @param orientation
+	 *            流向
+	 * @param width
+	 *            宽
+	 * @param height
+	 *            高
 	 * @return LinearLayout
 	 */
-	public static LinearLayout createLinearLayout(Context context, int orientation, int width, int height){
+	public static LinearLayout createLinearLayout(Context context, int orientation, int width, int height) {
 		LinearLayout linearLayout = new LinearLayout(context);
 		linearLayout.setOrientation(orientation);
 		linearLayout.setLayoutParams(new LinearLayout.LayoutParams(width, height));
 		return linearLayout;
 	}
-	
+
 	/**
 	 * 
 	 * 获取一个LinearLayout
-	 * @param context 上下文
-	 * @param orientation 流向
-	 * @param width 宽
-	 * @param height 高
-	 * @param weight 权重
+	 * 
+	 * @param context
+	 *            上下文
+	 * @param orientation
+	 *            流向
+	 * @param width
+	 *            宽
+	 * @param height
+	 *            高
+	 * @param weight
+	 *            权重
 	 * @return LinearLayout
 	 */
-	public static LinearLayout createLinearLayout(Context context, int orientation, int width, int height, int weight){
+	public static LinearLayout createLinearLayout(Context context, int orientation, int width, int height, int weight) {
 		LinearLayout linearLayout = new LinearLayout(context);
 		linearLayout.setOrientation(orientation);
 		linearLayout.setLayoutParams(new LinearLayout.LayoutParams(width, height, weight));
 		return linearLayout;
 	}
-	
+
 	/**
 	 * 根据ListView的所有子项的高度设置其高度
+	 * 
 	 * @param listView
 	 */
-	public static void setListViewHeightByAllChildrenViewHeight(ListView listView) {  
-		ListAdapter listAdapter = listView.getAdapter();   
-	    if (listAdapter != null) {  
-	    	int totalHeight = 0;  
-	    	for (int i = 0; i < listAdapter.getCount(); i++) {  
-	    		View listItem = listAdapter.getView(i, null, listView);  
-	    		listItem.measure(0, 0);  
-	    		totalHeight += listItem.getMeasuredHeight();  
-	    	}  
-	    	
-	    	ViewGroup.LayoutParams params = listView.getLayoutParams();  
-	    	params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));  
-	    	((MarginLayoutParams)params).setMargins(10, 10, 10, 10);
-	    	listView.setLayoutParams(params); 
-	    }  
-    }
-	
+	public static void setListViewHeightByAllChildrenViewHeight(ListView listView) {
+		ListAdapter listAdapter = listView.getAdapter();
+		if (listAdapter != null) {
+			int totalHeight = 0;
+			for (int i = 0; i < listAdapter.getCount(); i++) {
+				View listItem = listAdapter.getView(i, null, listView);
+				listItem.measure(0, 0);
+				totalHeight += listItem.getMeasuredHeight();
+			}
+
+			ViewGroup.LayoutParams params = listView.getLayoutParams();
+			params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+			((MarginLayoutParams) params).setMargins(10, 10, 10, 10);
+			listView.setLayoutParams(params);
+		}
+	}
+
 	/**
 	 * 给给定的视图设置长按提示
-	 * @param context 上下文
-	 * @param view 给定的视图
-	 * @param hintContent 提示内容
+	 * 
+	 * @param context
+	 *            上下文
+	 * @param view
+	 *            给定的视图
+	 * @param hintContent
+	 *            提示内容
 	 */
-	public static void setLongClickHint(final Context context, View view, final String hintContent){
+	public static void setLongClickHint(final Context context, View view, final String hintContent) {
 		view.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -259,166 +266,239 @@ public class ViewUtil {
 			}
 		});
 	}
-	
+
 	/**
 	 * 给给定的视图设置长按提示
-	 * @param context 上下文
-	 * @param view 给定的视图
-	 * @param hintContentId 提示内容的ID
+	 * 
+	 * @param context
+	 *            上下文
+	 * @param view
+	 *            给定的视图
+	 * @param hintContentId
+	 *            提示内容的ID
 	 */
-	public static void setLongClickHint(final Context context, View view, final int hintContentId){
+	public static void setLongClickHint(final Context context, View view, final int hintContentId) {
 		setLongClickHint(context, view, context.getString(hintContentId));
 	}
-	
+
 	/**
 	 * 设置给定视图的高度
-	 * @param view 给定的视图
-	 * @param newHeight 新的高度
+	 * 
+	 * @param view
+	 *            给定的视图
+	 * @param newHeight
+	 *            新的高度
 	 */
-	public static void setViewHeight(View view, int newHeight){
-		ViewGroup.LayoutParams layoutParams = view.getLayoutParams();  
-		layoutParams.height = newHeight; 
+	public static void setViewHeight(View view, int newHeight) {
+		ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+		layoutParams.height = newHeight;
 		view.setLayoutParams(layoutParams);
 	}
-	
+
 	/**
 	 * 将给定视图的高度增加一点
-	 * @param view 给定的视图
-	 * @param increasedAmount 增加多少
+	 * 
+	 * @param view
+	 *            给定的视图
+	 * @param increasedAmount
+	 *            增加多少
 	 */
-	public static void addViewHeight(View view, int increasedAmount){
-		ViewGroup.LayoutParams headerLayoutParams = view.getLayoutParams();  
-		headerLayoutParams.height += increasedAmount; 
+	public static void addViewHeight(View view, int increasedAmount) {
+		ViewGroup.LayoutParams headerLayoutParams = view.getLayoutParams();
+		headerLayoutParams.height += increasedAmount;
 		view.setLayoutParams(headerLayoutParams);
 	}
-	
+
 	/**
 	 * 设置给定视图的宽度
-	 * @param view 给定的视图
-	 * @param newWidth 新的宽度
+	 * 
+	 * @param view
+	 *            给定的视图
+	 * @param newWidth
+	 *            新的宽度
 	 */
-	public static void setViewWidth(View view, int newWidth){
-		ViewGroup.LayoutParams headerLayoutParams = view.getLayoutParams();  
-		headerLayoutParams.width = newWidth; 
+	public static void setViewWidth(View view, int newWidth) {
+		ViewGroup.LayoutParams headerLayoutParams = view.getLayoutParams();
+		headerLayoutParams.width = newWidth;
 		view.setLayoutParams(headerLayoutParams);
 	}
-	
+
 	/**
 	 * 将给定视图的宽度增加一点
-	 * @param view 给定的视图
-	 * @param increasedAmount 增加多少
+	 * 
+	 * @param view
+	 *            给定的视图
+	 * @param increasedAmount
+	 *            增加多少
 	 */
-	public static void addViewWidth(View view, int increasedAmount){
-		ViewGroup.LayoutParams headerLayoutParams = view.getLayoutParams();  
-		headerLayoutParams.width += increasedAmount; 
+	public static void addViewWidth(View view, int increasedAmount) {
+		ViewGroup.LayoutParams headerLayoutParams = view.getLayoutParams();
+		headerLayoutParams.width += increasedAmount;
 		view.setLayoutParams(headerLayoutParams);
 	}
-	
+
 	/**
 	 * 获取流布局的底部外边距
+	 * 
 	 * @param linearLayout
 	 * @return
 	 */
 	public static int getLinearLayoutBottomMargin(LinearLayout linearLayout) {
-		return ((LinearLayout.LayoutParams)linearLayout.getLayoutParams()).bottomMargin;
+		return ((LinearLayout.LayoutParams) linearLayout.getLayoutParams()).bottomMargin;
 	}
-	
+
 	/**
 	 * 设置流布局的底部外边距
+	 * 
 	 * @param linearLayout
 	 * @param newBottomMargin
 	 */
 	public static void setLinearLayoutBottomMargin(LinearLayout linearLayout, int newBottomMargin) {
-		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)linearLayout.getLayoutParams();
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
 		lp.bottomMargin = newBottomMargin;
 		linearLayout.setLayoutParams(lp);
 	}
-	
+
 	/**
 	 * 获取流布局的高度
+	 * 
 	 * @param linearLayout
 	 * @return
 	 */
 	public static int getLinearLayoutHiehgt(LinearLayout linearLayout) {
-		return ((LinearLayout.LayoutParams)linearLayout.getLayoutParams()).height;
+		return ((LinearLayout.LayoutParams) linearLayout.getLayoutParams()).height;
 	}
-	
+
 	/**
 	 * 设置输入框的光标到末尾
+	 * 
 	 * @param editText
 	 */
-	public static final void setEditTextSelectionToEnd(EditText editText){
+	public static final void setEditTextSelectionToEnd(EditText editText) {
 		Editable editable = editText.getEditableText();
 		Selection.setSelection(editable, editable.toString().length());
 	}
-	
+
 	/**
 	 * 执行测量，执行完成之后只需调用View的getMeasuredXXX()方法即可获取测量结果
+	 * 
 	 * @param view
 	 * @return
 	 */
-	public static final View measure(View view){
+	public static final View measure(View view) {
 		ViewGroup.LayoutParams p = view.getLayoutParams();
-	    if (p == null) {
-	        p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-	    }
-	    int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
-	    int lpHeight = p.height;
-	    int childHeightSpec;
-	    if (lpHeight > 0) {
-	    	childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);
-	    } else {
-	        childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-	    }
-	    view.measure(childWidthSpec, childHeightSpec);
-	    return view;
+		if (p == null) {
+			p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		}
+		int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
+		int lpHeight = p.height;
+		int childHeightSpec;
+		if (lpHeight > 0) {
+			childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);
+		} else {
+			childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+		}
+		view.measure(childWidthSpec, childHeightSpec);
+		return view;
 	}
-	
+
 	/**
 	 * 获取给定视图的测量高度
+	 * 
 	 * @param view
 	 * @return
 	 */
-	public static final int getMeasuredHeight(View view){
-	    return measure(view).getMeasuredHeight();
+	public static final int getMeasuredHeight(View view) {
+		return measure(view).getMeasuredHeight();
 	}
-	
+
 	/**
 	 * 获取给定视图的测量宽度
+	 * 
 	 * @param view
 	 * @return
 	 */
-	public static final int getMeasuredWidth(View view){
-	    return measure(view).getMeasuredWidth();
+	public static final int getMeasuredWidth(View view) {
+		return measure(view).getMeasuredWidth();
 	}
-	
+
 	/**
-	 * 获取视图1相对于视图2的位置，注意在屏幕上看起来视图1应该被视图2包含，但是视图1和视图并不一定是绝对的父子关系也可以是兄弟关系，只是一个大一个小而已
+	 * 获取视图1相对于视图2的位置，注意在屏幕上看起来视图1应该被视图2包含，但是视图1和视图并不一定是绝对的父子关系也可以是兄弟关系，
+	 * 只是一个大一个小而已
+	 * 
 	 * @param view1
 	 * @param view2
 	 * @return
 	 */
-	public static final Rect getRelativeRect(View view1, View view2){
+	public static final Rect getRelativeRect(View view1, View view2) {
 		Rect childViewGlobalRect = new Rect();
 		Rect parentViewGlobalRect = new Rect();
 		view1.getGlobalVisibleRect(childViewGlobalRect);
 		view2.getGlobalVisibleRect(parentViewGlobalRect);
-		return new Rect(childViewGlobalRect.left - parentViewGlobalRect.left, childViewGlobalRect.top - parentViewGlobalRect.top, childViewGlobalRect.right - parentViewGlobalRect.left, childViewGlobalRect.bottom - parentViewGlobalRect.top);
+		return new Rect(childViewGlobalRect.left - parentViewGlobalRect.left, childViewGlobalRect.top
+				- parentViewGlobalRect.top, childViewGlobalRect.right - parentViewGlobalRect.left,
+				childViewGlobalRect.bottom - parentViewGlobalRect.top);
 	}
-	
+
 	/**
 	 * 删除监听器
+	 * 
 	 * @param viewTreeObserver
 	 * @param onGlobalLayoutListener
 	 */
 	@SuppressWarnings("deprecation")
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	public static final void removeOnGlobalLayoutListener(ViewTreeObserver viewTreeObserver, ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener){
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN){
+	public static final void removeOnGlobalLayoutListener(ViewTreeObserver viewTreeObserver,
+			ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
 			viewTreeObserver.removeGlobalOnLayoutListener(onGlobalLayoutListener);
-		}else{
+		} else {
 			viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener);
 		}
 	}
-	
+
+	@SuppressWarnings({ "unchecked" })
+	public static <T extends View> T findViewById(View view, int id) {
+		return (T) view.findViewById(id);
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	public static <T extends View> T findViewById(Activity activity, int id) {
+		return (T) activity.findViewById(id);
+	}
+
+	public static interface OnTextChangedListener {
+		public void onTextChanged(Editable s);
+	}
+
+	public static TextWatcher creatNumLimitWatcher(final EditText etDynamicMsg, final int numLimit, final OnTextChangedListener changedListener) {
+		return new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				int nSelStart = 0;
+				int nSelEnd = 0;
+				boolean nOverMaxLength = false;
+
+				nSelStart = etDynamicMsg.getSelectionStart();
+				nSelEnd = etDynamicMsg.getSelectionEnd();
+				nOverMaxLength = (s.length() > numLimit) ? true : false;
+				if (nOverMaxLength) {
+					s.delete(nSelStart - 1, nSelEnd);
+					etDynamicMsg.setTextKeepState(s);
+				}
+				changedListener.onTextChanged(s);
+			}
+		};
+	}
 }

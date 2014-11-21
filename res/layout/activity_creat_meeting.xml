@@ -44,8 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_paading"
-            android:background="@color/white"
-            android:hint="请输入会议标题"
+            android:background="@drawable/selector_edit_white_round_corner"
+            android:hint="@string/please_input_meeting_title"
             android:padding="@dimen/general_paading"
             android:textSize="@dimen/general_font_4" />
 
@@ -105,6 +105,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_privacy_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -112,21 +113,21 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/tv_start_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:padding="10dp"
-                android:text="隐私设置"
+                android:text="@string/privacy_setting"
                 android:textColor="@color/general_text_black" />
 
             <TextView
+                android:id="@+id/tv_privacy_setting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical|right"
                 android:padding="10dp"
-                android:text="开放"
+                android:text="@string/privacy_setting_open"
                 android:textColor="@color/general_text_gray" />
         </LinearLayout>
 
@@ -140,7 +141,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
-                android:background="@color/white"
+                android:background="@drawable/selector_edit_white_round_corner"
                 android:gravity="top|left"
                 android:hint="请输入会议详细介绍(500字)"
                 android:padding="10dp"
@@ -159,34 +160,45 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_set_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_large_gap"
             android:background="@drawable/shape_white_round_corner"
-            android:drawableRight="@drawable/icon_switch_normal"
+            android:drawableRight="@drawable/icon_switch_active"
             android:gravity="center_vertical"
             android:padding="8dp"
-            android:text="设置圈子密码"
+            android:text="@string/set_password"
             android:textColor="@color/general_text_black" />
 
-        <EditText
-            android:id="@+id/et_tribe_tags"
+        <LinearLayout
+            android:id="@+id/layout_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/general_small_gap"
-            android:background="@drawable/shape_white_round_corner"
-            android:hint="请输入密码"
-            android:padding="10dp"
-            android:textSize="@dimen/general_font_4" />
+            android:orientation="vertical" >
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/general_small_gap"
-            android:background="@drawable/shape_white_round_corner"
-            android:hint="请再次输入密码"
-            android:padding="10dp"
-            android:textSize="@dimen/general_font_4" />
+            <EditText
+                android:id="@+id/et_enter_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_small_gap"
+                android:background="@drawable/selector_edit_white_round_corner"
+                android:hint="@string/please_input_password"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                android:textSize="@dimen/general_font_4" />
+
+            <EditText
+                android:id="@+id/et_enter_password_again"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_small_gap"
+                android:background="@drawable/selector_edit_white_round_corner"
+                android:hint="@string/please_input_password_again"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                android:textSize="@dimen/general_font_4" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/bottom_not_in_meeting"
@@ -199,14 +211,14 @@
                 android:id="@+id/btn_preview"
                 style="@style/meeting_detail_btn"
                 android:background="@drawable/selector_tribe_detail_btn_blue"
-                android:text="预览" />
+                android:text="@string/preview" />
 
             <Button
                 android:id="@+id/btn_creat"
                 style="@style/meeting_detail_btn"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/selector_tribe_detail_btn_yellow"
-                android:text="创建" />
+                android:text="@string/create" />
         </LinearLayout>
     </LinearLayout>
 

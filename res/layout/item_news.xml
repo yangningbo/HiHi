@@ -5,138 +5,86 @@
     android:background="#fff0f0"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/news_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:text="04-27 19:47" />
-
     <RelativeLayout
-        android:id="@+id/tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/news_top_corner_bg_normal"
-        android:descendantFocusability="blocksDescendants"
-        android:padding="10dp" >
+        android:paddingLeft="10dp" >
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="26px"
+            android:layout_marginLeft="15dp"
+            android:background="@color/profile_vertical_divider" />
 
         <ImageView
-            android:id="@+id/news_image"
+            android:id="@+id/iv_profile_favourite"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/icon_profile_favourite" />
+
+        <TextView
+            android:id="@+id/tv_bottom_favorite"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:focusable="false"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_6" />
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_profile_favourite"
+            android:layout_toRightOf="@id/iv_profile_favourite"
+            android:background="@drawable/holder_profile" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" >
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="26px"
+            android:layout_marginLeft="15dp"
+            android:background="@color/profile_vertical_divider" />
+
+        <ImageView
+            android:id="@+id/iv_profile_favourite"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/icon_profile_spread" />
 
         <TextView
-            android:id="@+id/news_image_title"
+            android:id="@+id/tv_bottom_spread"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@id/news_image"
-            android:background="@color/black"
-            android:focusable="false"
-            android:gravity="center_vertical"
-            android:paddingLeft="5dp"
-            android:text="广西上白洞豪华别苏控制熟练"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_profile_favourite"
+            android:layout_toRightOf="@id/iv_profile_favourite"
+            android:background="@drawable/holder_profile" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/news_no_corner_bg_normal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp" >
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="26px"
+            android:layout_marginLeft="15dp"
+            android:background="@color/profile_vertical_divider" />
 
         <ImageView
-            android:id="@+id/news_image1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_6" />
+            android:id="@+id/iv_profile_favourite"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/icon_profile_comment" />
 
-        <TextView
-            android:id="@+id/news_item1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/news_image1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:text="阿斯蒂芬gas德国卡技术的高科技啊黑色的高科技阿萨德后"
-            android:textSize="15sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/news_no_corner_bg_normal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
-
-        <ImageView
-            android:id="@+id/news_image1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_6" />
-
-        <TextView
-            android:id="@+id/news_item1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/news_image1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:text="阿斯蒂芬gas德国卡技术的高科技啊黑色的高科技阿萨德后"
-            android:textSize="15sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/news_bottom_corner_bg_normal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
-
-        <ImageView
-            android:id="@+id/news_image1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_6" />
-
-        <TextView
-            android:id="@+id/news_item1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/news_image1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:text="阿斯蒂芬gas德国卡技术的高科技啊黑色的高科技阿萨德后"
-            android:textSize="15sp" />
+        <LinearLayout
+            android:id="@+id/layout_bottom_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_profile_favourite"
+            android:layout_toRightOf="@id/iv_profile_favourite"
+            android:background="@drawable/holder_profile"
+            android:orientation="vertical" />
     </RelativeLayout>
 
 </LinearLayout>

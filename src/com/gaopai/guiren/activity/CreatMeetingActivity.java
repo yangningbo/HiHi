@@ -11,8 +11,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,16 +28,14 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.AddMeetingResult;
-import com.gaopai.guiren.volley.IResponseListener;
+import com.gaopai.guiren.utils.ViewUtil;
+import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class CreatMeetingActivity extends BaseActivity implements OnClickListener {
@@ -53,6 +51,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 
 	private TextView tvStartTime;
 	private TextView tvEndTime;
+	private TextView tvNumLimit;
 
 	private ArrayAdapter spAdapter;
 	private Spinner spPrivacy;
@@ -62,14 +61,21 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 
 	private EditText etTitle;
 	private EditText etContent;
+
+	private TextView tvSetPassword;
 	private EditText etPassword;
-	private EditText etTags;
-	
+	private EditText etPasswordAgain;
+	private View layoutPrivacySetting;
+	private TextView tvPrivacySetting;
+	private View layoutPasswordSetting;
+
 	private ImageView ivHeader;
 
-	private int mPrivacy = 1;
+	private int mPrivacy = 1; // 1公开 2私密
 
 	private String mFilePath = "";
+
+	private boolean isSetPassword = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,17 +85,33 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		setAbContentView(R.layout.activity_creat_meeting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.create_meeting));
+		initComponent();
+		bindView();
+	}
 
+	private void bindView() {
+		// TODO Auto-generated method stub
+		initialTimeView();
+
+	}
+
+	private void initialTimeView() {
+		Calendar calendar = Calendar.getInstance();
+		mYear = calendar.get(Calendar.YEAR);
+		mMonth = calendar.get(Calendar.MONTH);
+		mDay = calendar.get(Calendar.DAY_OF_MONTH);
+		mHour = calendar.get(Calendar.HOUR_OF_DAY);
+		mMinute = calendar.get(Calendar.MINUTE);
+		String time = FeatureFunction.showTimedate(mYear, mMonth, mDay, mHour, mMinute);
+		tvStartTime.setText(time);
+		tvEndTime.setText(time);
+	}
+
+	private void initComponent() {
 		tvStartTime = (TextView) findViewById(R.id.tv_start_time);
 		tvStartTime.setOnClickListener(this);
 		tvEndTime = (TextView) findViewById(R.id.tv_end_time);
 		tvEndTime.setOnClickListener(this);
-//		spPrivacy = (Spinner) findViewById(R.id.sp_privacy_setting);
-//		spAdapter = ArrayAdapter.createFromResource(mContext, R.array.spinner_creat_meeting_item,
-//				android.R.layout.simple_spinner_dropdown_item);
-//		spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		spPrivacy.setAdapter(spAdapter);
-//		spPrivacy.setOnItemSelectedListener(new SpItemSelectedListener());
 		btnUploadPic = (Button) findViewById(R.id.btn_upload_pic);
 		btnUploadPic.setOnClickListener(this);
 
@@ -100,24 +122,26 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 
 		etContent = (EditText) findViewById(R.id.et_meeting_info);
 		etTitle = (EditText) findViewById(R.id.et_meeting_title);
-//		etPassword = (EditText) findViewById(R.id.et_meeting_password);
-//		etTags = (EditText) findViewById(R.id.et_meeting_tags);
-		
+		tvSetPassword = ViewUtil.findViewById(this, R.id.tv_set_password);
+		tvSetPassword.setOnClickListener(this);
+		etPassword = ViewUtil.findViewById(this, R.id.et_enter_password);
+		etPasswordAgain = ViewUtil.findViewById(this, R.id.et_enter_password_again);
+		layoutPrivacySetting = ViewUtil.findViewById(this, R.id.layout_privacy_setting);
+		layoutPrivacySetting.setOnClickListener(this);
+		layoutPasswordSetting = ViewUtil.findViewById(this, R.id.layout_password);
+
+		tvPrivacySetting = ViewUtil.findViewById(this, R.id.tv_privacy_setting);
 		ivHeader = (ImageView) findViewById(R.id.iv_meeeting_header);
-	}
 
-	private class SpItemSelectedListener implements OnItemSelectedListener {
-		@Override
-		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-			// TODO Auto-generated method stub
-			mPrivacy = position + 1;
-		}
+		tvNumLimit = ViewUtil.findViewById(this, R.id.tv_num_limit);
 
-		@Override
-		public void onNothingSelected(AdapterView<?> parent) {
-			// TODO Auto-generated method stub
-
-		}
+		etContent.addTextChangedListener(ViewUtil.creatNumLimitWatcher(etContent, 500, new OnTextChangedListener() {
+			@Override
+			public void onTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
+			}
+		}));
 	}
 
 	@Override
@@ -143,8 +167,40 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			break;
 		case R.id.btn_preview:
 			break;
+		case R.id.layout_privacy_setting:
+			showPrivacyDialog();
+			break;
+		case R.id.tv_set_password:
+			isSetPassword = !isSetPassword;
+			showPasswordView();
+			break;
 		default:
 			break;
+		}
+	}
+
+	private void showPrivacyDialog() {
+		// TODO Auto-generated method stub
+		final String[] items = getResources().getStringArray(R.array.privacy_setting_choice);
+		new AlertDialog.Builder(mContext).setTitle(getString(R.string.privacy_setting))
+				.setItems(items, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						mPrivacy = which + 1;
+						tvPrivacySetting.setText(items[which]);
+					}
+				}).show();
+	}
+
+	private void showPasswordView() {
+		// TODO Auto-generated method stub
+		if (isSetPassword) {
+			layoutPasswordSetting.setVisibility(View.VISIBLE);
+			tvSetPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_switch_active, 0);
+		} else {
+			layoutPasswordSetting.setVisibility(View.GONE);
+			tvSetPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_switch_normal, 0);
 		}
 	}
 
@@ -239,9 +295,9 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		final String title = etTitle.getText().toString();
 		final String info = etContent.getText().toString();
 		final String password = etPassword.getText().toString();
+		final String passwordAgain = etPasswordAgain.getText().toString();
 		final String start = tvStartTime.getText().toString();
 		final String end = tvEndTime.getText().toString();
-		final String tag = etTags.getText().toString();
 
 		if (TextUtils.isEmpty(title)) {
 			String prompt = mContext.getString(R.string.please_input) + mContext.getString(R.string.meeting_name);
@@ -286,14 +342,25 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			return;
 		}
 
+		if (isSetPassword) {
+			if (TextUtils.isEmpty(passwordAgain + password)) {
+				showToast(R.string.password_can_not_be_empty);
+				return;
+			}
+			if (!password.equals(passwordAgain)) {
+				showToast(R.string.password_not_same);
+				return;
+			}
+		}
+
 		DamiInfo.addMeeting(title, mFilePath, String.valueOf(mPrivacy), info, FeatureFunction.getTimeStamp(start),
-				FeatureFunction.getTimeStamp(end), tag, password, new SimpleResponseListener(mContext) {
+				FeatureFunction.getTimeStamp(end), password, new SimpleResponseListener(mContext, R.string.now_creat) {
 					@Override
 					public void onSuccess(Object o) {
 						// TODO Auto-generated method stub
 						AddMeetingResult data = (AddMeetingResult) o;
 						if (data.state != null && data.state.code == 0) {
-							showToast(getString(R.string.create_success));
+							showToast(getString(R.string.create_success_and_wait));
 							CreatMeetingActivity.this.finish();
 						} else {
 							this.otherCondition(data.state, CreatMeetingActivity.this);

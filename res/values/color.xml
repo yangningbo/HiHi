@@ -129,6 +129,7 @@
     <color name="general_border_normal">#A9A8A8</color>
     <color name="general_border_active">#2FB2E2</color>
     <color name="general_blue">#2FB2E2</color>
+    <color name="general_btn_press_blue">#2FB2E2</color>
     
     
     <color name="general_light_gray">#ECECEC</color>

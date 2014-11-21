@@ -866,4 +866,21 @@ public class DateUtil {
 		sb.append(minutes + "分" + seconds + "秒");
 		return sb.toString();
 	}
+	
+	
+	//上午11:09
+	public static String getReadableTime(int hour, int minute) {
+		if (hour <= 12) {
+			return "上午"+formatToTwoDigits(hour)+":"+formatToTwoDigits(minute);
+		} else {
+			return "下午"+formatToTwoDigits(hour%12)+":"+formatToTwoDigits(minute);
+		}
+	}
+	
+	public static String formatToTwoDigits(int time) {
+		if (time<10) {
+			return "0"+time;
+		}
+		return String.valueOf(time);
+	}
 }

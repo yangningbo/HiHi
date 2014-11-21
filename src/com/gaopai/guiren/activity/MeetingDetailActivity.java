@@ -29,9 +29,9 @@ import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.SimpleStateBean;
-import com.gaopai.guiren.db.SPConst;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class MeetingDetailActivity extends BaseActivity implements OnClickListener {

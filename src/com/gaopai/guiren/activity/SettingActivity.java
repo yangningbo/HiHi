@@ -40,6 +40,8 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 		btnLoginOut.setOnClickListener(this);
 		tvPrivateSetting = (TextView) findViewById(R.id.tv_privacy_setting);
 		tvPrivateSetting.setOnClickListener(this);
+		View view = findViewById(R.id.tv_receive_msg_background);
+		view.setOnClickListener(this);
 	}
 
 	@Override
@@ -50,6 +52,9 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			startActivity(SettingActivity.class);
 			break;
 		}
+		case R.id.tv_receive_msg_background:
+			startActivity(NotifySettingActivity.class); 
+			break;
 		case R.id.tv_clear_cache:
 			new Thread(new Runnable() {
 				@Override

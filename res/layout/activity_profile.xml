@@ -374,6 +374,7 @@
                         android:orientation="vertical" >
 
                         <TextView
+                            android:id="@+id/tv_profile_dy_monthyear"
                             android:layout_width="match_parent"
                             android:layout_height="14.6666dp"
                             android:layout_marginTop="2.66dp"
@@ -383,6 +384,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tv_profile_dy_day"
                             android:layout_width="match_parent"
                             android:layout_height="24dp"
                             android:layout_marginBottom="2dp"
@@ -693,16 +695,11 @@
                     android:text="显示全部"
                     android:textColor="@color/profile_name" />
 
-                <RelativeLayout
+                <com.gaopai.guiren.view.LineRelativeLayout
+                    android:id="@+id/layout_zan_holder"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="10dp" >
-
-                    <View
-                        android:layout_width="2px"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:background="@color/profile_vertical_divider" />
 
                     <ImageView
                         android:id="@+id/iv_profile_favourite"
@@ -712,24 +709,19 @@
                         android:src="@drawable/icon_profile_favourite" />
 
                     <TextView
+                        android:id="@+id/tv_bottom_favorite"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/iv_profile_favourite"
                         android:layout_toRightOf="@id/iv_profile_favourite"
-                        android:background="@drawable/holder_profile"
-                        android:text="阿萨德就会饭卡角色发挥看" />
-                </RelativeLayout>
+                        android:background="@drawable/holder_profile" />
+                </com.gaopai.guiren.view.LineRelativeLayout>
 
-                <RelativeLayout
+                <com.gaopai.guiren.view.LineRelativeLayout
+                    android:id="@+id/layout_spread_holder"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="10dp" >
-
-                    <View
-                        android:layout_width="2px"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:background="@color/profile_vertical_divider" />
 
                     <ImageView
                         android:id="@+id/iv_profile_favourite"
@@ -739,24 +731,19 @@
                         android:src="@drawable/icon_profile_spread" />
 
                     <TextView
+                        android:id="@+id/tv_bottom_spread"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/iv_profile_favourite"
                         android:layout_toRightOf="@id/iv_profile_favourite"
-                        android:background="@drawable/holder_profile"
-                        android:text="阿萨德就会饭卡角色发挥看" />
-                </RelativeLayout>
+                        android:background="@drawable/holder_profile" />
+                </com.gaopai.guiren.view.LineRelativeLayout>
 
-                <RelativeLayout
+                <com.gaopai.guiren.view.LineRelativeLayout
+                    android:id="@+id/layout_comment_holder"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="10dp" >
-
-                    <View
-                        android:layout_width="2px"
-                        android:layout_height="25dp"
-                        android:layout_marginLeft="15dp"
-                        android:background="@color/profile_vertical_divider" />
 
                     <ImageView
                         android:id="@+id/iv_profile_favourite"
@@ -765,14 +752,15 @@
                         android:layout_marginTop="20dp"
                         android:src="@drawable/icon_profile_comment" />
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/layout_bottom_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/iv_profile_favourite"
                         android:layout_toRightOf="@id/iv_profile_favourite"
                         android:background="@drawable/holder_profile"
-                        android:text="阿萨德就会饭卡角色发挥看" />
-                </RelativeLayout>
+                        android:orientation="vertical" />
+                </com.gaopai.guiren.view.LineRelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

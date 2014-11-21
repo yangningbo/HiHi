@@ -1,9 +1,8 @@
 package com.gaopai.guiren.activity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
-import org.jraf.android.backport.switchwidget.R.layout;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -23,11 +22,13 @@ import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -35,10 +36,19 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
+import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.User.CommentBean;
+import com.gaopai.guiren.bean.User.SpreadBean;
 import com.gaopai.guiren.bean.UserInfoBean;
+import com.gaopai.guiren.bean.dynamic.ConnectionBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.bean.net.TagResult;
+import com.gaopai.guiren.support.TagWindowManager;
+import com.gaopai.guiren.support.TagWindowManager.TagCallback;
+import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.view.FlowLayout;
+import com.gaopai.guiren.view.LineRelativeLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +59,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	public final static String KEY_USER_ID = "user_id";
 
 	private String tuid;
-	private boolean isSelf;
+	private boolean isSelf = false;
 
 	private ImageView ivHeader;
 	private TextView tvUserName;
@@ -82,8 +92,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private View tvRevealAllTags;
 
 	private FlowLayout tagLayout;
-	private List<String> tagList = new ArrayList<String>();
-	private List<String> recTagList = new ArrayList<String>();
+	private List<User.TagBean> tagList = new ArrayList<User.TagBean>();
+	private List<TagBean> recTagList = new ArrayList<TagBean>();
 
 	private View layoutBasicProfile;
 	private View layoutDyProfile;
@@ -100,6 +110,16 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private TextView tvDyViewMore;
 	private TextView tvDyContent;
 
+	private TextView tvBottomFavorite;
+	private TextView tvBottomSpread;
+	private LinearLayout layoutBottomComment;
+
+	private LineRelativeLayout layoutZanHolder;
+	private LineRelativeLayout layoutSpreadHolder;
+	private LineRelativeLayout layoutCommentHolder;
+	
+	private TagWindowManager tagWindowManager;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -112,6 +132,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			tuid = data.toString().substring(data.toString().indexOf("//") + 2);
 		}
 		mUser = DamiCommon.getLoginResult(this);
+		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
+		getUserInfo();
+		getTags();
+
+	}
+
+	private void getUserInfo() {
 		DamiInfo.getUserInfo(tuid, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
@@ -121,6 +148,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					if (data.data != null) {
 						tUser = data.data;
 						isSelf = mUser.uid.equals(tUser.uid);
+						tagWindowManager.setIsSelf(isSelf);
+						tagWindowManager.setTagList(tUser.tag);
 						initComponent();
 						bindView();
 					}
@@ -129,18 +158,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				}
 			}
 		});
-
-		for (int i = 0; i < 10; i++) {
-			recTagList.add("推荐" + i);
-		}
 	}
+	
+	private TagWindowManager.TagCallback tagCallback = new TagCallback() {
+		
+		@Override
+		public void onSave(String tags) {
+			// TODO Auto-generated method stub
+			addRemoteTags(tags);
+		}
+	};
 
 	private void initComponent() {
 		mTitleBar.setTitleText(getString(R.string.profile));
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		View setting = mTitleBar.addRightImageButtonView(android.R.drawable.ic_menu_send);
-		setting.setId(R.id.ab_setting);
-		setting.setOnClickListener(this);
 
 		ivHeader = (ImageView) findViewById(R.id.iv_header);
 
@@ -203,9 +234,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvDyCommentCount = (TextView) findViewById(R.id.tv_profile_dy_comment);
 		tvDySpreadCount = (TextView) findViewById(R.id.tv_profile_dy_spread);
 
-		tvDyFavoriteCount = (TextView) findViewById(R.id.tv_profile_dy_favorite);
+		tvDyMonthYear = (TextView) findViewById(R.id.tv_profile_dy_monthyear);
+		tvDyDay = (TextView) findViewById(R.id.tv_profile_dy_day);
 		tvDyViewMore = (TextView) findViewById(R.id.tv_profile_dy_more);
 		tvDyContent = (TextView) findViewById(R.id.tv_profile_dy_content);
+
+		tvBottomFavorite = (TextView) findViewById(R.id.tv_bottom_favorite);
+		tvBottomFavorite.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		tvBottomSpread = (TextView) findViewById(R.id.tv_bottom_spread);
+		tvBottomSpread.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		layoutBottomComment = (LinearLayout) findViewById(R.id.layout_bottom_comment);
+
+		layoutZanHolder = (LineRelativeLayout) findViewById(R.id.layout_zan_holder);
+		layoutCommentHolder = (LineRelativeLayout) findViewById(R.id.layout_comment_holder);
+		layoutSpreadHolder = (LineRelativeLayout) findViewById(R.id.layout_spread_holder);
 	}
 
 	private void bindView() {
@@ -223,14 +265,21 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			bindConnectionView();
 		}
 
-		Picasso.with(mContext).load(tUser.headsmall).placeholder(R.drawable.default_header)
-				.error(R.drawable.default_header).into(ivHeader);
+		if (!TextUtils.isEmpty(tUser.headsmall)) {
+			Picasso.with(mContext).load(tUser.headsmall).placeholder(R.drawable.default_header)
+					.error(R.drawable.default_header).into(ivHeader);
+		}
 
 		tvUserName.setText(tUser.realname);
 		tvUserInfo.setText(tUser.company);
 
 		bindContactView();
-		bindTags(tagLayout, false);
+		bindDyView();
+		if (tUser.tag != null && tUser.tag.size() > 0) {
+			tagList = tUser.tag;
+			bindTags(tagLayout, false);
+		}
+		bindBottomDynamicView();
 	}
 
 	private void bindConnectionView() {
@@ -269,17 +318,84 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		textView.setCompoundDrawablePadding(0);
 		((ViewGroup) textView.getParent()).setOnClickListener(null);
 	}
-	
+
+	private void bindBottomDynamicView() {
+		// TODO Auto-generated method stub
+		boolean isZan = false, isSpread = false, isComment = false;
+		layoutZanHolder.setLineHalfOnly(false);
+		layoutSpreadHolder.setLineHalfOnly(false);
+		layoutCommentHolder.setLineHalf(true);
+		if (tUser.zantaglist != null && tUser.zantaglist.size() > 0) {
+
+		} else {
+			layoutZanHolder.setVisibility(View.GONE);
+		}
+
+		if (tUser.kuosanlist != null && tUser.kuosanlist.size() > 0) {
+			isSpread = true;
+			List<ConnectionBean.User> userList = new ArrayList<ConnectionBean.User>();
+			for (SpreadBean bean : tUser.kuosanlist) {
+				ConnectionBean.User user = new ConnectionBean.User();
+				user.uid = bean.uid;
+				user.realname = bean.realname;
+				userList.add(user);
+			}
+			tvBottomSpread.setText(MyTextUtils.addConnectionUserList(userList, "扩散过"));
+		} else {
+			layoutSpreadHolder.setVisibility(View.GONE);
+		}
+
+		isComment = bindCommentView();
+
+		if (!isComment && isSpread) {
+			layoutSpreadHolder.setLineHalf(true);
+		}
+		if (!isComment && !isSpread && isZan) {
+			layoutZanHolder.setLineHalf(true);
+		}
+	}
+
 	private void bindDyView() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(tUser.dynamic.createtime);
+		tvDyContent.setText(tUser.dynamic.post);
+		tvDyDay.setText(String.valueOf(calendar.get(Calendar.DATE)));
+		tvDyMonthYear.setText(calendar.get(Calendar.YEAR) + "." + calendar.get(Calendar.MONTH) + 1);
+	}
+
+	private boolean bindCommentView() {
+		if (tUser.commentlist != null && tUser.commentlist.size() > 0) {
+			for (CommentBean bean : tUser.commentlist) {
+				View view = mInflater.inflate(R.layout.item_general, null);
+				TextView nameView = (TextView) view.findViewById(R.id.tv_title);
+				TextView infoView = (TextView) view.findViewById(R.id.tv_info);
+				ImageView headerView = (ImageView) view.findViewById(R.id.iv_header);
+				nameView.setText(bean.uname);
+				infoView.setText(bean.content.content);
+				if (!TextUtils.isEmpty(bean.s_path)) {
+					Picasso.with(mContext).load(bean.s_path).placeholder(R.drawable.default_header)
+							.error(R.drawable.default_header).into(headerView);
+				}
+				layoutBottomComment.addView(view);
+				View lineView = new View(mContext);
+				lineView.setBackgroundColor(getResources().getColor(R.color.general_horizon_divider));
+				layoutBottomComment.addView(lineView, new LayoutParams(LayoutParams.MATCH_PARENT, 1));
+			}
+			layoutBottomComment.removeViewAt(layoutBottomComment.getChildCount() - 1);
+
+			return true;
+		}
+		layoutCommentHolder.setVisibility(View.GONE);
+		return false;
 	}
 
 	private void bindTags(FlowLayout taLayoutPara, boolean isWithDelete) {
 		taLayoutPara.removeAllViews();
-		for (String tag : tagList) {
+		for (User.TagBean tag : tagList) {
 			if (isWithDelete) {
-				taLayoutPara.addView(creatTag(tag), taLayoutPara.getTextLayoutParams());
+				taLayoutPara.addView(creatTag(tag.tag), taLayoutPara.getTextLayoutParams());
 			} else {
-				taLayoutPara.addView(creatTagWithoutDelete(tag), taLayoutPara.getTextLayoutParams());
+				taLayoutPara.addView(creatTagWithoutDelete(tag.tag), taLayoutPara.getTextLayoutParams());
 			}
 		}
 	}
@@ -294,21 +410,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivity(SettingActivity.class);
 			break;
 		}
-		case R.id.tv_my_fans_count:{
+		case R.id.tv_my_fans_count: {
 			Intent intent = new Intent(mContext, ContactActivity.class);
 			intent.putExtra(ContactActivity.KEY_TYPE, ContactActivity.TYPE_FANS);
 			intent.putExtra(ContactActivity.KEY_UID, tUser.uid);
 			startActivity(intent);
 			break;
 		}
-		case R.id.tv_my_followers_count:{
+		case R.id.tv_my_followers_count: {
 			Intent intent = new Intent(mContext, ContactActivity.class);
 			intent.putExtra(ContactActivity.KEY_TYPE, ContactActivity.TYPE_FOLLOWERS);
 			intent.putExtra(ContactActivity.KEY_UID, tUser.uid);
 			startActivity(intent);
 			break;
 		}
-			
 		case R.id.tv_reverification:
 			startActivity(ReverificationActivity.class);
 			break;
@@ -326,7 +441,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.tv_reveal_all_tags:
 		case R.id.tv_add_tags:
-			showTagsWindow();
+			tagWindowManager.showTagsWindow();
 			break;
 		case R.id.btn_add_tag:
 			String str = etTags.getText().toString();
@@ -335,7 +450,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				return;
 			}
 			etTags.setText("");
-			flowTagsAdd.addView(creatTag(str), flowTagsAdd.getTextLayoutParams());
+			if (!checkIsTagInList(str)) {
+				flowTagsAdd.addView(creatTag(str), flowTagsAdd.getTextLayoutParams());
+			}
 			break;
 		case R.id.layout_profile_bottom_comment:
 			startActivityWithUser(CommentProfileActivity.KEY_USER, CommentProfileActivity.class);
@@ -423,6 +540,22 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	private void getTags() {
+		DamiInfo.getTags(new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				TagResult data = (TagResult) o;
+				if (data.state != null && data.state.code == 0) {
+					recTagList = data.data;
+					tagWindowManager.setRecTagList(data.data);
+				} else {
+					this.otherCondition(data.state, ProfileActivity.this);
+				}
+			}
+		});
+	}
+
 	private View creatTag(String text) {
 		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
@@ -450,7 +583,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				flowTagsAdd.addView(creatTag(text), flowTagsAdd.getTextLayoutParams());
+				if (!checkIsTagInList(text)) {
+					flowTagsAdd.addView(creatTag(text), flowTagsAdd.getTextLayoutParams());
+				}
 			}
 		});
 		return v;
@@ -463,6 +598,30 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			flowTagsAdd.removeView((View) v.getParent());
 		}
 	};
+
+	// store tags in remote computer
+	private void addRemoteTags(String tags) {
+		if (!TextUtils.isEmpty(tags)) {
+			DamiInfo.updateUserTag(tuid, tags, new SimpleResponseListener(mContext, R.string.request_internet_now) {
+
+				@Override
+				public void onSuccess(Object o) {
+					// TODO Auto-generated method stub
+					showToast(R.string.add_tags_success);
+				}
+			});
+		}
+	}
+
+	private boolean checkIsTagInList(String tag) {
+		for (User.TagBean tagBean : tagList) {
+			if (tagBean.equals(tag)) {
+				showToast(R.string.tag_exist);
+				return true;
+			}
+		}
+		return false;
+	}
 
 	private FlowLayout flowTagsAdd;
 	private EditText etTags;
@@ -479,9 +638,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		etTags = (EditText) view.findViewById(R.id.et_tags);
 		btnAddTags = (Button) view.findViewById(R.id.btn_add_tag);
 		btnAddTags.setOnClickListener(this);
-		bindTags(flowTagsAdd, true);
-		for (String tag : recTagList) {
-			flowTagsRec.addView(creatTageWithAction(tag), flowTagsRec.getTextLayoutParams());
+		if (isSelf) {
+			bindTags(flowTagsAdd, true);
+		} else {
+			bindTags(flowTagsAdd, false);
+		}
+		for (TagBean tag : recTagList) {
+			flowTagsRec.addView(creatTageWithAction(tag.tag), flowTagsRec.getTextLayoutParams());
 		}
 		Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
 		btnCancel.setOnClickListener(new OnClickListener() {
@@ -499,10 +662,18 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				int count = flowTagsAdd.getChildCount();
+				StringBuilder tagStringBuilder = new StringBuilder();
 				tagList.clear();
 				for (int i = 0; i < count; i++) {
-					tagList.add(((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).getChildAt(0)).getText().toString());
+					String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).getChildAt(0)).getText()
+							.toString();
+					User.TagBean tagBean = new User.TagBean();
+					tagBean.tag = str;
+					tagList.add(tagBean);
+					tagStringBuilder.append(str).append(",");
 				}
+				tagStringBuilder.substring(0, tagStringBuilder.length() - 1);
+				addRemoteTags(tagStringBuilder.toString());
 				dialog.cancel();
 				bindTags(tagLayout, false);
 			}

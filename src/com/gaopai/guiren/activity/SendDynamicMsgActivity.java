@@ -126,7 +126,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				s.delete(nSelStart - 1, nSelEnd);
 				etDynamicMsg.setTextKeepState(s);
 			}
-			tvWordNumLimit.setText("还能输入" + (20 - s.length()) + "字");
+			tvWordNumLimit.setText("还能输入" + (500 - s.length()) + "字");
 		}
 	};
 

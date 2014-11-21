@@ -36,7 +36,6 @@
     <string name="login_error">登录失败</string>
     <string name="login_need_contact">这里主打部落社交，为了给您推荐更多的好友和商务资源，请开启通讯录权限</string>
     <string name="please_input_username">请输入用户名</string>
-    <string name="please_input_password">请输入密码</string>
     <string name="desc"></string>
     <string name="long_ago">很久之前</string>
     <string name="meeting_tab">会议</string>
@@ -45,7 +44,6 @@
     <string name="message_tab">消息</string>
     <string name="hot_spot">动态</string>
     <string name="find_tribe">查找部落</string>
-    <string name="create_tribe">创建部落</string>
     <string name="sina_weibo_login">新浪微博登录</string>
     <string name="tencent_qq_login">腾讯QQ登录</string>
     <string name="look_aroud">随便看看</string>
@@ -465,7 +463,7 @@
     <string name="meeting_name_too_short">您输入晚朝标题的长度不够</string>
     <string name="meeting_name_too_long">您输入的晚朝标题太长</string>
     <string name="choose_pass_time">您选择的时间比当前时间早，请重新选择</string>
-    <string name="choose_time_error">您选择结束时间小于开始时间，请重新选择</string>
+    <string name="choose_time_error">您选择结束时间小于开始时间</string>
     <string name="has_join_start">已有</string>
     <string name="has_join_end">人报名</string>
     <string name="add_clock">添加提醒</string>
@@ -513,7 +511,6 @@
     <string name="profile_info">个人中心</string>
     <string name="message_limit_count">聊天文本不能超过5000字</string>
     <string name="get_comment_address_failed">获取评论地址失败</string>
-    <string name="create">创建</string>
     <string name="server_tel_prompt">客服电话：</string>
     <string name="website_prompt">官方网站：</string>
     <string name="server_tel">400-806-1096</string>
@@ -652,5 +649,39 @@
     <string name="message_detail">消息详情</string>
     <string name="report">举报</string>
     <string name="private_chat_setting">隐聊设置</string>
+    <string name="add_tags_success">添加标签成功</string>
+    <string name="exit_login">退出登录</string>
+    <string name="receive_msg_notify">后台接送消息通知</string>
+    <string name="msg_notify">消息通知</string>
+
+    <!-- tags -->
+    <string name="tag_exist">标签已存在</string>
+
+    <!-- creat meeting or tribe -->
+    <string name="set_password">设置密码</string>
+    <string name="please_input_password">请输入密码</string>
+    <string name="please_input_password_again">请再次输入密码</string>
+    <string name="preview">预览</string>
+    <string name="create">创建</string>
+    <string name="password_can_not_be_empty">密码不能为空</string>
+    <string name="password_not_same">两次输入密码不相同</string>
+    <string name="privacy_setting">隐私设置</string>
+    
+    <string name="privacy_setting_open">开放</string>
+    <string name="privacy_setting_close">私密</string>
+    <string-array name="privacy_setting_choice">
+        <item >@string/privacy_setting_open</item>
+        <item >@string/privacy_setting_close</item>
+    </string-array>
+
+    <string name="add_meeting_pic">添加会议图片</string>
+    <string name="add_tribe_pic">添加部落图片</string>
+    <string name="edit_tribe_tag">编辑圈子标签</string>
+    <string name="tribe_info_hint">圈子说明，少于500字符</string>
+    <string name="tribe_title_hint">圈子名称2~15个字符</string>
+    
+    <string name="please_input_meeting_title">请输入会议标题</string>
+    <string name="now_creat">正在创建&#8230;</string>
+    <string name="create_success_and_wait">创建成功，请等待审核</string>
 
 </resources>

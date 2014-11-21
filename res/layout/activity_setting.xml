@@ -15,13 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white"
-        android:paddingLeft="10dp" >
+        android:background="@color/white" >
 
         <TextView
             android:id="@+id/tv_receive_msg_background"
             style="@style/setting_text"
-            android:text="后台接送消息通知" />
+            android:text="@string/receive_msg_notify" />
 
         <View
             android:layout_width="match_parent"
@@ -59,7 +58,7 @@
             android:background="@color/divider" />
 
         <TextView
-            android:id="@+id/tv_send_parise"
+            android:id="@+id/tv_send_prise"
             style="@style/setting_text"
             android:text="@string/give_nice" />
 
@@ -99,7 +98,6 @@
         android:id="@+id/tv_privacy_setting"
         style="@style/setting_text"
         android:paddingLeft="10dp"
-        android:background="@color/white"
         android:text="@string/private_setting" />
 
     <View
@@ -116,6 +114,6 @@
         android:background="@color/setting_btn_red"
         android:textColor="@color/white"
         android:layout_marginTop="10dp"
-        android:text="退出登录" />
+        android:text="@string/exit_login" />
 
 </LinearLayout>

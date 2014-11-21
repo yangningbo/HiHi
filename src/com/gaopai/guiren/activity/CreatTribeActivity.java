@@ -2,9 +2,12 @@ package com.gaopai.guiren.activity;
 
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,7 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.gaopai.guiren.BaseActivity;
@@ -21,6 +26,8 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.net.AddMeetingResult;
+import com.gaopai.guiren.utils.ViewUtil;
+import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class CreatTribeActivity extends BaseActivity implements OnClickListener {
@@ -31,16 +38,19 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	private Button btnCreat;
 	private EditText etTitle;
 	private EditText etInfo;
-	private EditText etTags;
+	private TextView tvEditTags;
+	private TextView tvNumLimit;
+
+	private TextView tvSetPassword;
 	private EditText etPassword;
-
-	private ArrayAdapter spAdapter;
-	private Spinner spPrivacy;
-
+	private EditText etPasswordAgain;
+	private View layoutPrivacySetting;
+	private TextView tvPrivacySetting;
+	private View layoutPasswordSetting;
+	
+	private boolean isSetPassword = true;
 	private int mPrivacy = 1;
-
 	private String mFilePath = "";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -49,21 +59,38 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		setAbContentView(R.layout.activity_creat_tribe);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText("创建圈子");
+		initComponent();
+	}
+	
+	private void initComponent() {
 		btnUploadPic = (Button) findViewById(R.id.btn_upload_pic);
 		btnUploadPic.setOnClickListener(this);
-		spAdapter = ArrayAdapter.createFromResource(mContext, R.array.spinner_creat_meeting_item,
-				android.R.layout.simple_spinner_dropdown_item);
-		spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		spPrivacy = (Spinner) findViewById(R.id.sp_privacy_setting);
-//		spPrivacy.setAdapter(spAdapter);
-//		spPrivacy.setOnItemSelectedListener(new SpItemSelectedListener());
+
 		btnCreat = (Button) findViewById(R.id.btn_creat);
 		btnCreat.setOnClickListener(this);
 
 		etInfo = (EditText) findViewById(R.id.et_tribe_info);
 		etTitle = (EditText) findViewById(R.id.et_tribe_title);
-//		etPassword = (EditText) findViewById(R.id.et_tribe_password);
-		etTags = (EditText) findViewById(R.id.et_tribe_tags);
+		tvEditTags = ViewUtil.findViewById(this, R.id.tv_edit_tag);
+		tvSetPassword = ViewUtil.findViewById(this, R.id.tv_set_password);
+		tvSetPassword.setOnClickListener(this);
+		etPassword = ViewUtil.findViewById(this, R.id.et_enter_password);
+		etPasswordAgain = ViewUtil.findViewById(this, R.id.et_enter_password_again);
+		layoutPrivacySetting = ViewUtil.findViewById(this, R.id.layout_privacy_setting);
+		layoutPrivacySetting.setOnClickListener(this);
+		layoutPasswordSetting = ViewUtil.findViewById(this, R.id.layout_password);
+
+		tvPrivacySetting = ViewUtil.findViewById(this, R.id.tv_privacy_setting);
+
+		tvNumLimit = ViewUtil.findViewById(this, R.id.tv_num_limit);
+
+		etInfo.addTextChangedListener(ViewUtil.creatNumLimitWatcher(etInfo, 500, new OnTextChangedListener() {
+			@Override
+			public void onTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
+			}
+		}));
 	}
 
 	@Override
@@ -79,10 +106,43 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		case R.id.btn_creat:
 			creatTribe();
 			break;
+		case R.id.layout_privacy_setting:
+			showPrivacyDialog();
+			break;
+		case R.id.tv_set_password:
+			isSetPassword = !isSetPassword;
+			showPasswordView();
+			break;
 		default:
 			break;
 		}
 	}
+	
+	private void showPrivacyDialog() {
+		// TODO Auto-generated method stub
+		final String[] items = getResources().getStringArray(R.array.privacy_setting_choice);
+		new AlertDialog.Builder(mContext).setTitle(getString(R.string.privacy_setting))
+				.setItems(items, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						mPrivacy = which + 1;
+						tvPrivacySetting.setText(items[which]);
+					}
+				}).show();
+	}
+	
+	private void showPasswordView() {
+		// TODO Auto-generated method stub
+		if (isSetPassword) {
+			layoutPasswordSetting.setVisibility(View.VISIBLE);
+			tvSetPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_switch_active, 0);
+		} else {
+			layoutPasswordSetting.setVisibility(View.GONE);
+			tvSetPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_switch_normal, 0);
+		}
+	}
+
 
 	private class SpItemSelectedListener implements OnItemSelectedListener {
 		@Override
@@ -113,7 +173,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		final String title = etTitle.getText().toString();
 		final String info = etInfo.getText().toString();
 		final String password = etPassword.getText().toString();
-		final String tag = etTags.getText().toString();
+//		final String tag = etTags.getText().toString();
 		
 		if (TextUtils.isEmpty(title)) {
 			String prompt = mContext.getString(R.string.please_input) + mContext.getString(R.string.tribe_name);
@@ -140,7 +200,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 			return;
 		}
 
-		DamiInfo.addTribe(title, mFilePath, String.valueOf(mPrivacy), info, tag, password, new SimpleResponseListener(
+		DamiInfo.addTribe(title, mFilePath, String.valueOf(mPrivacy), info, "", password, new SimpleResponseListener(
 				mContext, "正在请求") {
 			@Override
 			public void onSuccess(Object o) {

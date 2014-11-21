@@ -15,118 +15,52 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingLeft="10dp" >
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <TextView
             android:id="@+id/tv_check_phone_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                style="@style/privacy_setting_text"
-                android:text="允许未关注用户查看手机号码" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_switch_normal" />
-        </RelativeLayout>
+            style="@style/privacy_setting_text"
+            android:text="允许未关注用户查看手机号码" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/divider" />
 
-        <RelativeLayout
+        <TextView
             android:id="@+id/tv_check_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                style="@style/privacy_setting_text"
-                android:text="允许未关注用户查看邮箱" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_switch_normal" />
-        </RelativeLayout>
+            style="@style/privacy_setting_text"
+            android:text="允许未关注用户查看邮箱" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/divider" />
 
-        <RelativeLayout
+        <TextView
             android:id="@+id/tv_check_weixin_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                style="@style/privacy_setting_text"
-                android:text="允许未关注用户查看微信号" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_switch_normal" />
-        </RelativeLayout>
+            style="@style/privacy_setting_text"
+            android:text="允许未关注用户查看微信号" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/divider" />
 
-        <RelativeLayout
+        <TextView
             android:id="@+id/tv_check_sina_weibo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                style="@style/privacy_setting_text"
-                android:text="允许未关注用户查看我的新浪微博" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_switch_normal" />
-        </RelativeLayout>
+            style="@style/privacy_setting_text"
+            android:text="允许未关注用户查看我的新浪微博" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/divider" />
 
-        <RelativeLayout
+        <TextView
             android:id="@+id/tv_check_connection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                style="@style/privacy_setting_text"
-                android:text="允许未关注用户查看我的人脉" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_switch_normal" />
-        </RelativeLayout>
+            style="@style/privacy_setting_text"
+            android:text="允许未关注用户查看我的人脉" />
     </LinearLayout>
 
     <TextView

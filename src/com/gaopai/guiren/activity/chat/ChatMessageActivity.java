@@ -21,7 +21,7 @@ import com.gaopai.guiren.adapter.TribeChatAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.db.SPConst;
+import com.gaopai.guiren.utils.SPConst;
 
 //私信界面
 public class ChatMessageActivity extends ChatMainActivity implements OnClickListener {

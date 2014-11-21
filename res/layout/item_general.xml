@@ -23,6 +23,7 @@
         android:background="@drawable/message_count_bg"
         android:gravity="center"
         android:textColor="@color/white"
+        android:visibility="gone"
         android:textSize="11sp" />
 
     <TextView

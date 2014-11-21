@@ -14,13 +14,6 @@ public class TestActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.item_news);
 		
-		findViewById(R.id.tv).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-			}
-		});
 	}
 	
 }

@@ -54,6 +54,7 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -122,6 +123,7 @@ public class DynamicAdapter extends BaseAdapter {
 	 * @param type
 	 */
 	private void downVoiceSuccess(final MessageInfo msg) {
+		Logger.d(this, "player==null " +(mPlayerWrapper==null) + "   msg==null "+(msg==null));
 		if (mPlayerWrapper.getMessageTag().equals(msg.tag)) {
 			mPlayerWrapper.start(msg);
 			msg.isReadVoice = 1;
@@ -136,7 +138,7 @@ public class DynamicAdapter extends BaseAdapter {
 
 	public void clear() {
 		mData.clear();
-	}
+	}  
 
 	@Override
 	public int getCount() {
@@ -357,7 +359,7 @@ public class DynamicAdapter extends BaseAdapter {
 	private SpeexPlayerWrapper mPlayerWrapper;
 	private int palyedPosition;
 
-	private void buildMsgView(ViewHolderSpreadMsg viewHolder, TypeHolder typeBean, final int position, int type) {
+	private void buildMsgView(ViewHolderSpreadMsg viewHolder, final TypeHolder typeBean, final int position, int type) {
 		// TODO Auto-generated method stub
 		buildCommonView(viewHolder, typeBean, position, type);
 		final JsonContent content = typeBean.jsoncontent;
@@ -394,7 +396,7 @@ public class DynamicAdapter extends BaseAdapter {
 					palyedPosition = position;
 					MessageInfo messageInfo = new MessageInfo();
 					messageInfo.voiceUrl = content.voiceUrl;
-					messageInfo.tag = content.sid;
+					messageInfo.tag = typeBean.id;
 					mPlayerWrapper.start(messageInfo);
 				}
 			});

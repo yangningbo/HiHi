@@ -39,8 +39,8 @@ import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
-import com.gaopai.guiren.db.SPConst;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class ChatTribeActivity extends ChatMainActivity implements OnClickListener {

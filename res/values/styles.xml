@@ -248,11 +248,15 @@
 
     <style name="privacy_setting_text">
         <item name="android:textSize">16sp</item>
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">15dp</item>
-        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingTop">10dp</item>
         <item name="android:paddingRight">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/selector_btn_general</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:drawableRight">@drawable/level_switch_general</item>
     </style>
 
     <style name="connection_item_header1">

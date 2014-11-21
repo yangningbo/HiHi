@@ -130,7 +130,7 @@ public class DamiApp extends Application {
 				e.printStackTrace();
 			}
 		}
-		Log.d("example", "崩溃信息\n" + info);
+		Log.d("app_crash", "崩溃信息\n" + info);
 		File dir = new File(LOG_DIR);
 		if (!dir.exists()) {
 			dir.mkdirs();

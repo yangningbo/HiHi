@@ -26,7 +26,9 @@ import com.gaopai.guiren.bean.FavoriteList;
 import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.bean.MsgConfigResult;
 import com.gaopai.guiren.bean.NewUserList;
+import com.gaopai.guiren.bean.PrivacySettingResult;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.TribeList;
 import com.gaopai.guiren.bean.UserInfoBean;
@@ -62,8 +64,8 @@ public class DamiInfo implements Serializable {
 
 	// public static final String HOST =
 	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-//	public static final String HOST = "http://192.168.1.239:8081/index.php/";
-	
+	// public static final String HOST = "http://192.168.1.239:8081/index.php/";
+
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
@@ -546,7 +548,7 @@ public class DamiInfo implements Serializable {
 	 * @return @
 	 */
 	public static void addMeeting(String title, String pic, String type, String content, long start, long end,
-			String tag, String password, IResponseListener listener) {
+			String password, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		List<MorePicture> fileList = new ArrayList<MorePicture>();
 		if (!TextUtils.isEmpty(pic)) {
@@ -558,8 +560,10 @@ public class DamiInfo implements Serializable {
 		bundle.add("content", content);
 		bundle.add("start", String.valueOf(start));
 		bundle.add("end", String.valueOf(end));
-		bundle.add("tag", tag);
-		bundle.add("password", password);
+		// bundle.add("tag", tag);
+		if (!TextUtils.isEmpty(password)) {
+			bundle.add("password", password);
+		}
 
 		String url = SERVER + "meeting/addMeeting";
 		request(url, bundle, Utility.HTTPMETHOD_POST, 1, AddMeetingResult.class, listener);
@@ -1451,12 +1455,23 @@ public class DamiInfo implements Serializable {
 	/**
 	 * 添加动态评论 少了一个我的id
 	 * 
-	 * @param id
+	 * 
+	 * @param isanonymous
+	 *            1：匿名 0：实名评论
+	 * @param type
+	 *            0：用户聊天
+	 * 
+	 *            1：动态，实名评论 2：会议室 3：圈子 4：聊天室 5：人脉，
 	 * @return
 	 * @throws DamiException
 	 */
 	public static void addComment(String toid, int type, String dataid, String content, int isanonymous,
 			String displayname, String todisplayname, IResponseListener listener) {
+		addProfileComment(toid, type, dataid, content, isanonymous, displayname, todisplayname, "", listener);
+	}
+
+	public static void addProfileComment(String toid, int type, String dataid, String content, int isanonymous,
+			String displayname, String todisplayname, String tabletype, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("toid", toid);
 		bundle.add("type", String.valueOf(type));
@@ -1465,6 +1480,7 @@ public class DamiInfo implements Serializable {
 		bundle.add("isanonymous", String.valueOf(isanonymous));
 		bundle.add("displayname", forceNotNull(displayname));
 		bundle.add("todisplayname", forceNotNull(todisplayname));
+		bundle.add("tabletype", tabletype);
 
 		String url = SERVER + "user/addComment";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
@@ -1871,7 +1887,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "meeting/getguests";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
-	
+
 	/**
 	 * 获取部落消息的评论列表
 	 * 
@@ -1881,7 +1897,7 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void getCommentList(String msgid, String maxID, String sinceID, IResponseListener listener){
+	public static void getCommentList(String msgid, String maxID, String sinceID, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("msgid", msgid);
 		if (!TextUtils.isEmpty(maxID)) {
@@ -1896,7 +1912,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "tribe/messageCommentList";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
 	}
-	
+
 	/**
 	 * 获取部落赞列表
 	 * 
@@ -1913,7 +1929,122 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/messageAgreeList";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
 	}
-	
-	
-	
+
+	/**
+	 * 添加用户标签
+	 * 
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void addUserTag(String fid, String tag, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fid", fid);
+		bundle.add("tag", tag);
+		String url = SERVER + "user/addUserTag";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+	/**
+	 * 更新用户标签
+	 * 
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void updateUserTag(String fid, String tag, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fid", fid);
+		bundle.add("tag", tag);
+		String url = SERVER + "user/updateUserTag";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 删除用户标签
+	 * 
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void delUserTag(String fid, String tag, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fid", fid);
+		bundle.add("tag", tag);
+		String url = SERVER + "user/delUserTag";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void zanUserTag(String fid, String tag, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fid", fid);
+		bundle.add("tag", tag);
+		String url = SERVER + "user/zanUserTag";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
+	}
+
+	/**
+	 * 获取隐私设置 传uid
+	 * 
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getPrivacyConfig(IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		String url = SERVER + "user/GetPrivacyConfig";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, PrivacySettingResult.class, listener);
+	}
+
+	/**
+	 * 隐私设置 传uid
+	 * 
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void setPrivacyConfig(int phone, int email, int weixin, int weibo, int renmai,
+			IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("lookp", String.valueOf(phone));
+		bundle.add("lookm", String.valueOf(email));
+		bundle.add("lookw", String.valueOf(weixin));
+		bundle.add("lookwb", String.valueOf(weibo));
+		bundle.add("lookr", String.valueOf(renmai));
+		String url = SERVER + "user/setPrivacyConfig";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 获取消息提醒设置 传uid
+	 * 
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void getMessageConfig(IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		String url = SERVER + "user/GetMessageConfig";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, MsgConfigResult.class, listener);
+	}
+
+	/**
+	 * 消息提醒设置 传uid
+	 * 
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void setMessageConfig(int dnd, int bh, int bm, int eh, int em, int ring, int shake, int dami,
+			IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("dnd", String.valueOf(dnd));
+		bundle.add("bh", String.valueOf(bh));
+		bundle.add("bm", String.valueOf(bm));
+		bundle.add("eh", String.valueOf(eh));
+		bundle.add("em", String.valueOf(em));
+		bundle.add("ring", String.valueOf(ring));
+		bundle.add("shake", String.valueOf(shake));
+		bundle.add("dami", String.valueOf(dami));
+		String url = SERVER + "user/SetMessageConfig";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
 }
