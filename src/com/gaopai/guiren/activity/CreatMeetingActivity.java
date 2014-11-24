@@ -17,8 +17,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -33,7 +31,9 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.bean.net.AddMeetingResult;
+import com.gaopai.guiren.bean.Tribe;
+import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -48,6 +48,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 	private int mDay = 0;
 	private int mHour = 0;
 	private int mMinute = 0;
+	int mYeaer1 = 0, mMonth1 = 0;
 
 	private TextView tvStartTime;
 	private TextView tvEndTime;
@@ -76,6 +77,9 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 	private String mFilePath = "";
 
 	private boolean isSetPassword = true;
+	private Tribe mMeeting;
+	public static String KEY_MEETING = "meeting";
+	private boolean isEdit = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,14 +89,33 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		setAbContentView(R.layout.activity_creat_meeting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.create_meeting));
+		mMeeting = (Tribe) getIntent().getSerializableExtra(KEY_MEETING);
+		if (mMeeting != null) {
+			isEdit = true;
+		}
 		initComponent();
 		bindView();
 	}
 
 	private void bindView() {
 		// TODO Auto-generated method stub
-		initialTimeView();
-
+		if (!isEdit) {
+			initialTimeView();
+			return;
+		}
+		mTitleBar.setTitleText(R.string.edit_meeting);
+		ImageLoaderUtil.displayImage(mMeeting.logolarge, ivHeader);
+		etTitle.setText(mMeeting.name);
+		if (mMeeting.type == 1) {
+			mPrivacy = 1;
+		} else {
+			mPrivacy = 2;
+		}
+		tvPrivacySetting.setText(mPrivacy == 1 ? getString(R.string.privacy_setting_open)
+				: getString(R.string.privacy_setting_close));
+		tvStartTime.setText(FeatureFunction.getChatTime(mMeeting.start * 1000));
+		tvEndTime.setText(FeatureFunction.getChatTime(mMeeting.end * 1000));
+		etContent.setText(mMeeting.content);
 	}
 
 	private void initialTimeView() {
@@ -166,6 +189,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			creatMeeting();
 			break;
 		case R.id.btn_preview:
+			previewMeeting();
 			break;
 		case R.id.layout_privacy_setting:
 			showPrivacyDialog();
@@ -291,6 +315,22 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
+	private void previewMeeting() {
+		final String title = etTitle.getText().toString();
+		final String info = etContent.getText().toString();
+		final String start = tvStartTime.getText().toString();
+		final String end = tvEndTime.getText().toString();
+		Tribe tempTribe = new Tribe();
+		tempTribe.content = info;
+		tempTribe.start = FeatureFunction.getTimeStamp(start);
+		tempTribe.end = FeatureFunction.getTimeStamp(end);
+		tempTribe.name = title;
+		tempTribe.logosmall = mFilePath;
+		Intent intent = new Intent(mContext, MeetingDetailActivity.class);
+		intent.putExtra(MeetingDetailActivity.KEY_MEETING, tempTribe);
+		startActivity(intent);
+	}
+
 	private void creatMeeting() {
 		final String title = etTitle.getText().toString();
 		final String info = etContent.getText().toString();
@@ -353,19 +393,30 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			}
 		}
 
-		DamiInfo.addMeeting(title, mFilePath, String.valueOf(mPrivacy), info, FeatureFunction.getTimeStamp(start),
-				FeatureFunction.getTimeStamp(end), password, new SimpleResponseListener(mContext, R.string.now_creat) {
-					@Override
-					public void onSuccess(Object o) {
-						// TODO Auto-generated method stub
-						AddMeetingResult data = (AddMeetingResult) o;
-						if (data.state != null && data.state.code == 0) {
-							showToast(getString(R.string.create_success_and_wait));
-							CreatMeetingActivity.this.finish();
-						} else {
-							this.otherCondition(data.state, CreatMeetingActivity.this);
-						}
+		SimpleResponseListener listener = new SimpleResponseListener(mContext, R.string.now_creat) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					String str = getString(R.string.create_success_and_wait);
+					if (isEdit) {
+						str = getString(R.string.edit_success);
 					}
-				});
+					showToast(str);
+					CreatMeetingActivity.this.finish();
+				} else {
+					this.otherCondition(data.state, CreatMeetingActivity.this);
+				}
+			}
+		};
+		if (isEdit) {
+			DamiInfo.editMeeting(mMeeting.id, title, mFilePath, String.valueOf(mPrivacy), info,
+					FeatureFunction.getTimeStamp(start), FeatureFunction.getTimeStamp(end), password, listener);
+		} else {
+			DamiInfo.addMeeting(title, mFilePath, String.valueOf(mPrivacy), info, FeatureFunction.getTimeStamp(start),
+					FeatureFunction.getTimeStamp(end), password, listener);
+		}
 	}
+
 }

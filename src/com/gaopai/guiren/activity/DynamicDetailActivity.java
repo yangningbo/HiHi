@@ -284,9 +284,9 @@ public class DynamicDetailActivity extends BaseActivity {
 			viewHolder.lineZan.setVisibility((isShowSpread || isShowZan) ? View.VISIBLE : View.GONE);
 			viewHolder.layoutCoverTop.setVisibility(View.VISIBLE);
 			isShowComment = true;
-		} 
-		
-		if (isShowComment||isShowSpread||isShowZan) {
+		}
+
+		if (isShowComment || isShowSpread || isShowZan) {
 			viewHolder.layoutCoverTop.setVisibility(View.VISIBLE);
 		} else {
 			viewHolder.layoutCoverTop.setVisibility(View.GONE);
@@ -423,24 +423,43 @@ public class DynamicDetailActivity extends BaseActivity {
 	private void buildSpreadLinkView(ViewHolderSpreadLink viewHolder) {
 		// TODO Auto-generated method stub
 		buildCommonView(viewHolder);
-		JsonContent jsonContent = typeBean.jsoncontent;
+		final JsonContent jsonContent = typeBean.jsoncontent;
 		switch (typeBean.type) {
 		case TYPE_SPREAD_LINK:
 			// url
 			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.title);
 			viewHolder.tvInfo1.setText(jsonContent.desc);
+			viewHolder.layoutHolder.setOnClickListener(null);
 			break;
 		case TYPE_SPREAD_TRIBE:
 			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.name);
 			viewHolder.tvInfo1.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			viewHolder.tvInfo1.setText(MyTextUtils.addGuestUserList(jsonContent.guest, "圈子知名人物："));
+			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext, TribeDetailActivity.class);
+					intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, jsonContent.tid);
+					mContext.startActivity(intent);
+				}
+			});
 			break;
 		case TYPE_SPREAD_USER:
 			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.realname);
 			viewHolder.tvInfo1.setText(jsonContent.post);
+			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext, ProfileActivity.class);
+					intent.putExtra(ProfileActivity.KEY_USER_ID, jsonContent.uid);
+					mContext.startActivity(intent);
+				}
+			});
 			break;
 		default:
 			break;
@@ -520,6 +539,7 @@ public class DynamicDetailActivity extends BaseActivity {
 		ImageView ivHeader1;
 		TextView tvTitle1;
 		TextView tvInfo1;
+		View layoutHolder;
 
 		public static ViewHolderSpreadLink getInstance(View view) {
 			// TODO Auto-generated method stub
@@ -529,6 +549,7 @@ public class DynamicDetailActivity extends BaseActivity {
 			viewHolder.ivHeader1 = (ImageView) view.findViewById(R.id.iv_header1);
 			viewHolder.tvTitle1 = (TextView) view.findViewById(R.id.tv_title1);
 			viewHolder.tvInfo1 = (TextView) view.findViewById(R.id.tv_info1);
+			viewHolder.layoutHolder = view.findViewById(R.id.rl_spread_holder);
 
 			return viewHolder;
 		}
@@ -607,9 +628,9 @@ public class DynamicDetailActivity extends BaseActivity {
 		Button btnComment = (Button) v.findViewById(R.id.btn_comment);
 		Button btnSpread = (Button) v.findViewById(R.id.btn_spread);
 		if (typeBean.isZan == 0) {
-			btnZan.setText("赞");
+			btnZan.setText(getString(R.string.zan));
 		} else {
-			btnZan.setText("取消赞");
+			btnZan.setText(R.string.zan_cancel);
 		}
 		btnComment.setOnClickListener(new OnClickListener() {
 			@Override

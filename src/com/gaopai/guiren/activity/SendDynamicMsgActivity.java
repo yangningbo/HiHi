@@ -2,24 +2,14 @@ package com.gaopai.guiren.activity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.Keyframe;
-import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -30,6 +20,7 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -45,8 +36,11 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.net.SendDynamicResult;
+import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.net.MorePicture;
+import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
@@ -56,12 +50,15 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 	private Button btnAddTags;
 	private FlowLayout flowLayout;
+	private FlowLayout flowTagsRec;
 	private EditText etTags;
 	private TextView tvWordNumLimit;
 	private EditText etDynamicMsg;
 
 	private ImageButton btnPhoto;
 	private MyGridLayout picGrid;
+
+	private List<TagBean> recTagList = new ArrayList<TagBean>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +78,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			}
 		});
 		initViews();
+		getTags();
 	}
 
 	private void initViews() {
@@ -88,7 +86,8 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		btnAddTags = (Button) findViewById(R.id.btn_add_tag);
 		btnAddTags.setOnClickListener(this);
 		flowLayout = (FlowLayout) findViewById(R.id.flow_tags);
-		setTagTransition();
+		flowTagsRec = (FlowLayout) findViewById(R.id.flow_tags_recommend);
+		TagWindowManager.setTagTransition(flowLayout, mContext);
 		etTags = (EditText) findViewById(R.id.et_tags);
 		tvWordNumLimit = (TextView) findViewById(R.id.tv_num_limit);
 		etDynamicMsg = (EditText) findViewById(R.id.et_dynamic_msg);
@@ -130,6 +129,48 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 	};
 
+	private void getTags() {
+		DamiInfo.getTags(new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				TagResult data = (TagResult) o;
+				if (data.state != null && data.state.code == 0) {
+					for (TagBean tag : data.data) {
+						flowTagsRec.addView(
+								TagWindowManager.creatTageWithAction(tag.tag, addRecTagListener, mInflater),
+								flowTagsRec.getTextLayoutParams());
+					}
+				} else {
+					this.otherCondition(data.state, SendDynamicMsgActivity.this);
+				}
+			}
+		});
+	}
+
+	private OnClickListener addRecTagListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			String text = (String) v.getTag();
+			if (!checkIsTagInList(text)) {
+				flowLayout.addView(TagWindowManager.creatTagWhitouStrech(text, tagDeleteClickListener, mInflater),
+						flowLayout.getTextLayoutParams());
+			}
+		}
+	};
+
+	private boolean checkIsTagInList(String tag) {
+		for (int i = 0, count = flowLayout.getChildCount(); i < count; i++) {
+			String str = ((TextView) ((ViewGroup) flowLayout.getChildAt(i)).getChildAt(0)).getText().toString();
+			if (str.equals(tag)) {
+				showToast(R.string.tag_exist);
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private void sendDynamic() {
 		List<MorePicture> fileList = new ArrayList<MorePicture>();
 		for (String pic : picList) {
@@ -148,20 +189,20 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			tags = builder.toString();
 		}
 
-		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, 0, tags,
-				new SimpleResponseListener(mContext, "正在发送") {
+		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, 0, tags, new SimpleResponseListener(mContext,
+				"正在发送") {
 
-					@Override
-					public void onSuccess(Object o) {
-						// TODO Auto-generated method stub
-						SendDynamicResult data = (SendDynamicResult) o;
-						if (data.state != null && data.state.code == 0) {
-							showToast("发送成功！");
-						} else {
-							otherCondition(data.state, SendDynamicMsgActivity.this);
-						}
-					}
-				});
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				SendDynamicResult data = (SendDynamicResult) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast("发送成功！");
+				} else {
+					otherCondition(data.state, SendDynamicMsgActivity.this);
+				}
+			}
+		});
 	}
 
 	private List<String> getTagList() {
@@ -184,7 +225,8 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				return;
 			}
 			etTags.setText("");
-			flowLayout.addView(creatTag(str), flowLayout.getTextLayoutParams());
+			flowLayout.addView(TagWindowManager.creatTag(str, tagDeleteClickListener, mInflater),
+					flowLayout.getTextLayoutParams());
 			break;
 		case R.id.btn_camera:
 			showMoreWindow();
@@ -192,15 +234,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		default:
 			break;
 		}
-	}
-
-	private View creatTag(String text) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag_without_streach, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
-		button.setOnClickListener(tagDeleteClickListener);
-		return v;
 	}
 
 	private OnClickListener tagDeleteClickListener = new OnClickListener() {
@@ -255,64 +288,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setTagTransition() {
-		if (Build.VERSION.SDK_INT > 11) {
-			LayoutTransition transition = new LayoutTransition();
-			setupCustomAnimations(transition);
-			flowLayout.setLayoutTransition(transition);
-		}
-	}
-
-	@SuppressLint("NewApi")
-	private void setupCustomAnimations(LayoutTransition mTransitioner) {
-		// Changing while Adding
-		PropertyValuesHolder pvhLeft = PropertyValuesHolder.ofInt("left", 0, 1);
-		PropertyValuesHolder pvhTop = PropertyValuesHolder.ofInt("top", 0, 1);
-		PropertyValuesHolder pvhRight = PropertyValuesHolder.ofInt("right", 0, 1);
-		PropertyValuesHolder pvhBottom = PropertyValuesHolder.ofInt("bottom", 0, 1);
-		PropertyValuesHolder pvhScaleX = PropertyValuesHolder.ofFloat("scaleX", 1f, 0f, 1f);
-		PropertyValuesHolder pvhScaleY = PropertyValuesHolder.ofFloat("scaleY", 1f, 0f, 1f);
-
-		// CHANGE_DISAPPEARING
-		Keyframe kf0 = Keyframe.ofFloat(0f, 0f);
-		Keyframe kf1 = Keyframe.ofFloat(.9999f, 360f);
-		Keyframe kf2 = Keyframe.ofFloat(1f, 0f);
-		PropertyValuesHolder pvhRotation = PropertyValuesHolder.ofKeyframe("rotation", kf0, kf1, kf2);
-		final ObjectAnimator changeOut = ObjectAnimator.ofPropertyValuesHolder(this, pvhLeft, pvhTop, pvhRight,
-				pvhBottom, pvhRotation).setDuration(mTransitioner.getDuration(LayoutTransition.CHANGE_DISAPPEARING));
-		mTransitioner.setAnimator(LayoutTransition.CHANGE_DISAPPEARING, changeOut);
-		changeOut.addListener(new AnimatorListenerAdapter() {
-			public void onAnimationEnd(Animator anim) {
-				View view = (View) ((ObjectAnimator) anim).getTarget();
-				view.setRotation(0f);
-			}
-		});
-
-		// APPEARING
-		ObjectAnimator animIn = ObjectAnimator.ofFloat(null, "rotationY", 90f, 0f).setDuration(
-				mTransitioner.getDuration(LayoutTransition.APPEARING));
-		mTransitioner.setAnimator(LayoutTransition.APPEARING, animIn);
-		animIn.addListener(new AnimatorListenerAdapter() {
-			public void onAnimationEnd(Animator anim) {
-				View view = (View) ((ObjectAnimator) anim).getTarget();
-				view.setRotationY(0f);
-			}
-		});
-
-		// DISAPPEARING
-		ObjectAnimator animOut = ObjectAnimator.ofFloat(null, "rotationX", 0f, 90f).setDuration(
-				mTransitioner.getDuration(LayoutTransition.DISAPPEARING));
-		mTransitioner.setAnimator(LayoutTransition.DISAPPEARING, animOut);
-		animOut.addListener(new AnimatorListenerAdapter() {
-			public void onAnimationEnd(Animator anim) {
-				View view = (View) ((ObjectAnimator) anim).getTarget();
-				view.setRotationX(0f);
-			}
-		});
-
-	}
-
 	protected void btnCameraAction() {
 		getImageFromCamera();
 	}
@@ -356,7 +331,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		picGrid.addView(getImageView(file), picGrid.getChildCount() - 1);
 	}
 
-	private ImageView getImageView(String url) {
+	private ImageView getImageView(final String url) {
 		ImageView imageView = new ImageView(mContext);
 		Bitmap bitmap = BitmapFactory.decodeFile(url);
 		imageView.setImageBitmap(bitmap);
@@ -366,6 +341,16 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		imageView.setScaleType(ScaleType.FIT_XY);
 		int padding = MyUtils.dip2px(mContext, 5);
 		imageView.setPadding(padding, padding, padding, padding);
+		imageView.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				// TODO Auto-generated method stub
+				picGrid.removeView(v);
+				picList.remove(url);
+				return true;
+			}
+		});
 		return imageView;
 	}
 

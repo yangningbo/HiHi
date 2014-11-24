@@ -165,6 +165,11 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		MessageTable table = new MessageTable(db);
 		table.insert(messageInfo);
 	}
+	protected void insertMessages(List<MessageInfo> messageInfos) {
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
+		MessageTable table = new MessageTable(db);
+		table.insert(messageInfos);
+	}
 
 	protected void updateNewMessage(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();

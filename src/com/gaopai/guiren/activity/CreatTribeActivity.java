@@ -12,35 +12,34 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
+import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.net.AddMeetingResult;
+import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
+import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
+import com.squareup.picasso.Picasso;
 
 public class CreatTribeActivity extends BaseActivity implements OnClickListener {
-	
+
 	private static final int MIN_LEN = 2;
 	private static final int MAX_LEN = 15;
-	private Button btnUploadPic;
+	private ImageView btnUploadPic;
 	private Button btnCreat;
 	private EditText etTitle;
 	private EditText etInfo;
@@ -54,13 +53,19 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	private View layoutPrivacySetting;
 	private TextView tvPrivacySetting;
 	private View layoutPasswordSetting;
-	
+
 	private boolean isSetPassword = true;
 	private int mPrivacy = 1;
 	private String mFilePath = "";
-	
+	private String mTags = "";
+
 	private TagWindowManager tagWindowManager;
 	private List<TagBean> recTagList = new ArrayList<TagBean>();
+
+	public final static String KEY_TRIBE = "tribe";
+	private boolean isEdit = false;
+	private Tribe mTribe;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -68,10 +73,31 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		initTitleBar();
 		setAbContentView(R.layout.activity_creat_tribe);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText("创建圈子");
+		mTitleBar.setTitleText(R.string.create_tribe);
+		mTribe = (Tribe) getIntent().getSerializableExtra(KEY_TRIBE);
+		if (mTribe != null) {
+			isEdit = true;
+		}
 		initComponent();
 		tagWindowManager = new TagWindowManager(this, true, tagCallback);
 		getTags();
+		if (isEdit) {
+			bindEditView();
+		}
+	}
+
+	private void bindEditView() {
+		mTitleBar.setTitleText(R.string.edit_tribe);
+		ImageLoaderUtil.displayImage(mTribe.logolarge, btnUploadPic);
+		etTitle.setText(mTribe.name);
+		if (mTribe.type == 1) {
+			mPrivacy = 1;
+		} else {
+			mPrivacy = 2;
+		}
+		tvPrivacySetting.setText(mPrivacy == 1 ? getString(R.string.privacy_setting_open)
+				: getString(R.string.privacy_setting_close));
+		etInfo.setText(mTribe.content);
 	}
 
 	private void getTags() {
@@ -89,19 +115,19 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 			}
 		});
 	}
-	
+
 	private TagWindowManager.TagCallback tagCallback = new TagCallback() {
-		
+
 		@Override
 		public void onSave(String tags) {
 			// TODO Auto-generated method stub
-//			addRemoteTags(tags);
-			tagWindowManager.bindTags(layoutTags,false);
+			mTags = tags;
+			tagWindowManager.bindTags(layoutTags, false);
 		}
 	};
-	
+
 	private void initComponent() {
-		btnUploadPic = (Button) findViewById(R.id.btn_upload_pic);
+		btnUploadPic = (ImageView) findViewById(R.id.btn_upload_pic);
 		btnUploadPic.setOnClickListener(this);
 
 		btnCreat = (Button) findViewById(R.id.btn_creat);
@@ -160,7 +186,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 			break;
 		}
 	}
-	
+
 	private void showPrivacyDialog() {
 		// TODO Auto-generated method stub
 		final String[] items = getResources().getStringArray(R.array.privacy_setting_choice);
@@ -174,7 +200,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 					}
 				}).show();
 	}
-	
+
 	private void showPasswordView() {
 		// TODO Auto-generated method stub
 		if (isSetPassword) {
@@ -183,21 +209,6 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		} else {
 			layoutPasswordSetting.setVisibility(View.GONE);
 			tvSetPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_switch_normal, 0);
-		}
-	}
-
-
-	private class SpItemSelectedListener implements OnItemSelectedListener {
-		@Override
-		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-			// TODO Auto-generated method stub
-			mPrivacy = position + 1;
-		}
-
-		@Override
-		public void onNothingSelected(AdapterView<?> parent) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 
@@ -212,12 +223,13 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
+
 	private void creatTribe() {
 		final String title = etTitle.getText().toString();
 		final String info = etInfo.getText().toString();
 		final String password = etPassword.getText().toString();
-//		final String tag = etTags.getText().toString();
-		
+		final String passwordAgain = etPasswordAgain.getText().toString();
+
 		if (TextUtils.isEmpty(title)) {
 			String prompt = mContext.getString(R.string.please_input) + mContext.getString(R.string.tribe_name);
 			showToast(prompt);
@@ -236,27 +248,46 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 			return;
 		}
 
-
 		if (TextUtils.isEmpty(info)) {
 			String prompt = mContext.getString(R.string.please_input) + mContext.getString(R.string.tribe_content);
 			showToast(prompt);
 			return;
 		}
+		
+		if (isSetPassword) {
+			if (TextUtils.isEmpty(passwordAgain + password)) {
+				showToast(R.string.password_can_not_be_empty);
+				return;
+			}
+			if (!password.equals(passwordAgain)) {
+				showToast(R.string.password_not_same);
+				return;
+			}
+		}
 
-		DamiInfo.addTribe(title, mFilePath, String.valueOf(mPrivacy), info, "", password, new SimpleResponseListener(
-				mContext, "正在请求") {
+		SimpleResponseListener listener = new SimpleResponseListener(mContext, R.string.now_creat) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
-				AddMeetingResult data = (AddMeetingResult) o;
+				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
-					showToast("创建成功");
+					String str = getString(R.string.create_success_and_wait);
+					if (isEdit) {
+						str = getString(R.string.edit_success);
+					}
+					showToast(str);
 					CreatTribeActivity.this.finish();
 				} else {
 					this.otherCondition(data.state, CreatTribeActivity.this);
 				}
 			}
-		});
+		};
+
+		if (isEdit) {
+			DamiInfo.editTribe(mTribe.id, title, mFilePath, String.valueOf(mPrivacy), info, mTags, password, listener);
+		} else {
+			DamiInfo.addTribe(title, mFilePath, String.valueOf(mPrivacy), info, mTags, password, listener);
+		}
 	}
 
 }

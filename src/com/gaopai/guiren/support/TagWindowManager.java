@@ -12,6 +12,7 @@ import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.Display;
@@ -62,7 +63,7 @@ public class TagWindowManager implements OnClickListener {
 	public void setRecTagList(List<TagBean> recList) {
 		this.recTagList = recList;
 	}
-	
+
 	public void setIsSelf(boolean isSelf) {
 		this.isSelf = isSelf;
 	}
@@ -76,7 +77,7 @@ public class TagWindowManager implements OnClickListener {
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		View view = mInflater.inflate(R.layout.window_add_tags, null);
 		flowTagsAdd = (FlowLayout) view.findViewById(R.id.flow_tags_add);
-		setTagTransition(flowTagsAdd);
+		setTagTransition(flowTagsAdd, mContext);
 		FlowLayout flowTagsRec = (FlowLayout) view.findViewById(R.id.flow_tags_recommend);
 		etTags = (EditText) view.findViewById(R.id.et_tags);
 		btnAddTags = (Button) view.findViewById(R.id.btn_add_tag);
@@ -135,16 +136,16 @@ public class TagWindowManager implements OnClickListener {
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setTagTransition(ViewGroup viewGroup) {
+	public static void setTagTransition(ViewGroup viewGroup, Context context) {
 		if (Build.VERSION.SDK_INT > 11) {
 			LayoutTransition transition = new LayoutTransition();
-			setupCustomAnimations(transition);
+			setupCustomAnimations(transition, context);
 			viewGroup.setLayoutTransition(transition);
 		}
 	}
 
 	@SuppressLint("NewApi")
-	private void setupCustomAnimations(LayoutTransition mTransitioner) {
+	private static void setupCustomAnimations(LayoutTransition mTransitioner, Context context) {
 		// Changing while Adding
 		PropertyValuesHolder pvhLeft = PropertyValuesHolder.ofInt("left", 0, 1);
 		PropertyValuesHolder pvhTop = PropertyValuesHolder.ofInt("top", 0, 1);
@@ -158,7 +159,7 @@ public class TagWindowManager implements OnClickListener {
 		Keyframe kf1 = Keyframe.ofFloat(.9999f, 360f);
 		Keyframe kf2 = Keyframe.ofFloat(1f, 0f);
 		PropertyValuesHolder pvhRotation = PropertyValuesHolder.ofKeyframe("rotation", kf0, kf1, kf2);
-		final ObjectAnimator changeOut = ObjectAnimator.ofPropertyValuesHolder(this, pvhLeft, pvhTop, pvhRight,
+		final ObjectAnimator changeOut = ObjectAnimator.ofPropertyValuesHolder(context, pvhLeft, pvhTop, pvhRight,
 				pvhBottom, pvhRotation).setDuration(mTransitioner.getDuration(LayoutTransition.CHANGE_DISAPPEARING));
 		mTransitioner.setAnimator(LayoutTransition.CHANGE_DISAPPEARING, changeOut);
 		changeOut.addListener(new AnimatorListenerAdapter() {
@@ -235,11 +236,22 @@ public class TagWindowManager implements OnClickListener {
 	}
 
 	private View creatTag(String text) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
+		return creatTag(text, tagDeleteClickListener, mInflater);
+	}
+	public static View creatTag(String text, OnClickListener listener, LayoutInflater inflater) {
+		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
 		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
-		button.setOnClickListener(tagDeleteClickListener);
+		button.setOnClickListener(listener);
+		return v;
+	}
+	public static View creatTagWhitouStrech(String text, OnClickListener listener, LayoutInflater inflater) {
+		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag_without_streach, null);
+		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
+		textView.setText(text);
+		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
+		button.setOnClickListener(listener);
 		return v;
 	}
 
@@ -251,21 +263,29 @@ public class TagWindowManager implements OnClickListener {
 		return v;
 	}
 
+	public OnClickListener addRecClickListener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			String text = (String) v.getTag();
+			if (!checkIsTagInList(text)) {
+				flowTagsAdd.addView(creatTag(text), flowTagsAdd.getTextLayoutParams());
+			}
+		}
+	};
+
 	private View creatTageWithAction(final String text) {
+		return creatTageWithAction(text, addRecClickListener, mInflater);
+	}
+	
+	public static View creatTageWithAction(final String text, OnClickListener listener, LayoutInflater mInflater) {
 		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
 		v.findViewById(R.id.btn_delete_tag).setVisibility(View.GONE);
-		v.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (!checkIsTagInList(text)) {
-					flowTagsAdd.addView(creatTag(text), flowTagsAdd.getTextLayoutParams());
-				}
-			}
-		});
+		v.setTag(text);
+		v.setOnClickListener(listener);
 		return v;
 	}
 

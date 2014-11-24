@@ -105,11 +105,15 @@ public class TitleBar extends LinearLayout {
 	 * LinearLayout.LayoutParams，已经初始化为WRAP_CONTENT, WRAP_CONTENT
 	 */
 	public LinearLayout.LayoutParams layoutParamsWW = null;
+	
+	public LinearLayout.LayoutParams layoutParamsIconDefault;
 
 	/** 下拉选择. */
 	private PopupWindow popupWindow;
 
 	private Context mContext;
+	
+	private int titleBarHeight;
 
 	public TitleBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -130,8 +134,11 @@ public class TitleBar extends LinearLayout {
 		// 水平排列
 		this.setOrientation(LinearLayout.HORIZONTAL);
 		this.setId(mAbTitleBarID);
+		titleBarHeight = getResources().getDimensionPixelSize(R.dimen.title_bar);
 
 		mInflater = LayoutInflater.from(context);
+		
+		layoutParamsIconDefault = new LayoutParams(titleBarHeight, titleBarHeight);
 
 		layoutParamsFF = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
 				android.view.ViewGroup.LayoutParams.MATCH_PARENT);
@@ -158,7 +165,7 @@ public class TitleBar extends LinearLayout {
 		titleTextLayout.setOrientation(LinearLayout.HORIZONTAL);
 		titleTextLayout.setGravity(Gravity.CENTER_VERTICAL);
 		titleTextLayout.setPadding(0, 0, 0, 0);
-		titleTextLayout.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.title_bar));
+		titleTextLayout.setMinimumHeight(titleBarHeight);
 
 		titleTextBtn = new Button(context);
 		titleTextBtn.setTextColor(context.getResources().getColor(R.color.title_color));
@@ -458,14 +465,8 @@ public class TitleBar extends LinearLayout {
 		leftLayout.removeAllViews();
 		logoView.setVisibility(View.VISIBLE);
 		logoView.setBackgroundResource(resId);
-		layoutParamsWW.width = MyUtils.dip2px(mContext, 23);
-		layoutParamsWW.height = MyUtils.dip2px(mContext, 23);
-		layoutParamsWW.leftMargin = MyUtils.dip2px(mContext, 5);
-		layoutParamsWW.topMargin = MyUtils.dip2px(mContext, 5);
-		layoutParamsWW.bottomMargin = MyUtils.dip2px(mContext, 5);
-		leftLayout.addView(logoView, layoutParamsWW);
+		leftLayout.addView(logoView, layoutParamsIconDefault);
 		logoView.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				mActivity.finish();
@@ -584,8 +585,7 @@ public class TitleBar extends LinearLayout {
 		rightLayout.setVisibility(View.VISIBLE);
 		ImageView btn = new ImageView(mContext);
 		btn.setImageResource(resId);
-		layoutParamsWF.rightMargin = MyUtils.dip2px(mContext, 10);
-		rightLayout.addView(btn, layoutParamsWF);
+		rightLayout.addView(btn, layoutParamsIconDefault);
 		return btn;
 	}
 

@@ -260,20 +260,20 @@
     <string name="invite_add_tribe">邀请加入部落</string>
     <string name="agree_invite_add_tribe">已经同意您的部落邀请</string>
     <string name="disagree_invite_add_tribe">已经拒绝您的部落邀请</string>
-    <string name="pass_create_meeting">晚朝已通过审核</string>
-    <string name="refuse_create_meeting">晚朝未通过审核</string>
-    <string name="apply_add_meeting">申请加入晚朝</string>
-    <string name="agree_apply_add_meeting">已经同意您加入晚朝</string>
+    <string name="pass_create_meeting">会议已通过审核</string>
+    <string name="refuse_create_meeting">会议未通过审核</string>
+    <string name="apply_add_meeting">申请加入会议</string>
+    <string name="agree_apply_add_meeting">已经同意您加入会议</string>
     <string name="agree_apply_to_host">已经同意您成为主持人</string>
     <string name="agree_apply_to_guest">已经同意您成为嘉宾</string>
-    <string name="disagree_apply_add_meeting">已经拒绝您加入晚朝</string>
+    <string name="disagree_apply_add_meeting">已经拒绝您加入会议</string>
     <string name="disagree_apply_to_host">已经拒绝您成为主持人</string>
     <string name="disagree_apply_to_guest">已经拒绝您成为嘉宾</string>
-    <string name="meeting_host_to_guest">晚朝主持人身份已经降为嘉宾</string>
+    <string name="meeting_host_to_guest">会议主持人身份已经降为嘉宾</string>
     <string name="other_host_deal">其他主持人已经处理了此申请</string>
-    <string name="invite_add_meeting">邀请加入晚朝</string>
-    <string name="agree_invite_add_meeting">已经同意您的晚朝邀请</string>
-    <string name="disagree_invite_add_meeting">已经拒绝您的晚朝邀请</string>
+    <string name="invite_add_meeting">邀请加入会议</string>
+    <string name="agree_invite_add_meeting">已经同意您的会议邀请</string>
+    <string name="disagree_invite_add_meeting">已经拒绝您的会议邀请</string>
     <string name="new_comment">您有新的评论消息</string>
     <string name="your_meesage_zan">您 的消息被赞了</string>
     <string name="receive_report_msg">消息举报</string>
@@ -281,11 +281,11 @@
     <string name="agree_reported_msg">已同意您的举报</string>
     <string name="disagree_reported_msg">已拒绝您的举报</string>
     <string name="you_have_been_kick_out_tribe">您已被踢出部落</string>
-    <string name="you_have_been_kick_out_meeting">您已被踢出晚朝</string>
+    <string name="you_have_been_kick_out_meeting">您已被踢出会议</string>
     <string name="cant_see_memeber_private">私密部落，未加入不允许查看成员</string>
-    <string name="cant_see_member_meeting">私密晚朝，未加入不允许查看成员</string>
-    <string name="cant_see_host_meeting">私密晚朝，未加入不允许查看主持人</string>
-    <string name="cant_see_guest_meeting">私密晚朝，未加入不允许查看嘉宾</string>
+    <string name="cant_see_member_meeting">私密会议，未加入不允许查看成员</string>
+    <string name="cant_see_host_meeting">私密会议，未加入不允许查看主持人</string>
+    <string name="cant_see_guest_meeting">私密会议，未加入不允许查看嘉宾</string>
     <string name="has_new_notification">有新通告</string>
     <string name="system_notify">系统通知</string>
     <string name="operate_failed">操作失败</string>
@@ -351,7 +351,7 @@
     <string name="request_timeout">请求超时</string>
     <string name="apply_invitation_code_prompt">您是未认证用户，不能申请贵人码</string>
     <string name="create_tribe_auth_prompt">您是未认证用户，不能创建部落</string>
-    <string name="create_meeting_auth_prompt">您是未认证用户，不能创建晚朝</string>
+    <string name="create_meeting_auth_prompt">您是未认证用户，不能创建会议</string>
     <string name="join_tribe_auth_prompt">您是未认证用户，不能加入部落</string>
     <string name="search_tribe">搜索部落</string>
     <string name="search_tribe_by_name">通过名称搜索部落</string>
@@ -365,7 +365,6 @@
     <string name="exit_tribe">退出部落</string>
     <string name="apply_into_tribe">申请加入部落</string>
     <string name="deal_with_add_tribe_apply">处理加部落申请</string>
-    <string name="edit_tribe">修改部落</string>
     <string name="deal_with_report_info">处理举报信息</string>
     <string name="receive_message_and_notify">接收消息并提醒</string>
     <string name="display_message_count">不提醒仅显示数目</string>
@@ -377,7 +376,7 @@
     <string name="login_user_auth_error">用户登录信息认证失败!</string>
     <string name="remove_contact_prompt">移除联系人...</string>
     <string name="you_have_been_removed_from_tribe">管理员已经将你移除了该部落！</string>
-    <string name="you_have_been_removed_from_meeting">管理员已经将你移除了该晚朝！</string>
+    <string name="you_have_been_removed_from_meeting">管理员已经将你移除了该会议！</string>
     <string name="more">更多</string>
     <string name="more_prompt">查看更多提醒</string>
     <string name="more_dynamic">查看更多动态</string>
@@ -423,7 +422,7 @@
     <string name="update_identity_failed">更换身份失败</string>
     <string name="report_list">举报列表</string>
     <string name="shide_message">屏蔽消息</string>
-    <string name="kick_out">踢出晚朝</string>
+    <string name="kick_out">踢出会议</string>
     <string name="kick_out_tribe">踢出部落</string>
     <string name="error_report">误报</string>
     <string name="reason">理由：</string>
@@ -440,28 +439,28 @@
     <string name="receive_msg_and_notify">接收消息并提醒</string>
     <string name="receive_msg_and_not_notify">不提醒仅显示数目</string>
     <string name="you_have_exit_tribe">您已经退出了部落</string>
-    <string name="you_have_exit_meeting">您已经退出了晚朝</string>
+    <string name="you_have_exit_meeting">您已经退出了会议</string>
     <string name="the_first_voice">当前已经是第一首了</string>
     <string name="the_last_voice">当前已经是最后一首了</string>
     <string name="voice_list_is_null">当前无音频可播放</string>
-    <string name="going_meeting">进行中的晚朝</string>
-    <string name="pass_meeting">往期晚朝</string>
-    <string name="my_meeting">我的晚朝</string>
+    <string name="going_meeting">进行中的会议</string>
+    <string name="pass_meeting">往期会议</string>
+    <string name="my_meeting">我的会议</string>
     <string name="venue">分会场</string>
     <string name="launch">发起</string>
     <string name="apply_meeting">申请圆桌会</string>
-    <string name="meeting_logo">晚朝图片</string>
-    <string name="meeting_name">晚朝标题</string>
+    <string name="meeting_logo">会议图片</string>
+    <string name="meeting_name">会议标题</string>
     <string name="meeting_industry">话题行业</string>
-    <string name="meeting_content">晚朝提纲</string>
+    <string name="meeting_content">会议提纲</string>
     <string name="meeting_type">私密设置</string>
     <string name="meeting_start_time">起始时间</string>
     <string name="meeting_end_time">结束时间</string>
-    <string name="meeting_cancel">主持人取消了晚朝</string>
-    <string name="open_meeting">开放式晚朝</string>
-    <string name="private_meeting">隐私式晚朝</string>
-    <string name="meeting_name_too_short">您输入晚朝标题的长度不够</string>
-    <string name="meeting_name_too_long">您输入的晚朝标题太长</string>
+    <string name="meeting_cancel">主持人取消了会议</string>
+    <string name="open_meeting">开放式会议</string>
+    <string name="private_meeting">隐私式会议</string>
+    <string name="meeting_name_too_short">您输入会议标题的长度不够</string>
+    <string name="meeting_name_too_long">您输入的会议标题太长</string>
     <string name="choose_pass_time">您选择的时间比当前时间早，请重新选择</string>
     <string name="choose_time_error">您选择结束时间小于开始时间</string>
     <string name="has_join_start">已有</string>
@@ -470,21 +469,21 @@
     <string name="apply_add">申请参会</string>
     <string name="invite_add">邀请参会</string>
     <string name="onlooker">围观</string>
-    <string name="manger_meeting">晚朝管理</string>
+    <string name="manger_meeting">会议管理</string>
     <string name="deal_meeting_apply">处理参会申请</string>
     <string name="meeting_top_user">参会用户活跃度排行</string>
     <string name="presist">主持人</string>
     <string name="jiabin">嘉宾</string>
-    <string name="meeting_center_content">晚朝大纲</string>
+    <string name="meeting_center_content">会议大纲</string>
     <string name="joined_count">参会人数</string>
-    <string name="join_meeting_auth_prompt">您是未认证用户，不能加入晚朝</string>
+    <string name="join_meeting_auth_prompt">您是未认证用户，不能加入会议</string>
     <string name="apply_meeting_reason">申请理由</string>
     <string name="refuse_meeting_reason">拒绝理由</string>
     <string name="refuse_add_into_tribe">拒绝加入部落</string>
     <string name="refuse_add_into_meeting">拒绝参会</string>
     <string name="refuse_become_host">拒绝成为主持人</string>
     <string name="refuse_become_guest">拒绝成为嘉宾</string>
-    <string name="meeting_detail">晚朝详情</string>
+    <string name="meeting_detail">会议详情</string>
     <string name="enter_tribe">进入部落</string>
     <string name="kick_out_meeting">踢出会场</string>
     <string name="talk">发言</string>
@@ -500,10 +499,9 @@
     <string name="my_favorite">我的收藏</string>
     <string name="cancel_favorite">取消收藏</string>
     <string name="user_dynamic">用户动态</string>
-    <string name="add_in_meeting">加入晚朝</string>
+    <string name="add_in_meeting">加入会议</string>
     <string name="add_in_tribe">加入部落</string>
-    <string name="onlooker_meeting">围观晚朝</string>
-    <string name="create_meeting">创建晚朝</string>
+    <string name="onlooker_meeting">围观会议</string>
     <string name="onlooker_user_list">围观用户列表</string>
     <string name="my_private_msg">我的私信</string>
     <string name="qr_code">二维码</string>
@@ -529,7 +527,7 @@
     <string name="login_token_expired">登录凭证已失效，请重新登录</string>
     <string name="please_login">请登录</string>
     <string name="tribe_subject">部落专题</string>
-    <string name="meeting_subject">晚朝专题</string>
+    <string name="meeting_subject">会议专题</string>
     <string name="un_verify_prompt">您是未认证用户，请先认证！</string>
     <string name="setting_play_simplerate">设置播放频率</string>
     <string name="input_play_simplerate">输入播放频率</string>
@@ -575,8 +573,8 @@
     <string name="tip">提示</string>
     <string name="config">确认</string>
     <string name="config_exit_trib">确认退出部落？</string>
-    <string name="config_exit_meeting">确认退出晚朝？</string>
-    <string name="config_destroy_meeting">确认解散晚朝？</string>
+    <string name="config_exit_meeting">确认退出会议？</string>
+    <string name="config_destroy_meeting">确认解散会议？</string>
     <string name="load_pic_error">读取图片失败</string>
     <string name="loading_pic">正在读取图片...</string>
     <string name="has_save">已经保存过了</string>
@@ -585,16 +583,9 @@
     <string name="has_save_to_address">图片已保存到</string>
     <string name="invite_choose">全选</string>
     <string name="invite_all">邀请</string>
-    <string name="edit_success">修改成功</string>
-    <string name="edit_error">修改失败</string>
     <string name="send_text_btn">发送</string>
     <string name="comment_reply_info_colon">回复：</string>
     <string name="comment_reply_info_no_colon">回复</string>
-    <string name="zan">赞</string>
-    <string name="zan_cancel">取消赞</string>
-    <string name="zan_success">赞成功</string>
-    <string name="zan_cancel_success">取消赞成功</string>
-    <string name="zan_failed">赞失败</string>
     <string name="mode_in_call">使用听筒模式</string>
     <string name="mode_in_speaker">使用扬声器模式</string>
     <string name="switch_to_mode_in_call">已切换为听筒播放模式</string>
@@ -644,7 +635,6 @@
     <string name="invite_host">邀请主持人</string>
     <string name="deal_apply_jiabin">处理嘉宾申请</string>
     <string name="deal_apply_host">处理主持人申请</string>
-    <string name="edit_meeting">修改会议</string>
     <string name="destroy_meeting">解散会议</string>
     <string name="message_detail">消息详情</string>
     <string name="report">举报</string>
@@ -666,12 +656,12 @@
     <string name="password_can_not_be_empty">密码不能为空</string>
     <string name="password_not_same">两次输入密码不相同</string>
     <string name="privacy_setting">隐私设置</string>
-    
     <string name="privacy_setting_open">开放</string>
     <string name="privacy_setting_close">私密</string>
+
     <string-array name="privacy_setting_choice">
-        <item >@string/privacy_setting_open</item>
-        <item >@string/privacy_setting_close</item>
+        <item>@string/privacy_setting_open</item>
+        <item>@string/privacy_setting_close</item>
     </string-array>
 
     <string name="add_meeting_pic">添加会议图片</string>
@@ -679,9 +669,24 @@
     <string name="edit_tribe_tag">编辑圈子标签</string>
     <string name="tribe_info_hint">圈子说明，少于500字符</string>
     <string name="tribe_title_hint">圈子名称2~15个字符</string>
-    
     <string name="please_input_meeting_title">请输入会议标题</string>
     <string name="now_creat">正在创建&#8230;</string>
     <string name="create_success_and_wait">创建成功，请等待审核</string>
+    <string name="edit_success">修改成功</string>
+    <string name="edit_error">修改失败</string>
+    <string name="create_meeting">创建会议</string>
+    <string name="create_tribe">创建部落 </string>
+    <string name="edit_meeting">修改会议</string>
+    <string name="edit_tribe">修改部落</string>
 
+    <!-- action -->
+    <string name="zan">赞</string>
+    <string name="zan_cancel">取消赞</string>
+    <string name="zan_success">赞成功</string>
+    <string name="zan_cancel_success">取消赞成功</string>
+    <string name="zan_failed">赞失败</string>
+    
+    <!-- setting -->
+    <string name="clear_cache_now">正在清空缓存&#8230;</string>
+    <string name="clear_cache_success">清除完毕</string>
 </resources>

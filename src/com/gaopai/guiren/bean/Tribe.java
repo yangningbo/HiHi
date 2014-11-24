@@ -25,7 +25,7 @@ public class Tribe implements Serializable {
 	 * "createtime": "0" //创建时间
 	 */
 	@Expose
-	public String id;
+	public String id; 
 	@Expose
 	public String uid; // 创建者
 	@Expose

@@ -35,7 +35,9 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.DynamicDetailActivity;
+import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
+import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
@@ -101,7 +103,7 @@ public class DynamicAdapter extends BaseAdapter {
 		});
 		mPlayerWrapper.setPlayCallback(new PlayCallback());
 	}
-	
+
 	private class PlayCallback extends MediaUIHeper.PlayCallback {
 
 		@Override
@@ -115,7 +117,7 @@ public class DynamicAdapter extends BaseAdapter {
 			notifyDataSetChanged();
 		}
 	}
-	
+
 	/**
 	 * 下载成功后修改消息状态，更新数据库并播放声音
 	 * 
@@ -123,7 +125,7 @@ public class DynamicAdapter extends BaseAdapter {
 	 * @param type
 	 */
 	private void downVoiceSuccess(final MessageInfo msg) {
-		Logger.d(this, "player==null " +(mPlayerWrapper==null) + "   msg==null "+(msg==null));
+		Logger.d(this, "player==null " + (mPlayerWrapper == null) + "   msg==null " + (msg == null));
 		if (mPlayerWrapper.getMessageTag().equals(msg.tag)) {
 			mPlayerWrapper.start(msg);
 			msg.isReadVoice = 1;
@@ -138,7 +140,7 @@ public class DynamicAdapter extends BaseAdapter {
 
 	public void clear() {
 		mData.clear();
-	}  
+	}
 
 	@Override
 	public int getCount() {
@@ -278,7 +280,7 @@ public class DynamicAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		Log.d("tag", "position = " + position);
 		buildCommonView(viewHolder, typeBean, position, type);
-		JsonContent jsonContent = typeBean.jsoncontent;
+		final JsonContent jsonContent = typeBean.jsoncontent;
 
 		switch (type) {
 		case TYPE_SPREAD_LINK:
@@ -286,17 +288,37 @@ public class DynamicAdapter extends BaseAdapter {
 			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.title);
 			viewHolder.tvInfo1.setText(jsonContent.desc);
+			viewHolder.layoutHolder.setOnClickListener(null);
+
 			break;
 		case TYPE_SPREAD_TRIBE:
 			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.name);
 			viewHolder.tvInfo1.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			viewHolder.tvInfo1.setText(MyTextUtils.addGuestUserList(jsonContent.guest, "圈子知名人物："));
+			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext, TribeDetailActivity.class);
+					intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, jsonContent.tid);
+					mContext.startActivity(intent);
+				}
+			});
 			break;
 		case TYPE_SPREAD_USER:
 			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.realname);
 			viewHolder.tvInfo1.setText(jsonContent.post);
+			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext, ProfileActivity.class);
+					intent.putExtra(ProfileActivity.KEY_USER_ID, jsonContent.uid);
+					mContext.startActivity(intent);
+				}
+			});
 			break;
 		default:
 			break;
@@ -615,6 +637,7 @@ public class DynamicAdapter extends BaseAdapter {
 		ImageView ivHeader1;
 		TextView tvTitle1;
 		TextView tvInfo1;
+		View layoutHolder;
 
 		public static ViewHolderSpreadLink getInstance(View view) {
 			// TODO Auto-generated method stub
@@ -624,6 +647,7 @@ public class DynamicAdapter extends BaseAdapter {
 			viewHolder.ivHeader1 = (ImageView) view.findViewById(R.id.iv_header1);
 			viewHolder.tvTitle1 = (TextView) view.findViewById(R.id.tv_title1);
 			viewHolder.tvInfo1 = (TextView) view.findViewById(R.id.tv_info1);
+			viewHolder.layoutHolder = view.findViewById(R.id.rl_spread_holder);
 
 			return viewHolder;
 		}

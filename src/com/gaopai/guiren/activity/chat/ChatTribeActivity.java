@@ -25,6 +25,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.AddReasonActivity;
 import com.gaopai.guiren.activity.ChatCommentsActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
+import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.adapter.TribeChatAdapter;
 import com.gaopai.guiren.bean.Identity;
@@ -40,6 +41,7 @@ import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -49,9 +51,12 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	public static final String KEY_CHAT_TYPE = "chat_type";
 	public static final String KEY_TRIBE = "tribe";
+	public static final String KEY_TRIBE_ID = "tribe_id";
 
 	private int mSceneType = 0;
 	public final static int IS_SCENE_ONLOOK = 1;
+
+	private String mTribeId;
 
 	protected int mChatType = 0;
 	protected Tribe mTribe;
@@ -59,14 +64,12 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	private MessageInfo messageInfo;
 
-	
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mChatType = getIntent().getIntExtra(KEY_CHAT_TYPE, CHAT_TYPE_MEETING);
 		mTribe = (Tribe) getIntent().getSerializableExtra(KEY_TRIBE);// before
+		// mTribeId = getIntent().getStringExtra(KEY_TRIBE_ID)
 		updateTribe();
 		getIdentity();
 		initTribeComponent();
@@ -98,7 +101,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				startActivity(intent);
 			}
 		});
-		
+
 		mTitleBar.setTitleText(mTribe.name);
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		if (messageInfo != null) {
@@ -128,6 +131,16 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else {
 			DamiInfo.getTribeDetail(mTribe.id, listener);
 		}
+	}
+
+	@Override
+	protected void getMessageListLocal() {
+		SQLiteDatabase database = DBHelper.getInstance(mContext).getWritableDatabase();
+		MessageTable messageTable = new MessageTable(database);
+		messageInfos = messageTable.query(mTribe.id, -1, mChatType);
+		mAdapter.addAll(messageInfos);
+		mAdapter.notifyDataSetChanged();
+		Logger.d(this, "count="+messageInfos.size());
 	}
 
 	protected void buildRetweetMessageInfo(MessageInfo messageInfo) {
@@ -235,7 +248,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}).create();
 		dialog.show();
 	}
-	
 
 	public void zanMessage(final MessageInfo messageInfo) {
 		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, new SimpleResponseListener(mContext,
@@ -631,8 +643,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		builder.show();
 	}
 
-	
-
 	// public void updateVoicePlayModeState(boolean isModeInCall) {
 	// if (isModeInCall) {
 	// mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_avoid_disturb_on);
@@ -641,18 +651,22 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	// }
 	// }
 
-	
-
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		
+
 		case R.id.ab_chat_more:
-			Intent intent = new Intent(this, MeetingDetailActivity.class);
-			intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, mTribe.id);
-			startActivity(intent);
+			if (mChatType == CHAT_TYPE_MEETING) {
+				Intent intent = new Intent(this, MeetingDetailActivity.class);
+				intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, mTribe.id);
+				startActivity(intent);
+			} else {
+				Intent intent = new Intent(this, TribeDetailActivity.class);
+				intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, mTribe.id);
+				startActivity(intent);
+			}
+
 			break;
 
 		}

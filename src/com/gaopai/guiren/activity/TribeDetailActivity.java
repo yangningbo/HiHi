@@ -26,10 +26,13 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.share.ShareActivity;
+import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.Tribe.Member;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.support.MessageHelper;
+import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
@@ -38,7 +41,7 @@ import com.gaopai.guiren.volley.SimpleResponseListener;
 public class TribeDetailActivity extends BaseActivity implements OnClickListener {
 	private String mTribeID = "";
 	public static final String KEY_TRIBE_ID = "tribe_id";
-	
+
 	private boolean isCreator;
 
 	private Tribe mTribe;
@@ -87,7 +90,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		setAbContentView(R.layout.activity_tribe_detail);
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText("圈子详情");
+		mTitleBar.setTitleText(R.string.tribe_detail);
 
 		tvTribeTitle = (TextView) findViewById(R.id.tv_tibe_title);
 		tvTribeInfo = (TextView) findViewById(R.id.tv_tribe_detail);
@@ -157,7 +160,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	};
 
 	private void getTribeDetail() {
-		DamiInfo.getTribeDetail(mTribeID, new SimpleResponseListener(mContext, "正在请求数据") {
+		DamiInfo.getTribeDetail(mTribeID, new SimpleResponseListener(mContext, R.string.request_internet_now) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -259,7 +262,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			return false;
 		}
 	};
-	
+
 	private OnClickListener gridClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -347,6 +350,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			avoidDisturb();
 			break;
 		case R.id.tv_clear_cache:
+			MessageHelper.clearChatCache(mContext, mTribeID, 200, deleteCallback);
 			break;
 		case R.id.tv_user_real_identity:
 			changeSwitch(tvUseRealIdentity, true);
@@ -364,8 +368,12 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			// startActivity(reportIntent);
 			break;
 		}
-		case R.id.tv_change_tribe:
+		case R.id.tv_change_tribe: {
+			Intent intent = new Intent(mContext, CreatTribeActivity.class);
+			intent.putExtra(CreatTribeActivity.KEY_TRIBE, mTribe);
+			startActivity(intent);
 			break;
+		}
 		case R.id.tv_more_tags:
 			break;
 		default:
@@ -373,6 +381,20 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		}
 	}
 	
+	private DeleteCallback deleteCallback = new DeleteCallback() {
+
+		@Override
+		public void onStart() {
+			showProgressDialog(R.string.clear_cache_now);
+		}
+
+		@Override
+		public void onEnd() {
+			removeProgressDialog();
+			showToast(R.string.clear_cache_success);
+		}
+	};
+
 	private void invite() {
 		Intent intent = new Intent();
 		intent.setClass(mContext, ShareActivity.class);
@@ -454,7 +476,5 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			}
 		}
 	}
-	
-	
 
 }

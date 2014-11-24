@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.adapter.TribeAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
@@ -38,7 +39,7 @@ public class TribeActivity extends BaseActivity {
 		initTitleBar();
 		setAbContentView(R.layout.layout_general_refresh_listview);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText("我的圈子");
+		mTitleBar.setTitleText(R.string.my_tribe);
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false);
 		mListView.setPullLoadEnabled(false);
@@ -66,8 +67,11 @@ public class TribeActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
-				intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, ((Tribe) mAdapter.getItem(position)).id);
-				intent.setClass(mContext, TribeDetailActivity.class);
+				Tribe tribe = new Tribe();
+				tribe.id = ((Tribe) mAdapter.getItem(position)).id;
+				intent.putExtra(ChatTribeActivity.KEY_TRIBE, tribe);
+				intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, ChatTribeActivity.CHAT_TYPE_TRIBE);
+				intent.setClass(mContext, ChatTribeActivity.class);
 				startActivity(intent);
 			}
 		});

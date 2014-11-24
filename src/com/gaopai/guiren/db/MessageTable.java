@@ -13,6 +13,8 @@ import android.text.TextUtils;
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.bean.MessageInfo;
+import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.utils.Logger;
 
 public class MessageTable {
 
@@ -316,6 +318,14 @@ public class MessageTable {
 			mDBStore.execSQL(execSql);
 		} catch (Exception e) {
 		}
+	}
+	
+	//delete meeting or tribe
+	public boolean deleteTribe(String toId) {
+		if (delete(toId, 1)) {
+			return true;
+		}
+		return false;
 	}
 
 	public boolean delete(String toId, int isRoom) {
@@ -794,7 +804,7 @@ public class MessageTable {
 			if (cursor != null) {
 
 				if (!cursor.moveToFirst()) {
-					return null;
+					return allInfo;
 				}
 
 				int indexRowId = cursor.getColumnIndex("rowid");
@@ -873,6 +883,71 @@ public class MessageTable {
 					allInfo.add(0, message);
 				} while (cursor.moveToNext());
 
+			}
+			mDBStore.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+			mDBStore.endTransaction();
+		}
+		return allInfo;
+	}
+	
+	//only delete voice 
+	//type = 200部落  300会议
+	public List<MessageInfo> queryDeleteMessageInfos(String toId, int type) {
+		List<MessageInfo> allInfo = new ArrayList<MessageInfo>();
+		Cursor cursor = null;
+		
+		mDBStore.beginTransaction();
+		try {
+			
+			String querySql = "";
+			
+			if (type == 100) {
+				querySql = "SELECT rowid, * FROM " + TABLE_NAME
+						+ " WHERE (" + COLUMN_FROM_UID + "='" + toId
+						+ "' or " + COLUMN_TO_ID + "='" + toId + "')"
+						+ " AND " + COLUMN_LOGIN_ID + "='"
+						+ DamiCommon.getUid(DamiApp.getInstance()) + "'"
+						+ " AND " + COLUMN_TYPE + "=" + type
+						+ " ORDER BY sendTime" + " DESC LIMIT 0,"
+						+ DamiCommon.LOAD_SIZE;
+				
+			} else {
+				querySql = "SELECT rowid, * FROM " + TABLE_NAME + " WHERE "
+						+ COLUMN_TO_ID + "='" + toId + "' AND "
+						+ COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance()) + "'" + " AND " 
+						+ COLUMN_TYPE + "=" + type +  " AND "
+						+ COLUMN_MESSAGE_TYPE + "=" + MessageType.VOICE;
+			}
+			cursor = mDBStore.rawQuery(querySql, null);
+			if (!cursor.moveToFirst()) {
+				Logger.d(this, "4=" + cursor.getCount()+"");
+			}
+			if (cursor != null) {
+				
+				if (!cursor.moveToFirst()) {
+					return allInfo;
+				}
+				
+				int indexImgUrls = cursor.getColumnIndex(COLUMN_IMAGE_URLS);
+				int indexImgUrlL = cursor.getColumnIndex(COLUMN_IMAGE_URLL);
+				int indexVoiceUrl = cursor.getColumnIndex(COLUMN_VOICE_URL);
+				int indexMessageType = cursor
+						.getColumnIndex(COLUMN_MESSAGE_TYPE);
+				do {
+					MessageInfo message = new MessageInfo();
+					message.imgUrlS = cursor.getString(indexImgUrls);
+					message.imgUrlL = cursor.getString(indexImgUrlL);
+					message.voiceUrl = cursor.getString(indexVoiceUrl);
+					message.fileType = cursor.getInt(indexMessageType);
+					allInfo.add(0, message);
+				} while (cursor.moveToNext());
+				
 			}
 			mDBStore.setTransactionSuccessful();
 		} catch (Exception e) {

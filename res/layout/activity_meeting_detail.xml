@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ll_meeting_setting"
+        android:layout_above="@+id/layout_meeting_setting"
         android:fillViewport="true"
         android:layout_alignParentTop="true" >
 
@@ -125,9 +126,8 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
     <LinearLayout
-        android:id="@id/ll_meeting_setting"
+        android:id="@id/layout_meeting_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

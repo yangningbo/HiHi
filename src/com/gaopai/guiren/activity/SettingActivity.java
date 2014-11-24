@@ -93,7 +93,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			// TODO Auto-generated method stub
 			switch (msg.what) {
 			case 0:
-				showProgressDialog("正在清空缓存...");
+				showProgressDialog(R.string.clear_cache);
 				break;
 			case 1:
 				removeProgressDialog();

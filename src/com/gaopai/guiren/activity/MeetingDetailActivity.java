@@ -29,6 +29,8 @@ import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.SimpleStateBean;
+import com.gaopai.guiren.support.MessageHelper;
+import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -58,9 +60,13 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private View viewNotJoinIn;
 	private View viewJoinIn;
 
-	private String mMeetingID = "";
+	private View layoutBottom;
+
 	public static final String KEY_MEETING_ID = "meeting_id";
+	public static final String KEY_MEETING = "meeting";
+	private String mMeetingID = "";// pass tribe entity only in preview mode
 	private Tribe mMeeting;
+	private boolean isPreview = false;
 
 	public final static int REQUEST_NORMAL = 0;
 	public final static int REQUEST_BACK_TO_NORMAL = 1;
@@ -80,54 +86,69 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 
 		mMeetingID = getIntent().getStringExtra(KEY_MEETING_ID);
-		if (TextUtils.isEmpty(mMeetingID)) {
-			Uri data = getIntent().getData();
-			mMeetingID = data.toString().substring(data.toString().indexOf("//") + 2);
+		mMeeting = (Tribe) getIntent().getSerializableExtra(KEY_MEETING);
+		if (mMeeting != null) {
+			isPreview = true;
+		} else {
+			if (TextUtils.isEmpty(mMeetingID)) {
+				Uri data = getIntent().getData();
+				mMeetingID = data.toString().substring(data.toString().indexOf("//") + 2);
+			}
 		}
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.meeting_detail_title));
+		initComponent();
+		if (isPreview) {
+			bindBasicView();
+			return;
+		}
+		getMeetingDetail();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(TribeActivity.ACTION_KICK_TRIBE);
+		filter.addAction(ACTION_AGREE_ADD_MEETING);
+		filter.addAction(ACTION_MEETING_CANCEL);
+		registerReceiver(mReceiver, filter);
+	}
 
+	private void initComponent() {
 		tvMeetingTitle = (TextView) findViewById(R.id.tv_meeting_title);
 		tvMeetingTime = (TextView) findViewById(R.id.tv_meeting_time);
 		tvMeetingTimeDiff = (TextView) findViewById(R.id.tv_meeting_time_difference);
 		tvMeetingTitle = (TextView) findViewById(R.id.tv_meeting_title);
 		tvMeetingInfo = (TextView) findViewById(R.id.tv_meeting_detail);
 		tvMeetingHost = (TextView) findViewById(R.id.tv_meeting_host);
-		tvMeetingHost.setOnClickListener(this);
 		tvMeetingGuest = (TextView) findViewById(R.id.tv_meeting_guest);
-		tvMeetingGuest.setOnClickListener(this);
 		tvMeetingJoinIn = (TextView) findViewById(R.id.tv_meeting_join_in);
-		tvMeetingJoinIn.setOnClickListener(this);
 
 		ivMeetingHeader = (ImageView) findViewById(R.id.iv_meeeting_header);
 
 		btnEnterMeeting = (Button) findViewById(R.id.btn_enter_meeting);
-		btnEnterMeeting.setOnClickListener(this);
 
 		btnOnLook = (Button) findViewById(R.id.btn_on_look);
-		btnOnLook.setOnClickListener(this);
 		btnJoinMeeting = (Button) findViewById(R.id.btn_want_in_meeting);
-		btnJoinMeeting.setOnClickListener(this);
 
 		btnSetting = (Button) findViewById(R.id.btn_more);
 		viewNotJoinIn = findViewById(R.id.bottom_not_in_meeting);
 		viewJoinIn = findViewById(R.id.bottom_in_meeting);
 
-		btnSetting.setOnClickListener(new OnClickListener() {
+		layoutBottom = findViewById(R.id.layout_meeting_setting);
+		layoutBottom.setVisibility(isPreview ? View.GONE : View.VISIBLE);
+		if (!isPreview) {
+			tvMeetingHost.setOnClickListener(this);
+			tvMeetingGuest.setOnClickListener(this);
+			tvMeetingJoinIn.setOnClickListener(this);
+			btnEnterMeeting.setOnClickListener(this);
+			btnOnLook.setOnClickListener(this);
+			btnJoinMeeting.setOnClickListener(this);
+			btnSetting.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				showMoreWindow(mMeeting.role);
-			}
-		});
-		getMeetingDetail();
-
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(TribeActivity.ACTION_KICK_TRIBE);
-		filter.addAction(ACTION_AGREE_ADD_MEETING);
-		filter.addAction(ACTION_MEETING_CANCEL);
-		registerReceiver(mReceiver, filter);
+				@Override
+				public void onClick(View v) {
+					showMoreWindow(mMeeting.role);
+				}
+			});
+		}
 	}
 
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -180,15 +201,20 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 	private void bindView() {
 		// TODO Auto-generated method stub
+		bindBasicView();
+		tvMeetingHost.setText(mMeeting.hosts);
+		tvMeetingGuest.setText(mMeeting.guest);
+		// tvMeetingInfo.setText(mMeeting.j)
+
+		bindJoinInView(mMeeting.isjoin == 1);
+	}
+
+	private void bindBasicView() {
 		tvMeetingTitle.setText(mMeeting.name);
 		tvMeetingInfo.setText(mMeeting.content);
 		tvMeetingTime.setText(FeatureFunction.getTime(mMeeting.start) + "~" + FeatureFunction.getTime(mMeeting.end));
 		tvMeetingTimeDiff.setText(FeatureFunction.timeDifference(mMeeting.start));
-		tvMeetingHost.setText(mMeeting.hosts);
-		tvMeetingGuest.setText(mMeeting.guest);
-		// tvMeetingInfo.setText(mMeeting.j)
 		ImageLoaderUtil.displayImage(mMeeting.logosmall, ivMeetingHeader);
-		bindJoinInView(mMeeting.isjoin == 1);
 	}
 
 	private void bindJoinInView(boolean isJoin) {
@@ -205,17 +231,17 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.tv_meeting_guest:{
+		case R.id.tv_meeting_guest: {
 			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_GUEST);
 			break;
 		}
-			
-		case R.id.tv_meeting_host:{
+
+		case R.id.tv_meeting_host: {
 			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_HOST);
 			break;
 		}
-		case R.id.tv_meeting_join_in:{
-			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_USER);		
+		case R.id.tv_meeting_join_in: {
+			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_USER);
 			break;
 		}
 		case R.id.btn_on_look:
@@ -272,6 +298,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			invite(ShareActivity.TYPE_INVITE_GUEST);
 			break;
 		case R.id.grid_clear_local_msg:
+			MessageHelper.clearChatCache(mContext, mMeetingID, 300, deleteCallback);
 			break;
 		case R.id.grid_restore_to_normal:
 			break;
@@ -287,18 +314,38 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		case R.id.grid_cancel_meeting:
 			applyWithReason(AddReasonActivity.TYPE_DISMISS_MEETING, REQUEST_CANCEL_MEETING);
 			break;
+		case R.id.grid_modify_meeting: {
+			Intent intent = new Intent(mContext, CreatMeetingActivity.class);
+			intent.putExtra(CreatMeetingActivity.KEY_MEETING, mMeeting);
+			startActivity(intent);
+			break;
+		}
 
 		default:
 			break;
 		}
 
 	}
-	
+
+	private DeleteCallback deleteCallback = new DeleteCallback() {
+
+		@Override
+		public void onStart() {
+			showProgressDialog(R.string.clear_cache_now);
+		}
+
+		@Override
+		public void onEnd() {
+			removeProgressDialog();
+			showToast(R.string.clear_cache_success);
+		}
+	};
+
 	private void goToMemberActivity(int type) {
 		Intent intent = new Intent(MeetingDetailActivity.this, TribeMemberActivity.class);
 		intent.putExtra(TribeMemberActivity.KEY_TRIBE_ID, mMeetingID);
 		intent.putExtra(TribeMemberActivity.KEY_TYPE, type);
-		startActivity(intent);		
+		startActivity(intent);
 	}
 
 	// 处理申请

@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:padding="@dimen/general_paading" >
 
-        <Button
+        <ImageView
             android:id="@+id/btn_upload_pic"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -97,9 +97,7 @@
                 android:id="@+id/layout_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:padding="5dp" >
+                android:background="@color/white">
             </com.gaopai.guiren.view.FlowLayout>
 
             <TextView

@@ -84,7 +84,7 @@
             android:text="推荐标签" />
 
         <com.gaopai.guiren.view.FlowLayout
-            android:id="@+id/suggest_flow_tags"
+            android:id="@+id/flow_tags_recommend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </com.gaopai.guiren.view.FlowLayout>
@@ -104,6 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
+                android:padding="5dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/selector_upload_pic_btn" />
         </com.gaopai.guiren.view.MyGridLayout>

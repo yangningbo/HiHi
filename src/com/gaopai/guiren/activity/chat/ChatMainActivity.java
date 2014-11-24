@@ -92,6 +92,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 					if (data.data != null && data.data.size() > 0) {
 						isFull = data.data.size() < 20;// true not has more page
 						mAdapter.addAll(parseMessageList(data.data, 1));
+//						insertMessages(data.data);
 						mListView.getRefreshableView().setSelection(data.data.size());
 					} else {
 						isFull = true;
@@ -107,6 +108,10 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 				mListView.onPullComplete();
 			}
 		};
+//		getMessageListLocal();
+	}
+
+	protected void getMessageListLocal() {
 	}
 
 	protected ImageView ivDisturb;
@@ -116,6 +121,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		mListView.setAdapter(mAdapter);
 		if (messageInfos == null || messageInfos.size() == 0) {
 			getMessageList(false);
+//			getMessageListLocal();
 		}
 	}
 
@@ -264,7 +270,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 		mListView.setPullRefreshEnabled(true); // 下拉刷新，启用
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
-		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
+		mListView.setScrollLoadEnabled(false);// 滑动到底部自动刷新，启用
 		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 

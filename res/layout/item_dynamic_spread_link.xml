@@ -16,8 +16,7 @@
     <TextView
         android:id="@+id/tv_user_name"
         style="@style/dynamic_item_title_name"
-        android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼" />
+        android:layout_toRightOf="@id/iv_header"/>
 
     <TextView
         android:id="@+id/tv_user_info"
@@ -26,7 +25,6 @@
         android:layout_alignBottom="@id/tv_user_name"
         android:layout_marginLeft="2dp"
         android:layout_toRightOf="@id/tv_user_name"
-        android:text="疼惜总裁"
         android:textSize="14sp" />
 
     <TextView
@@ -36,7 +34,6 @@
         android:layout_alignBottom="@id/tv_user_name"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/tv_user_info"
-        android:text="扩散了一个连接"
         android:textColor="@color/general_text_gray"
         android:textSize="14sp" />
 
@@ -47,7 +44,7 @@
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/tv_user_name"
         android:layout_marginTop="10dp"
-        android:background="@color/general_light_gray"
+        android:background="@drawable/selector_btn_gray_general"
         android:padding="@dimen/general_header_padding" >
 
         <ImageView
@@ -61,8 +58,7 @@
         <TextView
             android:id="@+id/tv_title1"
             style="@style/dynamic_item_title_name"
-            android:layout_toRightOf="@id/iv_header1"
-            android:text="马虎疼" />
+            android:layout_toRightOf="@id/iv_header1" />
 
         <TextView
             android:id="@+id/tv_info1"
@@ -70,8 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_title1"
             android:layout_below="@id/tv_title1"
-            android:layout_marginTop="@dimen/general_info_margin_top"
-            android:text="疼惜总裁" />
+            android:layout_marginTop="@dimen/general_info_margin_top" />
     </RelativeLayout>
 
     <ImageView
@@ -90,7 +85,6 @@
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/iv_picture"
         android:layout_marginTop="7dp"
-        android:text="2天前        朋友的朋友"
         android:textColor="@color/general_text_gray" />
 
     <ImageButton

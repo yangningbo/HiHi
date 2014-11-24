@@ -36,10 +36,8 @@ import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
-import com.gaopai.guiren.bean.net.AddMeetingResult;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
-import com.gaopai.guiren.bean.net.CreatMeetingResult;
 import com.gaopai.guiren.bean.net.IdentitityResult;
 import com.gaopai.guiren.bean.net.QueryResult;
 import com.gaopai.guiren.bean.net.RecommendAddResult;
@@ -59,13 +57,12 @@ import com.gaopai.guiren.volley.GsonObj;
 import com.gaopai.guiren.volley.IResponseListener;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.volley.UIHelperUtil;
-
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
 	// public static final String HOST =
-	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-	// public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+	public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
@@ -425,27 +422,6 @@ public class DamiInfo implements Serializable {
 				LOGIN_TYPE_NEED_LOGIN);
 	}
 
-	public static void creatMeeting(String title, int type, String content, String start, String end, String tag,
-			String password, IResponseListener listener) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		if (!TextUtils.isEmpty(title)) {
-			params.put("title", title);
-		}
-		params.put("type", type);
-		if (!TextUtils.isEmpty(content)) {
-			params.put("content", content);
-		}
-		if (!TextUtils.isEmpty(tag)) {
-			params.put("tag", tag);
-		}
-		if (!TextUtils.isEmpty(password)) {
-			params.put("password", password);
-		}
-		params.put("start", start);
-		params.put("end", end);
-		request(Method.GET, CreatMeetingResult.class, params, 0, listener, LOGIN_TYPE_NEED_LOGIN);
-	}
-
 	/**
 	 * 获取部落和会议消息列表
 	 * 
@@ -518,14 +494,49 @@ public class DamiInfo implements Serializable {
 			fileList.add(new MorePicture("pic", pic));
 			bundle.addPicture("fileList", fileList);
 		}
-		bundle.add("title", title);
+		bundle.add("name", title);
 		bundle.add("type", type);
 		bundle.add("content", content);
 		bundle.add("tag", tag);
 		bundle.add("password", password);
 
 		String url = SERVER + "tribe/addTribe";
-		request(url, bundle, Utility.HTTPMETHOD_POST, 1, AddMeetingResult.class, listener);
+		request(url, bundle, Utility.HTTPMETHOD_POST, 1, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 修改部落
+	 * 
+	 * @param name
+	 *            部落名称
+	 * @param pic
+	 *            部落LOGO
+	 * @param industryid
+	 *            部落行业
+	 * @param type
+	 *            部落类型 1-公开群 2-私密群
+	 * @param content
+	 *            部落描述
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void editTribe(String tid, String name, String pic, String type, String content, String tag,
+			String password, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		List<MorePicture> fileList = new ArrayList<MorePicture>();
+		if (!TextUtils.isEmpty(pic)) {
+			fileList.add(new MorePicture("pic", pic));
+			bundle.addPicture("fileList", fileList);
+		}
+		bundle.add("tid", tid);
+		bundle.add("name", name);
+		bundle.add("type", type);
+		bundle.add("content", content);
+		bundle.add("tag", tag);
+		bundle.add("password", password);
+
+		String url = SERVER + "tribe/updatetribe";
+		request(url, bundle, Utility.HTTPMETHOD_POST, 1, BaseNetBean.class, listener);
 	}
 
 	/** ++++++++++++++++++++++++++ 会议接口 +++++++++++++++++++++++++++ */
@@ -567,7 +578,50 @@ public class DamiInfo implements Serializable {
 		}
 
 		String url = SERVER + "meeting/addMeeting";
-		request(url, bundle, Utility.HTTPMETHOD_POST, 1, AddMeetingResult.class, listener);
+		request(url, bundle, Utility.HTTPMETHOD_POST, 1, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 修改会议
+	 * 
+	 * @param title
+	 *            必传 会议标题
+	 * @param pic
+	 *            不必传 会议图片
+	 * @param industryid
+	 *            必传 会议行业ID
+	 * @param type
+	 *            必传 会议类型 1--公开 2--私密
+	 * @param content
+	 *            必传 会议提纲
+	 * @param start
+	 *            必传 会议开始时间
+	 * @param end
+	 *            必传 会议结束时间
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void editMeeting(String meetingid, String title, String pic, String type, String content, long start,
+			long end, String password, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		List<MorePicture> fileList = new ArrayList<MorePicture>();
+		if (!TextUtils.isEmpty(pic)) {
+			fileList.add(new MorePicture("pic", pic));
+			bundle.addPicture("fileList", fileList);
+		}
+		bundle.add("meetingid", meetingid);
+		bundle.add("title", title);
+		// bundle.add("industryid", industryid);
+		bundle.add("type", type);
+		bundle.add("content", content);
+		bundle.add("start", String.valueOf(start));
+		bundle.add("end", String.valueOf(end));
+		if (!TextUtils.isEmpty(password)) {
+			bundle.add("password", password);
+		}
+
+		String url = SERVER + "meeting/updatemeeting";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
 	/**
@@ -1944,6 +1998,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/addUserTag";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
+
 	/**
 	 * 更新用户标签
 	 * 
