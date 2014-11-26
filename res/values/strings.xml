@@ -689,4 +689,8 @@
     <!-- setting -->
     <string name="clear_cache_now">正在清空缓存&#8230;</string>
     <string name="clear_cache_success">清除完毕</string>
+    
+    
+    
+    <string name="comment_success">评论成功</string>
 </resources>

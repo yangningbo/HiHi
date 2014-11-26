@@ -1,8 +1,11 @@
 package com.gaopai.guiren.activity.chat;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,8 +16,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -29,11 +32,15 @@ import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.BaseChatAdapter;
+import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
+import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
 import com.gaopai.guiren.utils.ChatBoxManager;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.view.ChatGridLayout;
@@ -65,6 +72,8 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 	protected PreferenceOperateUtils spo;
 
+	protected boolean mHasLocalData = true;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -82,6 +91,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		speexRecorder = new SpeexRecorderWrapper(this);
 		speexRecorder.setRecordallback(recordCallback);
 		recordDialog = new RecordDialog(this);
+		recordDialog.getClass().getClass().getClass();
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		getMessageListListener = new SimpleResponseListener(mContext) {
 			@Override
@@ -92,7 +102,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 					if (data.data != null && data.data.size() > 0) {
 						isFull = data.data.size() < 20;// true not has more page
 						mAdapter.addAll(parseMessageList(data.data, 1));
-//						insertMessages(data.data);
+//						insertMessages(data.data); 
 						mListView.getRefreshableView().setSelection(data.data.size());
 					} else {
 						isFull = true;
@@ -108,10 +118,14 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 				mListView.onPullComplete();
 			}
 		};
-//		getMessageListLocal();
 	}
 
-	protected void getMessageListLocal() {
+	protected void getMessageListLocal(boolean isFirstTime) {
+		// implementation is in sub class
+		// first query database with autoID=-1 (call initMessage)
+		// then continue to query database with autoID=maxId to get more data
+		// (call loadMessage)
+		// if no more data then fetch data from internet
 	}
 
 	protected ImageView ivDisturb;
@@ -120,8 +134,48 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		super.initAdapter(chatAdapter);
 		mListView.setAdapter(mAdapter);
 		if (messageInfos == null || messageInfos.size() == 0) {
+			// getMessageList(false);
+			getMessageListLocal(true);
+		}
+	}
+
+	protected void initMessage(String id, int type) {
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
+		MessageTable messageTable = new MessageTable(db);
+		List<MessageInfo> tempMessageInfos = messageTable.query(id, -1, type);
+		if (tempMessageInfos.size() == 0) {
+			mHasLocalData = false;
+		} else {
+			for (int i = 0; i < tempMessageInfos.size(); i++) {
+				if (tempMessageInfos.get(i).readState == 0) {
+					tempMessageInfos.get(i).readState = 1;
+					updateMessage(tempMessageInfos.get(i));
+				} else if (tempMessageInfos.get(i).sendState == 2) {
+					tempMessageInfos.get(i).sendState = 0;
+					updateMessage(tempMessageInfos.get(i));
+				}
+			}
+			mAdapter.addAll(tempMessageInfos);
+		}
+	}
+
+	protected void loadMessage(String id, int chatType) {
+		Logger.d(this, "haslocaldata=" + mHasLocalData);
+		if (mHasLocalData) {
+			SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
+			MessageTable messageTable = new MessageTable(db);
+			List<MessageInfo> tempList = messageTable.query(id, mAdapter.getMessageInfos().get(0).auto_id, chatType);
+			if (tempList == null || tempList.size() < DamiCommon.LOAD_SIZE) {
+				mHasLocalData = false;
+			}
+			Logger.d(this, "haslocaldata=" + tempList.size());
+			if (tempList != null && tempList.size() != 0) {
+				mAdapter.addAll(tempList);
+				mListView.getRefreshableView().setSelection(tempList.size());
+			}
+			mListView.onPullComplete();
+		} else {
 			getMessageList(false);
-//			getMessageListLocal();
 		}
 	}
 
@@ -276,7 +330,8 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				getMessageList(false);
+				// getMessageList(false);
+				getMessageListLocal(false);
 			}
 
 			@Override

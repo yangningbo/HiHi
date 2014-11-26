@@ -197,6 +197,7 @@ public class MainActivity extends BaseActivity {
 			case R.id.slide_btn_invite_friend:
 				break;
 			case R.id.slide_btn_plus_v:
+				startActivity(ApplyActivity.class);
 				break;
 			case R.id.slide_btn_setting:
 				startActivity(SettingActivity.class);

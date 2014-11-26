@@ -114,6 +114,8 @@
     <color name="general_btn_blue_active">#2282A5</color>
     <color name="general_btn_gray_normal">#D3D3D3</color>
     <color name="general_btn_gray_active">#AAAAAA</color>
+    <color name="general_btn_light_red_normal">#E87C60</color>
+    <color name="general_btn_light_red_active">#FF4D3D</color>
     
     <color name="dynamic_horizon_divider">#C9C8C8</color>
     
@@ -133,4 +135,14 @@
     
     
     <color name="general_light_gray">#ECECEC</color>
+    
+    <color name="jiav_progressbar_dot">#F39C12</color>
+    <color name="jiav_progressbar_forground">#F1C40F</color>
+    <color name="jiav_progressbar_background">#FCFEFE</color>
+    <color name="jiav_progressbar_border">#A1A0A0</color>
+    <color name="jiav_text_gray">#C6C6C6</color>
+    <color name="jiav_text_red">#E63103</color>
+    <color name="jiav_btn_blue">#319EE6</color>
+    <color name="jiav_text_num_light_black">#8B8A8A</color>
+    <color name="jiav_text_num_highlight">#E87C60</color>
 </resources>

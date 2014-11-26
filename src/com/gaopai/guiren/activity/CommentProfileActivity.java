@@ -27,7 +27,7 @@ public class CommentProfileActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stubs
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_comment_profile);
@@ -57,7 +57,7 @@ public class CommentProfileActivity extends BaseActivity {
 								// TODO Auto-generated method stub
 								BaseNetBean data = (BaseNetBean) o;
 								if (data.state!=null && data.state.code == 0) {
-									showToast("successs");
+									showToast(R.string.comment_success);
 								} else {
 									otherCondition(data.state, CommentProfileActivity.this);
 								}

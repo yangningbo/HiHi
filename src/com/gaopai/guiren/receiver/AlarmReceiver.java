@@ -17,10 +17,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 			boolean isServiceRunning = false;
 			ActivityManager manager = (ActivityManager) DamiApp.getInstance()
 					.getSystemService(Context.ACTIVITY_SERVICE);
-			for (RunningServiceInfo service : manager
-					.getRunningServices(Integer.MAX_VALUE)) {
-				if ("com.gaopai.guiren.service.SnsService"
-						.equals(service.service.getClassName())) {
+			for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+				if ("com.gaopai.guiren.service.SnsService".equals(service.service.getClassName())) {
 					isServiceRunning = true;
 				}
 			}

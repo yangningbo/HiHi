@@ -11,6 +11,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.DynamicDrawableSpan;
@@ -378,4 +379,9 @@ public class MyTextUtils {
 			}
 		}
 	};
+	
+	public static void changeToBold(TextView textView) {
+		TextPaint tp = textView.getPaint(); 
+		tp.setFakeBoldText(true);
+	}
 }

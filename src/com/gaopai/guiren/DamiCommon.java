@@ -59,9 +59,6 @@ public class DamiCommon {
 	public static final String MESSAGE_NOTIFY = "message_notify";
 	public static final String SOUND = "sound";
 
-	public static final String NOTIFICATION_TIME_SHARED = "notification_time_shared";
-	public static final String NOTIFICATION_TIME = "notification_time";
-
 	/**
 	 * 版本号文件存储常量
 	 */
@@ -101,7 +98,7 @@ public class DamiCommon {
 	public static final int SAMPLERATE_LIMIT_HIGN = 1700;
 	public static final int SAMPLERATE_OFFSET = 800;
 
-	public static final long NOTIFICATION_INTERVAL = 5000; // 通知震动时间间隔
+
 	public static int mPlaySimpleRate = 8000;
 	public static final int MESSAGE_CONTENT_LEN = 5000;
 	private static int mIsReceive = -1;
@@ -137,8 +134,7 @@ public class DamiCommon {
 	}
 
 	public static void saveLoginResult(Context context, User user) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				LOGIN_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(LOGIN_SHARED, 0);
 		Editor editor = preferences.edit();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(3000);
 		ObjectOutputStream oos = null;
@@ -152,8 +148,7 @@ public class DamiCommon {
 		}
 		// 将Product对象放到OutputStream中
 		// 将Product对象转换成byte数组，并将其进行base64编码
-		String server = new String(Base64.encode(baos.toByteArray(),
-				Base64.DEFAULT));
+		String server = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
 		// 将编码后的字符串写到base64.xml文件中
 		editor.putString(LOGIN_RESULT, server);
 
@@ -161,8 +156,7 @@ public class DamiCommon {
 	}
 
 	public static User getLoginResult(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				LOGIN_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(LOGIN_SHARED, 0);
 		String str = preferences.getString(LOGIN_RESULT, "");
 		User user = null;
 		if (str.equals("")) {
@@ -253,8 +247,7 @@ public class DamiCommon {
 		if (mCurrentLat > 0) {
 			lat = mCurrentLat;
 		} else {
-			SharedPreferences preferences = context.getSharedPreferences(
-					LOCATION_SHARED, 0);
+			SharedPreferences preferences = context.getSharedPreferences(LOCATION_SHARED, 0);
 			String latStr = preferences.getString(LAT, "0");
 			lat = Double.parseDouble(latStr);
 			mCurrentLat = lat;
@@ -268,8 +261,7 @@ public class DamiCommon {
 		if (mCurrentLng > 0) {
 			lng = mCurrentLng;
 		} else {
-			SharedPreferences preferences = context.getSharedPreferences(
-					LOCATION_SHARED, 0);
+			SharedPreferences preferences = context.getSharedPreferences(LOCATION_SHARED, 0);
 			String latStr = preferences.getString(LNG, "0");
 			lng = Double.parseDouble(latStr);
 			mCurrentLng = lng;
@@ -302,21 +294,20 @@ public class DamiCommon {
 		if (Build.VERSION.SDK_INT >= 11) {
 			mode = Context.MODE_MULTI_PROCESS;
 		}
-		SharedPreferences preferences = context.getSharedPreferences(
-				MESSAGE_NOTIFY_SHARED, mode);
+		SharedPreferences preferences = context.getSharedPreferences(MESSAGE_NOTIFY_SHARED, mode);
 		Editor editor = preferences.edit();
 		editor.putBoolean(MESSAGE_NOTIFY, isReceive);
 		editor.commit();
 	}
 
 	public static void setOpenSound(Context context, boolean isOpen) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				MESSAGE_NOTIFY_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(MESSAGE_NOTIFY_SHARED, 0);
 		Editor editor = preferences.edit();
 		editor.putBoolean(SOUND, isOpen);
 		editor.commit();
 	}
 
+	
 	public static boolean getAcceptMsgAuth(Context context) {
 		boolean isReceive = true;
 		if (mIsReceive == -1) {
@@ -324,8 +315,7 @@ public class DamiCommon {
 			if (Build.VERSION.SDK_INT >= 11) {
 				mode = Context.MODE_MULTI_PROCESS;
 			}
-			SharedPreferences preferences = context.getSharedPreferences(
-					MESSAGE_NOTIFY_SHARED, mode);
+			SharedPreferences preferences = context.getSharedPreferences(MESSAGE_NOTIFY_SHARED, mode);
 			isReceive = preferences.getBoolean(MESSAGE_NOTIFY, true);
 		} else {
 			if (mIsReceive == 1) {
@@ -340,16 +330,14 @@ public class DamiCommon {
 	}
 
 	public static boolean getOpenSound(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				MESSAGE_NOTIFY_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(MESSAGE_NOTIFY_SHARED, 0);
 		boolean isOpen = true;
 		isOpen = preferences.getBoolean(SOUND, true);
 		return isOpen;
 	}
 
 	public static void saveVersionResult(Context context, Version version) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				VERSION_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(VERSION_SHARED, 0);
 		Editor editor = preferences.edit();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(3000);
 		ObjectOutputStream oos = null;
@@ -363,8 +351,7 @@ public class DamiCommon {
 		}
 		// 将Product对象放到OutputStream中
 		// 将Product对象转换成byte数组，并将其进行base64编码
-		String server = new String(Base64.encode(baos.toByteArray(),
-				Base64.DEFAULT));
+		String server = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
 		// 将编码后的字符串写到base64.xml文件中
 		editor.putString(VERSION_RESULT, server);
 
@@ -372,8 +359,7 @@ public class DamiCommon {
 	}
 
 	public static Version getVersionResult(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				VERSION_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(VERSION_SHARED, 0);
 		String str = preferences.getString(VERSION_RESULT, "");
 		Version version = null;
 		if (str.equals("")) {
@@ -401,10 +387,8 @@ public class DamiCommon {
 		return version;
 	}
 
-	public static void savePromptList(Context context,
-			List<CalenderPrompt> promptList) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				CALENDER_PROMPT_SHARED, 0);
+	public static void savePromptList(Context context, List<CalenderPrompt> promptList) {
+		SharedPreferences preferences = context.getSharedPreferences(CALENDER_PROMPT_SHARED, 0);
 		Editor editor = preferences.edit();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(3000);
 		ObjectOutputStream oos = null;
@@ -418,8 +402,7 @@ public class DamiCommon {
 		}
 		// 将Product对象放到OutputStream中
 		// 将Product对象转换成byte数组，并将其进行base64编码
-		String server = new String(Base64.encode(baos.toByteArray(),
-				Base64.DEFAULT));
+		String server = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
 		// 将编码后的字符串写到base64.xml文件中
 		editor.putString(CALENDER_PROMPT_LIST, server);
 
@@ -427,8 +410,7 @@ public class DamiCommon {
 	}
 
 	public static List<CalenderPrompt> getPromptList(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				CALENDER_PROMPT_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(CALENDER_PROMPT_SHARED, 0);
 		String str = preferences.getString(CALENDER_PROMPT_LIST, "");
 		List<CalenderPrompt> promptList = null;
 		if (str.equals("")) {
@@ -456,13 +438,10 @@ public class DamiCommon {
 		return promptList;
 	}
 
-	public static void showLevel(int integral, LinearLayout levelLayout,
-			int size, int margin) {
+	public static void showLevel(int integral, LinearLayout levelLayout, int size, int margin) {
 		int sunCount = integral / DamiCommon.SUN_SCORE;
-		int moonCount = (integral % DamiCommon.SUN_SCORE)
-				/ DamiCommon.MOON_SCORE;
-		int starCount = ((integral % DamiCommon.SUN_SCORE) % DamiCommon.MOON_SCORE)
-				/ DamiCommon.STAR_SCORE;
+		int moonCount = (integral % DamiCommon.SUN_SCORE) / DamiCommon.MOON_SCORE;
+		int starCount = ((integral % DamiCommon.SUN_SCORE) % DamiCommon.MOON_SCORE) / DamiCommon.STAR_SCORE;
 
 		if (sunCount + moonCount + starCount == 0) {
 			starCount = 1;
@@ -471,8 +450,7 @@ public class DamiCommon {
 		for (int i = 0; i < 5; i++) {
 			ImageView imageView = new ImageView(DamiApp.getInstance());
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					MyUtils.dip2px(DamiApp.getInstance(), size),
-					MyUtils.dip2px(DamiApp.getInstance(), size));
+					MyUtils.dip2px(DamiApp.getInstance(), size), MyUtils.dip2px(DamiApp.getInstance(), size));
 			params.setMargins(0, 0, margin, 0);
 			imageView.setLayoutParams(params);
 			if (i < sunCount) {
@@ -517,34 +495,18 @@ public class DamiCommon {
 		return sampleRate;
 	}
 
-	public static void saveNotificationTime(Context context, long time) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				NOTIFICATION_TIME_SHARED, 0);
-		Editor editor = preferences.edit();
-		editor.putLong(NOTIFICATION_TIME, time);
-		editor.commit();
-	}
-
-	public static long getNotificationTime(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				NOTIFICATION_TIME_SHARED, 0);
-		return preferences.getLong(NOTIFICATION_TIME, 0);
-	}
+	
 
 	public static void saveInstallFirst(Context context, boolean isFirst) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				INSTALL_FIRST_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(INSTALL_FIRST_SHARED, 0);
 		Editor editor = preferences.edit();
-		editor.putBoolean(FIRST_SPLASH_RESULT + DamiCommon.getUid(context),
-				isFirst);
+		editor.putBoolean(FIRST_SPLASH_RESULT + DamiCommon.getUid(context), isFirst);
 		editor.commit();
 	}
 
 	public static boolean getInstallFirst(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(
-				INSTALL_FIRST_SHARED, 0);
-		return preferences.getBoolean(
-				FIRST_SPLASH_RESULT + DamiCommon.getUid(context), true);
+		SharedPreferences preferences = context.getSharedPreferences(INSTALL_FIRST_SHARED, 0);
+		return preferences.getBoolean(FIRST_SPLASH_RESULT + DamiCommon.getUid(context), true);
 	}
 
 	public static void setChatType(Context context, int chatType) {
@@ -553,8 +515,7 @@ public class DamiCommon {
 		if (Build.VERSION.SDK_INT >= 11) {
 			mode = Context.MODE_MULTI_PROCESS;
 		}
-		SharedPreferences preferences = context.getSharedPreferences(
-				MESSAGE_NOTIFY_SHARED, mode);
+		SharedPreferences preferences = context.getSharedPreferences(MESSAGE_NOTIFY_SHARED, mode);
 		Editor editor = preferences.edit();
 		editor.putInt("chat_type", chatType);
 		editor.commit();
@@ -566,8 +527,7 @@ public class DamiCommon {
 		if (Build.VERSION.SDK_INT >= 11) {
 			mode = Context.MODE_MULTI_PROCESS;
 		}
-		SharedPreferences preferences = context.getSharedPreferences(
-				MESSAGE_NOTIFY_SHARED, mode);
+		SharedPreferences preferences = context.getSharedPreferences(MESSAGE_NOTIFY_SHARED, mode);
 		chatType = preferences.getInt("chat_type", 0);
 
 		return chatType;

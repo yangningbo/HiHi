@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/general_background" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/general_paading"
+        android:paddingRight="@dimen/general_paading"
+        android:paddingTop="@dimen/general_paading" >
+
+        <Button
+            android:id="@+id/btn_fill_profile"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/selector_tribe_detail_btn_green"
+            android:text="完善并认证个人资料"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_invite_to_guiren"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="@dimen/general_paading"
+            android:background="@drawable/selector_tribe_detail_btn_light_red"
+            android:text="邀请20位好友加入"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tv_invite_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/general_paading"
+            android:text="已邀请20位好友" />
+
+        <com.gaopai.guiren.support.view.ProgressView
+            android:layout_width="match_parent"
+            android:layout_height="30dp" >
+        </com.gaopai.guiren.support.view.ProgressView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="加V进度"
+            android:textColor="@color/jiav_text_gray" />
+
+        <TextView
+            android:id="@+id/tv_jiav_process"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="100%"
+            android:textColor="@color/jiav_text_red"
+            android:textSize="48sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_slide_jiav_active"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="加V说明" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_small_gap"
+            android:background="@drawable/shape_white_round_corner_with_border"
+            android:gravity="center_vertical"
+            android:padding="@dimen/general_paading"
+            android:text="加V说明" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/jiav_btn_blue"
+        android:text="恭喜你"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

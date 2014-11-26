@@ -79,6 +79,10 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		mData.addAll(0, o);
 		notifyDataSetChanged();
 	}
+	
+	public List<MessageInfo> getMessageInfos() {
+		return mData;
+	}
 
 	public void clear() {
 		mData.clear();

@@ -85,4 +85,5 @@
     <dimen name="general_font_2">18sp</dimen>
     <dimen name="general_font_3">16sp</dimen>
     <dimen name="general_font_4">14sp</dimen>
+    
 </resources>

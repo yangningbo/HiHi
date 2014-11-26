@@ -1,11 +1,12 @@
 package com.gaopai.guiren.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,6 +32,7 @@ import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.SimpleStateBean;
 import com.gaopai.guiren.support.MessageHelper;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
+import com.gaopai.guiren.support.alarm.AlarmReceiver;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -262,8 +264,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			hideMoreWindwo();
 			break;
 		case R.id.grid_notify_meeting_start: {
-			int level = ((ImageView) ((ViewGroup) v).getChildAt(0)).getDrawable().getLevel();
-			((ImageView) ((ViewGroup) v).getChildAt(0)).setImageLevel(1 - level);
+			setAlarmForMeeting();
 			break;
 		}
 		case R.id.grid_avoid_disturb: {
@@ -325,6 +326,17 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 
+	}
+
+	private void setAlarmForMeeting() {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(MeetingDetailActivity.this, AlarmReceiver.class); // 创建Intent对象
+		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 0, intent, 0); // 创建PendingIntent
+		// alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
+		// //设置闹钟
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pi); // 设置闹钟，当前时间就唤醒
+		showToast("success");
 	}
 
 	private DeleteCallback deleteCallback = new DeleteCallback() {

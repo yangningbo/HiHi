@@ -132,15 +132,18 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			DamiInfo.getTribeDetail(mTribe.id, listener);
 		}
 	}
+	
+	
 
 	@Override
-	protected void getMessageListLocal() {
-		SQLiteDatabase database = DBHelper.getInstance(mContext).getWritableDatabase();
-		MessageTable messageTable = new MessageTable(database);
-		messageInfos = messageTable.query(mTribe.id, -1, mChatType);
-		mAdapter.addAll(messageInfos);
-		mAdapter.notifyDataSetChanged();
-		Logger.d(this, "count="+messageInfos.size());
+	protected void getMessageListLocal(boolean isFirstTime) {
+		// TODO Auto-generated method stub
+		Logger.d(this, "tribe id="+mTribe.id);
+		if (isFirstTime) {
+			initMessage(mTribe.id, mChatType);
+		} else {
+			loadMessage(mTribe.id, mChatType);
+		}
 	}
 
 	protected void buildRetweetMessageInfo(MessageInfo messageInfo) {
@@ -377,25 +380,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				}
 			}
 		});
-	}
-
-	protected void initMessageInfos(int type) {
-		SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
-		MessageTable messageTable = new MessageTable(db);
-		boolean status = messageTable.updateReadState(mTribe.id);
-		messageInfos = messageTable.query(mTribe.id, -1, type);
-		if (messageInfos == null) {
-			messageInfos = new ArrayList<MessageInfo>();
-		} else {
-			for (int i = 0; i < messageInfos.size(); i++) {
-				if (messageInfos.get(i).readState == 0) {
-					messageInfos.get(i).readState = 1;
-				} else if (messageInfos.get(i).sendState == 2) {
-					messageInfos.get(i).sendState = 0;
-				}
-			}
-		}
-		mHandler.sendEmptyMessage(MSG_INIT_COMPONENT);
 	}
 
 	@Override

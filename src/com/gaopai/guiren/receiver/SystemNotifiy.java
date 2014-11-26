@@ -9,6 +9,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
@@ -26,7 +28,6 @@ import com.gaopai.guiren.bean.NotifiyType;
 import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.SNSMessage;
-import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
@@ -40,16 +41,19 @@ import com.gaopai.guiren.db.TribeTable;
 import com.gaopai.guiren.fragment.MeetingFragment;
 import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.service.SnsService;
+import com.gaopai.guiren.support.NotifyHelper;
 
 public class SystemNotifiy extends AbstractNotifiy {
 	public static final int NOTION_ID = 1000000023;
 
 	private Context mContext;
 	private boolean isSendNotif = true;
+	private NotifyHelper mNotifyHelper;
 
 	public SystemNotifiy(SnsService context) {
 		super(context);
 		mContext = context;
+		mNotifyHelper = new NotifyHelper(mContext);
 	}
 
 	@Override
@@ -497,78 +501,54 @@ public class SystemNotifiy extends AbstractNotifiy {
 			}
 			saveToLastMsgList(notifiyVo);
 			mContext.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
-//			if (!(notifiyVo.user==null) && !TextUtils.isEmpty(notifiyVo.user.uid)) {
-//				User user = userTable.query(notifiyVo.mID, notifiyVo.user.uid);
-//				if (user == null) {
-//					user = notifiyVo.user;
-//					userTable.insert(notifiyVo.mID, user);
-//				} else {
-//					user = notifiyVo.user;
-//					userTable.update(notifiyVo.mID, user);
-//				}
-//			}
-//
-//			if (!(notifiyVo.room==null) && !TextUtils.isEmpty(notifiyVo.room.id)) {
-//				Tribe tribe = table.query(notifiyVo.mID, notifiyVo.room.id);
-//				if (tribe == null) {
-//					tribe = notifiyVo.room;
-//					table.insert(notifiyVo.mID, notifiyVo.room);
-//				} else {
-//					tribe = notifiyVo.room;
-//					table.update(notifiyVo.mID, tribe);
-//				}
-//			}
+			// if (!(notifiyVo.user==null) &&
+			// !TextUtils.isEmpty(notifiyVo.user.uid)) {
+			// User user = userTable.query(notifiyVo.mID, notifiyVo.user.uid);
+			// if (user == null) {
+			// user = notifiyVo.user;
+			// userTable.insert(notifiyVo.mID, user);
+			// } else {
+			// user = notifiyVo.user;
+			// userTable.update(notifiyVo.mID, user);
+			// }
+			// }
+			//
+			// if (!(notifiyVo.room==null) &&
+			// !TextUtils.isEmpty(notifiyVo.room.id)) {
+			// Tribe tribe = table.query(notifiyVo.mID, notifiyVo.room.id);
+			// if (tribe == null) {
+			// tribe = notifiyVo.room;
+			// table.insert(notifiyVo.mID, notifiyVo.room);
+			// } else {
+			// tribe = notifiyVo.room;
+			// table.update(notifiyVo.mID, tribe);
+			// }
+			// }
 
-//			if (!(notifiyVo.message==null) && !TextUtils.isEmpty(notifiyVo.message.id)) {
-//				MessageInfo messageInfo = notifyMessageTable.query(notifiyVo.mID, notifiyVo.message.id);
-//				if (messageInfo == null) {
-//					messageInfo = notifiyVo.message;
-//					notifyMessageTable.insert(notifiyVo.mID, notifiyVo.message);
-//				} else {
-//					messageInfo = notifiyVo.message;
-//					notifyMessageTable.update(notifiyVo.mID, notifiyVo.message);
-//				}
-//			}
+			// if (!(notifiyVo.message==null) &&
+			// !TextUtils.isEmpty(notifiyVo.message.id)) {
+			// MessageInfo messageInfo = notifyMessageTable.query(notifiyVo.mID,
+			// notifiyVo.message.id);
+			// if (messageInfo == null) {
+			// messageInfo = notifiyVo.message;
+			// notifyMessageTable.insert(notifiyVo.mID, notifiyVo.message);
+			// } else {
+			// messageInfo = notifiyVo.message;
+			// notifyMessageTable.update(notifiyVo.mID, notifiyVo.message);
+			// }
+			// }
 
 			notifyTable.insert(notifiyVo);
-			
-//			mContext.sendBroadcast(new Intent(HomeTab.REFRESH_NOTIFY_ACTION));
-//			mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_NOTIFY_SESSION_COUNT));
 
-			Intent updateintent = new Intent(NotifySystemMessage.ACTION_NOTIFY_SYSTEM_MESSAGE);
-			mContext.sendBroadcast(updateintent);
-
-			try {
-				ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-				ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-				if (cn.getClassName().equals(cn.getPackageName() + ".NotifyActivity")) {
-					return;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-			builder.setSmallIcon(R.drawable.logo);
-			builder.setWhen(System.currentTimeMillis());// 设置时间发生时间
-			builder.setContentTitle(mContext.getString(R.string.has_new_notification));
-			builder.setContentText(msg);
-			if (System.currentTimeMillis() - DamiCommon.getNotificationTime(mContext) > DamiCommon.NOTIFICATION_INTERVAL) {
-				DamiCommon.saveNotificationTime(mContext, System.currentTimeMillis());
-				builder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE);
-			} else {
-				builder.setDefaults(Notification.DEFAULT_LIGHTS);
-			}
-			builder.setAutoCancel(true);
-			Intent intent = new Intent(getService(), MainActivity.class);
-			intent.putExtra("notify", true);
-			PendingIntent contentIntent = PendingIntent.getActivity(getService(), NOTION_ID, intent,
-					PendingIntent.FLAG_UPDATE_CURRENT);
-			builder.setContentIntent(contentIntent);
-			Notification notification = builder.build();
-			getNotificationManager().notify(NOTION_ID, notification);
+			// mContext.sendBroadcast(new
+			// Intent(HomeTab.REFRESH_NOTIFY_ACTION));
+			// mContext.sendBroadcast(new
+			// Intent(MainActivity.ACTION_UPDATE_NOTIFY_SESSION_COUNT));
+			mNotifyHelper.notifySystemMessage(msg);
 		}
 	}
+
+	
 
 	private void saveToLastMsgList(NotifiyVo notifiyVo) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();

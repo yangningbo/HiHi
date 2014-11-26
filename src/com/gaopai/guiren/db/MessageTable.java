@@ -133,6 +133,7 @@ public class MessageTable {
 				allPromotionInfoValues.put(COLUMN_LOGIN_ID,
 						DamiCommon.getUid(DamiApp.getInstance()));
 				allPromotionInfoValues.put(COLUMN_TO_ID, message.to);
+				Logger.d(this, "tribe id="+message.to);
 				allPromotionInfoValues.put(COLUMN_ID, message.id);
 				allPromotionInfoValues.put(COLUMN_TAG, message.tag);
 				allPromotionInfoValues.put(COLUMN_CONTENT, message.content);
@@ -748,6 +749,8 @@ public class MessageTable {
 
 	}
 
+	
+	//never return null, OK!!!
 	public List<MessageInfo> query(String toId, int autoID, int type) {
 		List<MessageInfo> allInfo = new ArrayList<MessageInfo>();
 		Cursor cursor = null;

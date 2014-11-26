@@ -47,7 +47,17 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 			addSaveSendMessage(messageInfo);
 		}
 	}
-
+	
+	@Override
+	protected void getMessageListLocal(boolean isFirstTime) {
+		// TODO Auto-generated method stub
+		if (isFirstTime) {
+			initMessage(user.uid, 100);
+		} else {
+			loadMessage(user.uid, 100);
+		}
+	}
+	
 	protected void buildRetweetMessageInfo(MessageInfo messageInfo) {
 		messageInfo.from = mLogin.uid;
 		messageInfo.type = 100;
