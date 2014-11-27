@@ -328,6 +328,12 @@ public class MessageTable {
 		}
 		return false;
 	}
+	public boolean deleteUser(String toId) {
+		if (delete(toId, 0)) {
+			return true;
+		}
+		return false;
+	}
 
 	public boolean delete(String toId, int isRoom) {
 		try {
@@ -916,9 +922,8 @@ public class MessageTable {
 						+ "' or " + COLUMN_TO_ID + "='" + toId + "')"
 						+ " AND " + COLUMN_LOGIN_ID + "='"
 						+ DamiCommon.getUid(DamiApp.getInstance()) + "'"
-						+ " AND " + COLUMN_TYPE + "=" + type
-						+ " ORDER BY sendTime" + " DESC LIMIT 0,"
-						+ DamiCommon.LOAD_SIZE;
+						+ " AND " + COLUMN_TYPE + "=" + type +  " AND "
+						+ COLUMN_MESSAGE_TYPE + "=" + MessageType.VOICE;
 				
 			} else {
 				querySql = "SELECT rowid, * FROM " + TABLE_NAME + " WHERE "

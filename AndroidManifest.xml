@@ -75,6 +75,9 @@
             android:name="com.gaopai.guiren.activity.GuideActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.UserProtocalActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -87,7 +90,7 @@
             android:name="com.gaopai.guiren.activity.ApplyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.gaopai.guiren.activity.CommentProfileActivity"
+            android:name="com.gaopai.guiren.activity.CommentGeneralActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.NotifySettingActivity"

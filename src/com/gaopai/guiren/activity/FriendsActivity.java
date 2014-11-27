@@ -47,7 +47,7 @@ public class FriendsActivity extends BaseActivity {
 		String title = (mType == NEW_FRIEND ? getString(R.string.new_friends)
 				: getString(R.string.new_friends_recommend));
 		mTitleBar.setTitleText(title);
-		mTitleBar.setLogo(R.drawable.selector_back_btn);
+		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
 
 		mListView.setPullLoadEnabled(false);

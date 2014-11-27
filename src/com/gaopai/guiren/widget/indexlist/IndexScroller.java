@@ -27,6 +27,7 @@ import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.widget.Adapter;
 import android.widget.ListView;
+import android.widget.Scroller;
 import android.widget.SectionIndexer;
 
 public class IndexScroller {

@@ -47,7 +47,7 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 
 	private void initView() {
 		mTitleBar.setTitleText(R.string.recommend_tribe);
-		btnBack = mTitleBar.setLogo(R.drawable.selector_back_btn);
+		btnBack = mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		btnBack.setOnClickListener(new BackClickListener());
 
 		mListView.setPullLoadEnabled(false);

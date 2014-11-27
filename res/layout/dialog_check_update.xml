@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingBottom="10dp"
+    android:layout_margin="10dp"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="10dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/black"
+        android:id="@+id/title"
+        android:textSize="22sp" />
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/devider_color"
+        android:visibility="invisible">
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/updatelog"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:textColor="@color/content_gray_text_color"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/okbtn"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/unlogin_btn"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="@string/upgrade"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+        
+        <Button
+            android:id="@+id/cancelbtn"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/qq_login_btn"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>

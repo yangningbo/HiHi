@@ -71,7 +71,8 @@ public class NotificationFragment extends BaseFragment {
 					Intent intent = new Intent();
 					com.gaopai.guiren.bean.User user = new com.gaopai.guiren.bean.User();
 					user.uid = conversationBean.toid;
-					user.displayName = conversationBean.name;
+					user.realname = conversationBean.name;
+					user.headsmall = conversationBean.headurl;
 					intent.putExtra(ChatMessageActivity.KEY_USER, user);
 					intent.setClass(getActivity(), ChatMessageActivity.class);
 					startActivity(intent);
@@ -96,9 +97,16 @@ public class NotificationFragment extends BaseFragment {
 				}
 			}
 		});
-
-		getDataFromDb();
 		registerReceiver();
+	}
+	
+	
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		getDataFromDb();
 	}
 
 	private void getDataFromDb() {

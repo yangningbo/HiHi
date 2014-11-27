@@ -13,7 +13,7 @@
         android:background="@drawable/selector_btn_general"
         android:drawableRight="@drawable/icon_switch_normal"
         android:gravity="center_vertical"
-        android:padding="5dp"
+        android:padding="10dp"
         android:text="@string/avoid_disturb" />
 
     <View
@@ -28,7 +28,7 @@
         android:background="@drawable/selector_btn_general"
         android:drawableRight="@drawable/icon_right_arrow"
         android:gravity="center_vertical"
-        android:padding="5dp"
+        android:padding="10dp"
         android:text="@string/clear_local_msg" />
 
     <View
@@ -43,7 +43,7 @@
         android:background="@drawable/selector_btn_general"
         android:drawableRight="@drawable/icon_right_arrow"
         android:gravity="center_vertical"
-        android:padding="5dp"
+        android:padding="10dp"
         android:text="@string/report" />
 
 </LinearLayout>

@@ -154,7 +154,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			// TODO Auto-generated method stub
 			String text = (String) v.getTag();
 			if (!checkIsTagInList(text)) {
-				flowLayout.addView(TagWindowManager.creatTagWhitouStrech(text, tagDeleteClickListener, mInflater),
+				flowLayout.addView(TagWindowManager.creatTagWithoutStrech(text, tagDeleteClickListener, mInflater),
 						flowLayout.getTextLayoutParams());
 			}
 		}
@@ -225,7 +225,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				return;
 			}
 			etTags.setText("");
-			flowLayout.addView(TagWindowManager.creatTag(str, tagDeleteClickListener, mInflater),
+			flowLayout.addView(TagWindowManager.creatTagWithDelete(str, tagDeleteClickListener, mInflater),
 					flowLayout.getTextLayoutParams());
 			break;
 		case R.id.btn_camera:

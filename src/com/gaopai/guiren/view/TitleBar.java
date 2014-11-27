@@ -408,11 +408,13 @@ public class TitleBar extends LinearLayout {
 	 */
 	public void setTitleText(String text) {
 		titleTextBtn.setText(text);
+		titleTextBtn.setGravity(Gravity.CENTER_HORIZONTAL);
 	}
 
 	public View setTitleTextWithImage(String text, int id) {
 		titleTextBtn.setText(text);
 		titleTextBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, id, 0);
+		titleTextBtn.setGravity(Gravity.CENTER_HORIZONTAL);
 		return titleTextBtn;
 	}
 

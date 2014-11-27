@@ -16,9 +16,11 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
@@ -36,7 +38,6 @@ import com.gaopai.guiren.utils.SPConst;
 public class NotifyHelper {
 	// private
 
-	private PreferenceOperateUtils po;
 	public static final long NOTIFICATION_INTERVAL = 5000; // 通知震动时间间隔
 
 	public static final int NOTIFYID_PRIVATE = 10000080;
@@ -46,15 +47,17 @@ public class NotifyHelper {
 
 	private Context mContext;
 	private NotificationManager notificationManager;
+	private SharedPreferences po;
+	private SharedPreferences poChat;
+	
 
 	public NotifyHelper(Context context) {
-		po = new PreferenceOperateUtils(context, SPConst.SP_SETTING);
 		mContext = context;
 		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+	
 	}
 
 	public boolean isNeedNotify() {
-		Logger.d(this, "===" + po.getInt(SPConst.KEY_AVOID_DISTURB_TIME_SEGMENT, 12));
 		if (po.getInt(SPConst.KEY_AVOID_DISTURB_TIME_SEGMENT, 0) == 0) {
 			return true;
 		}
@@ -100,13 +103,18 @@ public class NotifyHelper {
 		SharedPreferences preferences = context.getSharedPreferences(NOTIFICATION_TIME_SHARED, 0);
 		return preferences.getLong(NOTIFICATION_TIME, 0);
 	}
+	
+	private void init() {
+		po = mContext.getSharedPreferences(SPConst.SP_SETTING, Context.MODE_MULTI_PROCESS);
+		poChat = mContext.getSharedPreferences(SPConst.SP_AVOID_DISTURB, Context.MODE_MULTI_PROCESS);
+	}
 
 	public void notifyChatMessage(MessageInfo messageInfo) {
+		init();
 		Logger.d(this, "isNeedNotify=" + isNeedNotify());
 		if (!isNeedNotify()) {
 			return;
 		}
-		PreferenceOperateUtils chatPo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		// if (!FeatureFunction.isAppOnForeground(mContext) && !isReceive) {
 		// return;
 		// }
@@ -143,7 +151,7 @@ public class NotifyHelper {
 			if (isActivityTop(mContext, "ChatMessageActivity")) {
 				return;
 			}
-			if (chatPo.getInt(SPConst.getTribeUserId(mContext, messageInfo.from), 0) == 0) {
+			if (poChat.getInt(SPConst.getTribeUserId(mContext, messageInfo.from), 0) == 1) {
 				return;
 			}
 			notificationManager.notify(NOTIFYID_PRIVATE, builder.build());
@@ -156,7 +164,7 @@ public class NotifyHelper {
 				return;
 			}
 
-			if (chatPo.getInt(SPConst.getTribeUserId(mContext, messageInfo.to), 0) == 0) {
+			if (poChat.getInt(SPConst.getTribeUserId(mContext, messageInfo.to), 0) == 1) {
 				return;
 			}
 
@@ -170,6 +178,7 @@ public class NotifyHelper {
 	}
 
 	public void notifySystemMessage(String msg) {
+		init();
 		if (!isNeedNotify()) {
 			return;
 		}

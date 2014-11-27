@@ -151,6 +151,10 @@ public class DamiApp extends Application {
 	public static DamiApp getInstance() {
 		return mApp;
 	}
+	
+	public static PreferenceOperateUtils getPo() {
+		return mApp.pou;
+	}
 
 	public PreferenceOperateUtils getPou() {
 		return pou;

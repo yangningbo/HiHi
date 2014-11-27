@@ -5,6 +5,7 @@ import net.tsz.afinal.annotation.view.ViewInject;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -55,6 +56,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	private void initView() {
 		addButtonToTitleBar();
 		mTitleBar.setTitleText("动态");
+		mTitleBar.setTitleBarGravity(Gravity.CENTER, Gravity.CENTER);
 
 		mListView.setPullLoadEnabled(true);
 		mListView.setPullRefreshEnabled(true);

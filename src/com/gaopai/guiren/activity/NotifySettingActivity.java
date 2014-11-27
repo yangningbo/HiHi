@@ -3,7 +3,10 @@ package com.gaopai.guiren.activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +20,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.MsgConfigResult;
 import com.gaopai.guiren.bean.MsgConfigResult.MsgConfigBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -45,7 +49,7 @@ public class NotifySettingActivity extends BaseActivity implements OnClickListen
 	private int mHourTo;
 	private int mMinuteFrom;
 	private int mMinuteTo;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

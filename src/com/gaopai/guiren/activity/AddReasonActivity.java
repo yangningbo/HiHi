@@ -111,7 +111,7 @@ public class AddReasonActivity extends BaseActivity {
 		default:
 			break;
 		}
-		mTitleBar.setLogo(R.drawable.selector_back_btn);
+		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		etAddReason = (EditText) findViewById(R.id.et_reason);
 
 		etAddReason.setHint(hint);

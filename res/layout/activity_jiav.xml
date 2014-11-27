@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/selector_tribe_detail_btn_green"
-            android:text="完善并认证个人资料"
+            android:text="@string/jiav_finish_profile"
             android:textColor="@color/white" />
 
         <Button
@@ -26,7 +26,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="@dimen/general_paading"
             android:background="@drawable/selector_tribe_detail_btn_light_red"
-            android:text="邀请20位好友加入"
+            android:text="@string/jiav_invite_user"
             android:textColor="@color/white" />
 
         <TextView
@@ -34,8 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:padding="@dimen/general_paading"
-            android:text="已邀请20位好友" />
+            android:padding="@dimen/general_paading"/>
 
         <com.gaopai.guiren.support.view.ProgressView
             android:layout_width="match_parent"
@@ -47,7 +46,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:text="加V进度"
+            android:text="@string/jiav_progress"
             android:textColor="@color/jiav_text_gray" />
 
         <TextView
@@ -66,7 +65,7 @@
             android:drawableLeft="@drawable/icon_slide_jiav_active"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:text="加V说明" />
+            android:text="@string/jiav_info_title" />
 
         <TextView
             android:layout_width="match_parent"
@@ -75,7 +74,7 @@
             android:background="@drawable/shape_white_round_corner_with_border"
             android:gravity="center_vertical"
             android:padding="@dimen/general_paading"
-            android:text="加V说明" />
+            android:text="@string/jiav_info" />
     </LinearLayout>
 
     <Button
@@ -84,7 +83,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@color/jiav_btn_blue"
-        android:text="恭喜你"
+        android:text="@string/jiav_congratulation"
         android:textColor="@color/white" />
 
 </RelativeLayout>

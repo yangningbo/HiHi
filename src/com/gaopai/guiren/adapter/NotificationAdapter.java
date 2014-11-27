@@ -7,6 +7,7 @@ import u.aly.be;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.NotifiyVo;
+import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyUtils;
 
 public class NotificationAdapter extends BaseAdapter {
@@ -71,7 +73,11 @@ public class NotificationAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		ConversationBean bean = list.get(position);
-		holder.ivHeader.setImageResource(R.drawable.default_tribe);
+		if (!TextUtils.isEmpty(bean.headurl)) {
+			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader);
+		} else {
+			holder.ivHeader.setImageResource(R.drawable.default_tribe);
+		}
 		if (bean.type == 200 || bean.type == 300) {
 			holder.ivTitleIcon.setVisibility(View.VISIBLE);
 			int drawable = (bean.type == 300) ? R.drawable.icon_notification_meeting

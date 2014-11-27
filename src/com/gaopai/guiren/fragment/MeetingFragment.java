@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -101,8 +102,8 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private void initView() {
 		addButtonToTitleBar();
-		mTitleBar.setTitleText(R.string.meeting_tab);
 		mTitleBar.setTitleTextWithImage(getString(R.string.meeting_title), android.R.drawable.ic_menu_more);
+		mTitleBar.setTitleBarGravity(Gravity.CENTER, Gravity.CENTER);
 
 		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 		ViewGroup dropDownView = (ViewGroup) layoutInflater.inflate(R.layout.titlebar_popup_window, null);

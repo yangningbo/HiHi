@@ -3,10 +3,8 @@ package com.gaopai.guiren.activity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -27,6 +25,8 @@ public class ApplyActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_jiav);
+		mTitleBar.setTitleText(R.string.jiav_title);
+		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		tvInviteNum = ViewUtil.findViewById(this, R.id.tv_invite_num);
 		tvRedPercent = ViewUtil.findViewById(this, R.id.tv_jiav_process);
 		MyTextUtils.changeToBold(tvRedPercent);

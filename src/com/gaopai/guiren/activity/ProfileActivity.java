@@ -47,6 +47,7 @@ import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
+import com.gaopai.guiren.support.comment.CommentProfile;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.LineRelativeLayout;
@@ -118,7 +119,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private LineRelativeLayout layoutZanHolder;
 	private LineRelativeLayout layoutSpreadHolder;
 	private LineRelativeLayout layoutCommentHolder;
-	
+
 	private TagWindowManager tagWindowManager;
 
 	@Override
@@ -160,9 +161,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 	}
-	
+
 	private TagWindowManager.TagCallback tagCallback = new TagCallback() {
-		
+
 		@Override
 		public void onSave(String tags) {
 			// TODO Auto-generated method stub
@@ -278,10 +279,30 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		bindDyView();
 		if (tUser.tag != null && tUser.tag.size() > 0) {
 			tagList = tUser.tag;
-			tagWindowManager.bindTags(tagLayout, false);
+			tagWindowManager.bindTags(tagLayout, false, zanClickListener);
 		}
 		bindBottomDynamicView();
 	}
+
+	private OnClickListener zanClickListener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			TagBean tagBean = (TagBean) v.getTag();
+			DamiInfo.zanUserTag(tuid, tagBean.id, new SimpleResponseListener(mContext) {
+				@Override
+				public void onSuccess(Object o) {
+					BaseNetBean data = (BaseNetBean) o;
+					if (data.state != null && data.state.code == 0) {
+						showToast(R.string.zan_success);
+					} else {
+						otherCondition(data.state, ProfileActivity.this);
+					}
+				}
+			});
+		}
+	};
 
 	private void bindConnectionView() {
 		tvFancyCount.setText(String.valueOf(tUser.integral));
@@ -390,7 +411,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		return false;
 	}
 
-
 	public final static int REQUEST_CHANGE_PROFILE = 0;
 
 	@Override
@@ -434,9 +454,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_add_tags:
 			tagWindowManager.showTagsWindow();
 			break;
-		case R.id.layout_profile_bottom_comment:
-			startActivityWithUser(CommentProfileActivity.KEY_USER, CommentProfileActivity.class);
+		case R.id.layout_profile_bottom_comment: {
+			Intent intent = new Intent();
+			intent.putExtra(CommentProfile.KEY_USER, tUser);
+			intent.putExtra(CommentGeneralActivity.KEY_TYPE, CommentGeneralActivity.TYPE_COMMENT_PROFILE);
+			intent.setClass(mContext, CommentGeneralActivity.class);
+			startActivity(intent);
 			break;
+		}
 		case R.id.layout_profile_bottom_follow:
 			followUser();
 			break;
@@ -536,17 +561,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		});
 	}
 
-
 	// store tags in remote computer
 	private void addRemoteTags(String tags) {
 		if (!TextUtils.isEmpty(tags)) {
 			DamiInfo.updateUserTag(tuid, tags, new SimpleResponseListener(mContext, R.string.request_internet_now) {
-
 				@Override
 				public void onSuccess(Object o) {
 					// TODO Auto-generated method stub
 					TagResultBean data = (TagResultBean) o;
-					if (data.state!=null && data.state.code == 0) {
+					if (data.state != null && data.state.code == 0) {
 						tagList = data.data;
 						tagWindowManager.bindTags(tagLayout, false);
 						showToast(R.string.add_tags_success);

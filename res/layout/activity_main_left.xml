@@ -208,7 +208,7 @@
                 style="@style/slide_item_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="我发布的动态" />
+                android:text="我的动态" />
 
             <TextView
                 android:id="@+id/tv_slide_count_dynamics"

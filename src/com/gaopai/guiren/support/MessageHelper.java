@@ -20,20 +20,20 @@ import com.gaopai.guiren.utils.MyUtils;
 public class MessageHelper {
 	public final static int TYPE_PERSON = 1;
 	public final static int TYPE_TRIBE = 2;
-	
+
 	public static interface DeleteCallback {
 		public void onStart();
+
 		public void onEnd();
 	}
-	
+
 	public static class UIHandler extends Handler {
 		public UIHandler(DeleteCallback callback) {
 			super(Looper.getMainLooper());
 			this.callback = callback;
 		}
-		
+
 		private DeleteCallback callback;
-		
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -50,11 +50,11 @@ public class MessageHelper {
 			}
 			super.handleMessage(msg);
 		}
-		
-	}
-	
 
-	public static void clearChatCache(final Context context, final String id, final int type, final DeleteCallback callback) {
+	}
+
+	public static void clearChatCache(final Context context, final String id, final int type,
+			final DeleteCallback callback) {
 		final UIHandler handler = new UIHandler(callback);
 		new Thread(new Runnable() {
 			@Override
@@ -81,7 +81,11 @@ public class MessageHelper {
 						}
 					}
 				}
-				messageTable.deleteTribe(id);
+				if (type == 100) {
+					messageTable.deleteUser(id);
+				} else {
+					messageTable.deleteTribe(id);
+				}
 				handler.sendEmptyMessage(1);
 			}
 		}).start();

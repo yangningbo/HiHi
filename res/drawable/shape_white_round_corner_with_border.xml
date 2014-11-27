@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="10dp"/>
-    <solid android:color="@color/white"/>
-    <stroke android:width="2px"
-        android:color="@color/general_border_normal"/>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <corners android:radius="@dimen/tribe_detail_btn_radius" />
+
+    <solid android:color="@color/white" />
+
+    <stroke
+        android:width="2px"
+        android:color="@color/general_border_normal" />
+
 </shape>

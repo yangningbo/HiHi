@@ -88,7 +88,7 @@ public class TagWindowManager implements OnClickListener {
 			bindTags(flowTagsAdd, false);
 		}
 		for (TagBean tag : recTagList) {
-			flowTagsRec.addView(creatTageWithAction(tag.tag), flowTagsRec.getTextLayoutParams());
+			flowTagsRec.addView(creatTageWithDefaultAction(tag.tag), flowTagsRec.getTextLayoutParams());
 		}
 		Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
 		btnCancel.setOnClickListener(new OnClickListener() {
@@ -205,7 +205,7 @@ public class TagWindowManager implements OnClickListener {
 			}
 			etTags.setText("");
 			if (!checkIsTagInList(str)) {
-				flowTagsAdd.addView(creatTag(str), flowTagsAdd.getTextLayoutParams());
+				flowTagsAdd.addView(creatTagWithDeleteDefault(str), flowTagsAdd.getTextLayoutParams());
 			}
 			break;
 		default:
@@ -225,20 +225,27 @@ public class TagWindowManager implements OnClickListener {
 	}
 
 	public void bindTags(FlowLayout taLayoutPara, boolean isWithDelete) {
+		bindTags(taLayoutPara, isWithDelete, null);
+	}
+
+	public void bindTags(FlowLayout taLayoutPara, boolean isWithDelete, OnClickListener listener) {
 		taLayoutPara.removeAllViews();
 		for (TagBean tag : tagList) {
 			if (isWithDelete) {
-				taLayoutPara.addView(creatTag(tag.tag), taLayoutPara.getTextLayoutParams());
+				taLayoutPara.addView(creatTagWithDeleteDefault(tag.tag), taLayoutPara.getTextLayoutParams());
 			} else {
-				taLayoutPara.addView(creatTagWithoutDelete(tag.tag), taLayoutPara.getTextLayoutParams());
+				View view = creatTageWithAction(tag.tag, listener, mInflater);
+				view.setTag(tag);
+				taLayoutPara.addView(view, taLayoutPara.getTextLayoutParams());
 			}
 		}
 	}
 
-	private View creatTag(String text) {
-		return creatTag(text, tagDeleteClickListener, mInflater);
+	private View creatTagWithDeleteDefault(String text) {
+		return creatTagWithDelete(text, tagDeleteClickListener, mInflater);
 	}
-	public static View creatTag(String text, OnClickListener listener, LayoutInflater inflater) {
+
+	public static View creatTagWithDelete(String text, OnClickListener listener, LayoutInflater inflater) {
 		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
@@ -246,7 +253,8 @@ public class TagWindowManager implements OnClickListener {
 		button.setOnClickListener(listener);
 		return v;
 	}
-	public static View creatTagWhitouStrech(String text, OnClickListener listener, LayoutInflater inflater) {
+
+	public static View creatTagWithoutStrech(String text, OnClickListener listener, LayoutInflater inflater) {
 		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag_without_streach, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
@@ -256,11 +264,7 @@ public class TagWindowManager implements OnClickListener {
 	}
 
 	private View creatTagWithoutDelete(String text) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		v.findViewById(R.id.btn_delete_tag).setVisibility(View.GONE);
-		return v;
+		return creatTageWithAction(text, null, mInflater);
 	}
 
 	public OnClickListener addRecClickListener = new OnClickListener() {
@@ -270,15 +274,15 @@ public class TagWindowManager implements OnClickListener {
 			// TODO Auto-generated method stub
 			String text = (String) v.getTag();
 			if (!checkIsTagInList(text)) {
-				flowTagsAdd.addView(creatTag(text), flowTagsAdd.getTextLayoutParams());
+				flowTagsAdd.addView(creatTagWithDeleteDefault(text), flowTagsAdd.getTextLayoutParams());
 			}
 		}
 	};
 
-	private View creatTageWithAction(final String text) {
+	private View creatTageWithDefaultAction(final String text) {
 		return creatTageWithAction(text, addRecClickListener, mInflater);
 	}
-	
+
 	public static View creatTageWithAction(final String text, OnClickListener listener, LayoutInflater mInflater) {
 		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);

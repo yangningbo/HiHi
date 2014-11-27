@@ -13,9 +13,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -28,6 +30,8 @@ import com.gaopai.guiren.receiver.NotificationReceiver;
 import com.gaopai.guiren.receiver.PhoneStateChangeListener;
 import com.gaopai.guiren.service.type.XmppType;
 import com.gaopai.guiren.service.type.XmppTypeManager;
+import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.utils.SPConst;
 
 /**
  * 
@@ -157,8 +161,7 @@ public class SnsService extends Service {
 
 		userInfoVo = DamiCommon.getLoginResult(DamiApp.getInstance());
 		try {
-			xmppManager = new XmppManager(this, String.valueOf(userInfoVo.uid),
-					userInfoVo.password);
+			xmppManager = new XmppManager(this, String.valueOf(userInfoVo.uid), userInfoVo.password);
 		} catch (Exception e) {
 			Log.d(LOGTAG, "应用出现错误!", e);
 			stopService(new Intent(getBaseContext(), SnsService.class));
@@ -263,8 +266,7 @@ public class SnsService extends Service {
 
 	private void registerConnectivityReceiver() {
 		Log.d(LOGTAG, "registerConnectivityReceiver()...");
-		telephonyManager.listen(phoneStateListener,
-				PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
+		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
 		IntentFilter filter = new IntentFilter();
 		// filter.addAction(android.net.wifi.WifiManager.NETWORK_STATE_CHANGED_ACTION);
 
@@ -275,8 +277,7 @@ public class SnsService extends Service {
 
 	private void unregisterConnectivityReceiver() {
 		Log.d(LOGTAG, "unregisterConnectivityReceiver()...");
-		telephonyManager.listen(phoneStateListener,
-				PhoneStateListener.LISTEN_NONE);
+		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 		unregisterReceiver(connectivityReceiver);
 	}
 
@@ -293,8 +294,7 @@ public class SnsService extends Service {
 
 		public Future<?> submit(Runnable task) {
 			Future<?> result = null;
-			if (!SnsService.getExecutorService().isTerminated()
-					&& !SnsService.getExecutorService().isShutdown()
+			if (!SnsService.getExecutorService().isTerminated() && !SnsService.getExecutorService().isShutdown()
 					&& task != null) {
 				result = SnsService.getExecutorService().submit(task);
 			}
@@ -369,17 +369,13 @@ public class SnsService extends Service {
 	@SuppressLint("NewApi")
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {
-		Intent restartServiceIntent = new Intent(getApplicationContext(),
-				this.getClass());
+		Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
 		restartServiceIntent.setPackage(getPackageName());
 
-		PendingIntent restartServicePendingIntent = PendingIntent.getService(
-				getApplicationContext(), 1, restartServiceIntent,
-				PendingIntent.FLAG_ONE_SHOT);
-		AlarmManager alarmService = (AlarmManager) getApplicationContext()
-				.getSystemService(Context.ALARM_SERVICE);
-		alarmService.set(AlarmManager.ELAPSED_REALTIME,
-				SystemClock.elapsedRealtime() + 1000,
+		PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1,
+				restartServiceIntent, PendingIntent.FLAG_ONE_SHOT);
+		AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+		alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000,
 				restartServicePendingIntent);
 		super.onTaskRemoved(rootIntent);
 	}
@@ -393,8 +389,7 @@ public class SnsService extends Service {
 		i.setAction(ACTION_KEEPALIVE);
 		PendingIntent pi = PendingIntent.getService(this, 0, i, 0);
 		AlarmManager alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
-		alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis() + KEEP_ALIVE_INTERVAL,
+		alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + KEEP_ALIVE_INTERVAL,
 				KEEP_ALIVE_INTERVAL, pi);
 	}
 

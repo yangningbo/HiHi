@@ -14,6 +14,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 
+import u.aly.be;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +47,7 @@ import com.gaopai.guiren.adapter.BaseChatAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.DBHelper;
@@ -56,6 +59,7 @@ import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.receiver.PushChatMessage;
 import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.service.type.XmppType;
+import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.AjaxCallBack;
@@ -192,7 +196,12 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		msg.sendState = MessageState.STATE_SENDING;
 		addMessageInfo(msg);
 		insertMessage(msg);
+		saveMsgToLastConversation(msg);
 		sendMessage(msg);
+	}
+	
+	private void saveMsgToLastConversation(MessageInfo msg) {
+		ConversationHelper.saveToLastMsgList(msg, mContext, true);
 	}
 
 	protected void sendFilePath(MessageInfo messageInfo, int isResend) {
@@ -253,6 +262,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 
 	private void sendMessage(final MessageInfo msg) {
 		Log.d(TAG, "send voice change file name" + msg.voiceUrl);
+
 		DamiInfo.sendMessage(msg, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {

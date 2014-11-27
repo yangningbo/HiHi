@@ -21,6 +21,8 @@ public class User implements Serializable {
 	 * "http:\/\/tp4.sinaimg.cn\/2451191967\/180\/5631324169\/0", "authStage":
 	 * "1"
 	 */
+	
+	//一般情况下显示realname， 在聊天室里显示displayname，发送消息时根据是否匿名设置displayname
 	@Expose
 	public int tuid; // 是否被邀请了 0否
 	@Expose

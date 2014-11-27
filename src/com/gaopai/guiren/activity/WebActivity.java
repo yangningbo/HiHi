@@ -73,7 +73,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 			mTitle = mReportUrl;
 		}
 		
-		mTitleBar.setLogo(R.drawable.selector_back_btn);
+		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(mTitle);
 
 		mWebView = (WebView) findViewById(R.id.webview);

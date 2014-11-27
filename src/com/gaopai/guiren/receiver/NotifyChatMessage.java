@@ -18,6 +18,7 @@ import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.service.XmppManager;
+import com.gaopai.guiren.support.ConversationHelper;
 
 /**
  * 
@@ -85,7 +86,7 @@ public class NotifyChatMessage implements NotifyMessage {
 			// MessageInfo info = chatBean.messageInfo;
 
 			Log.d(TAG, "save()");
-			saveToLastMsgList(info);
+			ConversationHelper.saveToLastMsgList(info, xmppManager.getSnsService());
 			xmppManager.getSnsService().sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 
 			if (info.istranslate == 1) {
@@ -159,42 +160,5 @@ public class NotifyChatMessage implements NotifyMessage {
 		if (xmppManager != null && xmppManager.getSnsService() != null) {
 			xmppManager.getSnsService().sendBroadcast(intent);
 		}
-	}
-
-	private void saveToLastMsgList(MessageInfo messageInfo) {
-		SQLiteDatabase dbDatabase = DBHelper.getInstance(xmppManager.getSnsService()).getWritableDatabase();
-		ConversationInnerBean bean = messageInfo.conversion;
-		ConverseationTable table = new ConverseationTable(dbDatabase);
-		ConversationBean conversation = table.queryByID(bean.toid);
-		if (conversation != null) {
-			if (messageInfo.fileType == MessageType.VOICE) {
-				conversation.type = bean.type + 2;
-			} else {
-				conversation.type = bean.type;
-			}
-			conversation.headurl = bean.headurl;
-			conversation.unreadcount = conversation.unreadcount + 1;
-			conversation.name = bean.name;
-			conversation.lastmsgcontent = messageInfo.content;
-			conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
-			table.update(conversation);
-			return;
-		}
-		if (conversation == null) {
-			conversation = new ConversationBean();
-		}
-		conversation.headurl = bean.headurl;
-		conversation.unreadcount = 1;
-		conversation.name = bean.name;
-		conversation.lastmsgcontent = messageInfo.content;
-		conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
-		conversation.toid = bean.toid;
-		if (messageInfo.fileType == MessageType.VOICE) {
-			conversation.type = bean.type + 2;
-		} else {
-			conversation.type = bean.type;
-		}
-		conversation.anonymous = 0;
-		table.insert(conversation);
 	}
 }

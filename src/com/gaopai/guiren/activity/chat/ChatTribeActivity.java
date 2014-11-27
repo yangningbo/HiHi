@@ -34,6 +34,7 @@ import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
+import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.IdentitityResult;
 import com.gaopai.guiren.bean.net.SendMessageResult;
@@ -161,6 +162,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		messageInfo.time = System.currentTimeMillis();
 		messageInfo.readState = 1;
 		messageInfo.to = mTribe.id;
+		buildConversation(messageInfo);
 	}
 
 	public void showItemLongClickDialog(final MessageInfo messageInfo) {
@@ -324,7 +326,17 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			msg.heroid = mIdentity.id;
 		}
 		msg.type = mChatType;
+		buildConversation(msg);
 		return msg;
+	}
+	
+	private void buildConversation(MessageInfo msg) {
+		ConversationInnerBean bean = new ConversationInnerBean();
+		bean.headurl = mTribe.logosmall;
+		bean.toid = mTribe.id;
+		bean.name = mTribe.name;
+		bean.type = mChatType;
+		msg.conversion = bean;
 	}
 
 	@Override

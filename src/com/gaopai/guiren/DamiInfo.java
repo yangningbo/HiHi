@@ -22,6 +22,7 @@ import com.android.volley.Request.Method;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.BaseBean;
+import com.gaopai.guiren.bean.CheckUpdateResult;
 import com.gaopai.guiren.bean.FavoriteList;
 import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -57,6 +58,7 @@ import com.gaopai.guiren.volley.GsonObj;
 import com.gaopai.guiren.volley.IResponseListener;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.volley.UIHelperUtil;
+
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
@@ -2035,9 +2037,9 @@ public class DamiInfo implements Serializable {
 	public static void zanUserTag(String fid, String tag, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("fid", fid);
-		bundle.add("tag", tag);
+		bundle.add("tagid", tag);
 		String url = SERVER + "user/zanUserTag";
-		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
 	/**
@@ -2100,6 +2102,37 @@ public class DamiInfo implements Serializable {
 		bundle.add("shake", String.valueOf(shake));
 		bundle.add("dami", String.valueOf(dami));
 		String url = SERVER + "user/SetMessageConfig";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
+	/**
+	 * 检测更新
+	 * 
+	 * @param version
+	 *            版本号
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void checkUpgrade(IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("os", "android");
+		bundle.add("version", FeatureFunction.getAppVersionName(DamiApp.getInstance()));
+		String url = SERVER + "index/update";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, CheckUpdateResult.class, listener);
+	}
+	
+	/**
+	 * 意见反馈
+	 * 
+	 * @param content
+	 *            反馈内容
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void feedback(String content, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("content", content);
+		String url = SERVER + "user/feedback";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 

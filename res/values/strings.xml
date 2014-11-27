@@ -99,7 +99,7 @@
     <string name="synchronous_contact">从通讯录同步名字</string>
     <string name="modify_pwd">修改密码</string>
     <string name="help_center">帮助中心</string>
-    <string name="feedback">反馈意见</string>
+
     <string name="about_us">关于我们</string>
     <string name="logout">退出登录</string>
     <string name="add_more">更多</string>
@@ -690,7 +690,22 @@
     <string name="clear_cache_now">正在清空缓存&#8230;</string>
     <string name="clear_cache_success">清除完毕</string>
     
-    
-    
     <string name="comment_success">评论成功</string>
+    
+    <!-- jiav -->
+    <string name="jiav_title">申请加V</string>
+    <string name="jiav_info">\u0020\u0020\u0020\u0020\u0020\u0020\u0020感谢您对贵人产品的支持，今后贵人在全国所有的线上线下交流、成员互动等活动均将在线上报名，同时为了确保贵人产品内信息的及时性、准确性，给您营造一个良好的内容氛围以及让您更加便利的参与会议、圈子等相关活动切实保障您的权利。现邀请您完成贵人认证，通过实名认证的用户将拥有V标示，在贵人内将享受更完善的服务体验（了解更多请查看使用帮助）。</string>
+    <string name="jiav_congratulation">恭喜你，点击升级为VIP用户吧</string>
+    <string name="jiav_info_title">加V说明</string>
+    <string name="jiav_progress">加V进度</string>
+    <string name="jiav_finish_profile">完善并认证个人资料</string>
+    <string name="jiav_invite_user">邀请20位好友加入</string>
+    
+    <!-- comment -->
+    <string name="send_comment">发表评论</string>
+    <string name="send_feedback">提交</string>
+    <string name="feedback">反馈意见</string>
+    <string name="please_input_comment">请输入评论内容</string>
+    <string name="please_input_feedback">请输入反馈意见</string>
+    <string name="feed_success">谢谢您的反馈，祝您天天快乐！</string>
 </resources>
