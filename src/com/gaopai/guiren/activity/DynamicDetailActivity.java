@@ -304,12 +304,21 @@ public class DynamicDetailActivity extends BaseActivity {
 	private void buildMeetingView(ViewHolderMeeting viewHolder) {
 		// TODO Auto-generated method stub
 		buildCommonView(viewHolder);
-		JsonContent jsonContent = typeBean.jsoncontent;
+		final JsonContent jsonContent = typeBean.jsoncontent;
 
 		viewHolder.tvMeetingTitle.setText(jsonContent.name);
 		viewHolder.tvMeetingTime.setText(jsonContent.time);
 		viewHolder.tvMeetingGuest.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		viewHolder.tvMeetingGuest.setText(MyTextUtils.addGuestUserList(jsonContent.guest, "嘉宾："));
+		viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(mContext, MeetingDetailActivity.class);
+				intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, jsonContent.tid);
+				mContext.startActivity(intent);
+			}
+		});
 
 	}
 
@@ -430,7 +439,17 @@ public class DynamicDetailActivity extends BaseActivity {
 			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.title);
 			viewHolder.tvInfo1.setText(jsonContent.desc);
-			viewHolder.layoutHolder.setOnClickListener(null);
+			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext, WebActivity.class);
+					intent.putExtra("title", jsonContent.title);
+					intent.putExtra("url", jsonContent.url);
+					mContext.startActivity(intent);
+				}
+			});
+
 			break;
 		case TYPE_SPREAD_TRIBE:
 			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1);
@@ -521,6 +540,7 @@ public class DynamicDetailActivity extends BaseActivity {
 		TextView tvMeetingTitle;
 		TextView tvMeetingTime;
 		TextView tvMeetingGuest;
+		View layoutHolder;
 
 		public static ViewHolderMeeting getInstance(View view) {
 			// TODO Auto-generated method stub
@@ -530,6 +550,7 @@ public class DynamicDetailActivity extends BaseActivity {
 			viewHolder.tvMeetingTime = (TextView) view.findViewById(R.id.tv_meeting_time);
 			viewHolder.tvMeetingTitle = (TextView) view.findViewById(R.id.tv_meeting_title);
 			viewHolder.tvMeetingGuest = (TextView) view.findViewById(R.id.tv_meeting_guest);
+			viewHolder.layoutHolder = view.findViewById(R.id.layout_meeting_holder);
 			return viewHolder;
 		}
 	}

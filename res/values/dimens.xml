@@ -86,4 +86,6 @@
     <dimen name="general_font_3">16sp</dimen>
     <dimen name="general_font_4">14sp</dimen>
     
+    <!-- register -->
+    <dimen name="register_edit_height">45dp</dimen>    
 </resources>

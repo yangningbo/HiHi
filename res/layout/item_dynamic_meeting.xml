@@ -16,8 +16,7 @@
     <TextView
         android:id="@+id/tv_user_name"
         style="@style/dynamic_item_title_name"
-        android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼" />
+        android:layout_toRightOf="@id/iv_header"/>
 
     <TextView
         android:id="@+id/tv_user_info"
@@ -26,7 +25,6 @@
         android:layout_alignBottom="@id/tv_user_name"
         android:layout_marginLeft="2dp"
         android:layout_toRightOf="@id/tv_user_name"
-        android:text="疼惜总裁"
         android:textColor="@color/general_text_black"
         android:textSize="14sp" />
 
@@ -37,19 +35,18 @@
         android:layout_alignBottom="@id/tv_user_name"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/tv_user_info"
-        android:text="参加了一个会议"
         android:textColor="@color/general_text_gray"
         android:textSize="14sp" />
 
     <LinearLayout
-        android:id="@+id/ll_meeting_holder"
+        android:id="@+id/layout_meeting_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/tv_user_name"
         android:layout_marginTop="7dp"
         android:layout_toRightOf="@id/iv_header"
-        android:background="@color/general_light_gray"
+        android:background="@drawable/selector_btn_gray_general"
         android:orientation="vertical"
         android:padding="10dp" >
 
@@ -58,20 +55,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/connection_linkfy"
-            android:text="360是伟大的，同时也是渺小的！"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_meeting_time"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="10-2 20:00~21:00" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_meeting_guest"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="嘉宾：韩寒，方方" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView
@@ -79,9 +73,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
-        android:layout_below="@id/ll_meeting_holder"
+        android:layout_below="@id/layout_meeting_holder"
         android:layout_marginTop="7dp"
-        android:text="2天前        朋友的朋友"
         android:textColor="@color/u_text_gray" />
 
     <ImageButton
@@ -89,7 +82,7 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_alignBottom="@id/tv_date_info"
-        android:layout_alignRight="@id/ll_meeting_holder"
+        android:layout_alignRight="@id/layout_meeting_holder"
         android:layout_marginRight="12dp"
         android:background="@color/transparent"
         android:src="@drawable/icon_dynamic_comment_action" />

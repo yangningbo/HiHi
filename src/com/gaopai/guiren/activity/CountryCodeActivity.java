@@ -250,6 +250,7 @@ public class CountryCodeActivity extends BaseActivity{
 		final CountryCodeAdapter myAdapter = new CountryCodeAdapter();
 		myAdapter.setRows(mRows);
 		mListView = (IndexableListView) findViewById(R.id.listView);
+		mListView.addHeaderView(new View(mContext));
 		mListView.setAdapter(myAdapter);
 		indexScroller = (SingleIndexScroller) findViewById(R.id.scroller);
 		indexScroller.setListView(mListView);

@@ -105,14 +105,14 @@ public class TitleBar extends LinearLayout {
 	 * LinearLayout.LayoutParams，已经初始化为WRAP_CONTENT, WRAP_CONTENT
 	 */
 	public LinearLayout.LayoutParams layoutParamsWW = null;
-	
+
 	public LinearLayout.LayoutParams layoutParamsIconDefault;
 
 	/** 下拉选择. */
 	private PopupWindow popupWindow;
 
 	private Context mContext;
-	
+
 	private int titleBarHeight;
 
 	public TitleBar(Context context, AttributeSet attrs) {
@@ -137,7 +137,7 @@ public class TitleBar extends LinearLayout {
 		titleBarHeight = getResources().getDimensionPixelSize(R.dimen.title_bar);
 
 		mInflater = LayoutInflater.from(context);
-		
+
 		layoutParamsIconDefault = new LayoutParams(titleBarHeight, titleBarHeight);
 
 		layoutParamsFF = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
@@ -548,7 +548,7 @@ public class TitleBar extends LinearLayout {
 		logoLineView.setBackgroundDrawable(drawable);
 		leftLayout.addView(logoLineView, layoutParamsWW);
 	}
-	
+
 	public View addLeftImageView(int resId) {
 		ImageView btn = new ImageView(mContext);
 		btn.setImageResource(resId);
@@ -561,76 +561,30 @@ public class TitleBar extends LinearLayout {
 		return btn;
 	}
 
-	/**
-	 * 描述：把指定的View填加到标题栏右边.
-	 * 
-	 * @param rightView
-	 *            指定的View
-	 */
-	public void addRightView(View rightView) {
+
+	public TextView addRightTextView(String text) {
 		rightLayout.setVisibility(View.VISIBLE);
-		rightLayout.addView(rightView, layoutParamsWF);
+		TextView btn = new TextView(mContext);
+		btn.setText(text);
+		btn.setGravity(Gravity.CENTER);
+		btn.setTextColor(getResources().getColor(R.color.title_right_text_color));
+		layoutParamsWF.rightMargin = MyUtils.dip2px(mContext, 10);
+		rightLayout.addView(btn, layoutParamsWF);
+		return btn;
 	}
 
-	/**
-	 * 描述：把指定资源ID表示的View填加到标题栏右边.
-	 * 
-	 * @param resId
-	 *            指定的View的资源ID
-	 */
-	public void addRightView(int resId) {
-		rightLayout.setVisibility(View.VISIBLE);
-		rightLayout.addView(mInflater.inflate(resId, null), layoutParamsWF);
+	public View addRightTextView(int textId) {
+		return addRightTextView(getResources().getString(textId));
 	}
 
-	public View addRightImageView(int resId) {
+	public View addRightButtonView(int bgId) {
 		rightLayout.setVisibility(View.VISIBLE);
-		ImageView btn = new ImageView(mContext);
-		btn.setImageResource(resId);
+		Button btn = new Button(mContext);
+		btn.setBackgroundResource(bgId);
 		rightLayout.addView(btn, layoutParamsIconDefault);
 		return btn;
 	}
-
-	public View addRightButtonView(int resId, String text) {
-		rightLayout.setVisibility(View.VISIBLE);
-		Button btn = new Button(mContext);
-		btn.setMinHeight(0);
-		btn.setMinimumHeight(0);
-		btn.setMinWidth(0);
-		btn.setMinimumWidth(0);
-		btn.setTextSize(15);
-		btn.setText(text);
-		btn.setTextColor(getResources().getColor(R.color.black));
-		btn.setBackgroundResource(resId);
-		btn.setGravity(Gravity.CENTER);
-		layoutParamsWF.rightMargin = MyUtils.dip2px(mContext, 10);
-		rightLayout.addView(btn, layoutParamsWF);
-		return btn;
-	}
-
-	public TextView addRightButtonView(String text) {
-		rightLayout.setVisibility(View.VISIBLE);
-		TextView btn = new TextView(mContext);
-		btn.setText(text);
-		btn.setGravity(Gravity.CENTER);
-		btn.setTextColor(getResources().getColor(R.color.title_right_text_color));
-		layoutParamsWF.rightMargin = MyUtils.dip2px(mContext, 10);
-		rightLayout.addView(btn, layoutParamsWF);
-		return btn;
-	}
-
-	public View addRightButtonView(int textId) {
-		rightLayout.setVisibility(View.VISIBLE);
-		TextView btn = new TextView(mContext);
-		btn.setText(textId);
-		btn.setGravity(Gravity.CENTER);
-		btn.setTextColor(getResources().getColor(R.color.title_right_text_color));
-		layoutParamsWF.rightMargin = MyUtils.dip2px(mContext, 10);
-		rightLayout.addView(btn, layoutParamsWF);
-		return btn;
-	}
-
-	public View addRightImageButtonView(int drawableId) {
+	public View addRightImageView(int drawableId) {
 		rightLayout.setVisibility(View.VISIBLE);
 		ImageView btn = new ImageView(mContext);
 		btn.setImageResource(drawableId);

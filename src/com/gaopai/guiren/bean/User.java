@@ -21,8 +21,8 @@ public class User implements Serializable {
 	 * "http:\/\/tp4.sinaimg.cn\/2451191967\/180\/5631324169\/0", "authStage":
 	 * "1"
 	 */
-	
-	//一般情况下显示realname， 在聊天室里显示displayname，发送消息时根据是否匿名设置displayname
+
+	// 一般情况下显示realname， 在聊天室里显示displayname，发送消息时根据是否匿名设置displayname
 	@Expose
 	public int tuid; // 是否被邀请了 0否
 	@Expose
@@ -107,6 +107,7 @@ public class User implements Serializable {
 	public List<ZanBean> zantaglist;
 	public List<CommentBean> commentlist;
 	public List<TagBean> tag;
+	public PrivacyConfig privacyconfig;
 
 	public int kuosanlistnum;
 
@@ -135,12 +136,19 @@ public class User implements Serializable {
 		public String s_path;
 		public String addtime;
 		public CommentContent content;
-
 	}
 
 	public static class CommentContent implements Serializable {
 		public String content;
 	}
 
-	
+	public static class PrivacyConfig implements Serializable {
+		public String id;
+		public String uid;
+		public int phone;
+		public int mail;
+		public int wechat;
+		public int weibo;
+		public int renmai;
+	}
 }

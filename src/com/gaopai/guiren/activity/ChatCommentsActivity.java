@@ -211,7 +211,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected void initComponent() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.message_detail);
-		View view = mTitleBar.addRightImageButtonView(R.drawable.icon_chat_title_more);
+		View view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
 		view.setId(R.id.ab_chat_more);
 		view.setOnClickListener(this);
 

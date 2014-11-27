@@ -40,6 +40,7 @@ import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.TagResultBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.User.CommentBean;
+import com.gaopai.guiren.bean.User.PrivacyConfig;
 import com.gaopai.guiren.bean.User.SpreadBean;
 import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
@@ -317,15 +318,24 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void bindContactView() {
-		if (isSelf || tUser.relation == 1) {
-			tvEmail.setText(tUser.email);
-			tvPhone.setText(tUser.phone);
-			tvWeixin.setText(mUser.weixin);
-			tvWeibo.setText(mUser.weibo);
-		} else {
-			tvEmail.setText(R.string.profile_view_after_follow);
-			tvPhone.setText(R.string.profile_view_after_follow);
-			tvWeixin.setText(R.string.profile_view_after_follow);
+		tvEmail.setText(tUser.email);
+		tvPhone.setText(tUser.phone);
+		tvWeixin.setText(mUser.weixin);
+		tvWeibo.setText(mUser.weibo);
+		if (!(isSelf || tUser.relation == 1)) {
+			PrivacyConfig pc = tUser.privacyconfig;
+			if (pc.mail == 0) {
+				tvEmail.setText(R.string.profile_view_after_follow);
+			}
+			if (pc.phone == 0) {
+				tvPhone.setText(R.string.profile_view_after_follow);
+			}
+			if (pc.wechat == 0) {
+				tvWeixin.setText(R.string.profile_view_after_follow);
+			}
+			if (pc.weibo == 0) {
+				tvWeibo.setText(R.string.profile_view_after_follow);
+			}
 		}
 		if (!isSelf) {
 			removeTextDrawable(tvEmail);

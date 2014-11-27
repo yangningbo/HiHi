@@ -60,7 +60,7 @@ public class InvitationVerifyActivity extends BaseActivity implements
 				finish();
 			}
 		});
-		mTitleBar.addRightButtonView(R.string.verify_later).setOnClickListener(
+		mTitleBar.addRightTextView(R.string.verify_later).setOnClickListener(
 				new OnClickListener() {
 
 					@Override

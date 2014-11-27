@@ -82,7 +82,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 				getSearchResult();
 			}
 		});
-		View serchView = mTitleBar.addRightImageButtonView(android.R.drawable.ic_menu_search);
+		View serchView = mTitleBar.addRightImageView(android.R.drawable.ic_menu_search);
 		serchView.setId(R.id.ab_search);
 		serchView.setOnClickListener(this);
 		getTags();

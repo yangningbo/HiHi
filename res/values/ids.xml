@@ -11,6 +11,7 @@
     <item name="ab_search" type="id"/>
     <item name="ab_add" type="id"/>
     <item name="ab_setting" type="id"/>
+    <item name="ab_share" type="id"/>
     
     <item name="ab_complete" type="id"/>
     

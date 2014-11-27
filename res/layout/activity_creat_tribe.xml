@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_large_gap"
-            android:background="@drawable/shape_white_round_corner"
+            android:background="@drawable/selector_white_round_corner"
             android:orientation="horizontal" >
 
             <TextView
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_small_gap"
-            android:background="@drawable/shape_white_round_corner"
+            android:background="@drawable/selector_white_round_corner"
             android:orientation="vertical" >
 
             <com.gaopai.guiren.view.FlowLayout
@@ -104,7 +104,7 @@
                 android:id="@+id/tv_edit_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_white_round_corner"
+                android:background="@drawable/selector_white_round_corner"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
                 android:padding="10dp"
@@ -117,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_large_gap"
-            android:background="@drawable/shape_white_round_corner"
+            android:background="@drawable/selector_white_round_corner"
             android:drawableRight="@drawable/icon_switch_active"
             android:gravity="center_vertical"
             android:padding="8dp"

@@ -235,16 +235,16 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		if (!isModeInCall) {
 			imageId = R.drawable.icon_chat_title_speaker;
 		}
-		mVoiceModeImage = (ImageView) mTitleBar.addRightImageButtonView(imageId);
+		mVoiceModeImage = (ImageView) mTitleBar.addRightImageView(imageId);
 		mVoiceModeImage.setId(R.id.ab_chat_ear_phone);
 		mVoiceModeImage.setOnClickListener(this);
 
 		imageId = R.drawable.icon_chat_title_voice_mode;
-		View view = mTitleBar.addRightImageButtonView(imageId);
+		View view = mTitleBar.addRightImageView(imageId);
 		view.setId(R.id.ab_chat_text);
 		view.setOnClickListener(this);
 
-		view = mTitleBar.addRightImageButtonView(R.drawable.icon_chat_title_more);
+		view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
 		view.setId(R.id.ab_chat_more);
 		view.setOnClickListener(this);
 	}

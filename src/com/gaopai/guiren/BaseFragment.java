@@ -103,10 +103,10 @@ public class BaseFragment extends Fragment implements OnClickListener {
 		view.setId(R.id.ab_logo);
 		view.setOnClickListener(this);
 
-		view = mTitleBar.addRightImageButtonView(R.drawable.selector_titlebar_search);
+		view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_search);
 		view.setId(R.id.ab_search);
 		view.setOnClickListener(this);
-		view = mTitleBar.addRightImageButtonView(R.drawable.selector_titlebar_add);
+		view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
 		view.setId(R.id.ab_add);
 		view.setOnClickListener(this);
 	}

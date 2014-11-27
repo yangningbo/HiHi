@@ -54,7 +54,7 @@ public class RealVerifyActivity extends BaseActivity implements
 				finish();
 			}
 		});
-		mTitleBar.addRightButtonView(R.string.verify_later).setOnClickListener(
+		mTitleBar.addRightTextView(R.string.verify_later).setOnClickListener(
 				new OnClickListener() {
 
 					@Override

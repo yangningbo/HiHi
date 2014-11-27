@@ -870,7 +870,9 @@ public class DamiInfo implements Serializable {
 			IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("type", String.valueOf(type));
-		bundle.add("sid", String.valueOf(sid));
+		if (!TextUtils.isEmpty(sid)) {
+			bundle.add("sid", String.valueOf(sid));
+		}
 		bundle.add("title", title);
 		bundle.add("image", image);
 		bundle.add("url", url);

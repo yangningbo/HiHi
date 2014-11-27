@@ -49,7 +49,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 	private void initView() {
 		mTitleBar.setTitleText(R.string.recommend_friend);
 
-		btnJumpOver = mTitleBar.addRightButtonView("跳过");
+		btnJumpOver = mTitleBar.addRightTextView("跳过");
 		btnJumpOver.setOnClickListener(new JumpOverClickListener());
 
 		mListView.setPullLoadEnabled(false);

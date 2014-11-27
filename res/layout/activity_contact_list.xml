@@ -14,7 +14,7 @@
         android:layout_marginRight="20dp"
         android:singleLine="true"
         android:layout_marginTop="5dp"
-        android:background="@drawable/shape_white_round_corner"
+        android:background="@drawable/selector_white_round_corner"
         android:imeOptions="actionSearch"
         android:padding="5dp" />
 

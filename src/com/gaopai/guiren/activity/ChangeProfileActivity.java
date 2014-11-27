@@ -43,7 +43,7 @@ public class ChangeProfileActivity extends BaseActivity {
 		type = getIntent().getIntExtra(KEY_TYPE, TYPE_EMAIL);
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		View rightBtnView = mTitleBar.addRightButtonView(R.string.save);
+		View rightBtnView = mTitleBar.addRightTextView(R.string.save);
 		rightBtnView.setOnClickListener(new OnClickListener() {
 
 			@Override

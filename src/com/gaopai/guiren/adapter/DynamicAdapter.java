@@ -35,9 +35,11 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.DynamicDetailActivity;
+import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
+import com.gaopai.guiren.activity.WebActivity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
@@ -267,12 +269,21 @@ public class DynamicAdapter extends BaseAdapter {
 	private void buildMeetingView(ViewHolderMeeting viewHolder, TypeHolder typeBean, int position, int type) {
 		// TODO Auto-generated method stub
 		buildCommonView(viewHolder, typeBean, position, type);
-		JsonContent jsonContent = typeBean.jsoncontent;
+		final JsonContent jsonContent = typeBean.jsoncontent;
 
 		viewHolder.tvMeetingTitle.setText(jsonContent.name);
 		viewHolder.tvMeetingTime.setText(jsonContent.time);
 		viewHolder.tvMeetingGuest.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		viewHolder.tvMeetingGuest.setText(MyTextUtils.addGuestUserList(jsonContent.guest, "嘉宾："));
+		viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(mContext, MeetingDetailActivity.class);
+				intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, jsonContent.tid);
+				mContext.startActivity(intent);
+			}
+		});
 
 	}
 
@@ -288,7 +299,16 @@ public class DynamicAdapter extends BaseAdapter {
 			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.title);
 			viewHolder.tvInfo1.setText(jsonContent.desc);
-			viewHolder.layoutHolder.setOnClickListener(null);
+			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(mContext, WebActivity.class);
+					intent.putExtra("title", jsonContent.title);
+					intent.putExtra("url", jsonContent.url);
+					mContext.startActivity(intent);
+				}
+			});
 
 			break;
 		case TYPE_SPREAD_TRIBE:
@@ -619,6 +639,7 @@ public class DynamicAdapter extends BaseAdapter {
 		TextView tvMeetingTitle;
 		TextView tvMeetingTime;
 		TextView tvMeetingGuest;
+		View layoutHolder;
 
 		public static ViewHolderMeeting getInstance(View view) {
 			// TODO Auto-generated method stub
@@ -628,6 +649,7 @@ public class DynamicAdapter extends BaseAdapter {
 			viewHolder.tvMeetingTime = (TextView) view.findViewById(R.id.tv_meeting_time);
 			viewHolder.tvMeetingTitle = (TextView) view.findViewById(R.id.tv_meeting_title);
 			viewHolder.tvMeetingGuest = (TextView) view.findViewById(R.id.tv_meeting_guest);
+			viewHolder.layoutHolder = view.findViewById(R.id.layout_meeting_holder);
 			return viewHolder;
 		}
 	}

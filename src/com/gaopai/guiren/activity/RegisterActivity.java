@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.View;
@@ -21,27 +25,27 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.net.RegisterResult;
 import com.gaopai.guiren.bean.net.VerificationResult;
 import com.gaopai.guiren.bean.net.RegisterResult.RegisterBean;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private TextView tv1;
 	private TextView tv2;
 	private TextView tv3;
 
-	private EditText et1;
-	private EditText et2;
+	private EditText etPhone;
+	private EditText etVeryfication;
+	private Button btnConfirm;
+	private Button btnSendVeryfication;
+	private EditText etPassword;
+	private TextView tvSelectCountry;
+	private TextView tvRequestVeryficaion;
 
-	private Button btnNextStep;
-
-	private int mStage = 1;// 1 2 3
 	private Handler mHandler;
 
 	private String phoneNum;
 	private String smsCode;
-
-	private EditText etCountryCode;
-	private View viewChoseCountry;
-	private TextView tvCountry;
+	private String countryCode = "86";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,156 +55,58 @@ public class RegisterActivity extends BaseActivity {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.register));
 		initView();
-		changeViewByStage();
+		// changeViewByStage();
 		mHandler = new Handler(getMainLooper()) {
 
 			@Override
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				if (msg.what == 0) {
-					rightTextView.setText("请于" + String.valueOf(msg.arg1) + "秒后重新获取");
+					setCountDownText(msg.arg1);
 				} else {
-					if (mStage == 2) {
-						rightTextView.setText("点击获取验证码");
-					} else {
-						removeRightTitle();
-					}
+					btnSendVeryfication.setEnabled(true);
 				}
 			}
 		};
 	}
 
 	private void initView() {
-		tv1 = (TextView) findViewById(R.id.tv_register1);
-		tv2 = (TextView) findViewById(R.id.tv_register2);
-		tv3 = (TextView) findViewById(R.id.tv_register3);
+		etPhone = ViewUtil.findViewById(this, R.id.et_input_phone);
+		etVeryfication = ViewUtil.findViewById(this, R.id.et_input_veryfication_code);
+		btnConfirm = ViewUtil.findViewById(this, R.id.btn_confirm);
+		btnConfirm.setOnClickListener(this);
+		etPassword = ViewUtil.findViewById(this, R.id.et_input_password);
 
-		et1 = (EditText) findViewById(R.id.et_register1);
-		et2 = (EditText) findViewById(R.id.et_register2);
-
-		etCountryCode = (EditText) findViewById(R.id.et_country_code);
-		moveEditTextCursor(etCountryCode);
-		tvCountry = (TextView) findViewById(R.id.tv_country);
-		viewChoseCountry = findViewById(R.id.rl_chose_country);
-
-		viewChoseCountry.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				startActivityForResult(CountryCodeActivity.class, 0);
-			}
-		});
-
-		btnNextStep = (Button) findViewById(R.id.btn_next_step);
-		btnNextStep.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				switch (mStage) {
-				case 1: {
-					String set1 = et1.getText().toString();
-					String countryCode = etCountryCode.getText().toString();
-					if (TextUtils.isEmpty(set1)) {
-						showToast("输入不能为空");
-						return;
-					}
-					if (!Patterns.PHONE.matcher(set1).matches()) {
-						showToast("请输入正确的电话号码");
-						return;
-					}
-					getSmsCode(set1, countryCode);
-					break;
-				}
-				case 2: {
-					String set1 = et1.getText().toString();
-					if (TextUtils.isEmpty(set1)) {
-						showToast("输入不能为空");
-						return;
-					}
-					isCountDown = false;
-					mStage = 3;
-					changeViewByStage();
-					break;
-				}
-				case 3: {
-					String set1 = et1.getText().toString();
-					String set2 = et2.getText().toString();
-					if (TextUtils.isEmpty(set1) || TextUtils.isEmpty(set2)) {
-						showToast("输入不能为空");
-						return;
-					}
-					if (!set1.equals(set2)) {
-						showToast("两次输入不相同");
-						return;
-					}
-					register(phoneNum, set1, smsCode);
-					break;
-				}
-				default:
-					break;
-				}
-			}
-		});
+		btnSendVeryfication = ViewUtil.findViewById(this, R.id.btn_send_veryfication);
+		btnSendVeryfication.setOnClickListener(this);
+		tvSelectCountry = ViewUtil.findViewById(this, R.id.tv_select_country);
+		tvSelectCountry.setOnClickListener(this);
+		tvRequestVeryficaion = ViewUtil.findViewById(this, R.id.tv_request_veryfication);
 	}
 
-	private void changeViewByStage() {
-		switch (mStage) {
-		case 1:
-			tv1.setTextColor(getResources().getColor(R.color.red_dongtai_bg));
-			tv2.setTextColor(getResources().getColor(R.color.gray));
-			tv3.setTextColor(getResources().getColor(R.color.gray));
-			break;
-		case 2:
-			tv1.setTextColor(getResources().getColor(R.color.gray));
-			tv2.setTextColor(getResources().getColor(R.color.red_dongtai_bg));
-			tv3.setTextColor(getResources().getColor(R.color.gray));
-			viewChoseCountry.setVisibility(View.GONE);
-			etCountryCode.setVisibility(View.GONE);
-			// et1.setText("");
-			 et1.setHint("请输入验证码");
-			break;
-		case 3:
-			tv1.setTextColor(getResources().getColor(R.color.gray));
-			tv2.setTextColor(getResources().getColor(R.color.gray));
-			tv3.setTextColor(getResources().getColor(R.color.red_dongtai_bg));
-			et2.setVisibility(View.VISIBLE);
-			removeRightTitle();
-			emptyTextOfView(et1);
-			emptyTextOfView(et2);
-			et1.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-			et2.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-			et1.setHint("请输入密码");
-			et2.setHint("请再次输入密码");
-			btnNextStep.setText("确定");
-			break;
-		default:
-			break;
-		}
-	}
 
 	private boolean isCountDown = false;
 	private TextView rightTextView;
 
 	private void addRightCountDownText() {
-		if (rightTextView == null) {
-			rightTextView = mTitleBar.addRightButtonView("请于" + String.valueOf(60) + "秒后重新获取");
-			mTitleBar.setTitleBarGravity(Gravity.CENTER, Gravity.CENTER);
-			emptyTextOfView(rightTextView);
-			rightTextView.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					if (isCountDown || (mStage != 2)) {
-						return;
-					}
-					isCountDown = true;
-					new Thread(new CountDownRunnable()).start();
-				}
-			});
-		}
+		tvRequestVeryficaion.setVisibility(View.VISIBLE);
+		setCountDownText(60);
+	}
+	
+	private void setCountDownText(int num) {
+		String text1 = "没收到短信？";
+		String text2 = "秒后重新获取";
+		String text = text1 + num + text2;
+		SpannableString spString = new SpannableString(text);
+		spString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.general_text_gray)), 0,
+				text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		spString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.general_blue)),
+				text1.length(), (text1 + num).length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		spString.setSpan(new AbsoluteSizeSpan(20, true),
+				text1.length(), (text1 + num).length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		spString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.general_text_gray)), (text1 + num).length(),
+				text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		tvRequestVeryficaion.setText(spString);
 	}
 
 	class CountDownRunnable implements Runnable {
@@ -240,18 +146,17 @@ public class RegisterActivity extends BaseActivity {
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
 						VerificationResult.SmsCode sms = data.data;
-						et1.setText(sms.code);
-						moveEditTextCursor(et1);
+						btnSendVeryfication.setEnabled(false);
+						etVeryfication.setText(sms.code);
+						moveEditTextCursor(etVeryfication);
 						phoneNum = sms.phone;
 						smsCode = sms.code;
-						mStage = 2;
-						changeViewByStage();
 						addRightCountDownText();
 						isCountDown = true;
 						new Thread(new CountDownRunnable()).start();
 					}
 				} else {
-					this.showError(data);
+					otherCondition(data.state, RegisterActivity.this);
 				}
 			}
 		});
@@ -266,11 +171,11 @@ public class RegisterActivity extends BaseActivity {
 				final RegisterResult data = (RegisterResult) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
-						showToast("注册成功");
+						showToast(R.string.register_success);
 						RegisterActivity.this.finish();
 					}
 				} else {
-					this.showError(data);
+					otherCondition(data.state, RegisterActivity.this);
 				}
 			}
 		});
@@ -282,23 +187,58 @@ public class RegisterActivity extends BaseActivity {
 		if (resultCode == RESULT_OK) {
 			String code = intent.getStringExtra(CountryCodeActivity.KEY_COUNTRY_CODE);
 			String name = intent.getStringExtra(CountryCodeActivity.KEY_COUNTRY_NAME);
-			etCountryCode.setText(code);
-			moveEditTextCursor(etCountryCode);
-			tvCountry.setText(name);
+			countryCode = code;
+			tvSelectCountry.setText(name);
 		}
 	}
 	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		isCountDown = false;
+	}
+
 	private void moveEditTextCursor(EditText editText) {
 		editText.setSelection(editText.length());
 	}
-	
-	private void emptyTextOfView(TextView textView) {
-		textView.setText("");
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.btn_send_veryfication:
+			if (TextUtils.isEmpty(etPhone.getText())) {
+				showToast(R.string.phone_can_not_be_empty);
+				return;
+			}
+			getSmsCode(etPhone.getText().toString(), countryCode);
+			break;
+		case R.id.btn_confirm:
+			confirm();
+			break;
+		case R.id.tv_select_country:
+			startActivityForResult(CountryCodeActivity.class, 0);
+			break;
+
+		default:
+			break;
+		}
 	}
-	
-	private void removeRightTitle() {
-		rightTextView.setText("");
-		mTitleBar.setTitleBarGravity(Gravity.CENTER, Gravity.CENTER);
+
+	private void confirm() {
+		String password = etPassword.getText().toString();
+		String veryfication = etVeryfication.getText().toString();
+		if (TextUtils.isEmpty(password)) {
+			showToast(R.string.password_can_not_be_empty);
+			return;
+		}
+		if (TextUtils.isEmpty(veryfication)) {
+			showToast(R.string.veryficaion_can_not_be_empty);
+			return;
+		}
+
+		register(phoneNum, password, veryfication);
 	}
 
 }

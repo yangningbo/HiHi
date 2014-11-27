@@ -708,4 +708,17 @@
     <string name="please_input_comment">请输入评论内容</string>
     <string name="please_input_feedback">请输入反馈意见</string>
     <string name="feed_success">谢谢您的反馈，祝您天天快乐！</string>
+    
+    <!-- share -->
+    <string name="share_wechat">微信好友</string>
+    <string name="share_wechat_group">微信朋友圈</string>
+    <string name="share_weibo">微博</string>
+    <string name="share_guiren_dy">贵人动态</string>
+    <string name="share_qq">QQ好友</string>
+    <string name="share_qq_zone">QQ空间</string>
+    
+    <!-- register -->
+    <string name="register_success">注册成功</string>
+    <string name="veryficaion_can_not_be_empty">验证码不能为空</string>
+    <string name="phone_can_not_be_empty">手机号不能为空</string>
 </resources>

@@ -32,6 +32,8 @@ import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.SimpleStateBean;
 import com.gaopai.guiren.support.MessageHelper;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
+import com.gaopai.guiren.support.ShareManager;
+import com.gaopai.guiren.support.ShareManager.CallDyback;
 import com.gaopai.guiren.support.alarm.AlarmReceiver;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
@@ -100,6 +102,9 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.meeting_detail_title));
+		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
+		view.setId(R.id.ab_share);
+		view.setOnClickListener(this);
 		initComponent();
 		if (isPreview) {
 			bindBasicView();
@@ -321,11 +326,39 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			startActivity(intent);
 			break;
 		}
-
+		case R.id.ab_share:
+			ShareManager shareManager = new ShareManager(this);
+			shareManager.shareContentRecommend("aaaaaaa", "http://www.baidu.com");
+			shareManager.setDyCallback(new CallDyback() {
+				@Override
+				public void spreadDy() {
+					// TODO Auto-generated method stub
+					spreadMeeting(mMeeting);
+				}
+			});
+			break;
 		default:
 			break;
 		}
 
+	}
+	
+	
+	
+	public void spreadMeeting(Tribe meeting) {
+		DamiInfo.spreadDynamic(3, meeting.id, "", "", "", "", new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.spread_success);
+				} else {
+					otherCondition(data.state, MeetingDetailActivity.this);
+				}
+			}
+		});
+		
 	}
 
 	private void setAlarmForMeeting() {
@@ -335,7 +368,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		// alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
 		// //设置闹钟
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pi); // 设置闹钟，当前时间就唤醒
+		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, pi); // 设置闹钟，当前时间就唤醒
 		showToast("success");
 	}
 

@@ -68,7 +68,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		setAbContentView(R.layout.activity_send_dynamic);
 		mTitleBar.setTitleText("发布动态");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		View v = mTitleBar.addRightButtonView("发布");
+		View v = mTitleBar.addRightTextView("发布");
 		v.setOnClickListener(new OnClickListener() {
 
 			@Override

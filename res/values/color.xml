@@ -145,4 +145,8 @@
     <color name="jiav_btn_blue">#319EE6</color>
     <color name="jiav_text_num_light_black">#8B8A8A</color>
     <color name="jiav_text_num_highlight">#E87C60</color>
+    
+    <!-- share window -->
+    <color name="share_background">#F0EFEF</color>
+    <color name="share_text">#808080</color>
 </resources>

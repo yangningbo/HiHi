@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/share_background"
+    android:orientation="vertical"
+    android:paddingBottom="10dp" >
+
+    <Button
+        android:id="@+id/btn_hide_grid"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/icon_meeting_detail_popup_close_btn" />
+
+    <com.gaopai.guiren.view.ChatGridLayout
+        android:id="@+id/cgl_meeting_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:id="@+id/grid_share_wechat"
+            style="@style/meeting_detail_more_layout" >
+
+            <ImageView
+                style="@style/share_window_img"
+                android:src="@drawable/icon_share_wechat" />
+
+            <TextView
+                style="@style/share_window_text"
+                android:text="@string/share_wechat" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grid_share_wechat_group"
+            style="@style/meeting_detail_more_layout" >
+
+            <ImageView
+                style="@style/share_window_img"
+                android:src="@drawable/icon_share_wechat_group" />
+
+            <TextView
+                style="@style/share_window_text"
+                android:text="@string/share_wechat_group" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grid_share_weibo"
+            style="@style/meeting_detail_more_layout" >
+
+            <ImageView
+                style="@style/share_window_img"
+                android:src="@drawable/icon_share_weibo" />
+
+            <TextView
+                style="@style/share_window_text"
+                android:text="@string/share_weibo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grid_share_guiren_dy"
+            style="@style/meeting_detail_more_layout" >
+
+            <ImageView
+                style="@style/share_window_img"
+                android:src="@drawable/icon_share_guiren_dynamic" />
+
+            <TextView
+                style="@style/share_window_text"
+                android:text="@string/share_guiren_dy" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grid_share_qq"
+            style="@style/meeting_detail_more_layout" >
+
+            <ImageView
+                style="@style/share_window_img"
+                android:src="@drawable/icon_share_qq" />
+
+            <TextView
+                style="@style/share_window_text"
+                android:text="@string/share_qq" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grid_share_qq_zone"
+            style="@style/meeting_detail_more_layout" >
+
+            <ImageView
+                style="@style/share_window_img"
+                android:src="@drawable/icon_share_qq_zone" />
+
+            <TextView
+                style="@style/share_window_text"
+                android:text="@string/share_qq_zone" />
+        </LinearLayout>
+    </com.gaopai.guiren.view.ChatGridLayout>
+
+    <Button
+        android:id="@+id/btn_hide_grid_2"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/selector_share_btn"
+        android:text="@string/cancel" />
+
+</LinearLayout>
