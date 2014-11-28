@@ -29,8 +29,11 @@ import com.gaopai.guiren.utils.Constant;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.view.TitleBar;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
 import com.umeng.socialize.sso.EmailHandler;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.sso.SinaSsoHandler;
@@ -547,7 +550,8 @@ public class BaseActivity extends FragmentActivity {
 			.getUMSocialService("com.gaopai.guiren");
 
 	protected void initShare() {
-		mController.getConfig().setSsoHandler(new SinaSsoHandler());
+//		mController.getConfig().setSsoHandler(new SinaSsoHandler());
+//		mController.getConfig().setSinaCallbackUrl("http://www.kaopuhui.com/dami");
 		mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
 		mController.getConfig().setSsoHandler(
 				new QZoneSsoHandler(this, "100424468",
@@ -565,6 +569,23 @@ public class BaseActivity extends FragmentActivity {
 				"wx3d14f400726b7471");
 		wxCircleHandler.setToCircle(true);
 		wxCircleHandler.addToSocialSDK();
+	}
+	
+	public void share() {
+		mController.setShareContent("aaaaaaaaaaaaaaaaaa");
+		mController.openShare(this, new SnsPostListener() {
+
+			@Override
+			public void onStart() {
+
+			}
+
+			@Override
+			public void onComplete(SHARE_MEDIA platform, int eCode,
+					SocializeEntity entity) {
+				// Toast.makeText(BaseActivity.this, "分享成功", 1).show();
+			}
+		});
 	}
 	
 	
@@ -585,6 +606,8 @@ public class BaseActivity extends FragmentActivity {
 		DamiApp.getInstance().getPou()
 				.setBoolean(DamiApp.VOOICE_PLAY_MODE, isModeInCall);
 	}
+	
+
 	
 	
 

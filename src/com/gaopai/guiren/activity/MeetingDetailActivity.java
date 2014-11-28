@@ -327,6 +327,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 		case R.id.ab_share:
+//			share();
 			ShareManager shareManager = new ShareManager(this);
 			shareManager.shareContentRecommend("aaaaaaa", "http://www.baidu.com");
 			shareManager.setDyCallback(new CallDyback() {

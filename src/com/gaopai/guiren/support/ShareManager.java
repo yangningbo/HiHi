@@ -13,11 +13,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -30,6 +29,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.utils.OauthHelper;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
@@ -88,8 +88,9 @@ public class ShareManager implements OnClickListener {
 			mController.directShare(mActivity, SHARE_MEDIA.WEIXIN_CIRCLE, mShareListener);
 			break;
 		case R.id.grid_share_weibo:
-//			mController.directShare(mActivity, SHARE_MEDIA.SINA, mShareListener);
-			shareContentToDy("我爱你大百度", "请问你爱我吗", "http://www.baidu.com", DamiCommon.getLoginResult(mActivity).headsmall);
+			mController.postShare(mActivity, SHARE_MEDIA.SINA, mShareListener);
+			// shareContentToDy("我爱你大百度", "请问你爱我吗", "http://www.baidu.com",
+			// DamiCommon.getLoginResult(mActivity).headsmall);
 			break;
 		case R.id.grid_share_guiren_dy:
 			callDyback.spreadDy();
@@ -109,20 +110,22 @@ public class ShareManager implements OnClickListener {
 		}
 		hideMoreWindow();
 	}
-	
+
 	private CallDyback callDyback;
+
 	public void setDyCallback(CallDyback callDyback) {
 		this.callDyback = callDyback;
 	}
+
 	public static interface CallDyback {
 		public void spreadDy();
 	}
-	
+
 	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
-	
+
 	public void shareContentToDy(String title, String info, String link, String picLink) {
 		DamiInfo.spreadDynamic(6, "", title, picLink, link, info, new SimpleResponseListener(mActivity) {
-			
+
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
@@ -135,11 +138,11 @@ public class ShareManager implements OnClickListener {
 			}
 		});
 	}
-	
+
 	public void shareContentRecommend(String title, String url) {
 
-		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-		mController.getConfig().setSinaCallbackUrl("http://www.kaopuhui.com/dami");
+//		mController.getConfig().setSsoHandler(new SinaSsoHandler());
+//		mController.getConfig().setSinaCallbackUrl("http://www.kaopuhui.com/dami");
 		// mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
 		//
 		String content = title + " : " + url;

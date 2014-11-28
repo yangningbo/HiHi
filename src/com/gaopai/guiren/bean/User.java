@@ -1,12 +1,9 @@
 package com.gaopai.guiren.bean;
 
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.List;
 
-import com.gaopai.guiren.volley.GsonObj;
 import com.google.gson.annotations.Expose;
-import com.google.gson.reflect.TypeToken;
 
 public class User implements Serializable {
 
