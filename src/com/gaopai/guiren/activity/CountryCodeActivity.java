@@ -226,8 +226,6 @@ public class CountryCodeActivity extends BaseActivity{
 		mItems.add(new Item("赞比亚","260"));
 
 
-
-
 		Collections.sort(mItems);
 		
 		char character = '0';
@@ -257,8 +255,9 @@ public class CountryCodeActivity extends BaseActivity{
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
 				// TODO Auto-generated method stub
+				int position = pos - mListView.getHeaderViewsCount();
 				Row row = myAdapter.getItem(position);
 				if(row instanceof Item) {
 					Intent intent = new Intent();

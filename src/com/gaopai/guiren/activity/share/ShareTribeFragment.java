@@ -25,7 +25,7 @@ public class ShareTribeFragment extends BaseShareFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.layout_general_refresh_listview, null);
+		View view = inflater.inflate(R.layout.general_pulltorefresh_listview, null);
 		initView(view);
 		getTribeList();
 		return view;

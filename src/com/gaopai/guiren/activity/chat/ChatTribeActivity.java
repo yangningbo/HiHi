@@ -67,9 +67,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		mChatType = getIntent().getIntExtra(KEY_CHAT_TYPE, CHAT_TYPE_MEETING);
 		mTribe = (Tribe) getIntent().getSerializableExtra(KEY_TRIBE);// before
+		super.onCreate(savedInstanceState);
 		// mTribeId = getIntent().getStringExtra(KEY_TRIBE_ID)
 		updateTribe();
 		getIdentity();
@@ -103,12 +103,19 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			}
 		});
 
-		mTitleBar.setTitleText(mTribe.name);
+//		mTitleBar.setTitleText(mTribe.name);
+		
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		if (messageInfo != null) {
 			buildRetweetMessageInfo(messageInfo);
 			addSaveSendMessage(messageInfo);
 		}
+	}
+	
+	@Override
+	protected void setTitleText() {
+		// TODO Auto-generated method stub
+		mTitleBar.addLeftTextView(mTribe.name);
 	}
 
 	// 通知过来的tribe没有role，发送消息时需要用到，所以这里尽快更新呀

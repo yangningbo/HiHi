@@ -15,6 +15,8 @@
  */
 package com.gaopai.guiren.utils;
 
+import com.gaopai.guiren.R;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
@@ -471,13 +474,15 @@ public class ViewUtil {
 		public void onTextChanged(Editable s);
 	}
 
-	public static TextWatcher creatNumLimitWatcher(final EditText etDynamicMsg, final int numLimit, final OnTextChangedListener changedListener) {
+	public static TextWatcher creatNumLimitWatcher(final EditText etDynamicMsg, final int numLimit,
+			final OnTextChangedListener changedListener) {
 		return new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				// TODO Auto-generated method stub
 			}
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				// TODO Auto-generated method stub
@@ -500,5 +505,13 @@ public class ViewUtil {
 				changedListener.onTextChanged(s);
 			}
 		};
+	}
+
+	public static View creatTitleBarLineView(Context context) {
+		View view = new View(context);
+		view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) context.getResources().getDimension(
+				R.dimen.general_line_narrow)));
+		view.setBackgroundColor(context.getResources().getColor(R.color.titlebar_divider));
+		return view;
 	}
 }

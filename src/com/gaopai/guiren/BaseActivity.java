@@ -17,16 +17,16 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.gaopai.guiren.utils.Constant;
 import com.gaopai.guiren.utils.StringUtils;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.TitleBar;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -36,7 +36,6 @@ import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
 import com.umeng.socialize.sso.EmailHandler;
 import com.umeng.socialize.sso.QZoneSsoHandler;
-import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.SmsHandler;
 import com.umeng.socialize.sso.TencentWBSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
@@ -45,7 +44,7 @@ import com.umeng.socialize.weixin.controller.UMWXHandler;
 public class BaseActivity extends FragmentActivity {
 
 	protected DamiApp mApplication;
-	
+
 	protected Context mContext;
 
 	/** The tag. */
@@ -78,45 +77,15 @@ public class BaseActivity extends FragmentActivity {
 	/** 全局的LayoutInflater对象，已经完成初始化. */
 	public LayoutInflater mInflater;
 
-	/**
-	 * LinearLayout.LayoutParams，已经初始化为FILL_PARENT, FILL_PARENT
-	 */
-	public LinearLayout.LayoutParams layoutParamsFF = null;
-
-	/**
-	 * LinearLayout.LayoutParams，已经初始化为FILL_PARENT, WRAP_CONTENT
-	 */
-	public LinearLayout.LayoutParams layoutParamsFW = null;
-
-	/**
-	 * LinearLayout.LayoutParams，已经初始化为WRAP_CONTENT, FILL_PARENT
-	 */
-	public LinearLayout.LayoutParams layoutParamsWF = null;
-
-	/**
-	 * LinearLayout.LayoutParams，已经初始化为WRAP_CONTENT, WRAP_CONTENT
-	 */
-	public LinearLayout.LayoutParams layoutParamsWW = null;
-
-	/** 总布�?. */
-	public RelativeLayout ab_base = null;
-
-	/** 标题栏布�?. */
+	public LinearLayout windowLayout = null;
 	public TitleBar mTitleBar = null;
+	protected FrameLayout contentLayout = null;
 
-	/** 主内容布�?. */
-	protected RelativeLayout contentLayout = null;
-
-	/** 屏幕宽度. */
 	public int displayWidth = 320;
-
-	/** 屏幕高度. */
 	public int displayHeight = 480;
 
-	/** Window 管理�?. */
 	private WindowManager mWindowManager = null;
 
-	/** 弹出的Dialog的左右边�?. */
 	private int dialogPadding = 40;
 
 	/**
@@ -164,37 +133,17 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	protected void initTitleBar() {
-		layoutParamsFF = new LinearLayout.LayoutParams(
-				android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-				android.view.ViewGroup.LayoutParams.MATCH_PARENT);
-		layoutParamsFW = new LinearLayout.LayoutParams(
-				android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-		layoutParamsWF = new LinearLayout.LayoutParams(
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-				android.view.ViewGroup.LayoutParams.MATCH_PARENT);
-		layoutParamsWW = new LinearLayout.LayoutParams(
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-
-		// 主标题栏
 		mTitleBar = new TitleBar(this);
+		windowLayout = new LinearLayout(this);
+		windowLayout.setOrientation(LinearLayout.VERTICAL);
+		windowLayout.addView(mTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		windowLayout.addView(ViewUtil.creatTitleBarLineView(mContext));
 
-		ab_base = new RelativeLayout(this);
-		ab_base.setBackgroundResource(R.color.welcome_bg_color);
-		contentLayout = new RelativeLayout(this);
+		contentLayout = new FrameLayout(this);
 		contentLayout.setPadding(0, 0, 0, 0);
-
-		// 填入View
-		ab_base.addView(mTitleBar, layoutParamsFW);
-
-		RelativeLayout.LayoutParams layoutParamsFW1 = new RelativeLayout.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT);
-		layoutParamsFW1.addRule(RelativeLayout.BELOW, mTitleBar.getId());
-		ab_base.addView(contentLayout, layoutParamsFW1);
-
-		setContentView(ab_base, layoutParamsFF);
+		contentLayout.setBackgroundColor(getResources().getColor(R.color.general_background));
+		windowLayout.addView(contentLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		setContentView(windowLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 
 	/**
@@ -205,7 +154,7 @@ public class BaseActivity extends FragmentActivity {
 	 */
 	public void setAbContentView(View contentView) {
 		contentLayout.removeAllViews();
-		contentLayout.addView(contentView, layoutParamsFF);
+		contentLayout.addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 
 	/**
@@ -231,14 +180,12 @@ public class BaseActivity extends FragmentActivity {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				Toast.makeText(BaseActivity.this, "" + text, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(BaseActivity.this, "" + text, Toast.LENGTH_SHORT).show();
 			}
 		});
 
 	}
 
-	
 	/**
 	 * 结束fragment
 	 */
@@ -351,22 +298,18 @@ public class BaseActivity extends FragmentActivity {
 			mBottomDialogView = view;
 			if (mBottomDialog == null) {
 				mBottomDialog = new Dialog(this);
-				setDialogLayoutParams(mBottomDialog, dialogPadding,
-						Gravity.BOTTOM);
+				setDialogLayoutParams(mBottomDialog, dialogPadding, Gravity.BOTTOM);
 			}
-			mBottomDialog.setContentView(mBottomDialogView, new LayoutParams(
-					displayWidth - dialogPadding,
+			mBottomDialog.setContentView(mBottomDialogView, new LayoutParams(displayWidth - dialogPadding,
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 			showDialog(id);
 		} else if (id == Constant.DIALOGCENTER) {
 			mCenterDialogView = view;
 			if (mCenterDialog == null) {
 				mCenterDialog = new Dialog(this);
-				setDialogLayoutParams(mCenterDialog, dialogPadding,
-						Gravity.CENTER);
+				setDialogLayoutParams(mCenterDialog, dialogPadding, Gravity.CENTER);
 			}
-			mCenterDialog.setContentView(mCenterDialogView, new LayoutParams(
-					displayWidth - dialogPadding,
+			mCenterDialog.setContentView(mCenterDialogView, new LayoutParams(displayWidth - dialogPadding,
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 			showDialog(id);
 		} else if (id == Constant.DIALOGTOP) {
@@ -375,8 +318,7 @@ public class BaseActivity extends FragmentActivity {
 				mTopDialog = new Dialog(this);
 				setDialogLayoutParams(mTopDialog, dialogPadding, Gravity.TOP);
 			}
-			mTopDialog.setContentView(mTopDialogView, new LayoutParams(
-					displayWidth - dialogPadding,
+			mTopDialog.setContentView(mTopDialogView, new LayoutParams(displayWidth - dialogPadding,
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 			showDialog(id);
 		} else {
@@ -394,8 +336,7 @@ public class BaseActivity extends FragmentActivity {
 	 * @param gravity
 	 *            the gravity
 	 */
-	private void setDialogLayoutParams(Dialog dialog, int dialogPadding,
-			int gravity) {
+	private void setDialogLayoutParams(Dialog dialog, int dialogPadding, int gravity) {
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		Window window = dialog.getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();
@@ -426,8 +367,7 @@ public class BaseActivity extends FragmentActivity {
 	 * @param mOkOnClickListener
 	 *            点击确认按钮的事件监�?
 	 */
-	public void showDialog(String title, String msg,
-			DialogInterface.OnClickListener mOkOnClickListener) {
+	public void showDialog(String title, String msg, DialogInterface.OnClickListener mOkOnClickListener) {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setMessage(msg);
 		builder.setTitle(title);
@@ -451,8 +391,7 @@ public class BaseActivity extends FragmentActivity {
 	 * @param mOkOnClickListener
 	 *            点击确认按钮的事件监�?
 	 */
-	public AlertDialog showDialog(String title, View view,
-			DialogInterface.OnClickListener mOkOnClickListener) {
+	public AlertDialog showDialog(String title, View view, DialogInterface.OnClickListener mOkOnClickListener) {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setTitle(title);
 		builder.setView(view);
@@ -508,8 +447,6 @@ public class BaseActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 		MobclickAgent.onResume(this);
-		if (mTitleBar != null)
-			loadDefaultStyle();
 	}
 
 	@Override
@@ -518,18 +455,11 @@ public class BaseActivity extends FragmentActivity {
 		super.onDestroy();
 	}
 
-	public void loadDefaultStyle() {
-		if (mTitleBar != null) {
-			mTitleBar.setTitleBarBackground(R.drawable.title_bar);
-			mTitleBar.setTitleBarGravity(Gravity.CENTER, Gravity.CENTER);
-		}
-	}
-
 	/** 通过Class跳转界面 **/
 	public void startActivity(Class<?> cls) {
 		startActivity(cls, null);
 	}
-	
+
 	public void startActivityForResult(Class<?> cls, int requestCode) {
 		Intent intent = new Intent();
 		intent.setClass(this, cls);
@@ -546,18 +476,15 @@ public class BaseActivity extends FragmentActivity {
 		startActivity(intent);
 	}
 
-	protected UMSocialService mController = UMServiceFactory
-			.getUMSocialService("com.gaopai.guiren");
+	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
 
 	protected void initShare() {
-//		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-//		mController.getConfig().setSinaCallbackUrl("http://www.kaopuhui.com/dami");
+		// mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		// mController.getConfig().setSinaCallbackUrl("http://www.kaopuhui.com/dami");
 		mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
 		mController.getConfig().setSsoHandler(
-				new QZoneSsoHandler(this, "100424468",
-						"c7394704798a158208a74ab60104f0ba"));
-		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, "100424468",
-				"c7394704798a158208a74ab60104f0ba");
+				new QZoneSsoHandler(this, "100424468", "c7394704798a158208a74ab60104f0ba"));
+		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, "100424468", "c7394704798a158208a74ab60104f0ba");
 		qqSsoHandler.addToSocialSDK();
 		SmsHandler smsHandler = new SmsHandler();
 		smsHandler.addToSocialSDK();
@@ -565,12 +492,11 @@ public class BaseActivity extends FragmentActivity {
 		emailHandler.addToSocialSDK();
 		UMWXHandler wxHandler = new UMWXHandler(this, "wx3d14f400726b7471");
 		wxHandler.addToSocialSDK();
-		UMWXHandler wxCircleHandler = new UMWXHandler(this,
-				"wx3d14f400726b7471");
+		UMWXHandler wxCircleHandler = new UMWXHandler(this, "wx3d14f400726b7471");
 		wxCircleHandler.setToCircle(true);
 		wxCircleHandler.addToSocialSDK();
 	}
-	
+
 	public void share() {
 		mController.setShareContent("aaaaaaaaaaaaaaaaaa");
 		mController.openShare(this, new SnsPostListener() {
@@ -581,19 +507,17 @@ public class BaseActivity extends FragmentActivity {
 			}
 
 			@Override
-			public void onComplete(SHARE_MEDIA platform, int eCode,
-					SocializeEntity entity) {
+			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
 				// Toast.makeText(BaseActivity.this, "分享成功", 1).show();
 			}
 		});
 	}
-	
-	
+
 	public boolean isModeInCall = false;
+
 	protected void initVoicePlayMode() {
 		setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
-		isModeInCall = DamiApp.getInstance().getPou()
-				.getBoolean(DamiApp.VOOICE_PLAY_MODE, false);
+		isModeInCall = DamiApp.getInstance().getPou().getBoolean(DamiApp.VOOICE_PLAY_MODE, false);
 	}
 
 	/**
@@ -603,12 +527,7 @@ public class BaseActivity extends FragmentActivity {
 	 */
 	public void setPlayMode(boolean isModeInCall) {// true ear
 		this.isModeInCall = isModeInCall;
-		DamiApp.getInstance().getPou()
-				.setBoolean(DamiApp.VOOICE_PLAY_MODE, isModeInCall);
+		DamiApp.getInstance().getPou().setBoolean(DamiApp.VOOICE_PLAY_MODE, isModeInCall);
 	}
-	
-
-	
-	
 
 }

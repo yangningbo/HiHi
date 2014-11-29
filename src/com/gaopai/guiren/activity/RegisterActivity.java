@@ -29,9 +29,6 @@ import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class RegisterActivity extends BaseActivity implements OnClickListener {
-	private TextView tv1;
-	private TextView tv2;
-	private TextView tv3;
 
 	private EditText etPhone;
 	private EditText etVeryfication;
@@ -46,6 +43,11 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private String phoneNum;
 	private String smsCode;
 	private String countryCode = "86";
+	
+	public final static int TYPE_REGISTER = 0;
+	public final static int TYPE_FORGET_PASSWORD = 1;
+	public final static String KEY_TYPE = "type";
+	private int type;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		setAbContentView(R.layout.activity_register);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.register));
+		type = getIntent().getIntExtra(KEY_TYPE, 0);
 		initView();
 		// changeViewByStage();
 		mHandler = new Handler(getMainLooper()) {
@@ -82,6 +85,14 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		tvSelectCountry = ViewUtil.findViewById(this, R.id.tv_select_country);
 		tvSelectCountry.setOnClickListener(this);
 		tvRequestVeryficaion = ViewUtil.findViewById(this, R.id.tv_request_veryfication);
+		
+		if (type == TYPE_REGISTER) {
+			btnConfirm.setText(R.string.confirm_register);
+			mTitleBar.setTitleText(R.string.register);
+		} else {
+			btnConfirm.setText(R.string.confirm_modify);
+			mTitleBar.setTitleText(R.string.modify);
+		}
 	}
 
 
@@ -163,7 +174,8 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void register(String phone, String password, String code) {
-		DamiInfo.register(phone, password, code, new SimpleResponseListener(mContext) {
+		
+		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -171,14 +183,23 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 				final RegisterResult data = (RegisterResult) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
-						showToast(R.string.register_success);
+						if (type == TYPE_REGISTER) {
+							showToast(R.string.register_success);
+						} else {
+							showToast(R.string.modify_password);
+						}
 						RegisterActivity.this.finish();
 					}
 				} else {
 					otherCondition(data.state, RegisterActivity.this);
 				}
 			}
-		});
+		};
+		if (type == TYPE_REGISTER) {
+			DamiInfo.register(phone, password, code, listener);
+		} else {
+			DamiInfo.resetPassword(phone, password, code, listener);
+		}
 	}
 
 	@Override

@@ -1,87 +1,107 @@
 package com.gaopai.guiren.activity;
 
-import android.content.Intent;
+import net.tsz.afinal.FinalActivity;
+import net.tsz.afinal.annotation.view.ViewInject;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.adapter.MeetingAdapter;
-import com.gaopai.guiren.bean.Tribe;
-import com.gaopai.guiren.bean.TribeList;
-import com.gaopai.guiren.fragment.MeetingFragment;
+import com.gaopai.guiren.adapter.DynamicAdapter;
+import com.gaopai.guiren.bean.dynamic.DynamicBean;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
+import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
-public class MyMeetingActivity extends BaseActivity{
+public class MyDynamicActivity extends BaseActivity {
+
+	@ViewInject(id = R.id.listview)
 	private PullToRefreshListView mListView;
-	private MeetingAdapter mAdapter;
-	
-	private int page = 1;
-	private boolean isFull = false;
-	
+	private DynamicAdapter mAdapter;
+	private String TAG = DynamicFragment.class.getName();
+
+
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
-		setAbContentView(R.layout.general_pulltorefresh_listview);
+		setAbContentView(R.layout.fragment_dynamic);
+		FinalActivity.initInjectedView(this);
+		initView();
+	}
+
+	private void initView() {
+		mTitleBar.setTitleText("我的动态");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText("我的会议");
-		mListView = (PullToRefreshListView) findViewById(R.id.listView);
-		mListView.setPullRefreshEnabled(false); // 下拉刷新
-		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
-		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
-		mListView.getRefreshableView().setDivider(null);
+
+		mListView.setPullLoadEnabled(true);
+		mListView.setPullRefreshEnabled(true);
+		mListView.setScrollLoadEnabled(false);
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				getMeetingList(true, MeetingFragment.TYPE_MY_MEETING);
+				Log.d(TAG, "pulldown");
+				getDynamicList(true);
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				getMeetingList(false, MeetingFragment.TYPE_MY_MEETING);
+				// TODO Auto-generated method stub
+				Log.d(TAG, "pull up to");
+				getDynamicList(false);
 			}
 		});
-		mAdapter = new MeetingAdapter(mContext);
-		mListView.setAdapter(mAdapter);
-		mListView.doPullRefreshing(true, 50);
+		
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, ((Tribe) mAdapter.getItem(position)).id);
-				intent.setClass(mContext, MeetingDetailActivity.class);
-				startActivity(intent);
-
+				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
+				mAdapter.viewDynamicDetail((TypeHolder) mAdapter.getItem(pos));
 			}
 		});
+
+		mAdapter = new DynamicAdapter(this);
+		mListView.setAdapter(mAdapter);
+		// mListView.doPullRefreshing(true, 0);
 	}
 
-	private void getMeetingList(final boolean isRefresh, int meetingType) {
+	private int page = 1;
+	private boolean isFull = false;
+
+	private void getDynamicList(final boolean isRefresh) {
 		if (isRefresh) {
 			page = 1;
-			mAdapter.clear();
 			isFull = false;
 		}
 		if (isFull) {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		DamiInfo.getMeetingList(meetingType, page, new SimpleResponseListener(mContext) {
+		Log.d(TAG, "page=" + page);
+
+		DamiInfo.getMyDynamic(page, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
-				final TribeList data = (TribeList) o;
+				final DynamicBean data = (DynamicBean) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
+						if (isRefresh) {
+							mAdapter.clear();
+						}
 						mAdapter.addAll(data.data);
 					}
 					if (data.pageInfo != null) {
@@ -92,7 +112,7 @@ public class MyMeetingActivity extends BaseActivity{
 					}
 					mListView.setHasMoreData(!isFull);
 				} else {
-					otherCondition(data.state, MyMeetingActivity.this);
+					otherCondition(data.state, MyDynamicActivity.this);
 				}
 			}
 
@@ -102,5 +122,4 @@ public class MyMeetingActivity extends BaseActivity{
 			}
 		});
 	}
-
 }

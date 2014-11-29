@@ -42,6 +42,7 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.User.CommentBean;
 import com.gaopai.guiren.bean.User.PrivacyConfig;
 import com.gaopai.guiren.bean.User.SpreadBean;
+import com.gaopai.guiren.bean.User.ZanBean;
 import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
@@ -50,6 +51,7 @@ import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.support.comment.CommentProfile;
 import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.LineRelativeLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -120,6 +122,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private LineRelativeLayout layoutZanHolder;
 	private LineRelativeLayout layoutSpreadHolder;
 	private LineRelativeLayout layoutCommentHolder;
+	private TextView tvFollowBottom;
 
 	private TagWindowManager tagWindowManager;
 
@@ -251,6 +254,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		layoutZanHolder = (LineRelativeLayout) findViewById(R.id.layout_zan_holder);
 		layoutCommentHolder = (LineRelativeLayout) findViewById(R.id.layout_comment_holder);
 		layoutSpreadHolder = (LineRelativeLayout) findViewById(R.id.layout_spread_holder);
+
+		tvFollowBottom = ViewUtil.findViewById(this, R.id.tv_profile_bottom_follow);
 	}
 
 	private void bindView() {
@@ -283,6 +288,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			tagWindowManager.bindTags(tagLayout, false, zanClickListener);
 		}
 		bindBottomDynamicView();
+
+		bindBottomView();
 	}
 
 	private OnClickListener zanClickListener = new OnClickListener() {
@@ -309,6 +316,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvFancyCount.setText(String.valueOf(tUser.integral));
 		tvFollowersCount.setText(String.valueOf(tUser.followers));
 		tvFansCount.setText(String.valueOf(tUser.fansers));
+		tvMeetingsCount.setText(String.valueOf(tUser.meetingCount));
+		tvTribesCount.setText(String.valueOf(tUser.tribeCount));
 	}
 
 	private void bindProfileView() {
@@ -322,7 +331,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvPhone.setText(tUser.phone);
 		tvWeixin.setText(mUser.weixin);
 		tvWeibo.setText(mUser.weibo);
-		if (!(isSelf || tUser.relation == 1)) {
+		if (!(isSelf || tUser.isfollow == 1 || tUser.isfollow == 3)) {
 			PrivacyConfig pc = tUser.privacyconfig;
 			if (pc.mail == 0) {
 				tvEmail.setText(R.string.profile_view_after_follow);
@@ -345,6 +354,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	private void bindBottomView() {
+		if (tUser.isfollow == 0 || tUser.isfollow == 2) {
+			tvFollowBottom.setText("加关注");
+		} else {
+			tvFollowBottom.setText("取消关注");
+		}
+	}
+
 	private void removeTextDrawable(TextView textView) {
 		textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 		textView.setCompoundDrawablePadding(0);
@@ -358,7 +375,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		layoutSpreadHolder.setLineHalfOnly(false);
 		layoutCommentHolder.setLineHalf(true);
 		if (tUser.zantaglist != null && tUser.zantaglist.size() > 0) {
-
+			isZan = true;
+			List<ConnectionBean.User> userList = new ArrayList<ConnectionBean.User>();
+			for (ZanBean bean : tUser.zantaglist) {
+				ConnectionBean.User user = new ConnectionBean.User();
+				user.uid = bean.uid;
+				user.realname = bean.realname;
+				userList.add(user);
+			}
+			tvBottomFavorite.setText(MyTextUtils.addConnectionUserList(userList, "赞过"));
 		} else {
 			layoutZanHolder.setVisibility(View.GONE);
 		}
@@ -438,6 +463,22 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivity(intent);
 			break;
 		}
+		// case R.id.tv_my_meetings_count: {
+		// Intent intent = new Intent(mContext, ContactActivity.class);
+		// intent.putExtra(ContactActivity.KEY_TYPE,
+		// ContactActivity.TYPE_FOLLOWERS);
+		// intent.putExtra(ContactActivity.KEY_UID, tUser.uid);
+		// startActivity(intent);
+		// break;
+		// }
+		// case R.id.tv_my_tribes_count: {
+		// Intent intent = new Intent(mContext, ContactActivity.class);
+		// intent.putExtra(ContactActivity.KEY_TYPE,
+		// ContactActivity.TYPE_FOLLOWERS);
+		// intent.putExtra(ContactActivity.KEY_UID, tUser.uid);
+		// startActivity(intent);
+		// break;
+		// }
 		case R.id.tv_my_followers_count: {
 			Intent intent = new Intent(mContext, ContactActivity.class);
 			intent.putExtra(ContactActivity.KEY_TYPE, ContactActivity.TYPE_FOLLOWERS);
@@ -496,11 +537,23 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				if (data.state != null && data.state.code == 0) {
 					if (data.state.msg.equals(getString(R.string.cancel_follow_success))) {
 						showToast(R.string.cancel_follow_success);
-						tUser.relation = 0;
+						if (tUser.isfollow == 3) {
+							tUser.isfollow = 2;
+						}
+						if (tUser.isfollow == 1) {
+							tUser.isfollow = 0;
+						}
+
 					} else {
 						showToast(R.string.follow_success);
-						tUser.relation = 1;
+						if (tUser.isfollow == 2) {
+							tUser.isfollow = 3;
+						}
+						if (tUser.isfollow == 0) {
+							tUser.isfollow = 1;
+						}
 					}
+					bindBottomView();
 					bindContactView();
 				} else {
 					otherCondition(data.state, ProfileActivity.this);

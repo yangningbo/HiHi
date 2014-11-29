@@ -131,19 +131,6 @@
         <item name="android:windowAnimationStyle">@style/DataSheetAnimation</item>
     </style>
 
-    <style name="back_btn_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:background">@drawable/selector_titlebar_back</item>
-        <item name="android:minWidth">70dp</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:textColor">@color/title_bar_text_color</item>
-        <item name="android:textSize">@dimen/title_button_text_size</item>
-    </style>
 
     <style name="background_style">
         <item name="android:layout_width">fill_parent</item>
@@ -186,7 +173,7 @@
 
     <style name="slide_item_layout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">46dp</item>
         <item name="android:background">@drawable/selector_slide_item</item>
         <item name="android:paddingLeft">@dimen/slide_item_image_padding_left</item>
         <item name="android:clickable">true</item>
@@ -241,7 +228,7 @@
     <style name="profile_text_count_divider">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/profile_renmai_divider</item>
+        <item name="android:background">@color/general_divider_in_white</item>
         <item name="android:layout_marginTop">7dp</item>
         <item name="android:layout_marginBottom">7dp</item>
     </style>
@@ -270,7 +257,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/connection_title_name</item>
+        <item name="android:textColor">@color/general_text_blue</item>
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -320,7 +307,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/connection_title_name</item>
+        <item name="android:textColor">@color/general_text_blue</item>
     </style>
 
     <style name="meeting_detail_item_text">

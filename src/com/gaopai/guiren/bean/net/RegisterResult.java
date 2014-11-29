@@ -3,7 +3,6 @@ package com.gaopai.guiren.bean.net;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
-import com.gaopai.guiren.bean.net.VerificationResult.SmsCode;
 import com.gaopai.guiren.volley.GsonObj;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
@@ -16,7 +15,11 @@ public class RegisterResult extends BaseNetBean implements GsonObj {
 	@Override
 	public String getInterface() {
 		// TODO Auto-generated method stub
-		return "index/reg";
+		if (obj == 0) {
+			return "index/reg";
+		} else {
+			return "index/resetpassword";
+		}
 	}
 
 

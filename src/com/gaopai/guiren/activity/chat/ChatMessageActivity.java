@@ -39,7 +39,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 
 		mAdapter = new PrivateChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
-		mTitleBar.setTitleText(user.realname);
+//		mTitleBar.setTitleText(user.realname);
 
 		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, user.uid), 0));
 
@@ -47,6 +47,13 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 			buildRetweetMessageInfo(messageInfo);
 			addSaveSendMessage(messageInfo);
 		}
+	}
+	
+
+	@Override
+	protected void setTitleText() {
+		// TODO Auto-generated method stub
+		mTitleBar.addLeftTextView(user.realname);
 	}
 
 	@Override

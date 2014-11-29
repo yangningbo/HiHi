@@ -137,13 +137,14 @@
                 android:src="@drawable/icon_slide_tribe" />
 
             <TextView
-                android:id="@+id/tv_slide_count_tribes"
                 style="@style/slide_item_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="我的圈子" />
 
-            <TextView style="@style/slide_item_number" />
+            <TextView
+                android:id="@+id/tv_slide_count_tribes"
+                style="@style/slide_item_number" />
         </RelativeLayout>
 
         <View style="@style/slide_divider" />

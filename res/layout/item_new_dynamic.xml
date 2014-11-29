@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/general_paading" >
+
+    <ImageView
+        android:id="@+id/iv_header"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:contentDescription="@string/desc"
+        android:src="@drawable/default_header" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_header"
+        android:layout_toRightOf="@id/iv_header"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="厚度和"
+        android:textColor="@color/general_text_blue"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/iv_header"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="厚度和"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/iv_pic"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/default_header" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_info"
+        android:layout_toRightOf="@id/iv_header"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="厚度和"
+        android:textColor="@color/general_text_gray"
+        android:textSize="12sp" />
+
+</RelativeLayout>

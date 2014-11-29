@@ -78,7 +78,10 @@ public class DynamicDetailActivity extends BaseActivity {
 	private Button mSendTextBtn;
 
 	public final static String KEY_TYPEHOLDER = "typeholder";
+	public final static String KEY_SID = "sid";
 	private TypeHolder typeBean;
+	
+	private String sid;
 
 	private List<String> testUserList = new ArrayList<String>();
 
@@ -88,12 +91,17 @@ public class DynamicDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		typeBean = (TypeHolder) getIntent().getSerializableExtra(KEY_TYPEHOLDER);
 		initTitleBar();
 		setAbContentView(R.layout.fragment_dynamic);
 		mTitleBar.setTitleText("动态详情");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		initComponent();
+		
+		typeBean = (TypeHolder) getIntent().getSerializableExtra(KEY_TYPEHOLDER);
+		if (typeBean == null) {
+			sid = getIntent().getStringExtra(KEY_SID);
+		} else {
+			initComponent();
+		}
 	}
 
 	private void initComponent() {
@@ -135,7 +143,6 @@ public class DynamicDetailActivity extends BaseActivity {
 
 			}
 		});
-
 	}
 
 	/**
@@ -787,7 +794,7 @@ public class DynamicDetailActivity extends BaseActivity {
 
 		@Override
 		public int getCount() {
-			if (typeBean.commentlist.size() == 0) {
+			if (typeBean.commentlist == null || typeBean.commentlist.size() == 0) {
 				return 0;
 			}
 			return typeBean.commentlist.size() + 1;

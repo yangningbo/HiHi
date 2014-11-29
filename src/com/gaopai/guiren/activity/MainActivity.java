@@ -2,6 +2,8 @@ package com.gaopai.guiren.activity;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -121,6 +123,7 @@ public class MainActivity extends BaseActivity {
 		});
 
 		int screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
+		int screenHeight = mContext.getResources().getDisplayMetrics().heightPixels;
 		findViewById(R.id.slide_left_holder).getLayoutParams().width = (int) (screenWidth * 0.75);
 
 		View view = (View) findViewById(R.id.slide_btn_my_profile);
@@ -159,10 +162,13 @@ public class MainActivity extends BaseActivity {
 		textView = (TextView) findViewById(R.id.tv_slide_count_fans);
 		textView.setText(String.valueOf(mUser.fansers));
 		textView = (TextView) findViewById(R.id.tv_slide_count_tribes);
+		textView.setText(String.valueOf(mUser.tribeCount));
 		textView = (TextView) findViewById(R.id.tv_slide_count_meetings);
+		textView.setText(String.valueOf(mUser.meetingCount));
 		textView = (TextView) findViewById(R.id.tv_slide_count_favourite);
 		textView.setText(String.valueOf(mUser.favoriteCount));
 		textView = (TextView) findViewById(R.id.tv_slide_count_dynamics);
+		textView.setText(String.valueOf(mUser.dynamicCount));
 	}
 
 	private OnClickListener slideMenuClickListener = new OnClickListener() {
@@ -193,6 +199,7 @@ public class MainActivity extends BaseActivity {
 				startActivity(MyFavoriteActivity.class);
 				break;
 			case R.id.slide_btn_my_dynamics:
+				startActivity(MyDynamicActivity.class);
 				break;
 			case R.id.slide_btn_invite_friend:
 				break;

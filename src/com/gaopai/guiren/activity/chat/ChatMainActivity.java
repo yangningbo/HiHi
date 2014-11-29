@@ -226,10 +226,12 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		}
 	}
 
+	
 	private void initTitleBarLocal() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		setTitleText();
 		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
-		ivDisturb = (ImageView) mTitleBar.addLeftImageView(R.drawable.level_meeting_detail_avoid_disturb);
+		ivDisturb = (ImageView) mTitleBar.addLeftImageViewWithDefaultSize(R.drawable.icon_chat_title_avoid_disturb_off);
 
 		int imageId = R.drawable.icon_chat_title_ear_phone;
 		if (!isModeInCall) {
@@ -248,6 +250,10 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		view.setId(R.id.ab_chat_more);
 		view.setOnClickListener(this);
 	}
+	
+	protected void setTitleText(){
+		//call before add ivDisturb
+	};
 
 	protected void initViewComponent() {
 		mSwitchVoiceTextBtn = (Button) findViewById(R.id.chat_box_btn_switch_voice_text);

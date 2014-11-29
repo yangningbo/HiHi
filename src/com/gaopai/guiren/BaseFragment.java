@@ -4,14 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.gaopai.guiren.activity.CreatMeetingActivity;
 import com.gaopai.guiren.activity.CreatTribeActivity;
@@ -19,6 +19,7 @@ import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.SearchActivity;
 import com.gaopai.guiren.activity.SendDynamicMsgActivity;
 import com.gaopai.guiren.utils.Constant;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.TitleBar;
 
 public class BaseFragment extends Fragment implements OnClickListener {
@@ -48,14 +49,9 @@ public class BaseFragment extends Fragment implements OnClickListener {
 	 */
 	public LinearLayout.LayoutParams layoutParamsWW = null;
 
-	/** 总布�?. */
-	public RelativeLayout ab_base = null;
-
-	/** 标题栏布�?. */
-	protected TitleBar mTitleBar = null;
-
-	/** 主内容布�?. */
-	protected RelativeLayout contentLayout = null;
+	public LinearLayout windowLayout = null;
+	public TitleBar mTitleBar = null;
+	protected FrameLayout contentLayout = null;
 
 	/** 屏幕宽度. */
 	public int displayWidth = 320;
@@ -87,15 +83,15 @@ public class BaseFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-		if (ab_base == null) {
+		if (windowLayout == null) {
 			initTitleBar();
 
 			contentLayout.setClickable(true);
 			addChildView(contentLayout);
 		} else {
-			((ViewGroup) ab_base.getParent()).removeView(ab_base);
+			((ViewGroup) windowLayout.getParent()).removeView(windowLayout);
 		}
-		return ab_base;
+		return windowLayout;
 	}
 
 	protected void addButtonToTitleBar() {
@@ -125,22 +121,17 @@ public class BaseFragment extends Fragment implements OnClickListener {
 		layoutParamsWW = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 
-		// 主标题栏
 		mTitleBar = new TitleBar(act);
+		
+		windowLayout = new LinearLayout(act);
+		windowLayout.setOrientation(LinearLayout.VERTICAL);
+		windowLayout.addView(mTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		windowLayout.addView(ViewUtil.creatTitleBarLineView(act));
 
-		ab_base = new RelativeLayout(act);
-		ab_base.setBackgroundResource(R.color.welcome_bg_color);
-		contentLayout = new RelativeLayout(act);
+		contentLayout = new FrameLayout(act);
 		contentLayout.setPadding(0, 0, 0, 0);
-
-		// 填入View
-		ab_base.addView(mTitleBar, layoutParamsFW);
-
-		RelativeLayout.LayoutParams layoutParamsFW1 = new RelativeLayout.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		layoutParamsFW1.addRule(RelativeLayout.BELOW, mTitleBar.getId());
-		ab_base.addView(contentLayout, layoutParamsFW1);
-
+		contentLayout.setBackgroundColor(getResources().getColor(R.color.general_background));
+		windowLayout.addView(contentLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 
 	protected DamiApp getMyApplication() {
@@ -150,14 +141,8 @@ public class BaseFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (mTitleBar != null)
-			loadDefaultStyle();
 	}
 
-	public void loadDefaultStyle() {
-		mTitleBar.setTitleBarBackground(R.drawable.title_bar);
-		mTitleBar.setTitleBarGravity(Gravity.CENTER, Gravity.CENTER);
-	}
 
 	// /**
 	// * 系统自带的activity启动方式

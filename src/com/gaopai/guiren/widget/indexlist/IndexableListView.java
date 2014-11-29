@@ -58,6 +58,7 @@ public class IndexableListView extends ListView {
 	}
 
 	private void init(Context context) {
+		this.setHeaderDividersEnabled(false);
 		mDensity = context.getResources().getDisplayMetrics().density;
 		mPreviewPadding = 5 * mDensity;
 		mScaledDensity = context.getResources().getDisplayMetrics().scaledDensity;

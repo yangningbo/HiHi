@@ -3,12 +3,20 @@ package com.gaopai.guiren.bean.dynamic;
 import java.io.Serializable;
 import java.util.List;
 
-import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.bean.AppState;
+import com.gaopai.guiren.bean.PageInfo;
+import com.google.gson.annotations.Expose;
 
-public class DynamicBean extends BaseNetBean {
+public class DynamicBean implements Serializable{
 	public List<TypeHolder> data;
+	@Expose
+	public DyState state;
+	@Expose
+	public PageInfo pageInfo;
 
-	// 缺少标签
+	public static class DyState extends AppState {
+		public int newalertcount; 
+	}
 
 	public static class TypeHolder implements Serializable {
 		public String id;

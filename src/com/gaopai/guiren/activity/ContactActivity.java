@@ -240,6 +240,7 @@ public class ContactActivity extends BaseActivity {
 		@Override
 		public void onFinish() {
 			mListView.onPullComplete();
+			mListView.setHasMoreData(!isFullList);
 		}
 	}
 

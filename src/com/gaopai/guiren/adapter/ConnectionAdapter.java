@@ -255,12 +255,7 @@ public class ConnectionAdapter extends BaseAdapter {
 
 	private View inflateItemView(int type) {
 		View convertView = null;
-		if (TYPE_BE_FRIENDS == type) {
-			ViewHolderBeFriends viewHolder;
-			convertView = mInflater.inflate(R.layout.item_connection_be_friends, null);
-			viewHolder = ViewHolderBeFriends.getInstance(convertView);
-			convertView.setTag(viewHolder);
-		} else if (TYPE_GENERAL == type) {
+	    if (TYPE_GENERAL == type) {
 			ViewHolderGeneral viewHolder;
 			convertView = mInflater.inflate(R.layout.item_connection_general, null);
 			viewHolder = ViewHolderGeneral.getInstance(convertView);
@@ -274,33 +269,6 @@ public class ConnectionAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	static class ViewHolderBeFriends {
-		ImageView ivHeader;
-		TextView tvDynamicInfo;
-		ImageView ivHeader1;
-		TextView tvUserName1;
-		TextView tvUserInfo1;
-		ImageView ivHeader2;
-		TextView tvUserName2;
-		TextView tvUserInfo2;
-		TextView tvDateInfo;
-
-		public static ViewHolderBeFriends getInstance(View view) {
-			// TODO Auto-generated method stub
-			// TODO Auto-generated method stub
-			ViewHolderBeFriends viewHolder = new ViewHolderBeFriends();
-			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
-			viewHolder.tvDynamicInfo = (TextView) view.findViewById(R.id.tv_dynamic_info);
-			viewHolder.ivHeader1 = (ImageView) view.findViewById(R.id.iv_header1);
-			viewHolder.tvUserName1 = (TextView) view.findViewById(R.id.tv_user_name1);
-			viewHolder.tvUserInfo1 = (TextView) view.findViewById(R.id.tv_user_info1);
-			viewHolder.ivHeader2 = (ImageView) view.findViewById(R.id.iv_header2);
-			viewHolder.tvUserName2 = (TextView) view.findViewById(R.id.tv_user_name2);
-			viewHolder.tvUserInfo2 = (TextView) view.findViewById(R.id.tv_user_info2);
-			viewHolder.tvDateInfo = (TextView) view.findViewById(R.id.tv_date_info);
-			return viewHolder;
-		}
-	}
 
 	static class ViewHolderGeneral {
 		ImageView ivHeader;

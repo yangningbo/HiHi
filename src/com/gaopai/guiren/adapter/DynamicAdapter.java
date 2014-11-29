@@ -86,6 +86,8 @@ public class DynamicAdapter extends BaseAdapter {
 	// public final static int TYPE_JOIN_MEETING = 3;
 	// public final static int TYPE_JOIN_TRIBE = 6;
 	// public final static int TYPE_MSG_BY_TAG = 1;//精选一条消息
+	
+	private boolean isMyDynamic = false;
 
 	public void showSoftKeyboard() {
 		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -105,6 +107,21 @@ public class DynamicAdapter extends BaseAdapter {
 		});
 		mPlayerWrapper.setPlayCallback(new PlayCallback());
 	}
+	public DynamicAdapter(Activity activity) {
+		mContext = activity;
+		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
+			@Override
+			public void onSuccess(MessageInfo messageInfo) {
+				// TODO Auto-generated method stub
+				downVoiceSuccess(messageInfo);
+			}
+		});
+		mPlayerWrapper.setPlayCallback(new PlayCallback());
+		isMyDynamic = true;
+	}
+	
+	
 
 	private class PlayCallback extends MediaUIHeper.PlayCallback {
 
@@ -220,6 +237,12 @@ public class DynamicAdapter extends BaseAdapter {
 		}
 
 		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)) + "     天山上的来客");
+		
+		if (isMyDynamic) {
+			viewHolder.rlDynamicInteractive.setVisibility(View.GONE);
+			viewHolder.btnDynamicAction.setVisibility(View.GONE);
+			return;
+		}
 
 		if (typeBean.spread.size() > 0) {
 			isShowSpread = true;
@@ -563,11 +586,16 @@ public class DynamicAdapter extends BaseAdapter {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Intent intent = new Intent(mContext, DynamicDetailActivity.class);
-			intent.putExtra(DynamicDetailActivity.KEY_TYPEHOLDER, (TypeHolder) v.getTag());
-			mContext.startActivity(intent);
+			viewDynamicDetail((TypeHolder) v.getTag());
 		}
 	};
+	
+	public void viewDynamicDetail(TypeHolder typeHolder) {
+		Intent intent = new Intent(mContext, DynamicDetailActivity.class);
+		intent.putExtra(DynamicDetailActivity.KEY_TYPEHOLDER, typeHolder);
+		mContext.startActivity(intent);
+	}
+	
 	private OnClickListener moreWindowClickListener = new OnClickListener() {
 
 		@Override

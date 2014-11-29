@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="选择您手机号码所在的国家，以便收到短信"
+            android:text="@string/please_chose_country"
             android:textColor="@color/general_text_gray"
             android:textSize="@dimen/general_font_4" />
 
@@ -48,7 +48,7 @@
             android:layout_height="@dimen/register_edit_height"
             android:layout_marginTop="@dimen/general_large_gap"
             android:background="@drawable/selector_edit_white_round_corner"
-            android:hint="请输入您的手机号码"
+            android:hint="@string/please_input_phone"
             android:padding="10dp"
             android:inputType="phone"
             android:textSize="@dimen/general_font_2" />
@@ -65,7 +65,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:background="@drawable/selector_edit_white_round_corner"
-                android:hint="请输入验证码"
+                android:hint="@string/please_input_verify_code"
                 android:padding="10dp"
                 android:textSize="@dimen/general_font_2" />
 
@@ -76,7 +76,7 @@
                 android:layout_marginLeft="@dimen/general_large_gap"
                 android:layout_weight="2"
                 android:background="@drawable/selector_tribe_detail_btn_green"
-                android:text="发送验证码"
+                android:text="@string/send_verify_code"
                 android:textColor="@color/white" />
         </LinearLayout>
 
@@ -96,7 +96,7 @@
             android:layout_height="@dimen/register_edit_height"
             android:layout_marginTop="@dimen/general_large_gap"
             android:background="@drawable/selector_edit_white_round_corner"
-            android:hint="请输入密码"
+            android:hint="@string/please_input_password"
             android:padding="10dp"
             android:textSize="@dimen/general_font_2" />
 
@@ -112,7 +112,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/selector_tribe_detail_btn_blue"
-                android:text="确认注册"
+                android:text="@string/confirm_register"
                 android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>

@@ -105,34 +105,7 @@
     <string name="add_more">更多</string>
     <string name="no_more_data">没有更多信息</string>
     <string name="add_more_loading">加载中...</string>
-    <string name="forget_password">忘记密码?</string>
-    <string name="new_user_register">新账户注册</string>
-    <string name="register">注册</string>
-    <string name="login_forget_pwd">忘记密码</string>
-    <string name="confirm_pwd">确认密码</string>
-    <string name="user_protocol">用户协议</string>
-    <string name="input_signup_pwd">请输入注册密码</string>
-    <string name="input_signup_confirm_pwd">请输入确认密码</string>
-    <string name="signup_error">注册失败</string>
-    <string name="input_signup_pwd_short">密码：6-20位字符,由英文数字及符号组成</string>
-    <string name="confirm_pwd_error">你输入的密码不一致,请重新输入</string>
-    <string name="get_verify_code">获取验证码</string>
-    <string name="verify_code">验证码</string>
-    <string name="mobile_num">手机号</string>
-    <string name="please_input_verify_code">请输入验证码</string>
-    <string name="please_input_nickname">请输入昵称</string>
-    <string name="please_input_email">请输入邮箱</string>
-    <string name="please_input_correct_mobile_num">请输入正确格式的手机号</string>
-    <string name="old_password">旧密码</string>
-    <string name="new_password">新密码</string>
-    <string name="confirm_new_password">确认新密码</string>
-    <string name="modify">修改</string>
-    <string name="modify_pwd_successfully">密码修改成功</string>
-    <string name="modify_pwd_failed">密码修改失败</string>
-    <string name="modify_loading">修改中...</string>
-    <string name="please_input_old_pwd">请输入旧密码</string>
-    <string name="please_input_new_password">请输入新密码</string>
-    <string name="modify_password">修改密码</string>
+
     <string name="edit_profile">编辑资料</string>
     <string name="not_must_input">选填内容</string>
     <string name="please_input">请输入</string>
@@ -718,7 +691,43 @@
     <string name="share_qq_zone">QQ空间</string>
     
     <!-- register -->
+    <string name="register">注册</string>
+    <string name="modify">修改密码</string>
     <string name="register_success">注册成功</string>
+    <string name="modify_success">修改成功</string>
     <string name="veryficaion_can_not_be_empty">验证码不能为空</string>
     <string name="phone_can_not_be_empty">手机号不能为空</string>
+    <string name="confirm_register">确认注册</string>
+    <string name="confirm_modify">确认修改</string>
+    <string name="send_verify_code">发送验证码</string>
+    <string name="please_input_verify_code">请输入验证码</string>
+    <string name="please_chose_country">选择您手机号码所在的国家，以便收到短信</string>
+    <string name="please_input_phone">请输入您的手机号码</string>
+    
+    <string name="forget_password">忘记密码?</string>
+    <string name="new_user_register">新账户注册</string>
+    <string name="login_forget_pwd">忘记密码</string>
+    <string name="confirm_pwd">确认密码</string>
+    <string name="user_protocol">用户协议</string>
+    <string name="input_signup_pwd">请输入注册密码</string>
+    <string name="input_signup_confirm_pwd">请输入确认密码</string>
+    <string name="signup_error">注册失败</string>
+    <string name="input_signup_pwd_short">密码：6-20位字符,由英文数字及符号组成</string>
+    <string name="confirm_pwd_error">你输入的密码不一致,请重新输入</string>
+    <string name="get_verify_code">获取验证码</string>
+    <string name="verify_code">验证码</string>
+    <string name="mobile_num">手机号</string>
+    <string name="please_input_nickname">请输入昵称</string>
+    <string name="please_input_email">请输入邮箱</string>
+    <string name="please_input_correct_mobile_num">请输入正确格式的手机号</string>
+    <string name="modify_loading">修改中...</string>
+    <string name="please_input_old_pwd">请输入旧密码</string>
+    <string name="please_input_new_password">请输入新密码</string>
+    <string name="modify_password">修改密码</string>
+    
+    <string name="dynamic_msg">动态消息</string>
+    
+    <string name="message">消息</string>
+    
+    
 </resources>

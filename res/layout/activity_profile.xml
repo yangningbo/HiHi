@@ -32,7 +32,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="4dp"
-                android:text="加关注"
                 android:textColor="@color/white" />
         </RelativeLayout>
 

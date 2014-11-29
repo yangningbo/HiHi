@@ -189,11 +189,11 @@ public class NotifySystemActivity extends BaseActivity {
 						// mNotifyList.get(position).message.imgUrlL);
 						startActivity(pictureIntent);
 					} else if (mNotifyList.get(position).message.fileType == MessageType.VOICE) {
-						List<MessageInfo> messageList = new ArrayList<MessageInfo>();
-						messageList.add(mNotifyList.get(position).message);
-						Intent playIntent = new Intent(mContext, SequencePlayActivity.class);
-						playIntent.putExtra("msgList", (Serializable) messageList);
-						startActivity(playIntent);
+//						List<MessageInfo> messageList = new ArrayList<MessageInfo>();
+//						messageList.add(mNotifyList.get(position).message);
+//						Intent playIntent = new Intent(mContext, SequencePlayActivity.class);
+//						playIntent.putExtra("msgList", (Serializable) messageList);
+//						startActivity(playIntent);
 					}
 					break;
 
@@ -207,11 +207,11 @@ public class NotifySystemActivity extends BaseActivity {
 						// mNotifyList.get(position).message.imgUrlL);
 						startActivity(pictureIntent);
 					} else if (mNotifyList.get(position).message.fileType == MessageType.VOICE) {
-						List<MessageInfo> messageList = new ArrayList<MessageInfo>();
-						messageList.add(mNotifyList.get(position).message);
-						Intent playIntent = new Intent(mContext, SequencePlayActivity.class);
-						playIntent.putExtra("msgList", (Serializable) messageList);
-						startActivity(playIntent);
+//						List<MessageInfo> messageList = new ArrayList<MessageInfo>();
+//						messageList.add(mNotifyList.get(position).message);
+//						Intent playIntent = new Intent(mContext, SequencePlayActivity.class);
+//						playIntent.putExtra("msgList", (Serializable) messageList);
+//						startActivity(playIntent);
 					}
 					break;
 

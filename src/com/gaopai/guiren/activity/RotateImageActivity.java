@@ -95,7 +95,7 @@ public class RotateImageActivity extends BaseActivity implements OnClickListener
 		});
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.rotate_image);
-		View ivComplete = mTitleBar.addRightImageView(R.drawable.title_complete_btn);
+		View ivComplete = mTitleBar.addRightImageView(R.drawable.icon_profile_favourite);
 		ivComplete.setId(R.id.ab_complete);
 		ivComplete.setOnClickListener(this);
 

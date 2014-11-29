@@ -14,7 +14,8 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/scroller" >
+        android:layout_toLeftOf="@id/scroller"
+        android:background="@color/white" >
     </com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView>
 
 </RelativeLayout>

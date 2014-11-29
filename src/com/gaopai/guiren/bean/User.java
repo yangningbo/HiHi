@@ -88,6 +88,10 @@ public class User implements Serializable {
 	public int favoriteCount = 0; // 收藏数
 	@Expose
 	public int dynamicCount = 0; // 动态数
+	public int tribeCount = 0;
+	public int meetingCount = 0;
+	public int releaseCount = 0;
+	public int isdelete = 0;
 	@Expose
 	public RoomIds roomids;
 	@Expose

@@ -72,6 +72,9 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 		mListView.setCacheColorHint(0);
 //		mListView.setDivider(null);
 		mListView.setFadingEdgeLength(0);
+		mListView.setHeaderDividersEnabled(false);
+		mListView.setFooterDividersEnabled(false);
+		
 //		mListView.setSelector(context.getResources().getDrawable(
 //				R.color.transparent));
 		listView.setOnScrollListener(this);

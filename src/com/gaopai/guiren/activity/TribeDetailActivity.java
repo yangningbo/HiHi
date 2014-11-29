@@ -362,10 +362,10 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			break;
 		}
 		case R.id.tv_deal_jubao_apply: {
-			// Intent reportIntent = new Intent(mContext,
-			// ReportMsgActivity.class);
-			// reportIntent.putExtra("id", mTribeID);
-			// startActivity(reportIntent);
+			Intent reportIntent = new Intent(mContext, ReportMsgActivity.class);
+			reportIntent.putExtra(ReportMsgActivity.KEY_TID, mTribeID);
+			reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_TRIBE);
+			startActivity(reportIntent);
 			break;
 		}
 		case R.id.tv_change_tribe: {

@@ -23,7 +23,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/voice_mode_in_call_toast_icon" />
+            android:src="@drawable/icon_chat_title_ear_phone" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -79,7 +79,7 @@ public class LocalPicActivity extends BaseActivity implements OnClickListener {
 	private void initView() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText("—°‘Ò’’∆¨");
-		View ivComplete = mTitleBar.addRightImageView(R.drawable.title_complete_btn);
+		View ivComplete = mTitleBar.addRightImageView(R.drawable.icon_profile_favourite);
 		ivComplete.setId(R.id.ab_complete);
 		ivComplete.setOnClickListener(this);
 

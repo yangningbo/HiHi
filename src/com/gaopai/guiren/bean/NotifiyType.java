@@ -132,8 +132,4 @@ public class NotifiyType {
 	/** 你的消息被赞了 */
 	public static final int MESSAGE_ZAN_YOURS = 70;
 	
-	
-	
-	
-	
 }

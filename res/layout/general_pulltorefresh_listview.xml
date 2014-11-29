@@ -5,6 +5,7 @@
 
     <com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView
         android:id="@+id/listView"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView>

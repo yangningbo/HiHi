@@ -34,7 +34,7 @@ public class NotificationFragment extends BaseFragment {
 	@Override
 	public void addChildView(ViewGroup contentLayout) {
 		if (mView == null) {
-			mView = mInflater.inflate(R.layout.fragment_notification, null);
+			mView = mInflater.inflate(R.layout.general_pulltorefresh_listview, null);
 			contentLayout.addView(mView, layoutParamsFF);
 			initView();
 		} else {
@@ -44,9 +44,8 @@ public class NotificationFragment extends BaseFragment {
 
 	private void initView() {
 		addButtonToTitleBar();
-		mTitleBar.setTitleText("消息");
+		mTitleBar.setTitleText(R.string.message);
 		mListView = (PullToRefreshListView) mView.findViewById(R.id.listView);
-
 		mListView.setPullLoadEnabled(false);
 		mListView.setScrollLoadEnabled(false);
 		mListView.setPullRefreshEnabled(false);

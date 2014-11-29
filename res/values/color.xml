@@ -17,7 +17,6 @@
     <color name="viewfinder_mask">#60000000</color>
     <color name="possible_result_points">#c0ffff00</color>
     <color name="search_dialog_bg">#b0000000</color>
-    <color name="title_bar_text_color">#000000</color>
     <color name="devider_color">#C8C7CC</color>
     <color name="high_lighted_color">#23bbd7</color>
     <color name="profile_sign_color">#AFAFAF</color>
@@ -81,22 +80,18 @@
     <color name="slide_item_background_normal">#19232b</color>
     <color name="slide_item_background_active">#0b1721</color>
     
-    <color name="title_background">#f7f7f7</color>
-    
-    
     <color name="notification_dot_red">#df0000</color>
-    <color name="notification_item_divider">#DFDFDF</color>
     
     <color name="profile_background">#F1F0F5</color>
     <color name="profile_name">#306DAB</color>
     <color name="profile_renmai_topbar">#F7F7F7</color>
-    <color name="profile_renmai_divider">#CFCDCD</color>
+
     <color name="profile_text_gray">#9A9A9A</color>
     <color name="profile_vertical_divider">#B2B2B2</color>
     
     <color name="profile_bottom_bar">#6E6F70</color>
     
-    <color name="connection_title_name">#306DAB</color>
+
     <color name="connection_linkfy">#306DAB</color>
     <color name="connection_item_background">#ECECEC</color>
     
@@ -104,6 +99,8 @@
     <color name="tribe_detail_horizon_line">#C8C8C8</color>
     <color name="tribe_detail_text_gray">#8D8D8E</color>
     
+    <color name="general_text_blue">#306DAB</color>
+        
     <color name="general_btn_yellow_normal">#FFC600</color>
     <color name="general_btn_yellow_active">#D6A600</color>
     <color name="general_btn_green_normal">#00CCCB</color>
@@ -149,4 +146,9 @@
     <!-- share window -->
     <color name="share_background">#F0EFEF</color>
     <color name="share_text">#808080</color>
+    
+    <color name="titlebar_background">#F7F7F7</color>
+    <color name="titlebar_divider">#666565</color>
+    
+    <color name="general_divider_in_white">#CFCDCD</color>
 </resources>

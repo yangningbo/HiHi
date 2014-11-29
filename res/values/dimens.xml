@@ -3,7 +3,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="title_bar">49dp</dimen>
     <dimen name="menu_bar_height">54dp</dimen>
-    <dimen name="title_text_size">20sp</dimen>
+    
     <dimen name="select_system_text_size">14sp</dimen>
     <dimen name="login_username_text_size">16sp</dimen>
     <dimen name="menu_text_size">12dp</dimen>
@@ -72,8 +72,6 @@
     
     <dimen name="tribe_detail_thick_divider">2px</dimen>
     <dimen name="tribe_detail_btn_radius">5dp</dimen>
-    
-    
 
     <dimen name="general_small_gap">5dp</dimen>
     <dimen name="general_large_gap">15dp</dimen>
@@ -81,10 +79,16 @@
     <dimen name="general_header_padding">8dp</dimen>
     <dimen name="general_info_margin_top">3dp</dimen>
     
+    <dimen name="general_line_narrow">1px</dimen>
+    <dimen name="general_line_wide">1dp</dimen>
+    
     <dimen name="general_font_1">22sp</dimen>
     <dimen name="general_font_2">18sp</dimen>
     <dimen name="general_font_3">16sp</dimen>
     <dimen name="general_font_4">14sp</dimen>
+    
+    <!-- setTextSize will convert 20 to sp, so just let it be px -->
+	<dimen name="title_text_size">20px</dimen>
     
     <!-- register -->
     <dimen name="register_edit_height">45dp</dimen>    

@@ -186,7 +186,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			startActivity(UserProtocalActivity.class);
 			break;
 		case R.id.tv_forget_password:
-			startActivity(RegisterActivity.class);
+			startRegister(RegisterActivity.TYPE_FORGET_PASSWORD);
 			break;
 		case R.id.bt_login:
 			if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
@@ -196,11 +196,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			customLogin();
 			break;
 		case R.id.bt_register:
-			startActivity(RegisterActivity.class);
+			startRegister(RegisterActivity.TYPE_REGISTER);
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private void startRegister(int type) {
+		Intent intent = new Intent(mContext, RegisterActivity.class);
+		intent.putExtra(RegisterActivity.KEY_TYPE, type);
+		startActivity(intent);
 	}
 
 	private void customLogin() {

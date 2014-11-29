@@ -56,7 +56,7 @@ public class TribeMemberActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
-		setAbContentView(R.layout.layout_general_refresh_listview);
+		setAbContentView(R.layout.general_pulltorefresh_listview);
 		type = getIntent().getIntExtra(KEY_TYPE, 0);
 		
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
