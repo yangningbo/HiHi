@@ -225,10 +225,10 @@ public class TagWindowManager implements OnClickListener {
 	}
 
 	public void bindTags(FlowLayout taLayoutPara, boolean isWithDelete) {
-		bindTags(taLayoutPara, isWithDelete, null);
+		bindTags(taLayoutPara, isWithDelete, tagList, null);
 	}
 
-	public void bindTags(FlowLayout taLayoutPara, boolean isWithDelete, OnClickListener listener) {
+	public void bindTags(FlowLayout taLayoutPara, boolean isWithDelete, List<TagBean> tagList, OnClickListener listener) {
 		taLayoutPara.removeAllViews();
 		if (tagList == null) {
 			tagList = new ArrayList<TagBean>();

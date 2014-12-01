@@ -1,41 +1,29 @@
 package com.gaopai.guiren.activity;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.DownloadListener;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.umeng.socialize.sso.UMSsoHandler;
 
 /**
  * 内置浏览器界面
@@ -50,6 +38,9 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 	private ImageView mBackWardBtn, mForwardBtn, mRefreshBtn;
 	private LinearLayout mBottomLayout;
 	private int mType = 0;
+	
+	public final static String KEY_URL = "url";
+	public final static String KEY_TITLE = "title";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +53,8 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 
 	private void initComponent() {
 
-		mTitle = getIntent().getStringExtra("title");
-		mReportUrl = getIntent().getStringExtra("url");
+		mTitle = getIntent().getStringExtra(KEY_TITLE);
+		mReportUrl = getIntent().getStringExtra(KEY_URL);
 		mType = getIntent().getIntExtra("type", 0);
 		
 		if (TextUtils.isEmpty(mReportUrl)) {

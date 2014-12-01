@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.NotifySystemActivity;
+import com.gaopai.guiren.activity.WebActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.adapter.NotificationAdapter;
@@ -59,7 +60,13 @@ public class NotificationFragment extends BaseFragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
-				
+				if (position == 0) {
+					Intent intent = new Intent(getActivity(), WebActivity.class);
+					intent.putExtra(WebActivity.KEY_URL, getString(R.string.share_dami_url));
+					intent.putExtra(WebActivity.KEY_TITLE, getString(R.string.share_dami_title));
+					startActivity(intent);
+					return;
+				}
 				ConversationBean conversationBean = (ConversationBean) mAdapter.getItem(position);
 				resetCount(conversationBean.toid);
 				switch (conversationBean.type) {
@@ -98,8 +105,6 @@ public class NotificationFragment extends BaseFragment {
 		});
 		registerReceiver();
 	}
-	
-	
 
 	@Override
 	public void onResume() {
@@ -115,6 +120,7 @@ public class NotificationFragment extends BaseFragment {
 		mAdapter.addAll(conversationBeans);
 		mAdapter.notifyDataSetChanged();
 	}
+
 	private void resetCount(String id) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);

@@ -41,6 +41,7 @@ public class ShareManager implements OnClickListener {
 
 	public ShareManager(Activity activity) {
 		mActivity = activity;
+		addHandler();
 	}
 
 	public void showShareWindow(Activity activity) {
@@ -139,63 +140,117 @@ public class ShareManager implements OnClickListener {
 		});
 	}
 
-	public void shareContentRecommend(String title, String url) {
+	public void setShareContent(int img, String title, String content, String url) {
+		UMImage iconImage = new UMImage(mActivity, img);
 
-//		mController.getConfig().setSsoHandler(new SinaSsoHandler());
-//		mController.getConfig().setSinaCallbackUrl("http://www.kaopuhui.com/dami");
-		// mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
-		//
-		String content = title + " : " + url;
-
-		mController.setShareContent(content);
-
-		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mActivity, "100424468",
-				"c7394704798a158208a74ab60104f0ba");
-		qZoneSsoHandler.addToSocialSDK();
-		UMImage iconImage = new UMImage(mActivity, R.drawable.logo);
 		QZoneShareContent qzoneContent = new QZoneShareContent();
-		qzoneContent.setTitle(title);
-		qzoneContent.setShareMedia(iconImage);
-		qzoneContent.setTargetUrl(url);
-		qzoneContent.setShareContent(content);
-		mController.setShareMedia(qzoneContent);
-
-		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(mActivity, "100424468", "c7394704798a158208a74ab60104f0ba");
-		qqSsoHandler.setTargetUrl(url);
-		qqSsoHandler.setTitle(title);
-		qqSsoHandler.addToSocialSDK();
-		mController.setShareMedia(iconImage);
-		//
-
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
-		weixinContent.setTargetUrl(url);
-		weixinContent.setTitle(title);
-		weixinContent.setShareMedia(iconImage);
-		if (!TextUtils.isEmpty(content)) {
-			weixinContent.setShareContent(content);
-		}
-		mController.setShareMedia(weixinContent);
-
-		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent();
-		circleMedia.setTargetUrl(url);
-		circleMedia.setTitle(title);
+
+		qzoneContent.setShareMedia(iconImage);
+		weixinContent.setShareMedia(iconImage);
 		circleMedia.setShareMedia(iconImage);
+		mController.setShareImage(iconImage);
+
+		if (!TextUtils.isEmpty(url)) {
+			qzoneContent.setTargetUrl(url);
+			circleMedia.setTargetUrl(url);
+			weixinContent.setTargetUrl(url);
+			qqSsoHandler.setTargetUrl(url);
+		}
+		if (!TextUtils.isEmpty(title)) {
+			circleMedia.setTitle(title);
+			qzoneContent.setTitle(title);
+			qqSsoHandler.setTitle(title);
+			weixinContent.setTitle(title);
+		}
+
 		if (!TextUtils.isEmpty(content)) {
 			circleMedia.setShareContent(content);
+			weixinContent.setShareContent(content);
+			qzoneContent.setShareContent(content);
+			mController.setShareContent(content);
 		}
 		mController.setShareMedia(circleMedia);
+		mController.setShareMedia(weixinContent);
+		mController.setShareMedia(qzoneContent);
+	}
 
-		// wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
-		String appId = "wx3d14f400726b7471";
-		UMWXHandler wxHandler = new UMWXHandler(mActivity, appId);
+	public void shareContentRecommend(String title, String url) {
+		setShareContent(R.drawable.logo, title, title + url, url);
+		showShareWindow(mActivity);
+	}
+
+//	public void shareContentRecommend(String title, String url) {
+//		String content = title + " : " + url;
+//		mController.setShareContent(content);
+//
+//		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mActivity, APPID_QQ, APPKEY_QQ);
+//		qZoneSsoHandler.addToSocialSDK();
+//		UMImage iconImage = new UMImage(mActivity, R.drawable.logo);
+//		QZoneShareContent qzoneContent = new QZoneShareContent();
+//		qzoneContent.setTitle(title);
+//		qzoneContent.setShareMedia(iconImage);
+//		qzoneContent.setTargetUrl(url);
+//		qzoneContent.setShareContent(content);
+//		mController.setShareMedia(qzoneContent);
+//
+//		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(mActivity, APPID_QQ, APPKEY_QQ);
+//		// qqSsoHandler.setTargetUrl(url);
+//		// qqSsoHandler.setTitle(title);
+//		qqSsoHandler.addToSocialSDK();
+//		mController.setShareMedia(iconImage);
+//		//
+//
+//		WeiXinShareContent weixinContent = new WeiXinShareContent();
+//		weixinContent.setTargetUrl(url);
+//		weixinContent.setTitle(title);
+//		weixinContent.setShareMedia(iconImage);
+//		if (!TextUtils.isEmpty(content)) {
+//			weixinContent.setShareContent(content);
+//		}
+//		mController.setShareMedia(weixinContent);
+//
+//		// 设置朋友圈分享的内容
+//		CircleShareContent circleMedia = new CircleShareContent();
+//		circleMedia.setTargetUrl(url);
+//		circleMedia.setTitle(title);
+//		circleMedia.setShareMedia(iconImage);
+//		if (!TextUtils.isEmpty(content)) {
+//			circleMedia.setShareContent(content);
+//		}
+//		mController.setShareMedia(circleMedia);
+//
+//		// wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
+//		String appId = APPID_WECHAT;
+//		UMWXHandler wxHandler = new UMWXHandler(mActivity, appId);
+//		wxHandler.addToSocialSDK();
+//
+//		UMWXHandler wxCircleHandler = new UMWXHandler(mActivity, appId);
+//		wxCircleHandler.setToCircle(true);
+//		wxCircleHandler.addToSocialSDK();
+//
+//		showShareWindow(mActivity);
+//	}
+
+	public final static String APPID_QQ = "100424468";
+	public final static String APPKEY_QQ = "c7394704798a158208a74ab60104f0ba";
+	public final static String APPID_WECHAT = "wx3d14f400726b7471";
+	private UMQQSsoHandler qqSsoHandler;
+
+	private void addHandler() {
+		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mActivity, APPID_QQ, APPKEY_QQ);
+		qZoneSsoHandler.addToSocialSDK();
+
+		qqSsoHandler = new UMQQSsoHandler(mActivity, APPID_QQ, APPKEY_QQ);
+		qqSsoHandler.addToSocialSDK();
+
+		UMWXHandler wxHandler = new UMWXHandler(mActivity, APPID_WECHAT);
 		wxHandler.addToSocialSDK();
 
-		UMWXHandler wxCircleHandler = new UMWXHandler(mActivity, appId);
+		UMWXHandler wxCircleHandler = new UMWXHandler(mActivity, APPID_WECHAT);
 		wxCircleHandler.setToCircle(true);
 		wxCircleHandler.addToSocialSDK();
-
-		showShareWindow(mActivity);
 	}
 
 	SnsPostListener mShareListener = new SnsPostListener() {
@@ -213,5 +268,23 @@ public class ShareManager implements OnClickListener {
 			}
 		}
 	};
+
+	public void shareQQ(String content, String url) {
+		setShareContent(R.drawable.logo, "", content, url);
+		mController.directShare(mActivity, SHARE_MEDIA.QQ, mShareListener);
+	}
+
+	public void shareWechat(String content, String url) {
+		setShareContent(R.drawable.logo, "", content, url);
+		mController.directShare(mActivity, SHARE_MEDIA.WEIXIN, mShareListener);
+	}
+
+	public void shareWeibo(String content, String url) {
+		setShareContent(R.drawable.logo, "", content, url);
+		mController.postShare(mActivity, SHARE_MEDIA.SINA, mShareListener);
+	}
+
+	public void shareContact() {
+	}
 
 }

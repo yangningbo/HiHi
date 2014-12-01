@@ -90,6 +90,12 @@ public class AddReasonActivity extends BaseActivity {
 			title = getString(R.string.seeking_contacts_reason);
 			hint = getString(R.string.communication);
 			break;
+			
+		case TYPE_REFUSE_COMUNICATION:
+			messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGEINFO);
+			title = getString(R.string.refuse_seeking_contacts);
+			hint = getString(R.string.refuse_seeking_contacts_reason);
+			break;
 
 		case TYPE_REFUSE_JOIN_TRIBE:
 			title = getString(R.string.refuse_add_into_tribe);
@@ -136,7 +142,13 @@ public class AddReasonActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
-					setResult(RESULT_OK);
+					if (type == TYPE_REFUSE_COMUNICATION) {
+						Intent intent = new Intent();
+						intent.putExtra(KEY_MESSAGEINFO, messageInfo);
+						setResult(RESULT_OK, intent);
+					} else {
+						setResult(RESULT_OK);
+					}
 					AddReasonActivity.this.finish();
 				} else {
 					otherCondition(data.state, AddReasonActivity.this);

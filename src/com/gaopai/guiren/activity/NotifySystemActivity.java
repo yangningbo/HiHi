@@ -6,37 +6,26 @@ import java.util.List;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.ContactActivity.MyListener;
 import com.gaopai.guiren.adapter.NotifyAdapter;
-import com.gaopai.guiren.bean.AppState;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.NotifiyType;
@@ -44,7 +33,6 @@ import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.NotifyTable;
-import com.gaopai.guiren.net.DamiException;
 import com.gaopai.guiren.receiver.NotifySystemMessage;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -135,7 +123,7 @@ public class NotifySystemActivity extends BaseActivity {
 
 				case NotifiyType.INVITE_ADD_TRIBE:
 					if (mNotifyList.get(position).processed == 0) {
-						showPromptDialog(position, 0);
+						showActionDialog(position, 0);
 					}
 					break;
 
@@ -164,19 +152,17 @@ public class NotifySystemActivity extends BaseActivity {
 
 				case NotifiyType.INVITE_ADD_MEETING:
 					if (mNotifyList.get(position).processed == 0) {
-						showPromptDialog(position, 1);
+						showActionDialog(position, 1);
 					}
 					break;
 
 				case NotifiyType.RECEIVE_REPORT_MSG:
-					// Intent reportIntent = new Intent(mContext,
-					// ReportMsgActivity.class);
-					// reportIntent.putExtra("id",
-					// mNotifyList.get(position).room.id);
-					// if (mNotifyList.get(position).message.type == 300) {
-					// reportIntent.putExtra("type", 1);
-					// }
-					// startActivity(reportIntent);
+					Intent reportIntent = new Intent(mContext, ReportMsgActivity.class);
+					reportIntent.putExtra("id", mNotifyList.get(position).room.id);
+					if (mNotifyList.get(position).message.type == 300) {
+						reportIntent.putExtra("type", 1);
+					}
+					startActivity(reportIntent);
 					break;
 
 				case NotifiyType.BEEN_REPORTED_AGREE_REPORT_MSG:
@@ -189,11 +175,14 @@ public class NotifySystemActivity extends BaseActivity {
 						// mNotifyList.get(position).message.imgUrlL);
 						startActivity(pictureIntent);
 					} else if (mNotifyList.get(position).message.fileType == MessageType.VOICE) {
-//						List<MessageInfo> messageList = new ArrayList<MessageInfo>();
-//						messageList.add(mNotifyList.get(position).message);
-//						Intent playIntent = new Intent(mContext, SequencePlayActivity.class);
-//						playIntent.putExtra("msgList", (Serializable) messageList);
-//						startActivity(playIntent);
+						// List<MessageInfo> messageList = new
+						// ArrayList<MessageInfo>();
+						// messageList.add(mNotifyList.get(position).message);
+						// Intent playIntent = new Intent(mContext,
+						// SequencePlayActivity.class);
+						// playIntent.putExtra("msgList", (Serializable)
+						// messageList);
+						// startActivity(playIntent);
 					}
 					break;
 
@@ -207,11 +196,14 @@ public class NotifySystemActivity extends BaseActivity {
 						// mNotifyList.get(position).message.imgUrlL);
 						startActivity(pictureIntent);
 					} else if (mNotifyList.get(position).message.fileType == MessageType.VOICE) {
-//						List<MessageInfo> messageList = new ArrayList<MessageInfo>();
-//						messageList.add(mNotifyList.get(position).message);
-//						Intent playIntent = new Intent(mContext, SequencePlayActivity.class);
-//						playIntent.putExtra("msgList", (Serializable) messageList);
-//						startActivity(playIntent);
+						// List<MessageInfo> messageList = new
+						// ArrayList<MessageInfo>();
+						// messageList.add(mNotifyList.get(position).message);
+						// Intent playIntent = new Intent(mContext,
+						// SequencePlayActivity.class);
+						// playIntent.putExtra("msgList", (Serializable)
+						// messageList);
+						// startActivity(playIntent);
 					}
 					break;
 
@@ -229,29 +221,26 @@ public class NotifySystemActivity extends BaseActivity {
 
 				case NotifiyType.COMMENT_MESSAGE: // 受到评论
 				case NotifiyType.MESSAGE_ZAN_YOURS:// 消息被赞
-					// Intent commentIntent = new Intent(mContext,
-					// ChatCommentsActivity.class);
-					// commentIntent.putExtra(ChatCommentsActivity.INTENT_CHATTYPE_KEY,
-					// mNotifyList.get(position).message.type);
-					// commentIntent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY,
-					// mNotifyList.get(position).mRoom);
-					// commentIntent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY,
-					// mNotifyList.get(position).mIdentity);
-					// commentIntent.putExtra(ChatCommentsActivity.INTENT_MESSAGE_KEY,
-					// mNotifyList.get(position).message);
-					// startActivity(commentIntent);
+					Intent commentIntent = new Intent(mContext, ChatCommentsActivity.class);
+					commentIntent.putExtra(ChatCommentsActivity.INTENT_CHATTYPE_KEY,
+							mNotifyList.get(position).message.type);
+					commentIntent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mNotifyList.get(position).room);
+					commentIntent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY,
+							mNotifyList.get(position).roomuser);
+					commentIntent.putExtra(ChatCommentsActivity.INTENT_MESSAGE_KEY, mNotifyList.get(position).message);
+					startActivity(commentIntent);
 					break;
 
 				case NotifiyType.SEEKING_CONTACTS:
 					if (mNotifyList.get(position).processed == 0) {
-						showPromptDialog(position, 2);
+						showActionDialog(position, 2);
 					}
 					break;
 
 				case NotifiyType.AGREE_SEEKING_CONTACTS:
 					if (mNotifyList.get(position).user != null) {
-						Intent privateIntent = new Intent(mContext, UserInfoActivity.class);
-						privateIntent.putExtra("uid", mNotifyList.get(position).user.uid);
+						Intent privateIntent = new Intent(mContext, ProfileActivity.class);
+						privateIntent.putExtra(ProfileActivity.KEY_UID, mNotifyList.get(position).user.uid);
 						startActivity(privateIntent);
 					}
 					break;
@@ -304,12 +293,12 @@ public class NotifySystemActivity extends BaseActivity {
 					break;
 				case NotifiyType.INVITE_TO_GUEST:
 					if (mNotifyList.get(position).processed == 0) {
-						showPromptDialog(position, 3);
+						showActionDialog(position, 3);
 					}
 					break;
 				case NotifiyType.INVITE_TO_HOST:
 					if (mNotifyList.get(position).processed == 0) {
-						showPromptDialog(position, 4);
+						showActionDialog(position, 4);
 					}
 					break;
 				case NotifiyType.AGREE_OR_REFUSE_HOST:
@@ -383,109 +372,66 @@ public class NotifySystemActivity extends BaseActivity {
 		}
 	};
 
-	/**
-	 * 
-	 * @param pos
-	 * @param type
-	 *            3 嘉宾 4 主持人
-	 */
-	private void showPromptDialog(final int pos, final int type) {
-
-		final Dialog dlg = new Dialog(mContext, R.style.MMThem_DataSheet);
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.chat_add_menu_dialog, null);
-		final int cFullFillWidth = 10000;
-		layout.setMinimumWidth(cFullFillWidth);
-
-		final Button agreeBtn = (Button) layout.findViewById(R.id.sendType);
-		final Button refuseBtn = (Button) layout.findViewById(R.id.camera);
-		final Button detailBtn = (Button) layout.findViewById(R.id.gallery);
-		final Button cancelBtn = (Button) layout.findViewById(R.id.cancelbtn);
-		agreeBtn.setText(mContext.getString(R.string.agree));
-		refuseBtn.setText(mContext.getString(R.string.refuse));
+	private void showActionDialog(final int pos, final int type) {
+		String[] array = new String[4];
+		array[0] = getString(R.string.agree);
+		array[1] = getString(R.string.refuse);
 		if (type == 0) {
-			detailBtn.setText(mContext.getString(R.string.tribe_detail));
+			array[2] = getString(R.string.tribe_detail);
 		} else if (type == 1) {
-			detailBtn.setText(mContext.getString(R.string.meeting_detail));
+			array[2] = getString(R.string.meeting_detail);
 		} else if (type == 2) {
-			detailBtn.setText(mContext.getString(R.string.user_detail));
+			array[2] = getString(R.string.user_detail);
 		} else if (type == 3) {
-			detailBtn.setText(mContext.getString(R.string.meeting_detail));
+			array[2] = getString(R.string.meeting_detail);
 		} else if (type == 4) {
-			detailBtn.setText(mContext.getString(R.string.meeting_detail));
+			array[2] = getString(R.string.meeting_detail);
 		}
-		cancelBtn.setText(mContext.getString(R.string.cancel));
-
-		agreeBtn.setOnClickListener(new OnClickListener() {
-
+		array[3] = getString(R.string.cancel);
+		Dialog dialog = new AlertDialog.Builder(mContext).setItems(array, new DialogInterface.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				agreeJoin(pos, type);
-				dlg.dismiss();
-			}
-		});
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				switch (which) {
+				case 0:
+					agreeJoin(pos, type);
+					break;
+				case 1:
+					if (type != 2) {
+						refuseJoin(pos, type);
+					} else {
+						Intent intent = new Intent(mContext, AddReasonActivity.class);
+						intent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_REFUSE_COMUNICATION);
+						intent.putExtra(AddReasonActivity.KEY_MESSAGEINFO, mNotifyList.get(pos).message);
+						startActivityForResult(intent, REFUSE_SEEKING_CONTACTS_REQUEST);
+					}
+					break;
+				case 2:
+					if (type == 0) {
+						Intent intent = new Intent(mContext, TribeDetailActivity.class);
+						intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, mNotifyList.get(pos).room.id);
+						startActivity(intent);
+					} else if (type == 1 || type == 3 || type == 4) {
+						Intent intent = new Intent(mContext, MeetingDetailActivity.class);
+						intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, mNotifyList.get(pos).room.id);
+						startActivity(intent);
+					} else if (type == 2) {
+						Intent intent = new Intent(mContext, ProfileActivity.class);
+						intent.putExtra(ProfileActivity.KEY_UID, mNotifyList.get(pos).user.uid);
+						startActivity(intent);
+					}
+					break;
+				case 3:
+					break;
 
-		detailBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dlg.dismiss();
-				if (type == 0) {
-					Intent intent = new Intent(mContext, TribeDetailActivity.class);
-					intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, mNotifyList.get(pos).room.id);
-					startActivity(intent);
-				} else if (type == 1 || type == 3 || type == 4) {
-					Intent intent = new Intent(mContext, MeetingDetailActivity.class);
-					intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, mNotifyList.get(pos).room.id);
-					startActivity(intent);
-				} else if (type == 2) {
-					Intent intent = new Intent(mContext, UserInfoActivity.class);
-					intent.putExtra(UserInfoActivity.KEY_UID, mNotifyList.get(pos).user.uid);
-					startActivity(intent);
+				default:
+					break;
 				}
+
+				dialog.dismiss();
 			}
-		});
-
-		refuseBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dlg.dismiss();
-				if (type != 2) {
-					refuseJoin(pos, type);
-				} else {
-					// Intent intent = new Intent(mContext,
-					// ApplyMeetingActivity.class);
-					// intent.putExtra("uid", mNotifyList.get(pos).user.uid);
-					// intent.putExtra("msgid",
-					// mNotifyList.get(pos).message.id);
-					// intent.putExtra("refuseType", 3);
-					// startActivityForResult(intent,
-					// REFUSE_SEEKING_CONTACTS_REQUEST);
-				}
-			}
-		});
-
-		cancelBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dlg.dismiss();
-			}
-		});
-
-		// set a large value put it in bottom
-		Window w = dlg.getWindow();
-		WindowManager.LayoutParams lp = w.getAttributes();
-		lp.x = 0;
-		final int cMakeBottom = -1000;
-		lp.y = cMakeBottom;
-		lp.gravity = Gravity.BOTTOM;
-		dlg.onWindowAttributesChanged(lp);
-		dlg.setCanceledOnTouchOutside(true);
-		dlg.setCancelable(true);
-
-		dlg.setContentView(layout);
-		dlg.show();
+		}).create();
+		dialog.show();
 	}
 
 	private void agreeJoin(final int pos, final int type) {
@@ -532,7 +478,6 @@ public class NotifySystemActivity extends BaseActivity {
 			NotifyTable table = new NotifyTable(db);
 			table.update(mNotifyList.get(postion));
 		}
-
 	}
 
 	private void refuseJoin(final int pos, final int type) {
@@ -547,32 +492,31 @@ public class NotifySystemActivity extends BaseActivity {
 		}
 	}
 
-	// @Override
-	// protected void onActivityResult(int requestCode, int resultCode, Intent
-	// data) {
-	// super.onActivityResult(requestCode, resultCode, data);
-	// switch (requestCode) {
-	// case REFUSE_SEEKING_CONTACTS_REQUEST:
-	// if (resultCode == RESULT_OK) {
-	// String fuid = data.getStringExtra("uid");
-	// String msgId = data.getStringExtra("msgid");
-	// if (!TextUtils.isEmpty(fuid) && !TextUtils.isEmpty(msgId)) {
-	// for (int i = 0; i < mNotifyList.size(); i++) {
-	// if (mNotifyList.get(i).getType() == NotifiyType.SEEKING_CONTACTS
-	// && mNotifyList.get(i).getUserId().equals(fuid)
-	// && mNotifyList.get(i).mMessageID.equals(msgId)) {
-	// mNotifyList.get(i).setProcessed(1);
-	// mAdapter.notifyDataSetChanged();
-	// break;
-	// }
-	// }
-	// }
-	// }
-	// break;
-	//
-	// default:
-	// break;
-	// }
-	// }
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		case REFUSE_SEEKING_CONTACTS_REQUEST:
+			if (resultCode == RESULT_OK) {
+				MessageInfo messageInfo = (MessageInfo) data.getSerializableExtra(AddReasonActivity.KEY_MESSAGEINFO);
+				String fuid = messageInfo.from;
+				String msgId = messageInfo.id;
+				if (!TextUtils.isEmpty(fuid) && !TextUtils.isEmpty(msgId)) {
+					for (int i = 0; i < mNotifyList.size(); i++) {
+						if (mNotifyList.get(i).type == NotifiyType.SEEKING_CONTACTS
+								&& mNotifyList.get(i).user.uid.equals(fuid)
+								&& mNotifyList.get(i).message.id.equals(msgId)) {
+							mNotifyList.get(i).processed = 1;
+							adapter.notifyDataSetChanged();
+							break;
+						}
+					}
+				}
+			}
+			break;
 
+		default:
+			break;
+		}
+	}
 }

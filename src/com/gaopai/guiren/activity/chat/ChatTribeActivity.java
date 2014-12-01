@@ -103,8 +103,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			}
 		});
 
-//		mTitleBar.setTitleText(mTribe.name);
-		
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		if (messageInfo != null) {
 			buildRetweetMessageInfo(messageInfo);
@@ -114,7 +112,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	
 	@Override
 	protected void setTitleText() {
-		// TODO Auto-generated method stub
 		mTitleBar.addLeftTextView(mTribe.name);
 	}
 

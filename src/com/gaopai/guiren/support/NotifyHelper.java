@@ -25,6 +25,7 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
+import com.gaopai.guiren.activity.NotifySystemActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -188,7 +189,7 @@ public class NotifyHelper {
 		NotificationCompat.Builder builder = getNotificationBuilder();
 		builder.setContentTitle(mContext.getString(R.string.has_new_notification));
 		builder.setContentText(msg);
-		Intent intent = new Intent(mContext, MainActivity.class);
+		Intent intent = new Intent(mContext, NotifySystemActivity.class);
 		intent.putExtra("notify", true);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, NOTIFYD_SYSTEM, intent,
@@ -204,7 +205,7 @@ public class NotifyHelper {
 			intent = new Intent(mContext, ChatMessageActivity.class);
 			User user = new User();
 			user.uid = messageInfo.from;
-			user.displayName = messageInfo.displayname;
+			user.realname = messageInfo.displayname;
 			user.headsmall = messageInfo.headImgUrl;
 			intent.putExtra(ChatMessageActivity.KEY_USER, user);
 		} else {

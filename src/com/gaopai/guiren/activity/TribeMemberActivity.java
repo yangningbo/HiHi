@@ -88,7 +88,7 @@ public class TribeMemberActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
-				intent.putExtra(ProfileActivity.KEY_USER_ID, ((User) mAdapter.getItem(position)).uid);
+				intent.putExtra(ProfileActivity.KEY_UID, ((User) mAdapter.getItem(position)).uid);
 				intent.setClass(mContext, ProfileActivity.class);
 				startActivity(intent);
 			}

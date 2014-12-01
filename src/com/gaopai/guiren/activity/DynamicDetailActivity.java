@@ -482,7 +482,7 @@ public class DynamicDetailActivity extends BaseActivity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(mContext, ProfileActivity.class);
-					intent.putExtra(ProfileActivity.KEY_USER_ID, jsonContent.uid);
+					intent.putExtra(ProfileActivity.KEY_UID, jsonContent.uid);
 					mContext.startActivity(intent);
 				}
 			});

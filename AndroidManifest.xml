@@ -84,6 +84,9 @@
             android:name="com.gaopai.guiren.activity.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.MyDynamicActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.InvitationVerifyActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -234,7 +237,13 @@
             android:name="com.gaopai.guiren.activity.ChangeProfileActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.InviteFriendActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.TribeMemberActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.TwoDimensionActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.share.ShareActivity"

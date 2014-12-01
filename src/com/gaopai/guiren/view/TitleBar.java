@@ -152,9 +152,10 @@ public class TitleBar extends ViewGroup {
 		return layout;
 	}
 
-	public void setTitleText(String text) {
+	public Button setTitleText(String text) {
 		titleTextBtn.setText(text);
 		titleTextBtn.setGravity(Gravity.CENTER);
+		return titleTextBtn;
 	}
 
 	public View setTitleTextWithImage(String text, int id) {
@@ -183,7 +184,7 @@ public class TitleBar extends ViewGroup {
 	}
 
 	public View addLeftImageViewWithDefaultSize(int resId) {
-		int width = MyUtils.dip2px(mContext, 25);
+		int width = MyUtils.dip2px(mContext, 20);
 		return addLeftImageView(resId, width, width);
 	}
 

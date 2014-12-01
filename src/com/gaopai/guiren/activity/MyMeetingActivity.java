@@ -30,7 +30,7 @@ public class MyMeetingActivity extends BaseActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
-		setAbContentView(R.layout.general_pulltorefresh_listview);
+		setAbContentView(R.layout.fragment_meeting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText("我的会议");
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/general_background"
+    android:orientation="vertical" >
+
+    <View
+        style="@style/general_thin_divider_in_white"
+        android:layout_marginTop="@dimen/general_large_gap" />
+
+    <TextView
+        android:id="@+id/tv_invite_contact"
+        style="@style/tribe_detail_item_text_with_drawable"
+        android:background="@drawable/selector_btn_general"
+        android:drawableLeft="@drawable/icon_invite_pone"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="@string/invite_contact" />
+
+    <View style="@style/general_thin_divider_in_white" />
+
+    <TextView
+        android:id="@+id/tv_invite_weibo"
+        style="@style/tribe_detail_item_text_with_drawable"
+        android:background="@drawable/selector_btn_general"
+        android:drawableLeft="@drawable/icon_invite_sina"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="@string/invite_weibo" />
+
+    <View style="@style/general_thin_divider_in_white" />
+
+    <TextView
+        android:id="@+id/tv_invite_wechat"
+        style="@style/tribe_detail_item_text_with_drawable"
+        android:background="@drawable/selector_btn_general"
+        android:drawableLeft="@drawable/icon_invite_weichat"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="@string/invite_wechat" />
+
+    <View style="@style/general_thin_divider_in_white" />
+
+    <TextView
+        android:id="@+id/tv_invite_qq"
+        style="@style/tribe_detail_item_text_with_drawable"
+        android:background="@drawable/selector_btn_general"
+        android:drawableLeft="@drawable/icon_invite_pone"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="@string/invite_QQ" />
+
+    <View style="@style/general_thin_divider_in_white" />
+
+</LinearLayout>

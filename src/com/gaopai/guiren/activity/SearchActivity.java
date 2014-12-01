@@ -98,7 +98,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 				if (row.type == 1) {
 					if (((Item) row).object instanceof User) {
 						User user = (User) ((Item) row).object;
-						jumpToOtherActivity(ProfileActivity.KEY_USER_ID, user.uid, ProfileActivity.class);
+						jumpToOtherActivity(ProfileActivity.KEY_UID, user.uid, ProfileActivity.class);
 					} else if (((Item) row).object instanceof Tribe) {
 						Tribe tribe = (Tribe) ((Item) row).object;
 						if (tribe.isTribeOrMeeting) {

@@ -67,6 +67,8 @@ public class PullToRefreshIndexableListView extends PullToRefreshBase<IndexableL
 		mListView.setFastScrollEnabled(true);// 不设置scroller为null
 		// mListView.setCacheColorHint(0);
 		// mListView.setDivider(null);
+		mListView.setFooterDividersEnabled(false);
+		mListView.setHeaderDividersEnabled(false);
 		mListView.setFadingEdgeLength(0);
 		// mListView.setSelector(context.getResources().getDrawable(R.color.transparent));
 		listView.setOnScrollListener(this);

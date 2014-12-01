@@ -127,7 +127,7 @@ public class ConnectionAdapter extends BaseAdapter {
 			return;
 		}
 		Intent intent = new Intent(mContext, ProfileActivity.class);
-		intent.putExtra(ProfileActivity.KEY_USER_ID, uid);
+		intent.putExtra(ProfileActivity.KEY_UID, uid);
 		mContext.startActivity(intent);
 	}
 

@@ -78,8 +78,7 @@ public class TribeAdapter extends BaseAdapter {
 			holder.mHeaderView.setImageResource(R.drawable.default_tribe);
 		}
 		holder.mUserNameTextView.setText(tribe.name);
-		holder.mTimeTextView.setText(FeatureFunction
-				.getCreateTime(tribe.createtime));
+		holder.mTimeTextView.setVisibility(View.GONE);
 		holder.mMessageCount.setVisibility(View.GONE);
 		holder.mContentTextView.setText(tribe.content);
 		return convertView;

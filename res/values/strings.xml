@@ -729,5 +729,26 @@
     
     <string name="message">消息</string>
     
+    <!-- send dynamic -->
+    <string name="send_dynamic">发布动态</string>
+    <string name="send_user_real_name">实名发布</string>
+    <string name="send_user_nick_name">匿名发布</string>
+    <string name="send_success">发送成功</string>
+    <string name="send_now">正在发送</string>
     
+    <!-- invite friend -->
+    <string name="invite_friend">邀请朋友</string>
+    <string name="invite_contact">通讯录邀请</string>
+    <string name="invite_weibo">微博邀请</string>
+    <string name="invite_wechat">微信邀请</string>
+    <string name="invite_QQ">QQ邀请</string>
+    
+    <string name="invite_link">http://guirenhui.cn</string>
+    <string name="invite_str_1">老友，以“面具会议、讲后即焚”为特色的职场社交【贵人】真不错，您也来吧！贵人下载地址：http://guirenhui.cn</string>
+    <string name="invite_str_2">
+老友，我正在使用【贵人】，它是一款精英匿名语聊平台，在这里，您可以自由表达，真实沟通，甩掉身份、阶层、地位、职业、亲疏关系等“名缰利锁”，真心话，不冒险。360公司CEO周鸿祎、乐视网CEO贾跃亭等大牛都在，您也赶紧来呗!贵人下载地址：http://guirenhui.cn</string>
+    
+    
+    <string name="share_dami_url">http://www.diggg.com.cn/</string>
+    <string name="share_dami_title">大蜜汇报</string>
 </resources>

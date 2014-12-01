@@ -3,9 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp" >
+    android:padding="@dimen/general_paading" >
 
     <ImageView
         android:id="@+id/deletebtn"
@@ -14,19 +12,18 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:contentDescription="@string/desc"
-        android:src="@drawable/modify_icon"
-        android:visibility="gone" />
+        android:src="@drawable/modify_icon" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/deletebtn"
-        android:padding="10dp" >
+        android:layout_toRightOf="@id/deletebtn">
 
         <TextView
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:text="的立法肯德基flak的飞机拉萨看到"
             android:textColor="@color/one_word_prompt_color"
             android:textSize="17sp" />
 
@@ -47,6 +44,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/content"
             android:layout_marginTop="3dp"
+            android:text="2014"
             android:textColor="@color/content_gray_color"
             android:textSize="15sp" />
     </RelativeLayout>

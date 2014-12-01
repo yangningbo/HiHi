@@ -23,7 +23,19 @@
             style="@style/connection_item_title1"
             android:layout_toRightOf="@id/iv_header"
             android:text="马虎疼"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tv_star_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_user_name"
+            android:layout_marginLeft="@dimen/general_paading"
+            android:layout_toRightOf="@id/tv_user_name"
+            android:text="250"
+            android:textColor="@color/red_dongtai_bg"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_user_info"
@@ -35,21 +47,20 @@
 
         <ImageView
             android:id="@+id/iv_erweima"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:layout_below="@id/iv_header"
-            android:layout_marginTop="@dimen/general_paading"
+            android:layout_marginTop="@dimen/general_large_gap"
             android:scaleType="fitXY"
-            android:src="@drawable/logo" />
+            android:src="@drawable/icon_notification_dami" />
 
         <View
-            android:id="@+id/iv_header1"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_alignLeft="@id/iv_erweima"
             android:layout_alignTop="@id/iv_erweima"
-            android:layout_marginLeft="72dp"
-            android:layout_marginTop="72dp"
+            android:layout_marginLeft="97dp"
+            android:layout_marginTop="97dp"
             android:background="@color/white" />
 
         <ImageView
@@ -57,12 +68,12 @@
             style="@style/connection_item_header1"
             android:layout_alignLeft="@id/iv_erweima"
             android:layout_alignTop="@id/iv_erweima"
-            android:layout_marginLeft="75dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="100dp"
             android:contentDescription="@string/desc" />
 
         <TextView
-            android:layout_width="200dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_erweima"
             android:layout_centerHorizontal="true"

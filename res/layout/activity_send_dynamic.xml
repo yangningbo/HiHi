@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:background="@color/general_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/general_background" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/general_paading" >
+
+        <TextView
+            android:id="@+id/tv_send_dy_realname"
+            style="@style/tribe_detail_item_title"
+            android:layout_marginLeft="0dp"
+            android:drawableLeft="@drawable/icon_send_dy_real_name"
+            android:background="@drawable/selector_btn_transparent_general"
+            android:text="@string/send_user_real_name" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,8 +28,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
+                android:background="@drawable/selector_edit_white_round_corner"
                 android:gravity="top|left"
-                android:hint="请输入500字以内的动态" />
+                android:hint="请输入500字以内的动态"
+                android:padding="5dp" />
 
             <TextView
                 android:id="@+id/tv_num_limit"
@@ -46,7 +56,7 @@
         <com.gaopai.guiren.view.FlowLayout
             android:id="@+id/flow_tags"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" >
         </com.gaopai.guiren.view.FlowLayout>
 
         <LinearLayout
@@ -60,8 +70,8 @@
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="3"
-                android:paddingLeft="15dp"
-                android:background="@drawable/shape_send_dynamic_edit_tag" />
+                android:background="@drawable/shape_send_dynamic_edit_tag"
+                android:paddingLeft="15dp" />
 
             <Button
                 android:id="@+id/btn_add_tag"

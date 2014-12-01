@@ -69,18 +69,17 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				Log.d(TAG, "pulldown");
 				getDynamicList(true);
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				// TODO Auto-generated method stub
-				Log.d(TAG, "pull up to");
 				getDynamicList(false);
 			}
 		});
 
+		addNewDyHeader();
 		mAdapter = new DynamicAdapter(this);
 		mListView.setAdapter(mAdapter);
 		// mListView.doPullRefreshing(true, 0);
@@ -139,7 +138,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			public void onSuccess(Object o) {
 				final DynamicBean data = (DynamicBean) o;
 				if (data.state != null && data.state.code == 0) {
-					addHeader(data.state.newalertcount);
+					setHeaderCount(data.state.newalertcount);
 					if (data.data != null && data.data.size() > 0) {
 						if (isRefresh) {
 							mAdapter.clear();
@@ -177,8 +176,6 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		chatBox.setVisibility(View.GONE);
 		((MainActivity) getActivity()).showBottomTab();
 	}
-	
-	
 
 	private BackPressedListener onBackPressedListener = new BackPressedListener() {
 		@Override
@@ -196,38 +193,49 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		public boolean onBack();
 	}
 
-	private void addHeader(int newalertcount) {
+	private TextView tvDyCount;
+
+	private void addNewDyHeader() {
 		ListView listView = mListView.getRefreshableView();
-		if (newalertcount == 0) {
-			if (listView.getHeaderViewsCount() > 0) {
-				listView.removeHeaderView(listView.getChildAt(0));
-			}
-			return;
-		}
-		if (listView.getHeaderViewsCount() > 0) {
-			listView.removeHeaderView(listView.getChildAt(0));
-		}
-		TextView textView = new TextView(getActivity());
-		textView.setText("您有" + newalertcount + "条新动态");
-		textView.setTextColor(getResources().getColor(R.color.general_text_blue));
-		textView.setBackgroundResource(R.drawable.selector_btn_round_gray);
+		// if (newalertcount == 0) {
+		// if (listView.getHeaderViewsCount() > 0) {
+		// listView.removeHeaderView(listView.getChildAt(0));
+		// }
+		// return;
+		// }
+		// if (listView.getHeaderViewsCount() > 0) {
+		// listView.removeHeaderView(listView.getChildAt(0));
+		// }
+		tvDyCount = new TextView(getActivity());
+
+		tvDyCount.setTextColor(getResources().getColor(R.color.general_text_blue));
+		tvDyCount.setBackgroundResource(R.drawable.selector_btn_round_gray);
 		int padding = MyUtils.dip2px(getActivity(), 5);
-		textView.setPadding(2 * padding, padding, 2 * padding, padding);
-		textView.setGravity(Gravity.CENTER);
-		textView.setOnClickListener(new OnClickListener() {
+		tvDyCount.setPadding(2 * padding, padding, 2 * padding, padding);
+		tvDyCount.setGravity(Gravity.CENTER);
+		tvDyCount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				startActivity(NewDynamicActivity.class);
 			}
 		});
-
+		tvDyCount.setVisibility(View.GONE);
 		LinearLayout layout = new LinearLayout(getActivity());
 		LinearLayout.LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		lp.setMargins(padding, padding, padding, padding);
 		layout.setGravity(Gravity.CENTER);
-		layout.addView(textView, lp);
+		layout.addView(tvDyCount, lp);
 		mListView.getRefreshableView().addHeaderView(layout);
+	}
+
+	private void setHeaderCount(int newalertcount) {
+		if (newalertcount == 0) {
+			tvDyCount.setVisibility(View.GONE);
+			return;
+		}
+		tvDyCount.setVisibility(View.VISIBLE);
+		tvDyCount.setText("您有" + newalertcount + "条新动态");
 	}
 
 }

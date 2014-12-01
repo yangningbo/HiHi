@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -66,7 +67,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 	private View layoutBottom;
 
-	public static final String KEY_MEETING_ID = "meeting_id";
+	public static final String KEY_MEETING_ID = "id";
 	public static final String KEY_MEETING = "meeting";
 	private String mMeetingID = "";// pass tribe entity only in preview mode
 	private Tribe mMeeting;
@@ -102,14 +103,16 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.meeting_detail_title));
-		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
-		view.setId(R.id.ab_share);
-		view.setOnClickListener(this);
+		
 		initComponent();
 		if (isPreview) {
 			bindBasicView();
 			return;
 		}
+		
+		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
+		view.setId(R.id.ab_share);
+		view.setOnClickListener(this);
 		getMeetingDetail();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(TribeActivity.ACTION_KICK_TRIBE);
@@ -221,7 +224,17 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		tvMeetingInfo.setText(mMeeting.content);
 		tvMeetingTime.setText(FeatureFunction.getTime(mMeeting.start) + "~" + FeatureFunction.getTime(mMeeting.end));
 		tvMeetingTimeDiff.setText(FeatureFunction.timeDifference(mMeeting.start));
-		ImageLoaderUtil.displayImage(mMeeting.logosmall, ivMeetingHeader);
+		if (!isPreview) {
+			ImageLoaderUtil.displayImage(mMeeting.logosmall, ivMeetingHeader);
+			return;
+		}
+		if (!TextUtils.isEmpty(mMeeting.logosmall)) {
+			Drawable drawable = Drawable.createFromPath(mMeeting.logosmall);
+			ivMeetingHeader.setImageDrawable(drawable);
+		} else {
+			Drawable drawable = Drawable.createFromPath(mMeeting.logolarge);
+			ivMeetingHeader.setImageDrawable(drawable);
+		}
 	}
 
 	private void bindJoinInView(boolean isJoin) {

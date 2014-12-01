@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +51,7 @@ import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.support.comment.CommentProfile;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.FlowLayout;
@@ -61,7 +63,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private User tUser;
 	private User mUser;
-	public final static String KEY_USER_ID = "user_id";
+	public final static String KEY_UID = "user_id";
 
 	private String tuid;
 	private boolean isSelf = false;
@@ -125,6 +127,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private TextView tvFollowBottom;
 
 	private TagWindowManager tagWindowManager;
+	private boolean isShowAllTags = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +135,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_profile);
-		tuid = getIntent().getStringExtra(KEY_USER_ID);
+		tuid = getIntent().getStringExtra(KEY_UID);
 		if (TextUtils.isEmpty(tuid)) {
 			Uri data = getIntent().getData();
 			tuid = data.toString().substring(data.toString().indexOf("//") + 2);
@@ -180,6 +183,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
 		ivHeader = (ImageView) findViewById(R.id.iv_header);
+
+		ViewUtil.findViewById(this, R.id.iv_profile_erweima).setOnClickListener(this);
 
 		tvUserInfo = (TextView) findViewById(R.id.tv_user_info);
 		tvUserName = (TextView) findViewById(R.id.tv_user_name);
@@ -278,18 +283,28 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					.error(R.drawable.default_header).into(ivHeader);
 		}
 
+		tvFancyCount.setText(String.valueOf(tUser.integral));
 		tvUserName.setText(tUser.realname);
 		tvUserInfo.setText(tUser.company);
 
 		bindContactView();
 		bindDyView();
-		if (tUser.tag != null && tUser.tag.size() > 0) {
-			tagList = tUser.tag;
-			tagWindowManager.bindTags(tagLayout, false, zanClickListener);
-		}
+		tagList = tUser.tag;
+		bindUserTags();
 		bindBottomDynamicView();
-
 		bindBottomView();
+	}
+	
+	private void bindUserTags() {
+		if (tagList != null && tagList.size() > 0) {
+			if (tagList.size() > 10 && (!isShowAllTags)) {
+				tagWindowManager.bindTags(tagLayout, false, tagList.subList(0, 9), zanClickListener);
+				tvRevealAllTags.setVisibility(View.VISIBLE);
+				return;
+			}
+			tagWindowManager.bindTags(tagLayout, false, tagList, zanClickListener);
+			tvRevealAllTags.setVisibility(View.GONE);
+		}
 	}
 
 	private OnClickListener zanClickListener = new OnClickListener() {
@@ -298,7 +313,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			TagBean tagBean = (TagBean) v.getTag();
-			DamiInfo.zanUserTag(tuid, tagBean.id, new SimpleResponseListener(mContext) {
+			DamiInfo.zanUserTag(mUser.uid, tagBean.id, new SimpleResponseListener(mContext) {
 				@Override
 				public void onSuccess(Object o) {
 					BaseNetBean data = (BaseNetBean) o;
@@ -502,6 +517,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);
 			break;
 		case R.id.tv_reveal_all_tags:
+			isShowAllTags = true;
+			bindUserTags();
+			break;
 		case R.id.tv_add_tags:
 			tagWindowManager.showTagsWindow();
 			break;
@@ -522,6 +540,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		case R.id.layout_profile_bottom_spread:
 			spreadUser();
 			break;
+		case R.id.iv_profile_erweima:{
+			Intent intent = new Intent(mContext, TwoDimensionActivity.class);
+			intent.putExtra("user", tUser);
+			startActivity(intent);
+			break;
+		}
 		default:
 			break;
 		}
@@ -626,6 +650,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	// store tags in remote computer
 	private void addRemoteTags(String tags) {
+		Logger.d(this, tags);
 		if (!TextUtils.isEmpty(tags)) {
 			DamiInfo.updateUserTag(tuid, tags, new SimpleResponseListener(mContext, R.string.request_internet_now) {
 				@Override
@@ -633,8 +658,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					// TODO Auto-generated method stub
 					TagResultBean data = (TagResultBean) o;
 					if (data.state != null && data.state.code == 0) {
-						tagList = data.data;
-						tagWindowManager.bindTags(tagLayout, false);
+						tagList.clear();
+						tagList.addAll(data.data);
+						bindUserTags();
+//						tagWindowManager.bindTags(tagLayout, false);
 						showToast(R.string.add_tags_success);
 					}
 				}

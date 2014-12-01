@@ -67,9 +67,10 @@ public class TribeActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
-				Tribe tribe = new Tribe();
-				tribe.id = ((Tribe) mAdapter.getItem(position)).id;
-				intent.putExtra(ChatTribeActivity.KEY_TRIBE, tribe);
+//				Tribe tribe = new Tribe();
+//				tribe.id = ((Tribe) mAdapter.getItem(position)).id;
+				
+				intent.putExtra(ChatTribeActivity.KEY_TRIBE, (Tribe) mAdapter.getItem(position));
 				intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, ChatTribeActivity.CHAT_TYPE_TRIBE);
 				intent.setClass(mContext, ChatTribeActivity.class);
 				startActivity(intent);

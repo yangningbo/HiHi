@@ -8,6 +8,4 @@ public class ShareFansFragment extends BaseShareFragment {
 	protected View creatHeaderView() {
 		return new View(getActivity());
 	}
-
-	
 }

@@ -42,6 +42,7 @@ import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.net.MorePicture;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -59,6 +60,9 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private MyGridLayout picGrid;
 
 	private List<TagBean> recTagList = new ArrayList<TagBean>();
+	
+	private TextView tvUseRealName;
+	private int isHideName = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +70,9 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_send_dynamic);
-		mTitleBar.setTitleText("发布动态");
+		mTitleBar.setTitleText(R.string.send_dynamic);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		View v = mTitleBar.addRightTextView("发布");
+		View v = mTitleBar.addRightTextView(R.string.send);
 		v.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -97,6 +101,9 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		btnPhoto = (ImageButton) findViewById(R.id.btn_camera);
 		btnPhoto.setOnClickListener(this);
 		picGrid = (MyGridLayout) findViewById(R.id.gl_pic);
+		
+		tvUseRealName = ViewUtil.findViewById(this, R.id.tv_send_dy_realname);
+		tvUseRealName.setOnClickListener(this);
 	}
 
 	private TextWatcher numLimitWatcher = new TextWatcher() {
@@ -189,15 +196,16 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			tags = builder.toString();
 		}
 
-		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, 0, tags, new SimpleResponseListener(mContext,
-				"正在发送") {
+		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, isHideName, tags, new SimpleResponseListener(mContext,
+				R.string.send_now) {
 
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
 				SendDynamicResult data = (SendDynamicResult) o;
 				if (data.state != null && data.state.code == 0) {
-					showToast("发送成功！");
+					showToast(R.string.send_success);
+					SendDynamicMsgActivity.this.finish();
 				} else {
 					otherCondition(data.state, SendDynamicMsgActivity.this);
 				}
@@ -231,9 +239,18 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		case R.id.btn_camera:
 			showMoreWindow();
 			break;
+		case R.id.tv_send_dy_realname:
+			isHideName = 1 - isHideName;
+			changeIsHideName(isHideName);
+			break;
 		default:
 			break;
 		}
+	}
+	
+	private void changeIsHideName(int isHide) {
+		int drawbale = (isHide == 0) ? R.drawable.icon_send_dy_real_name : R.drawable.icon_send_dy_nick_name;
+		tvUseRealName.setCompoundDrawablesWithIntrinsicBounds(drawbale, 0, 0, 0);
 	}
 
 	private OnClickListener tagDeleteClickListener = new OnClickListener() {

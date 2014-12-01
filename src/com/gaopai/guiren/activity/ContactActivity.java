@@ -157,7 +157,7 @@ public class ContactActivity extends BaseActivity {
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
 				String uid = ((Item) mAdapter.getItem(pos)).user.uid;
 				Intent intent = new Intent();
-				intent.putExtra(ProfileActivity.KEY_USER_ID, uid);
+				intent.putExtra(ProfileActivity.KEY_UID, uid);
 				intent.setClass(mContext, ProfileActivity.class);
 				startActivity(intent);
 			}
@@ -179,9 +179,9 @@ public class ContactActivity extends BaseActivity {
 			page = searchListPage;
 		}
 		if (type == TYPE_FANS) {
-			DamiInfo.getFollowerList(uid, page, etSearch.getText().toString(), new MyListener(mContext));
-		} else {
 			DamiInfo.getFansList(uid, page, etSearch.getText().toString(), new MyListener(mContext));
+		} else {
+			DamiInfo.getFollowerList(uid, page, etSearch.getText().toString(), new MyListener(mContext));
 		}
 	}
 

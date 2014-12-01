@@ -10,7 +10,7 @@
         style="@style/tribe_detail_item_title"
         android:layout_marginLeft="0dp"
         android:drawableLeft="@drawable/icon_profile_personal_file"
-        android:text="添加标签" />
+        android:text="基本资料" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="所在部分" />
+            android:text="所在部门" />
 
         <EditText
             android:id="@+id/et_partment"

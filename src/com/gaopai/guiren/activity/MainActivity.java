@@ -179,7 +179,7 @@ public class MainActivity extends BaseActivity {
 			switch (v.getId()) {
 			case R.id.slide_btn_my_profile: {
 				Intent intent = new Intent(mContext, ProfileActivity.class);
-				intent.putExtra(ProfileActivity.KEY_USER_ID, mUser.uid);
+				intent.putExtra(ProfileActivity.KEY_UID, mUser.uid);
 				startActivity(intent);
 				break;
 			}
@@ -202,6 +202,7 @@ public class MainActivity extends BaseActivity {
 				startActivity(MyDynamicActivity.class);
 				break;
 			case R.id.slide_btn_invite_friend:
+				startActivity(InviteFriendActivity.class);
 				break;
 			case R.id.slide_btn_plus_v:
 				startActivity(ApplyActivity.class);

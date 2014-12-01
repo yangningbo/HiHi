@@ -56,6 +56,9 @@ public class ChangeProfileActivity extends BaseActivity {
 				switch (type) {
 				case TYPE_EMAIL:
 					email = etText.getText().toString();
+					if (!email.contains("@")) {
+						return;
+					}
 					mUser.email = email;
 					break;
 				case TYPE_PHONE:

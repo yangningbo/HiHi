@@ -179,6 +179,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			setTime(tvEndTime.getText().toString());
 			showStartTimeDialog(mContext.getString(R.string.meeting_end_time), TYPE_END_TIME);
 			break;
+		case R.id.iv_meeeting_header:
 		case R.id.btn_upload_pic:
 			Intent intent = getIntent();
 			intent.setClass(mContext, LocalPicPathActivity.class);
@@ -236,6 +237,9 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				Drawable drawable = Drawable.createFromPath(pathList.get(0));
 				mFilePath = pathList.get(0);
 				ivHeader.setImageDrawable(drawable);
+				btnUploadPic.setVisibility(View.GONE);
+				ViewUtil.findViewById(this, R.id.tv_add_pic_info).setVisibility(View.GONE);
+				ivHeader.setOnClickListener(this);
 			}
 		}
 	}

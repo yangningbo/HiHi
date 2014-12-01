@@ -269,7 +269,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			// TODO Auto-generated method stub
 			String uid = ((Member) v.getTag()).uid;
 			Intent intent = new Intent();
-			intent.putExtra(ProfileActivity.KEY_USER_ID, uid);
+			intent.putExtra(ProfileActivity.KEY_UID, uid);
 			intent.setClass(mContext, ProfileActivity.class);
 			startActivity(intent);
 		}
