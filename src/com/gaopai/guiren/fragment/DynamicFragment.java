@@ -2,16 +2,19 @@ package com.gaopai.guiren.fragment;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
-import android.util.Log;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -26,6 +29,8 @@ import com.gaopai.guiren.activity.NewDynamicActivity;
 import com.gaopai.guiren.adapter.DynamicAdapter;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
+import com.gaopai.guiren.support.view.CustomEditText;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -42,26 +47,22 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	@ViewInject(id = R.id.chat_box)
 	private View chatBox;
 	@ViewInject(id = R.id.chat_box_edit_keyword)
-	private EditText etComment;
+	private CustomEditText etComment;
 	@ViewInject(id = R.id.send_text_btn)
 	private Button mSendTextBtn;
 
 	@Override
-	public void addChildView(ViewGroup contentLayout) {
-		// TODO Auto-generated method stub
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (mView == null) {
 			mView = mInflater.inflate(R.layout.fragment_dynamic, null);
 			((MainActivity) getActivity()).setBackPressedListener(onBackPressedListener);
-			contentLayout.addView(mView, layoutParamsFF);
 			FinalActivity.initInjectedView(this, mView);
 			initView();
 		}
+		return mView;
 	}
 
 	private void initView() {
-		addButtonToTitleBar();
-		mTitleBar.setTitleText("动态");
-
 		mListView.setPullLoadEnabled(true);
 		mListView.setPullRefreshEnabled(true);
 		mListView.setScrollLoadEnabled(false);
@@ -82,7 +83,6 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		addNewDyHeader();
 		mAdapter = new DynamicAdapter(this);
 		mListView.setAdapter(mAdapter);
-		// mListView.doPullRefreshing(true, 0);
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -106,7 +106,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 
 			}
 		});
-
+		etComment.setBackPressedListener(onBackPressedListener);
 		etComment.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -131,7 +131,6 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		Log.d(TAG, "page=" + page);
 
 		DamiInfo.getDynamic(page, new SimpleResponseListener(getActivity()) {
 			@Override
@@ -164,16 +163,22 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		});
 	}
 
-	public void showChatBox(String name, TypeHolder typeHolder) {
+	public void showChatBox(String name, TypeHolder typeHolder, boolean showReply) {
 		chatBox.setVisibility(View.VISIBLE);
 		etComment.requestFocus();
 		etComment.setTag(typeHolder);
-		etComment.setHint("回复：" + name);
+		if (showReply) {
+			etComment.setHint("回复：" + name);
+		} else {
+			etComment.setHint("请输入评论");
+		}
 		((MainActivity) getActivity()).hideBottomTab();
 	}
 
 	public void hideChatBox() {
 		chatBox.setVisibility(View.GONE);
+		etComment.setText("");
+		hideSoftKeyboard(etComment);
 		((MainActivity) getActivity()).showBottomTab();
 	}
 
@@ -196,16 +201,6 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	private TextView tvDyCount;
 
 	private void addNewDyHeader() {
-		ListView listView = mListView.getRefreshableView();
-		// if (newalertcount == 0) {
-		// if (listView.getHeaderViewsCount() > 0) {
-		// listView.removeHeaderView(listView.getChildAt(0));
-		// }
-		// return;
-		// }
-		// if (listView.getHeaderViewsCount() > 0) {
-		// listView.removeHeaderView(listView.getChildAt(0));
-		// }
 		tvDyCount = new TextView(getActivity());
 
 		tvDyCount.setTextColor(getResources().getColor(R.color.general_text_blue));
@@ -216,7 +211,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		tvDyCount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				tvDyCount.setVisibility(View.GONE);
 				startActivity(NewDynamicActivity.class);
 			}
 		});
@@ -236,6 +231,14 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		}
 		tvDyCount.setVisibility(View.VISIBLE);
 		tvDyCount.setText("您有" + newalertcount + "条新动态");
+	}
+	
+
+	public void hideSoftKeyboard(View view) {
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (view != null) {
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
 	}
 
 }

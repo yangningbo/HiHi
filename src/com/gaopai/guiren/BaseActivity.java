@@ -17,6 +17,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
@@ -144,6 +145,12 @@ public class BaseActivity extends FragmentActivity {
 		contentLayout.setBackgroundColor(getResources().getColor(R.color.general_background));
 		windowLayout.addView(contentLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		setContentView(windowLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+	}
+	
+	protected void addTitleBar(ViewGroup holder) {
+		mTitleBar = new TitleBar(this);
+		holder.addView(mTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		holder.addView(ViewUtil.creatTitleBarLineView(mContext));
 	}
 
 	/**

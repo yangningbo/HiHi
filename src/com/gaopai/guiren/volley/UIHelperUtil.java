@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.gaopai.guiren.R;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,6 +35,10 @@ public class UIHelperUtil {
 				UIHelperUtil.this.listener.onReqStart();
 				break;
 			case command_success:
+				if (UIHelperUtil.this.getResponse() == null) {
+					Toast.makeText(cxt, cxt.getString(R.string.data_error), Toast.LENGTH_SHORT).show();
+					return;
+				}
 				UIHelperUtil.this.listener.onSuccess(UIHelperUtil.this.getResponse());
 				UIHelperUtil.this.listener.onFinish();
 				break;
@@ -46,7 +52,7 @@ public class UIHelperUtil {
 				UIHelperUtil.this.listener.onTimeOut();
 				break;
 			case command_error:
-				Toast.makeText(cxt, "数据出现错误...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(cxt, cxt.getString(R.string.data_error), Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}

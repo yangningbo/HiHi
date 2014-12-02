@@ -145,4 +145,11 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 
 		super.onClick(v);
 	}
+
+
+	@Override
+	protected boolean isAvoidDisturb() {
+		// TODO Auto-generated method stub
+		return spo.getInt(SPConst.getTribeUserId(mContext, user.uid), 0) == 1;
+	}
 }

@@ -42,7 +42,16 @@
         android:layout_height="60dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/default_header" />
+        android:src="@drawable/default_header"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_date"

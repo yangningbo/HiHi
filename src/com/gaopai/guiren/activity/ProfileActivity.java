@@ -1,5 +1,7 @@
 package com.gaopai.guiren.activity;
 
+import im.yixin.sdk.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -13,6 +15,7 @@ import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -145,6 +148,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		getUserInfo();
 		getTags();
 
+	}
+	
+	public static Intent getIntent(Context context, String uid) {
+		Intent intent = new Intent(context, ProfileActivity.class);
+		intent.putExtra(KEY_UID, uid);
+		return intent;
 	}
 
 	private void getUserInfo() {

@@ -207,7 +207,6 @@ public class TribeMemberActivity extends BaseActivity {
 			} else {
 				holder.btnAction.setVisibility(View.GONE);
 			}
-			
 			return convertView;
 		}
 
@@ -234,7 +233,6 @@ public class TribeMemberActivity extends BaseActivity {
 		// 1退出部落
 		Dialog dialog = new AlertDialog.Builder(mContext).setTitle(title)
 				.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub

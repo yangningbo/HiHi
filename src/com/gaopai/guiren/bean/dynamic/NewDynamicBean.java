@@ -3,6 +3,7 @@ package com.gaopai.guiren.bean.dynamic;
 import java.io.Serializable;
 import java.util.List;
 
+import com.gaopai.guiren.bean.dynamic.DynamicBean.PicBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 
 public class NewDynamicBean extends BaseNetBean{
@@ -14,17 +15,26 @@ public class NewDynamicBean extends BaseNetBean{
 		public String uid;
 		public int type;
 		public String realname;
-		public String headurl="s";//差这个字段
+		public String head;
 		public JsonContent jsoncontent;
+		public long addtime;
 	}
 	
 	public static class JsonContent implements Serializable {
 		public String content;
 		public String sid;
+		public int type;
 		public String name;
-		public String image;
+		public List<PicBean> pic;
 		public String recontent;
 	}
+	public static class PicBean implements Serializable {
+		public String imgUrlS;
+		public String imgUrlL;
+		public int imgWidth;
+		public int imgHeight;
+	}
+	
 	  
 //	发表了一个动态11111111，然后评论555555555， uid是评论人的，realname是评论人的名称   
 //	   {

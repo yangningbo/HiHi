@@ -40,6 +40,7 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentContetnHolder;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.DySingleBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.PicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
@@ -57,6 +58,7 @@ import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
+import com.umeng.socialize.net.t;
 
 public class DynamicDetailActivity extends BaseActivity {
 	public static final int TYPE_SEND_DYNAMIC = 1;
@@ -80,7 +82,7 @@ public class DynamicDetailActivity extends BaseActivity {
 	public final static String KEY_TYPEHOLDER = "typeholder";
 	public final static String KEY_SID = "sid";
 	private TypeHolder typeBean;
-	
+
 	private String sid;
 
 	private List<String> testUserList = new ArrayList<String>();
@@ -95,13 +97,36 @@ public class DynamicDetailActivity extends BaseActivity {
 		setAbContentView(R.layout.fragment_dynamic);
 		mTitleBar.setTitleText("动态详情");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		
+
 		typeBean = (TypeHolder) getIntent().getSerializableExtra(KEY_TYPEHOLDER);
 		if (typeBean == null) {
 			sid = getIntent().getStringExtra(KEY_SID);
 		} else {
+			sid = typeBean.id;
 			initComponent();
 		}
+		getDynamicDetail();
+	}
+
+	private void getDynamicDetail() {
+		DamiInfo.getDynamicDetails(sid, new SimpleResponseListener(mContext) {
+
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				DySingleBean data = (DySingleBean) o;
+				if (data.state != null && data.state.code == 0) {
+					if (typeBean == null) {
+						typeBean = data.data;
+						initComponent();
+					} else {
+						typeBean = data.data;
+						getHeaderView();
+						mAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+		});
 	}
 
 	private void initComponent() {
@@ -125,11 +150,11 @@ public class DynamicDetailActivity extends BaseActivity {
 		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
 
 		headerView = getHeaderView();
-
-		mListView.getRefreshableView().addHeaderView(headerView);
+		if (headerView != null) {
+			mListView.getRefreshableView().addHeaderView(headerView);
+		}
 		mAdapter = new MyAdapter(this);
 		mListView.setAdapter(mAdapter);
-
 		mSendTextBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -171,31 +196,40 @@ public class DynamicDetailActivity extends BaseActivity {
 		}
 	}
 
+	View convertView = null;
+
 	private View getHeaderView() {
 		// TODO Auto-generated method stub
 		// DynamicBean.TypeHolder typeBean = mData.get(position);
-		View convertView = null;
 		switch (typeBean.type) {
 
 		case TYPE_SPREAD_OTHER_DYNAMIC:
 		case TYPE_SEND_DYNAMIC:
-			convertView = inflateItemView(TYPE_SEND_DYNAMIC);
+			if (convertView == null) {
+				convertView = inflateItemView(TYPE_SEND_DYNAMIC);
+			}
 			buildDynamicView((ViewHolderSendDynamic) convertView.getTag());
 			break;
 		case TYPE_SPREAD_USER:
 		case TYPE_SPREAD_TRIBE:
 		case TYPE_SPREAD_LINK: {
-			convertView = inflateItemView(TYPE_SPREAD_LINK);
+			if (convertView == null) {
+				convertView = inflateItemView(TYPE_SPREAD_LINK);
+			}
 			buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag());
 			break;
 		}
 		case TYPE_SPREAD_MEETING: {
-			convertView = inflateItemView(TYPE_SPREAD_MEETING);
+			if (convertView == null) {
+				convertView = inflateItemView(TYPE_SPREAD_MEETING);
+			}
 			buildMeetingView((ViewHolderMeeting) convertView.getTag());
 			break;
 		}
 		case TYPE_SPREAD_MSG:
-			convertView = inflateItemView(TYPE_SPREAD_MSG);
+			if (convertView == null) {
+				convertView = inflateItemView(TYPE_SPREAD_MSG);
+			}
 			buildMsgView((ViewHolderSpreadMsg) convertView.getTag());
 			break;
 		}
@@ -290,7 +324,6 @@ public class DynamicDetailActivity extends BaseActivity {
 			isShowComment = true;
 			viewHolder.lineZan.setVisibility((isShowSpread || isShowZan) ? View.VISIBLE : View.GONE);
 			viewHolder.layoutCoverTop.setVisibility(View.VISIBLE);
-			isShowComment = true;
 		}
 
 		if (isShowComment || isShowSpread || isShowZan) {
@@ -669,7 +702,8 @@ public class DynamicDetailActivity extends BaseActivity {
 				commnetHolder.displayname = DamiCommon.getLoginResult(mContext).realname;
 				commnetHolder.dataid = typeBean.id;
 				commnetHolder.type = 1;// ??????????????????
-				showChatBox(commnetHolder.todisplayname);
+				showChatBox(commnetHolder.todisplayname, false);
+				showSoftKeyboard();
 				actionWindow.dismiss();
 			}
 		});
@@ -760,6 +794,9 @@ public class DynamicDetailActivity extends BaseActivity {
 	private CommnetHolder commnetHolder = new CommnetHolder();
 
 	public void commentMessage(final String content) {
+		hideChatBox();
+		hideSoftKeyboard(etContent);
+		etContent.setText("");
 		DamiInfo.addComment(commnetHolder.toid, commnetHolder.type, commnetHolder.dataid, content, 0,
 				commnetHolder.displayname, commnetHolder.todisplayname, new SimpleResponseListener(mContext) {
 					@Override
@@ -855,7 +892,7 @@ public class DynamicDetailActivity extends BaseActivity {
 					commnetHolder.displayname = DamiCommon.getLoginResult(mContext).displayName;
 					commnetHolder.dataid = commentBean.dataid;
 					commnetHolder.type = commentBean.type;
-					showChatBox(commnetHolder.todisplayname);
+					showChatBox(commnetHolder.todisplayname, true);
 					showSoftKeyboard();
 				}
 			});
@@ -868,10 +905,17 @@ public class DynamicDetailActivity extends BaseActivity {
 			}
 			return name;
 		}
-
-		public void showSoftKeyboard() {
-			InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+	}
+	
+	public void showSoftKeyboard() {
+		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+	}
+	
+	public void hideSoftKeyboard(View view) {
+		InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (view != null) {
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
 	}
 
@@ -880,10 +924,14 @@ public class DynamicDetailActivity extends BaseActivity {
 		View layoutFake;
 	}
 
-	public void showChatBox(String text) {
+	public void showChatBox(String name, boolean showReply) {
 		chatBox.setVisibility(View.VISIBLE);
 		etContent.requestFocus();
-		etContent.setHint("回复：" + text);
+		if (showReply) {
+			etContent.setHint("回复：" + name);
+		} else {
+			etContent.setHint("请输入评论");
+		}
 	}
 
 	public void hideChatBox() {

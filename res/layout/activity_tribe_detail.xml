@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:padding="10dp"
+            custom:is_square="true"
             custom:columns="4" >
         </com.gaopai.guiren.view.MyGridLayout>
 

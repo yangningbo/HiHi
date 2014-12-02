@@ -34,13 +34,15 @@ import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.MessageHelper;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class TribeDetailActivity extends BaseActivity implements OnClickListener {
 	private String mTribeID = "";
-	public static final String KEY_TRIBE_ID = "tribe_id";
+	public static final String KEY_TRIBE_ID = "id";
 
 	private boolean isCreator;
 
@@ -88,7 +90,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		}
 		initTitleBar();
 		setAbContentView(R.layout.activity_tribe_detail);
-
+		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.tribe_detail);
 
@@ -184,11 +186,17 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		tvTribeInfo.setText(mTribe.content);
 		tvTribeHost.setText(mTribe.realname);
 
-		changeSwitch(tvAvoidDisturb, mTribe.getmsg == 1);
+		changeSwitch(tvAvoidDisturb, isAvoidDisturb());
 
 		ImageLoaderUtil.displayImage(mTribe.logosmall, ivTribeLogo);
 		bindBottomButtons();
 		bindMemberView();
+	}
+
+	private PreferenceOperateUtils spo;
+
+	protected boolean isAvoidDisturb() {
+		return spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0) == 1;
 	}
 
 	private void bindBottomButtons() {
@@ -219,17 +227,16 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 		if (members != null && members.size() > 0) {
 			int size = members.size();
-			for (int i = 0; i < size + 1; i++) {
+			for (int i = 0; i < size; i++) {
 
 				ViewGroup gridView = (ViewGroup) inflater.inflate(R.layout.tribe_grid_item, null);
 				UserViewHolder holder = new UserViewHolder();
 				holder.tvUserName = (TextView) gridView.findViewById(R.id.tv_user_name);
 				holder.ivHeader = (ImageView) gridView.findViewById(R.id.iv_header);
-				if (i == size) {
+				if (i == 7) {
 					gridView.removeViewAt(0);
-					holder.tvUserName.setText("查看其他" + (size - i) + "人");
+					holder.tvUserName.setText("查看其他" + (size - 7) + "人");
 					gridView.setOnClickListener(new OnClickListener() {
-
 						@Override
 						public void onClick(View v) {
 							// TODO Auto-generated method stub
@@ -277,16 +284,18 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 	private void showDialog(String title, final int type, final Member member) {// 0提出部落
 																				// 1退出部落
+		                                                                        // 2解散圈子
 		Dialog dialog = new AlertDialog.Builder(mContext).setTitle(title)
 				.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
 						if (type == 0) {
 							kikOutTribe(member);
-						} else {
+						} else if (type == 1) {
 							exitTribe();
+						} else {
+							cancelTribe();
 						}
 					}
 				}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -327,14 +336,6 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		case R.id.btn_spread:
 			spreadTribe();
 			break;
-		// case R.id.btn_enter_tribe:
-		// Intent intent = new Intent();
-		// intent.setClass(mContext, ChatTribeActivity.class);
-		// intent.putExtra(ChatTribeActivity.KEY_TRIBE, mTribe);
-		// intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE,
-		// ChatTribeActivity.CHAT_TYPE_TRIBE);
-		// startActivity(intent);
-		// break;
 		case R.id.btn_on_look:
 			if (mTribe.isjoin == 1) {
 				invite();
@@ -376,11 +377,14 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		}
 		case R.id.tv_more_tags:
 			break;
+		case R.id.tv_cancel_tribe:
+			showDialog(getString(R.string.cancel_tribe), 2, null);
+			break;
 		default:
 			break;
 		}
 	}
-	
+
 	private DeleteCallback deleteCallback = new DeleteCallback() {
 
 		@Override
@@ -409,6 +413,22 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		intent.putExtra(AddReasonActivity.KEY_MEETING_ID, mTribeID);
 		intent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_TO_JOIN_TRIBE);
 		startActivityForResult(intent, REQUEST_JOIN_TRIBE);
+	}
+	
+	private void cancelTribe() {
+		DamiInfo.cancelTribe(mTribeID, new SimpleResponseListener(mContext, R.string.request_internet_now) {
+			
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.tribe_has_been_cancel);
+				} else {
+					otherCondition(data.state, TribeDetailActivity.this);
+				}
+			}
+		});
 	}
 
 	private void exitTribe() {
@@ -444,19 +464,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void avoidDisturb() {
-		final String type = mTribe.getmsg == 1 ? "2" : "1";
-		DamiInfo.setMsgType(mTribeID, type, new SimpleResponseListener(mContext, R.string.request_internet_now) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.operate_success);
-					mTribe.getmsg = Integer.parseInt(type);
-					changeSwitch(tvAvoidDisturb, mTribe.getmsg == 1);
-				}
-			}
-		});
+		int level = spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0);
+		spo.setInt(SPConst.getTribeUserId(mContext, mTribe.id), 1 - level);
+		changeSwitch(tvAvoidDisturb, isAvoidDisturb());
 	}
 
 	private void changeSwitch(TextView textView, boolean isOn) {

@@ -2,8 +2,6 @@ package com.gaopai.guiren.activity;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +19,10 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,13 +47,14 @@ import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.slidemenu.SlidingMenu;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.StringUtils;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.slide.DragLayout;
 import com.gaopai.guiren.view.slide.DragLayout.DragListener;
 import com.gaopai.guiren.volley.IResponseListener;
 import com.gaopai.guiren.volley.MyVolley;
 import com.squareup.picasso.Picasso;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnClickListener {
 	private ViewPager mTabPager;
 	private ArrayList<Fragment> pagerItemList = null;
 	private int currIndex = 0;
@@ -85,9 +86,11 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		// initSlidingMenu();
+		// initTitleBar();
 		setContentView(R.layout.activity_main);
+		addTitleBar();
+		initTitleBarLocal();
 		initDragLayout();
 		mTabPager = (ViewPager) findViewById(R.id.vPager);
 		main_bottom = (LinearLayout) findViewById(R.id.main_bottom);
@@ -102,6 +105,23 @@ public class MainActivity extends BaseActivity {
 			}
 		}
 
+	}
+
+	private void addTitleBar() {
+		addTitleBar((ViewGroup) ViewUtil.findViewById(this, R.id.layout_titlebar));
+	}
+
+	private void initTitleBarLocal() {
+		View view = mTitleBar.setLogo(R.drawable.selector_titlebar_home);
+		view.setId(R.id.ab_logo);
+		view.setOnClickListener(this);
+
+		view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_search);
+		view.setId(R.id.ab_search);
+		view.setOnClickListener(this);
+		view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
+		view.setId(R.id.ab_add);
+		view.setOnClickListener(this);
 	}
 
 	private DragLayout dragLayout;
@@ -288,7 +308,13 @@ public class MainActivity extends BaseActivity {
 		}
 	};
 
+	private boolean isIntialed = false;
 	private void initPage() {
+		if (isIntialed) {
+			mTabPager.setCurrentItem(0);
+			return;
+		}
+		isIntialed = true;
 		page1 = new MeetingFragment();
 		page2 = new DynamicFragment();
 		page3 = new ConnectionFragment();
@@ -302,10 +328,12 @@ public class MainActivity extends BaseActivity {
 		FragmentManager mFragmentManager = this.getSupportFragmentManager();
 		CustomFragmentPagerAdapter mFragmentPagerAdapter = new CustomFragmentPagerAdapter(mFragmentManager,
 				pagerItemList);
+		
 		mTabPager.setAdapter(mFragmentPagerAdapter);
 		mTabPager.setOnPageChangeListener(new MyOnPageChangeListener());
 		mTabPager.setOffscreenPageLimit(3);
 		changeBg(0);
+		mTabPager.setCurrentItem(0);
 	}
 
 	/** 初始化左边滑动菜单 **/
@@ -340,15 +368,30 @@ public class MainActivity extends BaseActivity {
 
 		@Override
 		public void onPageSelected(int arg0) {
-			// if (arg0 == 0) {
-			// mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-			// } else {
-			// mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-			// }
+			setTitleBarText(arg0);
 			changeBg(arg0);
 			currIndex = arg0;
 		}
+	}
 
+	private void setTitleBarText(int pos) {
+		switch (pos) {
+		case 0:
+			mTitleBar.setTitleText(R.string.meeting);
+			break;
+		case 1:
+			mTitleBar.setTitleText(R.string.dynamic);
+			break;
+		case 2:
+			mTitleBar.setTitleText(R.string.connection);
+			break;
+		case 3:
+			mTitleBar.setTitleText(R.string.message);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	public class MyOnClickListener implements OnClickListener {
@@ -401,13 +444,13 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		Log.d("keydown", "00000");
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (backPressedListener != null && backPressedListener.onBack()) {
-				return true;
-			}
-			moveTaskToBack(true);
-			return true;
-		}
+//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+//			if (backPressedListener != null && backPressedListener.onBack()) {
+//				return true;
+//			}
+//			moveTaskToBack(true);
+//			return true;
+//		}
 		return super.onKeyDown(keyCode, event);
 	}
 
@@ -593,6 +636,59 @@ public class MainActivity extends BaseActivity {
 
 	public void setBackPressedListener(BackPressedListener listener) {
 		this.backPressedListener = listener;
+	}
+
+	private static ViewGroup dropDownView;
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.ab_add:
+			if (dropDownView == null) {
+				dropDownView = (ViewGroup) mInflater.inflate(R.layout.titlebar_add_popup_window, null);
+				initAddMoreViews(dropDownView, mInflater);
+			}
+			mTitleBar.showWindow(v, dropDownView);
+			break;
+
+		case R.id.ab_search: {
+			startActivity(SearchActivity.class);
+			break;
+		}
+		case R.id.ab_logo:
+			toggle();
+			break;
+		case R.id.tv_creat_meeting: {
+			startActivity(CreatMeetingActivity.class);
+			mTitleBar.closeWindow();
+			break;
+		}
+		case R.id.tv_send_dynamic_:
+			startActivity(SendDynamicMsgActivity.class);
+			mTitleBar.closeWindow();
+			break;
+		case R.id.tv_creat_tribe:
+			startActivity(CreatTribeActivity.class);
+			mTitleBar.closeWindow();
+			break;
+		case R.id.tv_start_chat:
+			mTitleBar.closeWindow();
+			break;
+		}
+	}
+
+	private void initAddMoreViews(ViewGroup viewGroup, LayoutInflater inflater) {
+		View tvCreatMeeting = viewGroup.findViewById(R.id.tv_creat_meeting);
+		tvCreatMeeting.setOnClickListener(this);
+		View tvSendDynamicMsg = viewGroup.findViewById(R.id.tv_send_dynamic_);
+		tvSendDynamicMsg.setOnClickListener(this);
+		View tvCreatTribe = viewGroup.findViewById(R.id.tv_creat_tribe);
+		tvCreatTribe.setOnClickListener(this);
+		View tvAddFriend = viewGroup.findViewById(R.id.tv_add_friends);
+		tvAddFriend.setOnClickListener(this);
+		View tvStartChat = viewGroup.findViewById(R.id.tv_start_chat);
+		tvStartChat.setOnClickListener(this);
 	}
 
 }

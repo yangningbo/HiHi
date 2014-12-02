@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/setting_background"
+    android:orientation="vertical" >
+
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/general_text_gray"
+        android:padding="10dp"
+        android:text="@string/rp_chose_reason"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_rp_yellow"
+            style="@style/report_people_text"
+            android:text="@string/rp_yellow" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_rp_cheat"
+            style="@style/report_people_text"
+            android:text="@string/rp_cheat" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_rp_abuse"
+            style="@style/report_people_text"
+            android:text="@string/rp_abuse" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_rp_ad"
+            style="@style/report_people_text"
+            android:text="@string/rp_ad" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/tv_rp_politics"
+            style="@style/report_people_text"
+            android:text="@string/rp_politics" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/btn_report"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_tribe_detail_btn_red"
+            android:text="@string/rp_ok"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>

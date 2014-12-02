@@ -158,9 +158,11 @@ public class NotifySystemActivity extends BaseActivity {
 
 				case NotifiyType.RECEIVE_REPORT_MSG:
 					Intent reportIntent = new Intent(mContext, ReportMsgActivity.class);
-					reportIntent.putExtra("id", mNotifyList.get(position).room.id);
+					reportIntent.putExtra(ReportMsgActivity.KEY_TID, mNotifyList.get(position).room.id);
 					if (mNotifyList.get(position).message.type == 300) {
-						reportIntent.putExtra("type", 1);
+						reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_MEETING);
+					} else {
+						reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_TRIBE);
 					}
 					startActivity(reportIntent);
 					break;
@@ -171,19 +173,8 @@ public class NotifySystemActivity extends BaseActivity {
 						messageList.add(mNotifyList.get(position).message);
 						Intent pictureIntent = new Intent(mContext, ShowImagesActivity.class);
 						pictureIntent.putExtra("msgList", (Serializable) messageList);
-						// pictureIntent.putExtra("imageurl",
-						// mNotifyList.get(position).message.imgUrlL);
 						startActivity(pictureIntent);
-					} else if (mNotifyList.get(position).message.fileType == MessageType.VOICE) {
-						// List<MessageInfo> messageList = new
-						// ArrayList<MessageInfo>();
-						// messageList.add(mNotifyList.get(position).message);
-						// Intent playIntent = new Intent(mContext,
-						// SequencePlayActivity.class);
-						// playIntent.putExtra("msgList", (Serializable)
-						// messageList);
-						// startActivity(playIntent);
-					}
+					} 
 					break;
 
 				case NotifiyType.REFUSE_REPORT_MSG:
@@ -192,19 +183,8 @@ public class NotifySystemActivity extends BaseActivity {
 						messageList.add(mNotifyList.get(position).message);
 						Intent pictureIntent = new Intent(mContext, ShowImagesActivity.class);
 						pictureIntent.putExtra("msgList", (Serializable) messageList);
-						// pictureIntent.putExtra("imageurl",
-						// mNotifyList.get(position).message.imgUrlL);
 						startActivity(pictureIntent);
-					} else if (mNotifyList.get(position).message.fileType == MessageType.VOICE) {
-						// List<MessageInfo> messageList = new
-						// ArrayList<MessageInfo>();
-						// messageList.add(mNotifyList.get(position).message);
-						// Intent playIntent = new Intent(mContext,
-						// SequencePlayActivity.class);
-						// playIntent.putExtra("msgList", (Serializable)
-						// messageList);
-						// startActivity(playIntent);
-					}
+					} 
 					break;
 
 				case NotifiyType.TRIBE_KICK_OUT:

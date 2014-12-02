@@ -105,6 +105,9 @@
             android:name="com.gaopai.guiren.activity.RecommendTribeListActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.ReportPeopleActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.RecommendActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -244,6 +247,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.TwoDimensionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.ReportMsgActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.share.ShareActivity"

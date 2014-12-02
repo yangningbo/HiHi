@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -372,6 +372,13 @@
         <item name="android:background">@color/general_divider_in_white</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
+    </style>
+
+    <style name="report_people_text" parent="@style/setting_text">
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:drawableRight">@drawable/transparent</item>
     </style>
 
 </resources>

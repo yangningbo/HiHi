@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.DamiInfo;
@@ -26,6 +28,7 @@ import com.gaopai.guiren.activity.TribeActivity;
 import com.gaopai.guiren.adapter.MeetingAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -50,18 +53,19 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 	private int meetingType;
 
 	public final static String REFRESH_LIST_ACTION = "com.gaopai.guiren.intent.action.REFRESH_LIST_ACTION";
+	
+	private TextView tvOnGoingMeeting;
+	private TextView tvPastMeeting;
 
+	
 	@Override
-	public void addChildView(ViewGroup contentLayout) {
-
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (mView == null) {
 			mView = mInflater.inflate(R.layout.fragment_meeting, null);
-			contentLayout.addView(mView, layoutParamsFF);
 			FinalActivity.initInjectedView(this, mView);
-			initView();
-		} else {
-			((ViewGroup) mView.getParent()).removeView(mView);
+			initView(mView);
 		}
+		return mView;
 	}
 
 	private void registerFilter() {
@@ -100,9 +104,9 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		}
 	};
 
-	private void initView() {
-		addButtonToTitleBar();
-		mTitleBar.setTitleTextWithImage(getString(R.string.meeting_title), android.R.drawable.ic_menu_more);
+	private void initView(View mView) {
+//		addButtonToTitleBar();
+//		mTitleBar.setTitleTextWithImage(getString(R.string.meeting_title), android.R.drawable.ic_menu_more);
 
 		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 		ViewGroup dropDownView = (ViewGroup) layoutInflater.inflate(R.layout.titlebar_popup_window, null);
@@ -114,7 +118,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		onGoingMeetingBtn.setOnClickListener(clickListener);
 		pastMeetingBtn.setOnClickListener(clickListener);
 
-		mTitleBar.setTitleTextDropDown(dropDownView);
+//		mTitleBar.setTitleTextDropDown(dropDownView);
 
 		meetingType = TYPE_ONGOING_MEETING;
 
@@ -149,6 +153,13 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 			}
 		});
+		
+		ViewGroup viewGroup = ViewUtil.findViewById(mView, R.id.layout_meeting_past);
+		tvPastMeeting = (TextView) viewGroup.getChildAt(0);
+		viewGroup.setOnClickListener(this);
+		viewGroup = ViewUtil.findViewById(mView, R.id.layout_meeting_faxian);
+		tvOnGoingMeeting = (TextView) viewGroup.getChildAt(0);
+		viewGroup.setOnClickListener(this);
 	}
 
 	private class PopupWindowItemClickListener implements OnClickListener {
@@ -226,6 +237,18 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			startActivity(intent);
 			return;
 		}
+		case R.id.layout_meeting_faxian:
+			meetingType = TYPE_ONGOING_MEETING;
+			tvPastMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
+			tvOnGoingMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
+			getMeetingList(true, meetingType);
+			break;
+		case R.id.layout_meeting_past:
+			meetingType = TYPE_PAST_MEETING;
+			tvOnGoingMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
+			tvPastMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
+			getMeetingList(true, meetingType);
+			break;
 		default:
 			super.onClick(v);
 		}

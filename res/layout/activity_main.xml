@@ -200,18 +200,26 @@
                         android:id="@+id/iv_count_4"
                         android:layout_width="@dimen/notification_item_dot_size"
                         android:layout_height="@dimen/notification_item_dot_size"
-                        android:layout_alignTop="@id/img_4"
                         android:layout_alignRight="@id/img_4"
+                        android:layout_alignTop="@id/img_4"
                         android:layout_marginRight="-8dp"
                         android:background="@drawable/shape_notify_red_dot"
                         android:gravity="center"
                         android:minWidth="@dimen/notification_item_dot_size"
                         android:text="123"
-                        android:visibility="gone"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:visibility="gone" />
                 </RelativeLayout>
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_titlebar"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content" >
         </LinearLayout>
 
         <android.support.v4.view.ViewPager
@@ -219,8 +227,10 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_above="@id/main_bottom"
+            android:layout_below="@id/layout_titlebar"
             android:flipInterval="30"
             android:persistentDrawingCache="animation" />
+
     </com.gaopai.guiren.view.slide.MyRelativeLayout>
 
 </com.gaopai.guiren.view.slide.DragLayout>

@@ -425,23 +425,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void moreSetNotPush(final int level, final View v) {
-		DamiInfo.setNotPush(mMeetingID, 1 - level, new SimpleResponseListener(mContext) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				SimpleStateBean data = (SimpleStateBean) o;
-				if (data.state != null && data.state.code == 0) {
-					changeSwitchState(v);
-					spo.setInt(SPConst.getTribeUserId(mContext, mMeetingID), 1 - level);
-				} else {
-					otherCondition(data.state, MeetingDetailActivity.this);
-				}
-			}
-		});
+		changeSwitchState(v);
+		spo.setInt(SPConst.getTribeUserId(mContext, mMeetingID), 1 - level);
 	}
 
 	private void changeSwitchState(View v) {
-		int level = ((ImageView) ((ViewGroup) v).getChildAt(0)).getDrawable().getLevel();
+		int level = getSwitchStateLevel(v);
 		setSwitchState(v, 1 - level);
 	}
 

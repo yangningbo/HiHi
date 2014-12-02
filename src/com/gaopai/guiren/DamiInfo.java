@@ -19,17 +19,20 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.android.volley.Request.Method;
+import com.gaopai.guiren.activity.ApplyActivity.InviteUrlResult;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.BaseBean;
 import com.gaopai.guiren.bean.CheckUpdateResult;
 import com.gaopai.guiren.bean.FavoriteList;
+import com.gaopai.guiren.bean.InviteNumResult;
 import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.MsgConfigResult;
 import com.gaopai.guiren.bean.NewUserList;
 import com.gaopai.guiren.bean.PrivacySettingResult;
+import com.gaopai.guiren.bean.QrCordBean;
 import com.gaopai.guiren.bean.ReportMsgResult;
 import com.gaopai.guiren.bean.TagResultBean;
 import com.gaopai.guiren.bean.TribeInfoBean;
@@ -1862,6 +1865,21 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "tribe/quit";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
+	/**
+	 * 解散部落
+	 * 
+	 * @param id
+	 * @return
+	 * @throws DamiException
+	 */
+	public static void cancelTribe(String id, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("tid", id);
+		
+		String url = SERVER + "tribe/disbanded";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+
 
 	/**
 	 * 申请加入部落
@@ -2272,6 +2290,45 @@ public class DamiInfo implements Serializable {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/getNewDynamic";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, NewDynamicBean.class, listener);
+	}
+	
+	//举报用户
+	public static void reportUser(String fuid, String content, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fuid", fuid);
+		bundle.add("content", content);
+		String url = SERVER + "user/ReportUser";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+	
+	//获取动态详情
+	public static void getDynamicDetails(String dynaid, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("dynaid", dynaid);
+		String url = SERVER + "user/DynamicDetails";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.DySingleBean.class, listener);
+	}
+	
+	//获取用户二维码
+	public static void getUserQrCord(String fid, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fid", fid);
+		String url = SERVER + "user/UserQrCord";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, QrCordBean.class, listener);
+	}
+	
+	//外发注册连接 need uid
+	public static void getUserInvitation(IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		String url = SERVER + "user/UserInvitation";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, InviteUrlResult.class, listener);
+	}
+	
+	//成功邀请用户数(/api/user/UserInvitationNum)
+	public static void getUserInvitationNum(IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		String url = SERVER + "user/UserInvitationNum";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, InviteNumResult.class, listener);
 	}
 
 }

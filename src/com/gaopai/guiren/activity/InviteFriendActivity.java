@@ -1,7 +1,7 @@
 package com.gaopai.guiren.activity;
 
-import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,6 +22,8 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 	private ShareManager sm;
 	public final static int REQUEST_CONTACT = 1991;
 
+	private String url = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -30,8 +32,15 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 		setAbContentView(R.layout.activity_invite_friend);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.invite_friend);
+		url = getIntent().getStringExtra("url");
 		initComponent();
 		sm = new ShareManager(this);
+	}
+
+	public static Intent getIntent(Context context, String url) {
+		Intent intent = new Intent(context, InviteFriendActivity.class);
+		intent.putExtra("url", url);
+		return intent;
 	}
 
 	private void initComponent() {
@@ -45,19 +54,24 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
+		String shareStr = getString(R.string.invite_str_2);
+		if (!TextUtils.isEmpty(url)) {
+			shareStr = url;
+		}
 		switch (v.getId()) {
 		case R.id.tv_invite_contact:
 			startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI),
 					REQUEST_CONTACT);
 			break;
 		case R.id.tv_invite_qq:
-			sm.shareQQ(getString(R.string.invite_str_1), getString(R.string.invite_link));
+
+			sm.shareQQ(shareStr, getString(R.string.invite_link));
 			break;
 		case R.id.tv_invite_wechat:
-			sm.shareWechat(getString(R.string.invite_str_1), getString(R.string.invite_link));
+			sm.shareWechat(shareStr, getString(R.string.invite_link));
 			break;
 		case R.id.tv_invite_weibo:
-			sm.shareWeibo(getString(R.string.invite_str_1), getString(R.string.invite_link));
+			sm.shareWeibo(shareStr, getString(R.string.invite_link));
 			break;
 		default:
 			break;
@@ -85,7 +99,11 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 			}
 			Uri uri = Uri.parse("smsto:" + phoneNum);
 			Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-			it.putExtra("sms_body", getString(R.string.invite_str_1));
+			String shareStr = getString(R.string.invite_str_1);
+			if (!TextUtils.isEmpty(url)) {
+				shareStr = url;
+			}
+			it.putExtra("sms_body", shareStr);
 			mContext.startActivity(it);
 		}
 	}

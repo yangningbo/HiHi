@@ -251,6 +251,11 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private void changeIsHideName(int isHide) {
 		int drawbale = (isHide == 0) ? R.drawable.icon_send_dy_real_name : R.drawable.icon_send_dy_nick_name;
 		tvUseRealName.setCompoundDrawablesWithIntrinsicBounds(drawbale, 0, 0, 0);
+		if (isHide == 0) {
+			tvUseRealName.setText(R.string.send_user_real_name);
+		} else {
+			tvUseRealName.setText(R.string.send_user_nick_name);
+		}
 	}
 
 	private OnClickListener tagDeleteClickListener = new OnClickListener() {

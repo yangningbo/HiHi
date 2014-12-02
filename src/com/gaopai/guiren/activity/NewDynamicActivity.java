@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
+import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean;
@@ -50,7 +51,6 @@ public class NewDynamicActivity extends BaseActivity {
 		mListView.setPullLoadEnabled(false);
 		mListView.setScrollLoadEnabled(false);
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
@@ -90,7 +90,6 @@ public class NewDynamicActivity extends BaseActivity {
 			mContext = context;
 		}
 
-
 		@Override
 		public int getCount() {
 			return dataList.size();
@@ -117,18 +116,19 @@ public class NewDynamicActivity extends BaseActivity {
 				holder.ivHeader = (ImageView) convertView.findViewById(R.id.iv_header);
 				holder.ivPic = (ImageView) convertView.findViewById(R.id.iv_pic);
 				holder.tvDate = (TextView) convertView.findViewById(R.id.tv_date);
+				holder.tvContent = (TextView) convertView.findViewById(R.id.tv_content);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			TypeHolder bean = dataList.get(position);
-			if (!TextUtils.isEmpty(bean.headurl)) {
-				ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader);
+			if (!TextUtils.isEmpty(bean.head)) {
+				ImageLoaderUtil.displayImage(bean.head, holder.ivHeader);
 			} else {
 				holder.ivHeader.setImageResource(R.drawable.default_header);
 			}
 			holder.tvName.setText(bean.realname);
-			holder.tvDate.setText("2012");
+			holder.tvDate.setText(FeatureFunction.getCreateTime(bean.addtime));
 			JsonContent jsonContent = bean.jsoncontent;
 			holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			holder.tvInfo.setText("");
@@ -139,10 +139,20 @@ public class NewDynamicActivity extends BaseActivity {
 			} else {
 				holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_favourite, 0, 0, 0);
 			}
-			if (!TextUtils.isEmpty(jsonContent.image)) {
-				ImageLoaderUtil.displayImage(jsonContent.image, holder.ivPic);
+			if (jsonContent.pic != null && jsonContent.pic.size() > 0) {
+				String imgaurlString = jsonContent.pic.get(0).imgUrlS;
+				if (!TextUtils.isEmpty(imgaurlString)) {
+					holder.ivPic.setVisibility(View.VISIBLE);
+					ImageLoaderUtil.displayImage(imgaurlString, holder.ivPic);
+				}
 			} else {
-				holder.ivPic.setImageResource(R.drawable.default_tribe);
+				holder.ivPic.setVisibility(View.GONE);
+			}
+			if (!TextUtils.isEmpty(jsonContent.content)) {
+				holder.tvContent.setVisibility(View.VISIBLE);
+				holder.tvContent.setText(jsonContent.content);
+			} else {
+				holder.tvContent.setVisibility(View.GONE);
 			}
 			return convertView;
 		}
@@ -153,6 +163,7 @@ public class NewDynamicActivity extends BaseActivity {
 			ImageView ivHeader;
 			ImageView ivPic;
 			TextView tvDate;
+			TextView tvContent;
 		}
 	}
 }

@@ -3,11 +3,15 @@ package com.gaopai.guiren.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tsz.afinal.FinalActivity;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,19 +37,15 @@ public class NotificationFragment extends BaseFragment {
 	public final static String ACTION_MSG_NOTIFY = "com.gaopai.guiren.intent.action.ACTION_MSG_NOTIFY";
 
 	@Override
-	public void addChildView(ViewGroup contentLayout) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (mView == null) {
 			mView = mInflater.inflate(R.layout.general_pulltorefresh_listview, null);
-			contentLayout.addView(mView, layoutParamsFF);
 			initView();
-		} else {
-			((ViewGroup) mView.getParent()).removeView(mView);
-		}
+		} 
+		return mView;
 	}
 
 	private void initView() {
-		addButtonToTitleBar();
-		mTitleBar.setTitleText(R.string.message);
 		mListView = (PullToRefreshListView) mView.findViewById(R.id.listView);
 		mListView.setPullLoadEnabled(false);
 		mListView.setScrollLoadEnabled(false);

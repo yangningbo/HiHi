@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.gaopai.guiren.bean.AppState;
 import com.gaopai.guiren.bean.PageInfo;
+import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.google.gson.annotations.Expose;
 
 public class DynamicBean implements Serializable{
@@ -13,6 +14,10 @@ public class DynamicBean implements Serializable{
 	public DyState state;
 	@Expose
 	public PageInfo pageInfo;
+	
+	public static class DySingleBean extends BaseNetBean {
+		public TypeHolder data;
+	}
 
 	public static class DyState extends AppState {
 		public int newalertcount; 

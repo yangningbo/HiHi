@@ -386,6 +386,9 @@ public class DynamicAdapter extends BaseAdapter {
 			if (tags.length > 0) {
 				viewHolder.flTags.setVisibility(View.VISIBLE);
 				for (String tag : tags) {
+					if (TextUtils.isEmpty(tag)) {
+						break;
+					}
 					viewHolder.flTags.addView(creatTagWithoutDelete(tag), viewHolder.flTags.getTextLayoutParams());
 				}
 			}
@@ -779,7 +782,7 @@ public class DynamicAdapter extends BaseAdapter {
 					commnetHolder.displayname = DamiCommon.getLoginResult(mContext).displayName;
 					commnetHolder.dataid = commentBean.dataid;
 					commnetHolder.type = commentBean.type;
-					mFragment.showChatBox(commnetHolder.todisplayname, mData.get(position));
+					mFragment.showChatBox(commnetHolder.todisplayname, mData.get(position), true);
 					showSoftKeyboard();
 				}
 			});
@@ -814,7 +817,8 @@ public class DynamicAdapter extends BaseAdapter {
 				commnetHolder.displayname = DamiCommon.getLoginResult(mContext).realname;
 				commnetHolder.dataid = typeHolder.id;
 				commnetHolder.type = 1;// ??????????????????
-				mFragment.showChatBox(commnetHolder.todisplayname, typeHolder);
+				mFragment.showChatBox(commnetHolder.todisplayname, typeHolder, false);
+				showSoftKeyboard();
 				actionWindow.dismiss();
 			}
 		});
@@ -932,6 +936,7 @@ public class DynamicAdapter extends BaseAdapter {
 	private CommnetHolder commnetHolder = new CommnetHolder();
 
 	public void commentMessage(final String content, final TypeHolder typeHolder) {
+		mFragment.hideChatBox();
 		DamiInfo.addComment(commnetHolder.toid, commnetHolder.type, commnetHolder.dataid, content, 0,
 				commnetHolder.displayname, commnetHolder.todisplayname, new SimpleResponseListener(mContext) {
 					@Override

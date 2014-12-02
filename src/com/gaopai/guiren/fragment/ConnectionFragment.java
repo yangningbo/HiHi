@@ -2,7 +2,9 @@ package com.gaopai.guiren.fragment;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -34,21 +36,17 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 	@ViewInject(id = R.id.chat_box_edit_keyword)
 	private EditText etComment;
 
+
 	@Override
-	public void addChildView(ViewGroup contentLayout) {
-		// TODO Auto-generated method stub
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (mView == null) {
 			mView = mInflater.inflate(R.layout.general_pulltorefresh_listview, null);
-			contentLayout.addView(mView, layoutParamsFF);
 			FinalActivity.initInjectedView(this, mView);
 			initView();
 		}
+		return mView;
 	}
-
 	private void initView() {
-		addButtonToTitleBar();
-		mTitleBar.setTitleText("人脉");
-
 		mListView.setPullLoadEnabled(true);
 		mListView.setPullRefreshEnabled(true);
 		mListView.setScrollLoadEnabled(false);

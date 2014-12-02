@@ -34,7 +34,7 @@
     <string name="load_error">数据加载失败</string>
     <string name="loading_login">登录...</string>
     <string name="login_error">登录失败</string>
-    <string name="login_need_contact">这里主打部落社交，为了给您推荐更多的好友和商务资源，请开启通讯录权限</string>
+    <string name="login_need_contact">这里主打圈子社交，为了给您推荐更多的好友和商务资源，请开启通讯录权限</string>
     <string name="please_input_username">请输入用户名</string>
     <string name="desc"></string>
     <string name="long_ago">很久之前</string>
@@ -43,7 +43,7 @@
     <string name="friend_tab">人脉</string>
     <string name="message_tab">消息</string>
     <string name="hot_spot">动态</string>
-    <string name="find_tribe">查找部落</string>
+    <string name="find_tribe">查找圈子</string>
     <string name="sina_weibo_login">新浪微博登录</string>
     <string name="tencent_qq_login">腾讯QQ登录</string>
     <string name="look_aroud">随便看看</string>
@@ -225,14 +225,14 @@
     <string name="unpass_real_verify">实名认证未通过审核</string>
     <string name="pass_invite_code">贵人码已通过审核</string>
     <string name="unpass_invite_code">贵人码未通过审核</string>
-    <string name="pass_create_tribe">部落已通过审核</string>
-    <string name="refuse_create_tribe">部落未通过审核</string>
-    <string name="apply_add_tribe">申请加入部落</string>
-    <string name="agree_apply_add_tribe">已经同意您加入部落</string>
-    <string name="disagree_apply_add_tribe">已经拒绝您加入部落</string>
-    <string name="invite_add_tribe">邀请加入部落</string>
-    <string name="agree_invite_add_tribe">已经同意您的部落邀请</string>
-    <string name="disagree_invite_add_tribe">已经拒绝您的部落邀请</string>
+    <string name="pass_create_tribe">圈子已通过审核</string>
+    <string name="refuse_create_tribe">圈子未通过审核</string>
+    <string name="apply_add_tribe">申请加入圈子</string>
+    <string name="agree_apply_add_tribe">已经同意您加入圈子</string>
+    <string name="disagree_apply_add_tribe">已经拒绝您加入圈子</string>
+    <string name="invite_add_tribe">邀请加入圈子</string>
+    <string name="agree_invite_add_tribe">已经同意您的圈子邀请</string>
+    <string name="disagree_invite_add_tribe">已经拒绝您的圈子邀请</string>
     <string name="pass_create_meeting">会议已通过审核</string>
     <string name="refuse_create_meeting">会议未通过审核</string>
     <string name="apply_add_meeting">申请加入会议</string>
@@ -253,9 +253,9 @@
     <string name="reported_msg">您的消息已被举报</string>
     <string name="agree_reported_msg">已同意您的举报</string>
     <string name="disagree_reported_msg">已拒绝您的举报</string>
-    <string name="you_have_been_kick_out_tribe">您已被踢出部落</string>
+    <string name="you_have_been_kick_out_tribe">您已被踢出圈子</string>
     <string name="you_have_been_kick_out_meeting">您已被踢出会议</string>
-    <string name="cant_see_memeber_private">私密部落，未加入不允许查看成员</string>
+    <string name="cant_see_memeber_private">私密圈子，未加入不允许查看成员</string>
     <string name="cant_see_member_meeting">私密会议，未加入不允许查看成员</string>
     <string name="cant_see_host_meeting">私密会议，未加入不允许查看主持人</string>
     <string name="cant_see_guest_meeting">私密会议，未加入不允许查看嘉宾</string>
@@ -304,51 +304,51 @@
     <string name="voice">语音</string>
     <string name="played_file_not_exist">播放文件不存在!</string>
     <string name="connect_to_server">正在连接聊天服务器!</string>
-    <string name="tribe_pic">部落图片</string>
-    <string name="tribe_name">部落名称</string>
+    <string name="tribe_pic">圈子图片</string>
+    <string name="tribe_name">圈子名称</string>
     <string name="industry">行业</string>
-    <string name="tribe_industry">部落行业</string>
-    <string name="tribe_type">部落私密设置</string>
-    <string name="tribe_content">部落说明</string>
+    <string name="tribe_industry">圈子行业</string>
+    <string name="tribe_type">圈子私密设置</string>
+    <string name="tribe_content">圈子说明</string>
     <string name="tribe_name_hint">2-15字</string>
-    <string name="open_tribe">开放式部落</string>
-    <string name="private_tribe">隐私式部落</string>
+    <string name="open_tribe">开放式圈子</string>
+    <string name="private_tribe">隐私式圈子</string>
     <string name="please_choose">请选择</string>
     <string name="please_choose_correct_pic">请选择JPG,JPEG,PNG格式的图片</string>
     <string name="apply_tribe_sucess">申请成功 ，请等待审核</string>
-    <string name="tribe_name_too_short">您输入部落名称的长度不够</string>
-    <string name="tribe_name_too_long">您输入的部落名称太长</string>
+    <string name="tribe_name_too_short">您输入圈子名称的长度不够</string>
+    <string name="tribe_name_too_long">您输入的圈子名称太长</string>
     <string name="edit_failed">编辑失败</string>
     <string name="verify_success">验证成功</string>
     <string name="verify_failed">验证失败</string>
     <string name="request_timeout">请求超时</string>
     <string name="apply_invitation_code_prompt">您是未认证用户，不能申请贵人码</string>
-    <string name="create_tribe_auth_prompt">您是未认证用户，不能创建部落</string>
+    <string name="create_tribe_auth_prompt">您是未认证用户，不能创建圈子</string>
     <string name="create_meeting_auth_prompt">您是未认证用户，不能创建会议</string>
-    <string name="join_tribe_auth_prompt">您是未认证用户，不能加入部落</string>
-    <string name="search_tribe">搜索部落</string>
-    <string name="search_tribe_by_name">通过名称搜索部落</string>
-    <string name="search_tribe_by_industry">通过行业搜索部落</string>
+    <string name="join_tribe_auth_prompt">您是未认证用户，不能加入圈子</string>
+    <string name="search_tribe">搜索圈子</string>
+    <string name="search_tribe_by_name">通过名称搜索圈子</string>
+    <string name="search_tribe_by_industry">通过行业搜索圈子</string>
     <string name="administrator">管理员</string>
     <string name="tribe_category">分类</string>
     <string name="menber_count">成员</string>
-    <string name="tribe_qr_code">部落二维码</string>
-    <string name="invite_person_into_tribe">邀请成员加入部落</string>
+    <string name="tribe_qr_code">圈子二维码</string>
+    <string name="invite_person_into_tribe">邀请成员加入圈子</string>
     <string name="tribe_message_notify_setting">消息提醒设置</string>
-    <string name="exit_tribe">退出部落</string>
-    <string name="apply_into_tribe">申请加入部落</string>
-    <string name="deal_with_add_tribe_apply">处理加部落申请</string>
+    <string name="exit_tribe">退出圈子</string>
+    <string name="apply_into_tribe">申请加入圈子</string>
+    <string name="deal_with_add_tribe_apply">处理加圈子申请</string>
     <string name="deal_with_report_info">处理举报信息</string>
     <string name="receive_message_and_notify">接收消息并提醒</string>
     <string name="display_message_count">不提醒仅显示数目</string>
-    <string name="tribe_detail">部落详情</string>
+    <string name="tribe_detail">圈子详情</string>
     <string name="person_list">成员列表</string>
     <string name="apply_list">申请列表</string>
     <string name="exit_success">退出成功</string>
     <string name="exit_failed">退出失败</string>
     <string name="login_user_auth_error">用户登录信息认证失败!</string>
     <string name="remove_contact_prompt">移除联系人...</string>
-    <string name="you_have_been_removed_from_tribe">管理员已经将你移除了该部落！</string>
+    <string name="you_have_been_removed_from_tribe">管理员已经将你移除了该圈子！</string>
     <string name="you_have_been_removed_from_meeting">管理员已经将你移除了该会议！</string>
     <string name="more">更多</string>
     <string name="more_prompt">查看更多提醒</string>
@@ -356,12 +356,12 @@
     <string name="more_favorite">查看更多收藏</string>
     <string name="cancel_follow">取消关注</string>
     <string name="user_detail">用户详情</string>
-    <string name="my_tribe">我的部落</string>
-    <string name="hot_tribe">热门部落</string>
+    <string name="my_tribe">我的圈子</string>
+    <string name="hot_tribe">热门圈子</string>
     <string name="view_text_version">查看文字版</string>
     <string name="view_voice_version">查看语音版</string>
     <string name="play_by_sequence">顺序播放</string>
-    <string name="tribe_setting">部落设置</string>
+    <string name="tribe_setting">圈子设置</string>
     <string name="allocation_identity_failed">身份分配失败,是否重新分配</string>
     <string name="allocation_identity_success">身份分配成功</string>
     <string name="reallocate">重新分配</string>
@@ -396,7 +396,7 @@
     <string name="report_list">举报列表</string>
     <string name="shide_message">屏蔽消息</string>
     <string name="kick_out">踢出会议</string>
-    <string name="kick_out_tribe">踢出部落</string>
+    <string name="kick_out_tribe">踢出圈子</string>
     <string name="error_report">误报</string>
     <string name="reason">理由：</string>
     <string name="reason1">理由</string>
@@ -411,7 +411,7 @@
     <string name="shide_msg_prompt">此消息已被屏蔽</string>
     <string name="receive_msg_and_notify">接收消息并提醒</string>
     <string name="receive_msg_and_not_notify">不提醒仅显示数目</string>
-    <string name="you_have_exit_tribe">您已经退出了部落</string>
+    <string name="you_have_exit_tribe">您已经退出了圈子</string>
     <string name="you_have_exit_meeting">您已经退出了会议</string>
     <string name="the_first_voice">当前已经是第一首了</string>
     <string name="the_last_voice">当前已经是最后一首了</string>
@@ -452,12 +452,12 @@
     <string name="join_meeting_auth_prompt">您是未认证用户，不能加入会议</string>
     <string name="apply_meeting_reason">申请理由</string>
     <string name="refuse_meeting_reason">拒绝理由</string>
-    <string name="refuse_add_into_tribe">拒绝加入部落</string>
+    <string name="refuse_add_into_tribe">拒绝加入圈子</string>
     <string name="refuse_add_into_meeting">拒绝参会</string>
     <string name="refuse_become_host">拒绝成为主持人</string>
     <string name="refuse_become_guest">拒绝成为嘉宾</string>
     <string name="meeting_detail">会议详情</string>
-    <string name="enter_tribe">进入部落</string>
+    <string name="enter_tribe">进入圈子</string>
     <string name="kick_out_meeting">踢出会场</string>
     <string name="talk">发言</string>
     <string name="remove_success">移除成功</string>
@@ -473,7 +473,7 @@
     <string name="cancel_favorite">取消收藏</string>
     <string name="user_dynamic">用户动态</string>
     <string name="add_in_meeting">加入会议</string>
-    <string name="add_in_tribe">加入部落</string>
+    <string name="add_in_tribe">加入圈子</string>
     <string name="onlooker_meeting">围观会议</string>
     <string name="onlooker_user_list">围观用户列表</string>
     <string name="my_private_msg">我的私信</string>
@@ -499,7 +499,7 @@
     <string name="openfire_login_prompt">账号在其他设备登录</string>
     <string name="login_token_expired">登录凭证已失效，请重新登录</string>
     <string name="please_login">请登录</string>
-    <string name="tribe_subject">部落专题</string>
+    <string name="tribe_subject">圈子专题</string>
     <string name="meeting_subject">会议专题</string>
     <string name="un_verify_prompt">您是未认证用户，请先认证！</string>
     <string name="setting_play_simplerate">设置播放频率</string>
@@ -532,7 +532,6 @@
     <string name="see_info_follow_each_other">相互关注后可见</string>
     <string name="weibo">微博</string>
     <string name="user_info">个人资料</string>
-    <string name="dynamic">动态</string>
     <string name="un_known">未知</string>
     <string name="un_verify">暂未认证</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
@@ -545,7 +544,7 @@
     <string name="say">说</string>
     <string name="tip">提示</string>
     <string name="config">确认</string>
-    <string name="config_exit_trib">确认退出部落？</string>
+    <string name="config_exit_trib">确认退出圈子？</string>
     <string name="config_exit_meeting">确认退出会议？</string>
     <string name="config_destroy_meeting">确认解散会议？</string>
     <string name="load_pic_error">读取图片失败</string>
@@ -638,7 +637,7 @@
     </string-array>
 
     <string name="add_meeting_pic">添加会议图片</string>
-    <string name="add_tribe_pic">添加部落图片</string>
+    <string name="add_tribe_pic">添加圈子图片</string>
     <string name="edit_tribe_tag">编辑圈子标签</string>
     <string name="tribe_info_hint">圈子说明，少于500字符</string>
     <string name="tribe_title_hint">圈子名称2~15个字符</string>
@@ -648,9 +647,9 @@
     <string name="edit_success">修改成功</string>
     <string name="edit_error">修改失败</string>
     <string name="create_meeting">创建会议</string>
-    <string name="create_tribe">创建部落 </string>
+    <string name="create_tribe">创建圈子 </string>
     <string name="edit_meeting">修改会议</string>
-    <string name="edit_tribe">修改部落</string>
+    <string name="edit_tribe">修改圈子</string>
 
     <!-- action -->
     <string name="zan">赞</string>
@@ -727,7 +726,6 @@
     
     <string name="dynamic_msg">动态消息</string>
     
-    <string name="message">消息</string>
     
     <!-- send dynamic -->
     <string name="send_dynamic">发布动态</string>
@@ -748,7 +746,30 @@
     <string name="invite_str_2">
 老友，我正在使用【贵人】，它是一款精英匿名语聊平台，在这里，您可以自由表达，真实沟通，甩掉身份、阶层、地位、职业、亲疏关系等“名缰利锁”，真心话，不冒险。360公司CEO周鸿祎、乐视网CEO贾跃亭等大牛都在，您也赶紧来呗!贵人下载地址：http://guirenhui.cn</string>
     
+    <!-- titlebar -->
+    <string name="meeting">会议</string>
+    <string name="dynamic">动态</string>
+    <string name="connection">人脉</string>
+    <string name="message">消息</string>
+    
+
+    
+    
+    <!-- report -->
+    <string name="rp_yellow">色情</string>
+    <string name="rp_cheat">欺诈骗钱</string>
+    <string name="rp_abuse">诅咒谩骂</string>
+    <string name="rp_ad">广告骚扰</string>
+    <string name="rp_politics">政治</string>
+    <string name="rp_chose_reason">请选择投诉原因</string>
+    <string name="rp_ok">点击举报</string>
     
     <string name="share_dami_url">http://www.diggg.com.cn/</string>
     <string name="share_dami_title">大蜜汇报</string>
+    
+    <string name="data_error">数据出现错误&#8230;</string>
+    <string name="tribe_has_been_cancel">圈子已解散</string>
+    <string name="cancel_tribe">解散圈子</string>
+    
+    
 </resources>

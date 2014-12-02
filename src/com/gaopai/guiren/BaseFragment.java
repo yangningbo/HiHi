@@ -219,30 +219,13 @@ public class BaseFragment extends Fragment implements OnClickListener {
 		startActivity(intent);
 	}
 
-	private static ViewGroup dropDownView;
+
 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.ab_add:
-			if (dropDownView == null) {
-				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-				dropDownView = (ViewGroup) layoutInflater.inflate(R.layout.titlebar_add_popup_window, null);
-				initAddMoreViews(dropDownView, layoutInflater);
-			}
-			mTitleBar.showWindow(v, dropDownView);
-			break;
-
-		case R.id.ab_search: {
-			startActivity(SearchActivity.class);
-			break;
-		}
-		case R.id.ab_logo: {
-//			startActivity(ProfileActivity.class);
-			((MainActivity)getActivity()).toggle();
-			break;
-		}
+		
 		case R.id.tv_creat_meeting: {
 			startActivity(CreatMeetingActivity.class);
 			mTitleBar.closeWindow();
@@ -265,19 +248,7 @@ public class BaseFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	private void initAddMoreViews(ViewGroup viewGroup, LayoutInflater inflater) {
-		View tvCreatMeeting = viewGroup.findViewById(R.id.tv_creat_meeting);
-		tvCreatMeeting.setOnClickListener(this);
-		View tvSendDynamicMsg = viewGroup.findViewById(R.id.tv_send_dynamic_);
-		tvSendDynamicMsg.setOnClickListener(this);
-		View tvCreatTribe = viewGroup.findViewById(R.id.tv_creat_tribe);
-		tvCreatTribe.setOnClickListener(this);
-		View tvAddFriend = viewGroup.findViewById(R.id.tv_add_friends);
-		tvAddFriend.setOnClickListener(this);
-		View tvStartChat = viewGroup.findViewById(R.id.tv_start_chat);
-		tvStartChat.setOnClickListener(this);
-	}
-
+	
 	/**
 	 * 描述：显示进度框.
 	 */

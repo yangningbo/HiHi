@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 
 public class MyGridLayout extends ViewGroup {
@@ -32,6 +33,7 @@ public class MyGridLayout extends ViewGroup {
 	}
 
 	private boolean isMeasure = false;
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		// TODO Auto-generated method stub
@@ -41,12 +43,13 @@ public class MyGridLayout extends ViewGroup {
 
 		int childWidthSpec = MeasureSpec.makeMeasureSpec((width - getPaddingLeft() - getPaddingRight()) / mColumns,
 				MeasureSpec.EXACTLY);
-		
+
 		int childHeightSpec;
 		if (isSquare) {
 			childHeightSpec = childWidthSpec;
 		} else {
-			childHeightSpec = MeasureSpec.makeMeasureSpec(LayoutParams.WRAP_CONTENT, MeasureSpec.AT_MOST);
+//			childHeightSpec = MeasureSpec.makeMeasureSpec(LayoutParams.WRAP_CONTENT, MeasureSpec.AT_MOST);
+			childHeightSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingBottom() + getPaddingTop(), LayoutParams.WRAP_CONTENT);
 		}
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
@@ -83,15 +86,15 @@ public class MyGridLayout extends ViewGroup {
 
 	}
 
-//	private OnClickListener mItemListener;
-//
-//	public void setOnItemClickListener(OnClickListener clickListener) {
-//		mItemListener = clickListener;
-//		for (int i = 0; i < getChildCount(); i++) {
-//			View v = getChildAt(i);
-//			v.setOnClickListener(clickListener);
-//		}
-//	}
+	// private OnClickListener mItemListener;
+	//
+	// public void setOnItemClickListener(OnClickListener clickListener) {
+	// mItemListener = clickListener;
+	// for (int i = 0; i < getChildCount(); i++) {
+	// View v = getChildAt(i);
+	// v.setOnClickListener(clickListener);
+	// }
+	// }
 
 	@Override
 	public void addView(View child) {

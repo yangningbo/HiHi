@@ -102,7 +102,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 					if (data.data != null && data.data.size() > 0) {
 						isFull = data.data.size() < 20;// true not has more page
 						mAdapter.addAll(parseMessageList(data.data, 1));
-//						insertMessages(data.data); 
 						mListView.getRefreshableView().setSelection(data.data.size());
 					} else {
 						isFull = true;
@@ -232,7 +231,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		setTitleText();
 		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
 		ivDisturb = (ImageView) mTitleBar.addLeftImageViewWithDefaultSize(R.drawable.icon_chat_title_avoid_disturb_off);
-
+		
 		int imageId = R.drawable.icon_chat_title_ear_phone;
 		if (!isModeInCall) {
 			imageId = R.drawable.icon_chat_title_speaker;
@@ -251,6 +250,15 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		view.setOnClickListener(this);
 	}
 	
+	protected abstract boolean isAvoidDisturb();
+	protected void switchAvoidDisturb() {
+		if (isAvoidDisturb()) {
+			ivDisturb.setVisibility(View.VISIBLE);
+		} else {
+			ivDisturb.setVisibility(View.GONE);
+		}
+
+	}
 	protected void setTitleText(){
 		//call before add ivDisturb
 	};
@@ -346,6 +354,15 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		});
 
 	}
+	
+	
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		switchAvoidDisturb();
+	}
 
 	protected String getMessageMaxId() {
 		String maxID = "";
@@ -365,6 +382,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			return false;
 		}
 	};
+	
 
 	public void showSoftKeyboard() {
 		InputMethodManager imm = (InputMethodManager) mContentEdit.getContext().getSystemService(

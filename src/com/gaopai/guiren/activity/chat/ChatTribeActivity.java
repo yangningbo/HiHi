@@ -111,6 +111,12 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 	
 	@Override
+	protected boolean isAvoidDisturb() {
+		// TODO Auto-generated method stub
+		return spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0) == 1;
+	}
+	
+	@Override
 	protected void setTitleText() {
 		mTitleBar.addLeftTextView(mTribe.name);
 	}
