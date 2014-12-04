@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Item;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Row;
@@ -40,9 +41,11 @@ public class ContactActivity extends BaseActivity {
 	public final static int TYPE_FANS = 1;
 	public final static String KEY_TYPE = "type";
 	public final static String KEY_UID = "uid";
+	public final static String KEY_NEWCHAT = "newchat";
 
 	private int type;
 	private String uid;
+	private boolean isNewChat = false;//if true, clicking item lead to chat interface
 
 	private PullToRefreshIndexableListView mListView;
 	private CopyOfConnectionAdapter mAdapter;
@@ -61,6 +64,7 @@ public class ContactActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		type = getIntent().getIntExtra(KEY_TYPE, TYPE_FANS);
 		uid = getIntent().getStringExtra(KEY_UID);
+		isNewChat = getIntent().getBooleanExtra(KEY_NEWCHAT, false);
 		initTitleBar();
 		setAbContentView(R.layout.activity_contact_list);
 
@@ -155,11 +159,13 @@ public class ContactActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
-				String uid = ((Item) mAdapter.getItem(pos)).user.uid;
-				Intent intent = new Intent();
-				intent.putExtra(ProfileActivity.KEY_UID, uid);
-				intent.setClass(mContext, ProfileActivity.class);
-				startActivity(intent);
+				User user = ((Item) mAdapter.getItem(pos)).user;
+				if (isNewChat) {
+					startActivity(ChatMessageActivity.getIntent(mContext, user));
+				} else {
+					startActivity(ProfileActivity.getIntent(mContext, user.uid));
+				}
+				
 			}
 		});
 
@@ -169,6 +175,20 @@ public class ContactActivity extends BaseActivity {
 		indexScroller.setListView(mListView.getRefreshableView());
 
 		getUserList();
+	}
+	
+	public static Intent getIntent(Context context, int type, String uid, boolean isNewChat) {
+		Intent intent = new Intent(context, ContactActivity.class);
+		intent.putExtra(KEY_TYPE, type);
+		intent.putExtra(KEY_UID, uid);
+		intent.putExtra(KEY_NEWCHAT, isNewChat);
+		return intent;
+	}
+	public static Intent getIntent(Context context, int type, String uid) {
+		Intent intent = new Intent(context, ContactActivity.class);
+		intent.putExtra(KEY_TYPE, type);
+		intent.putExtra(KEY_UID, uid);
+		return intent;
 	}
 
 	private int page = 1;

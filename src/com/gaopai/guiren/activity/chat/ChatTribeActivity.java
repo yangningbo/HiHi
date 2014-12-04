@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,9 +33,9 @@ import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
-import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.IdentitityResult;
 import com.gaopai.guiren.bean.net.SendMessageResult;
@@ -110,6 +111,12 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 	}
 	
+	public static Intent getIntent(Context context, Tribe tribe, int type) {
+		Intent intent = new Intent(context, ChatTribeActivity.class);
+		intent.putExtra(KEY_TRIBE, tribe);
+		intent.putExtra(KEY_CHAT_TYPE, type);
+		return intent;
+	}
 	@Override
 	protected boolean isAvoidDisturb() {
 		// TODO Auto-generated method stub
@@ -225,7 +232,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.zan_cancel))) {
 			zanMessage(msgInfo);
 		} else if (result.equals(getString(R.string.retrweet))) {
-			goToRetrweet(msgInfo);
+//			goToRetrweet(msgInfo);
+			spreadToDy(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {
 			showReportDialog(msgInfo);
 		} else if (result.equals(getString(R.string.favorite))) {
@@ -235,6 +243,22 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (result.equals(getString(R.string.communication))) {
 			communicatePeople(msgInfo);
 		}
+	}
+	
+	private void spreadToDy(MessageInfo messageInfo) {
+		DamiInfo.spreadDynamic(2, messageInfo.id, "", "", "", "", new SimpleResponseListener(mContext) {
+			
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.spread_success);
+				} else {
+					otherCondition(data.state, ChatTribeActivity.this);
+				}
+			}
+		});
 	}
 
 	private void goToRetrweet(MessageInfo msgInfo) {

@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -14,12 +15,14 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.ClickableSpan;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import com.gaopai.guiren.DamiApp;
@@ -268,7 +271,7 @@ public class MyTextUtils {
 		}
 		String text = stringBuilder.substring(0, stringBuilder.length() - 1).toString();
 		// text = stringFilter(text);
-		SpannableString result = SpannableString.valueOf(text);
+		SpannableString result = SpannableString.valueOf(StringUtils.fullWidthToHalfWidth(text));
 		Linkify.addLinks(result, USER_PATTERN, USER_SCHEME);
 		URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
 		WeiboTextUrlSpan weiboTextUrlSpan = null;
@@ -317,14 +320,21 @@ public class MyTextUtils {
 		}
 		return src;
 	}
-
+	
 	public static View.OnTouchListener mTextOnTouchListener = new View.OnTouchListener() {
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			TextView textView = (TextView) v;
-			Layout layout = textView.getLayout();
+			
 			int x = (int) event.getX();
 			int y = (int) event.getY();
+			x -= textView.getTotalPaddingLeft();
+			y -= textView.getTotalPaddingTop();
+
+			x += textView.getScrollX();
+			y += textView.getScrollY();
+
+			Layout layout = textView.getLayout();
 			int offset = 0;
 			if (layout != null) {
 				int line = layout.getLineForVertical(y);

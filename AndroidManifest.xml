@@ -75,6 +75,9 @@
             android:name="com.gaopai.guiren.activity.GuideActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.gaopai.guiren.activity.TribeVierifyActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.gaopai.guiren.activity.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -251,6 +254,12 @@
         <activity
             android:name="com.gaopai.guiren.activity.ReportMsgActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.CaptureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.gaopai.guiren.activity.share.ShareActivity"
             android:screenOrientation="portrait"

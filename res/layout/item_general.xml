@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:padding="@dimen/general_paading"
+    android:background="@drawable/selector_btn_transparent_general"
     android:layout_height="wrap_content" >
 
     <ImageView
@@ -34,7 +35,6 @@
         android:layout_toRightOf="@id/iv_header"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="厚度和"
         android:textColor="@color/one_word_prompt_color"
         android:textSize="16sp" />
 
@@ -47,7 +47,6 @@
         android:layout_toRightOf="@id/iv_header"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="厚度和"
         android:textColor="@color/content_gray_color"
         android:textSize="14sp" />
 
@@ -61,5 +60,14 @@
         android:singleLine="true"
         android:textColor="@color/content_gray_color"
         android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tv_delete" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:layout_below="@id/tv_date"
+        android:layout_alignParentRight="true"
+        android:text="@string/delete"/>
 
 </RelativeLayout>

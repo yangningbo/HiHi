@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/layout_meeting_titlebar"
         android:layout_width="match_parent"
         android:background="#FEFEFE"
         android:layout_height="wrap_content" >

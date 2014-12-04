@@ -31,7 +31,7 @@ public class DynamicBean implements Serializable{
 		public JsonContent jsoncontent;
 
 		public String tag;
-		public String time;
+		public long time;
 		public int isanonymous;
 		public int totalkuosan;
 		public int totalzan;

@@ -14,17 +14,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
-<set xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <translate
-        android:duration="400"
-        android:fromYDelta="0"
-        android:toYDelta="100%p" />
-
-    <alpha
-        android:duration="400"
-        android:fromAlpha="1.0"
-        android:toAlpha="0.0" />
-
-</set>
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_longAnimTime"
+    android:fromYDelta="0"
+    android:toYDelta="100%p" />

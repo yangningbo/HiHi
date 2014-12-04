@@ -5,21 +5,31 @@
     <item name="gridview" type="id"/>
     <item name="webview" type="id"/>
     <item name="scrollview" type="id"/>
-    
+    <!--  -->
     <item name="ab_logo" type="id"/>
     <item name="ab_title" type="id"/>
     <item name="ab_search" type="id"/>
     <item name="ab_add" type="id"/>
     <item name="ab_setting" type="id"/>
     <item name="ab_share" type="id"/>
-    
+    <!--  -->
     <item name="ab_complete" type="id"/>
-    
     <item name="ab_chat_more" type="id"/>
     <item name="ab_chat_text" type="id"/>
     <item name="ab_chat_avoid_disturb" type="id"/>
     <item name="ab_chat_ear_phone" type="id"/>
-    
-    
+    <!--  -->
+    <item name="auto_focus" type="id"/>
+    <item name="decode" type="id"/>
+    <item name="decode_failed" type="id"/>
+    <item name="decode_succeeded" type="id"/>
+    <item name="encode_failed" type="id"/>
+    <item name="encode_succeeded" type="id"/>
+    <item name="launch_product_query" type="id"/>
+    <item name="quit" type="id"/>
+    <item name="restart_preview" type="id"/>
+    <item name="return_scan_result" type="id"/>
+    <item name="search_book_contents_failed" type="id"/>
+    <item name="search_book_contents_succeeded" type="id"/>
 
 </resources>

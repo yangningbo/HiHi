@@ -408,11 +408,26 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void applyJoinTribe() {
-		Intent intent = new Intent();
-		intent.setClass(mContext, AddReasonActivity.class);
-		intent.putExtra(AddReasonActivity.KEY_MEETING_ID, mTribeID);
-		intent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_TO_JOIN_TRIBE);
-		startActivityForResult(intent, REQUEST_JOIN_TRIBE);
+		if (mTribe.ispwd == 0) {
+			wantJoinTribe();
+		} else {
+			startActivity(TribeVierifyActivity.getIntent(mContext, mTribe, 0));
+		}
+	}
+	
+	public void wantJoinTribe() {
+		DamiInfo.applyTribe(mTribe.id, "", new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.send_request_success);
+				} else {
+					otherCondition(data.state, TribeDetailActivity.this);
+				}
+			}
+		});
 	}
 	
 	private void cancelTribe() {

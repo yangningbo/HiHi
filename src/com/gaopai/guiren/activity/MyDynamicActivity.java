@@ -2,6 +2,8 @@ package com.gaopai.guiren.activity;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,11 +33,14 @@ public class MyDynamicActivity extends BaseActivity {
 	private PullToRefreshListView mListView;
 	private DynamicAdapter mAdapter;
 	private String TAG = DynamicFragment.class.getName();
+	
+	private String fid;
 
 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		fid = getIntent().getStringExtra("uid");
 		initTitleBar();
 		setAbContentView(R.layout.fragment_dynamic);
 		FinalActivity.initInjectedView(this);
@@ -65,6 +70,7 @@ public class MyDynamicActivity extends BaseActivity {
 			}
 		});
 		
+		
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,6 +85,12 @@ public class MyDynamicActivity extends BaseActivity {
 		// mListView.doPullRefreshing(true, 0);
 	}
 
+	public static Intent getIntent(Context context, String fid) {
+		Intent intent = new Intent(context, MyDynamicActivity.class);
+		intent.putExtra("uid", fid);
+		return intent;
+	}
+	
 	private int page = 1;
 	private boolean isFull = false;
 
@@ -93,7 +105,7 @@ public class MyDynamicActivity extends BaseActivity {
 		}
 		Log.d(TAG, "page=" + page);
 
-		DamiInfo.getMyDynamic(page, new SimpleResponseListener(mContext) {
+		DamiInfo.getDynamic(fid, page, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				final DynamicBean data = (DynamicBean) o;

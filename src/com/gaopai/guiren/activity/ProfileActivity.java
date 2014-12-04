@@ -1,36 +1,18 @@
 package com.gaopai.guiren.activity;
 
-import im.yixin.sdk.util.StringUtil;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.Keyframe;
-import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,6 +20,7 @@ import android.widget.TextView;
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
+import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.bean.TagBean;
@@ -49,11 +32,15 @@ import com.gaopai.guiren.bean.User.SpreadBean;
 import com.gaopai.guiren.bean.User.ZanBean;
 import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
+import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
+import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.support.comment.CommentProfile;
+import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -107,6 +94,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private View layoutBasicProfile;
 	private View layoutDyProfile;
+	private ViewGroup layoutDyContent;
 	private View layoutBottom;
 	private View layoutConnection;
 
@@ -118,7 +106,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private TextView tvDyDay;
 
 	private TextView tvDyViewMore;
-	private TextView tvDyContent;
 
 	private TextView tvBottomFavorite;
 	private TextView tvBottomSpread;
@@ -129,8 +116,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private LineRelativeLayout layoutCommentHolder;
 	private TextView tvFollowBottom;
 
+	private ImageView ivFollow;
 	private TagWindowManager tagWindowManager;
 	private boolean isShowAllTags = false;
+
+	private DynamicHelper dynamicHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,13 +133,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			Uri data = getIntent().getData();
 			tuid = data.toString().substring(data.toString().indexOf("//") + 2);
 		}
+		if (TextUtils.isEmpty(tuid)) {
+			return;
+		}
 		mUser = DamiCommon.getLoginResult(this);
+		isSelf = mUser.uid.equals(tuid);
+		initComponent();
+		hideSomeViewsBasedOnUser();
+
+		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
 		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
 		getUserInfo();
 		getTags();
-
 	}
-	
+
 	public static Intent getIntent(Context context, String uid) {
 		Intent intent = new Intent(context, ProfileActivity.class);
 		intent.putExtra(KEY_UID, uid);
@@ -165,10 +162,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
 						tUser = data.data;
-						isSelf = mUser.uid.equals(tUser.uid);
-						tagWindowManager.setIsSelf(isSelf);
 						tagWindowManager.setTagList(tUser.tag);
-						initComponent();
 						bindView();
 					}
 				} else {
@@ -257,10 +251,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvDyMonthYear = (TextView) findViewById(R.id.tv_profile_dy_monthyear);
 		tvDyDay = (TextView) findViewById(R.id.tv_profile_dy_day);
 		tvDyViewMore = (TextView) findViewById(R.id.tv_profile_dy_more);
-		tvDyContent = (TextView) findViewById(R.id.tv_profile_dy_content);
+		tvDyViewMore.setOnClickListener(this);
+		layoutDyContent = ViewUtil.findViewById(this, R.id.layout_profile_dy_content);
 
 		tvBottomFavorite = (TextView) findViewById(R.id.tv_bottom_favorite);
-		tvBottomFavorite.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		// tvBottomFavorite.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		tvBottomSpread = (TextView) findViewById(R.id.tv_bottom_spread);
 		tvBottomSpread.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		layoutBottomComment = (LinearLayout) findViewById(R.id.layout_bottom_comment);
@@ -270,20 +265,29 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		layoutSpreadHolder = (LineRelativeLayout) findViewById(R.id.layout_spread_holder);
 
 		tvFollowBottom = ViewUtil.findViewById(this, R.id.tv_profile_bottom_follow);
+		ivFollow = ViewUtil.findViewById(this, R.id.iv_profile_follow);
 	}
 
-	private void bindView() {
+	private void hideSomeViewsBasedOnUser() {
 		if (isSelf) {
 			layoutBasicProfile.setVisibility(View.VISIBLE);
 			layoutBottom.setVisibility(View.GONE);
 			layoutDyProfile.setVisibility(View.GONE);
 			layoutConnection.setVisibility(View.GONE);
-			bindProfileView();
 		} else {
 			layoutBasicProfile.setVisibility(View.GONE);
 			layoutDyProfile.setVisibility(View.VISIBLE);
 			layoutBottom.setVisibility(View.VISIBLE);
 			layoutConnection.setVisibility(View.VISIBLE);
+		}
+	}
+	
+
+
+	private void bindView() {
+		if (isSelf) {
+			bindProfileView();
+		} else {
 			bindConnectionView();
 		}
 
@@ -303,7 +307,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		bindBottomDynamicView();
 		bindBottomView();
 	}
-	
+
 	private void bindUserTags() {
 		if (tagList != null && tagList.size() > 0) {
 			if (tagList.size() > 10 && (!isShowAllTags)) {
@@ -380,8 +384,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private void bindBottomView() {
 		if (tUser.isfollow == 0 || tUser.isfollow == 2) {
+			ivFollow.setImageResource(R.drawable.icon_profile_follow_normal);
 			tvFollowBottom.setText("加关注");
 		} else {
+			ivFollow.setImageResource(R.drawable.icon_profile_follow_active);
 			tvFollowBottom.setText("取消关注");
 		}
 	}
@@ -436,27 +442,64 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	private View dyView;
+
 	private void bindDyView() {
+		TypeHolder bean = tUser.newdyna;
+		if (bean == null || bean.jsoncontent == null) {
+			layoutDyProfile.setVisibility(View.GONE);
+			return;
+		}
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(tUser.dynamic.createtime);
-		tvDyContent.setText(tUser.dynamic.post);
-		tvDyDay.setText(String.valueOf(calendar.get(Calendar.DATE)));
-		tvDyMonthYear.setText(calendar.get(Calendar.YEAR) + "." + calendar.get(Calendar.MONTH) + 1);
+		calendar.setTimeInMillis(bean.time * 1000);
+
+		tvDyDay.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+		tvDyMonthYear.setText(calendar.get(Calendar.YEAR) + "." + (calendar.get(Calendar.MONTH) + 1));
+
+		tvDyFavoriteCount.setText(String.valueOf(bean.totalzan));
+		tvDySpreadCount.setText(String.valueOf(bean.totalkuosan));
+		tvDyCommentCount.setText(String.valueOf(bean.totalcomment));
+
+		layoutDyContent.addView(dynamicHelper.getView(dyView, bean));
 	}
 
 	private boolean bindCommentView() {
 		if (tUser.commentlist != null && tUser.commentlist.size() > 0) {
-			for (CommentBean bean : tUser.commentlist) {
+			for (final CommentBean bean : tUser.commentlist) {
 				View view = mInflater.inflate(R.layout.item_general, null);
 				TextView nameView = (TextView) view.findViewById(R.id.tv_title);
 				TextView infoView = (TextView) view.findViewById(R.id.tv_info);
+				TextView dateView = (TextView) view.findViewById(R.id.tv_date);
+				
 				ImageView headerView = (ImageView) view.findViewById(R.id.iv_header);
 				nameView.setText(bean.uname);
 				infoView.setText(bean.content.content);
+				dateView.setText(FeatureFunction.getGeneralTime(bean.addtime*1000));
 				if (!TextUtils.isEmpty(bean.s_path)) {
 					Picasso.with(mContext).load(bean.s_path).placeholder(R.drawable.default_header)
 							.error(R.drawable.default_header).into(headerView);
 				}
+				
+//				if (isSelf) {
+//					TextView tvDelete = (TextView) view.findViewById(R.id.tv_delete);
+//					tvDelete.setVisibility(View.VISIBLE);
+//					tvDelete.setOnClickListener(new OnClickListener() {
+//						@Override
+//						public void onClick(View v) {
+//							// TODO Auto-generated method stub
+//							
+//						}
+//					});
+//				}
+				view.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						startActivity(ProfileActivity.getIntent(mContext, bean.uid));
+						
+					}
+				});
+				
 				layoutBottomComment.addView(view);
 				View lineView = new View(mContext);
 				lineView.setBackgroundColor(getResources().getColor(R.color.general_horizon_divider));
@@ -549,12 +592,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		case R.id.layout_profile_bottom_spread:
 			spreadUser();
 			break;
-		case R.id.iv_profile_erweima:{
+		case R.id.iv_profile_erweima: {
 			Intent intent = new Intent(mContext, TwoDimensionActivity.class);
 			intent.putExtra("user", tUser);
 			startActivity(intent);
 			break;
 		}
+		case R.id.tv_profile_dy_more:
+			startActivity(MyDynamicActivity.getIntent(mContext, tuid));
+			break;
 		default:
 			break;
 		}
@@ -576,7 +622,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 						if (tUser.isfollow == 1) {
 							tUser.isfollow = 0;
 						}
-
+						mUser.followers = mUser.followers - 1;
 					} else {
 						showToast(R.string.follow_success);
 						if (tUser.isfollow == 2) {
@@ -585,7 +631,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 						if (tUser.isfollow == 0) {
 							tUser.isfollow = 1;
 						}
+						mUser.followers = mUser.followers + 1;
 					}
+					DamiCommon.saveLoginResult(mContext, mUser);
 					bindBottomView();
 					bindContactView();
 				} else {
@@ -670,7 +718,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 						tagList.clear();
 						tagList.addAll(data.data);
 						bindUserTags();
-//						tagWindowManager.bindTags(tagLayout, false);
+						// tagWindowManager.bindTags(tagLayout, false);
 						showToast(R.string.add_tags_success);
 					}
 				}

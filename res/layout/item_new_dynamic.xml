@@ -61,7 +61,6 @@
         android:layout_toRightOf="@id/iv_header"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="厚度和"
         android:textColor="@color/general_text_gray"
         android:textSize="12sp" />
 

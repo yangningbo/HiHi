@@ -16,8 +16,7 @@
     <TextView
         android:id="@+id/tv_user_name"
         style="@style/dynamic_item_title_name"
-        android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼" />
+        android:layout_toRightOf="@id/iv_header" />
 
     <TextView
         android:id="@+id/tv_user_info"
@@ -26,7 +25,6 @@
         android:layout_alignBottom="@id/tv_user_name"
         android:layout_marginLeft="2dp"
         android:layout_toRightOf="@id/tv_user_name"
-        android:text="疼惜总裁"
         android:textColor="@color/general_text_gray"
         android:textSize="14sp" />
 
@@ -37,7 +35,6 @@
         android:layout_alignBottom="@id/tv_user_name"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/tv_user_info"
-        android:text="扩散了一个连接"
         android:textColor="@color/u_text_gray"
         android:textSize="14sp" />
 
@@ -47,8 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/tv_user_name"
-        android:layout_marginTop="10dp"
-        android:text="正在读初三的月岛滴滴是一个喜欢看书的女孩，她每次都能在借书卡上看到一个叫天泽圣司名字，因此她对这个人充满了好奇。\n滴滴一直喜欢写诗，有一天她跟好友夕子夕子喜欢的杉村喜欢的是滴滴，滴滴一时间感到十分困惑。" />
+        android:layout_marginTop="5dp" />
 
     <com.gaopai.guiren.view.FlowLayout
         android:id="@+id/fl_tags"
@@ -71,7 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/dynamic_pics_holder"
-        android:text="2天前        朋友的朋友"
         android:textColor="@color/u_text_gray" />
 
     <ImageButton
@@ -79,6 +74,7 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_alignBottom="@id/tv_date_info"
+        android:layout_alignParentRight="true"
         android:layout_alignRight="@id/tv_content"
         android:layout_marginRight="12dp"
         android:background="@color/transparent"

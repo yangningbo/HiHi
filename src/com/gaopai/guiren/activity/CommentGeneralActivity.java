@@ -1,5 +1,7 @@
 package com.gaopai.guiren.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +41,12 @@ public class CommentGeneralActivity extends BaseActivity {
 		btnComment.setText(commenter.getBtnText());
 		btnComment.setOnClickListener(commenter.getClickListener());
 		etText.setHint(commenter.getHint());
+	}
+	
+	public static Intent getIntent(Context context, int type) {
+		Intent intent = new Intent(context, CommentGeneralActivity.class);
+		intent.putExtra(KEY_TYPE, type);
+		return intent;
 	}
 	
 	private IComment getCommenter() {

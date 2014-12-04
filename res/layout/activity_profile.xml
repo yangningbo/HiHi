@@ -18,6 +18,7 @@
             android:layout_weight="1" >
 
             <ImageView
+                android:id="@+id/iv_profile_follow"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
                 android:layout_above="@+id/tv_profile_bottom_follow"
@@ -56,7 +57,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="4dp"
-                android:text="发消息"
+                android:text="@string/send_message"
                 android:textColor="@color/white" />
         </RelativeLayout>
 
@@ -81,7 +82,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="4dp"
-                android:text="评论"
+                android:text="@string/comment"
                 android:textColor="@color/white" />
         </RelativeLayout>
 
@@ -106,7 +107,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="4dp"
-                android:text="扩散"
+                android:text="@string/spread"
                 android:textColor="@color/white" />
         </RelativeLayout>
     </LinearLayout>
@@ -118,7 +119,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <RelativeLayout
@@ -136,32 +137,35 @@
                     android:src="@drawable/default_header" />
 
                 <TextView
-                    android:id="@+id/tv_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/iv_header"
-                    android:layout_toRightOf="@id/iv_header"
-                    android:singleLine="true"
-                    android:textColor="@color/one_word_prompt_color"
-                    android:textSize="22sp" />
-
-                <TextView
-                    android:id="@+id/iv_star"
+                    android:id="@+id/tv_meilizhi_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/tv_user_name"
-                    android:layout_marginLeft="40dp" />
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/tv_user_name"
+                    android:text="@string/level_count"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/iv_star_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/tv_user_name"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@id/tv_user_name"
-                    android:text="250"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@id/tv_meilizhi_text"
                     android:textColor="@color/red_dongtai_bg"
                     android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/iv_header"
+                    android:layout_toRightOf="@id/iv_header"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/one_word_prompt_color"
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tv_user_info"
@@ -195,7 +199,7 @@
                         android:drawableLeft="@drawable/icon_slide_tribe"
                         android:drawablePadding="5dp"
                         android:gravity="center_vertical"
-                        android:text="人脉" />
+                        android:text="@string/renmai" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -210,7 +214,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="关注"
+                            android:text="@string/follow"
                             android:textColor="@color/profile_text_gray" />
 
                         <TextView
@@ -218,7 +222,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="粉丝"
+                            android:text="@string/fans"
                             android:textColor="@color/profile_text_gray" />
 
                         <TextView
@@ -226,7 +230,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="会议"
+                            android:text="@string/meeting"
                             android:textColor="@color/profile_text_gray" />
 
                         <TextView
@@ -234,7 +238,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="圈子"
+                            android:text="@string/tribe"
                             android:textColor="@color/profile_text_gray" />
                     </LinearLayout>
 
@@ -313,7 +317,7 @@
                             android:drawableLeft="@drawable/icon_profile_dy"
                             android:drawablePadding="5dp"
                             android:gravity="center_vertical"
-                            android:text="最新动态" />
+                            android:text="@string/most_recent_dynamic" />
 
                         <TextView
                             android:id="@+id/tv_profile_dy_more"
@@ -323,24 +327,25 @@
                             android:layout_centerVertical="true"
                             android:background="@drawable/selector_btn_transparent_general"
                             android:gravity="center_vertical"
-                            android:text="点击 查看更多"
+                            android:text="@string/click_view_more"
                             android:textColor="@color/profile_name" />
                     </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/tv_profile_dy_content"
+                    <RelativeLayout
+                        android:id="@+id/layout_profile_dy_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/layout_profile_dy_title"
                         android:layout_marginTop="5dp"
                         android:background="@color/white"
-                        android:padding="@dimen/general_paading"
-                        android:text="阿萨德发是" />
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/general_paading" >
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_below="@id/tv_profile_dy_content"
+                        android:layout_below="@id/layout_profile_dy_content"
                         android:background="@color/profile_renmai_topbar"
                         android:paddingLeft="@dimen/general_paading" >
 
@@ -369,7 +374,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/tv_profile_dy_content"
+                        android:layout_alignBottom="@id/layout_profile_dy_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginBottom="-26.666dp"
                         android:layout_marginRight="@dimen/general_paading"
@@ -382,7 +387,6 @@
                             android:layout_height="14.6666dp"
                             android:layout_marginTop="2.66dp"
                             android:gravity="center"
-                            android:text="2014.10"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -392,7 +396,6 @@
                             android:layout_height="24dp"
                             android:layout_marginBottom="2dp"
                             android:gravity="center"
-                            android:text="14"
                             android:textSize="14sp" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -417,7 +420,7 @@
                             android:drawableLeft="@drawable/icon_profile_personal_file"
                             android:drawablePadding="5dp"
                             android:gravity="center_vertical"
-                            android:text="基本资料" />
+                            android:text="@string/basic_profile" />
 
                         <TextView
                             android:id="@+id/tv_reverification"
@@ -427,7 +430,7 @@
                             android:layout_centerVertical="true"
                             android:background="@drawable/selector_btn_transparent_general"
                             android:gravity="center_vertical"
-                            android:text="点击重新认证"
+                            android:text="@string/click_verify"
                             android:textColor="@color/profile_name" />
                     </RelativeLayout>
 
@@ -545,7 +548,7 @@
                         android:drawableLeft="@drawable/icon_profile_contact"
                         android:drawablePadding="5dp"
                         android:gravity="center_vertical"
-                        android:text="联系方式" />
+                        android:text="@string/contact_information" />
 
                     <ImageView
                         android:id="@+id/iv_profile_erweima"
@@ -677,7 +680,7 @@
                         android:drawableLeft="@drawable/icon_profile_tag"
                         android:drawablePadding="5dp"
                         android:gravity="center_vertical"
-                        android:text="人脉标签" />
+                        android:text="@string/renmai_tags" />
 
                     <TextView
                         android:id="@+id/tv_add_tags"
@@ -689,7 +692,7 @@
                         android:drawableLeft="@drawable/icon_profile_edit_tag"
                         android:drawablePadding="3dp"
                         android:gravity="center_vertical"
-                        android:text="贴标签"
+                        android:text="@string/add_tags"
                         android:textColor="@color/profile_name" />
                 </RelativeLayout>
 
@@ -710,8 +713,8 @@
                     android:gravity="right|center_vertical"
                     android:paddingRight="10dp"
                     android:text="显示全部"
-                    android:visibility="gone"
-                    android:textColor="@color/profile_name" />
+                    android:textColor="@color/profile_name"
+                    android:visibility="gone" />
 
                 <com.gaopai.guiren.view.LineRelativeLayout
                     android:id="@+id/layout_zan_holder"
@@ -720,19 +723,25 @@
                     android:paddingLeft="10dp" >
 
                     <ImageView
-                        android:id="@+id/iv_profile_favourite"
+                        android:id="@+id/iv_bottom_favorite"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginTop="20dp"
                         android:src="@drawable/icon_profile_favourite" />
 
-                    <TextView
-                        android:id="@+id/tv_bottom_favorite"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/iv_profile_favourite"
-                        android:layout_toRightOf="@id/iv_profile_favourite"
-                        android:background="@drawable/holder_profile" />
+                        android:layout_alignTop="@id/iv_bottom_favorite"
+                        android:layout_toRightOf="@id/iv_bottom_favorite"
+                        android:background="@drawable/icon_profile_holder" >
+
+                        <TextView
+                            android:id="@+id/tv_bottom_favorite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp" />
+                    </LinearLayout>
                 </com.gaopai.guiren.view.LineRelativeLayout>
 
                 <com.gaopai.guiren.view.LineRelativeLayout
@@ -742,19 +751,25 @@
                     android:paddingLeft="10dp" >
 
                     <ImageView
-                        android:id="@+id/iv_profile_favourite"
+                        android:id="@+id/iv_bottom_spread"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginTop="20dp"
                         android:src="@drawable/icon_profile_spread" />
 
-                    <TextView
-                        android:id="@+id/tv_bottom_spread"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/iv_profile_favourite"
-                        android:layout_toRightOf="@id/iv_profile_favourite"
-                        android:background="@drawable/holder_profile" />
+                        android:layout_alignTop="@id/iv_bottom_spread"
+                        android:layout_toRightOf="@id/iv_bottom_spread"
+                        android:background="@drawable/icon_profile_holder" >
+
+                        <TextView
+                            android:id="@+id/tv_bottom_spread"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp" />
+                    </LinearLayout>
                 </com.gaopai.guiren.view.LineRelativeLayout>
 
                 <com.gaopai.guiren.view.LineRelativeLayout
@@ -764,7 +779,7 @@
                     android:paddingLeft="10dp" >
 
                     <ImageView
-                        android:id="@+id/iv_profile_favourite"
+                        android:id="@+id/iv_bottom_comment"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginTop="20dp"
@@ -774,9 +789,9 @@
                         android:id="@+id/layout_bottom_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/iv_profile_favourite"
-                        android:layout_toRightOf="@id/iv_profile_favourite"
-                        android:background="@drawable/holder_profile"
+                        android:layout_alignTop="@id/iv_bottom_comment"
+                        android:layout_toRightOf="@id/iv_bottom_comment"
+                        android:background="@drawable/icon_profile_holder"
                         android:orientation="vertical" />
                 </com.gaopai.guiren.view.LineRelativeLayout>
             </LinearLayout>

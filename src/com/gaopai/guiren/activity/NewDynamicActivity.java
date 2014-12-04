@@ -139,15 +139,7 @@ public class NewDynamicActivity extends BaseActivity {
 			} else {
 				holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_favourite, 0, 0, 0);
 			}
-			if (jsonContent.pic != null && jsonContent.pic.size() > 0) {
-				String imgaurlString = jsonContent.pic.get(0).imgUrlS;
-				if (!TextUtils.isEmpty(imgaurlString)) {
-					holder.ivPic.setVisibility(View.VISIBLE);
-					ImageLoaderUtil.displayImage(imgaurlString, holder.ivPic);
-				}
-			} else {
-				holder.ivPic.setVisibility(View.GONE);
-			}
+			bindImage(jsonContent, holder.ivPic);
 			if (!TextUtils.isEmpty(jsonContent.content)) {
 				holder.tvContent.setVisibility(View.VISIBLE);
 				holder.tvContent.setText(jsonContent.content);
@@ -155,6 +147,32 @@ public class NewDynamicActivity extends BaseActivity {
 				holder.tvContent.setVisibility(View.GONE);
 			}
 			return convertView;
+		}
+
+		private void bindImage(JsonContent jsonContent, ImageView ivPic) {
+			switch (jsonContent.type) {
+			case 2:// chat msg
+				if (!TextUtils.isEmpty(jsonContent.image)) {
+					ImageLoaderUtil.displayImage(jsonContent.image, ivPic);
+				} else {
+					ivPic.setVisibility(View.GONE);
+				}
+				break;
+			case 7:// dynamic
+				if (jsonContent.pic != null && jsonContent.pic.size() > 0) {
+					String imgaurlString = jsonContent.pic.get(0).imgUrlS;
+					if (!TextUtils.isEmpty(imgaurlString)) {
+						ivPic.setVisibility(View.VISIBLE);
+						ImageLoaderUtil.displayImage(imgaurlString, ivPic);
+					}
+				} else {
+					ivPic.setVisibility(View.GONE);
+				}
+				break;
+
+			default:
+				break;
+			}
 		}
 
 		private class ViewHolder {

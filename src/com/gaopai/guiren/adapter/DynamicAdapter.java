@@ -3,13 +3,10 @@ package com.gaopai.guiren.adapter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
@@ -51,12 +48,12 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
-import com.gaopai.guiren.db.DBHelper;
-import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
+import com.gaopai.guiren.support.DynamicHelper;
+import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
@@ -83,11 +80,9 @@ public class DynamicAdapter extends BaseAdapter {
 
 	public final static int TYPE_SPREAD_OTHER_DYNAMIC = 7;
 
-	// public final static int TYPE_JOIN_MEETING = 3;
-	// public final static int TYPE_JOIN_TRIBE = 6;
-	// public final static int TYPE_MSG_BY_TAG = 1;//精选一条消息
-	
 	private boolean isMyDynamic = false;
+
+	private DynamicHelper dynamicHelper;
 
 	public void showSoftKeyboard() {
 		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -98,6 +93,8 @@ public class DynamicAdapter extends BaseAdapter {
 		mFragment = fragment;
 		mContext = fragment.getActivity();
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_LIST);
+		dynamicHelper.setCallback(callback);
 		mPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
 			@Override
 			public void onSuccess(MessageInfo messageInfo) {
@@ -107,6 +104,7 @@ public class DynamicAdapter extends BaseAdapter {
 		});
 		mPlayerWrapper.setPlayCallback(new PlayCallback());
 	}
+
 	public DynamicAdapter(Activity activity) {
 		mContext = activity;
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -120,8 +118,62 @@ public class DynamicAdapter extends BaseAdapter {
 		mPlayerWrapper.setPlayCallback(new PlayCallback());
 		isMyDynamic = true;
 	}
-	
-	
+
+	private DynamicHelper.DyCallback callback = new DyCallback() {
+
+		@Override
+		public void onZanSuccess() {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onVoicePlayStart() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onVoicePlayEnd() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onSpreadSuccess() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onDownVoiceSuccess() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCommentSuccess() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onCommentButtonClick(TypeHolder typeHolder, boolean isShowReply) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onBindComment(TypeHolder typeHolder, DynamicHelper.ViewHolderCommon holder) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onBindCommenViewBottom(TypeHolder typeHolder, DynamicHelper.ViewHolderCommon holder) {
+			// TODO Auto-generated method stub
+
+		}
+	};
 
 	private class PlayCallback extends MediaUIHeper.PlayCallback {
 
@@ -182,42 +234,47 @@ public class DynamicAdapter extends BaseAdapter {
 		int type = getItemViewType(position);
 		// DynamicBean.TypeHolder typeBean = mData.get(position);
 		DynamicBean.TypeHolder typeBean = mData.get(position);
-		switch (type + 1) {
-
-		case TYPE_SPREAD_OTHER_DYNAMIC:
-		case TYPE_SEND_DYNAMIC:
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_SEND_DYNAMIC);
-			}
-			buildDynamicView((ViewHolderSendDynamic) convertView.getTag(), typeBean, position, type + 1);
-			break;
-		case TYPE_SPREAD_USER:
-		case TYPE_SPREAD_TRIBE:
-		case TYPE_SPREAD_LINK: {
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_SPREAD_LINK);
-			}
-			buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag(), typeBean, position, type + 1);
-			break;
-		}
-		case TYPE_SPREAD_MEETING: {
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_SPREAD_MEETING);
-			}
-			buildMeetingView((ViewHolderMeeting) convertView.getTag(), typeBean, position, type + 1);
-			break;
-		}
-		case TYPE_SPREAD_MSG:
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_SPREAD_MSG);
-			}
-			buildMsgView((ViewHolderSpreadMsg) convertView.getTag(), typeBean, position, type + 1);
-			break;
-		}
-		return convertView;
+		return dynamicHelper.getView(convertView, typeBean);
+		// switch (type + 1) {
+		//
+		// case TYPE_SPREAD_OTHER_DYNAMIC:
+		// case TYPE_SEND_DYNAMIC:
+		// if (convertView == null) {
+		// convertView = inflateItemView(TYPE_SEND_DYNAMIC);
+		// }
+		// buildDynamicView((ViewHolderSendDynamic) convertView.getTag(),
+		// typeBean, position, type + 1);
+		// break;
+		// case TYPE_SPREAD_USER:
+		// case TYPE_SPREAD_TRIBE:
+		// case TYPE_SPREAD_LINK: {
+		// if (convertView == null) {
+		// convertView = inflateItemView(TYPE_SPREAD_LINK);
+		// }
+		// buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag(),
+		// typeBean, position, type + 1);
+		// break;
+		// }
+		// case TYPE_SPREAD_MEETING: {
+		// if (convertView == null) {
+		// convertView = inflateItemView(TYPE_SPREAD_MEETING);
+		// }
+		// buildMeetingView((ViewHolderMeeting) convertView.getTag(), typeBean,
+		// position, type + 1);
+		// break;
+		// }
+		// case TYPE_SPREAD_MSG:
+		// if (convertView == null) {
+		// convertView = inflateItemView(TYPE_SPREAD_MSG);
+		// }
+		// buildMsgView((ViewHolderSpreadMsg) convertView.getTag(), typeBean,
+		// position, type + 1);
+		// break;
+		// }
+		// return convertView;
 	}
 
-	private void buildCommonView(ViewHolderCommon viewHolder, TypeHolder typeBean, int position, int type) {
+	private void buildCommonView(ViewHolderCommon viewHolder, final TypeHolder typeBean, int position, int type) {
 		boolean isShowZan = false, isShowComment = false, isShowSpread = false;
 		viewHolder.lineZan.setVisibility(View.GONE);
 		viewHolder.lineSpread.setVisibility(View.GONE);
@@ -237,7 +294,7 @@ public class DynamicAdapter extends BaseAdapter {
 		}
 
 		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)) + "     天山上的来客");
-		
+
 		if (isMyDynamic) {
 			viewHolder.rlDynamicInteractive.setVisibility(View.GONE);
 			viewHolder.btnDynamicAction.setVisibility(View.GONE);
@@ -285,7 +342,7 @@ public class DynamicAdapter extends BaseAdapter {
 		} else {
 			viewHolder.rlDynamicInteractive.setVisibility(View.GONE);
 		}
-		viewHolder.btnDynamicAction.setTag(mData.get(position));
+		viewHolder.btnDynamicAction.setTag(typeBean);
 		viewHolder.btnDynamicAction.setOnClickListener(moreWindowClickListener);
 	}
 
@@ -307,7 +364,6 @@ public class DynamicAdapter extends BaseAdapter {
 				mContext.startActivity(intent);
 			}
 		});
-
 	}
 
 	private void buildSpreadLinkView(ViewHolderSpreadLink viewHolder, TypeHolder typeBean, int position, int type) {
@@ -592,13 +648,13 @@ public class DynamicAdapter extends BaseAdapter {
 			viewDynamicDetail((TypeHolder) v.getTag());
 		}
 	};
-	
+
 	public void viewDynamicDetail(TypeHolder typeHolder) {
 		Intent intent = new Intent(mContext, DynamicDetailActivity.class);
 		intent.putExtra(DynamicDetailActivity.KEY_TYPEHOLDER, typeHolder);
 		mContext.startActivity(intent);
 	}
-	
+
 	private OnClickListener moreWindowClickListener = new OnClickListener() {
 
 		@Override
@@ -897,7 +953,6 @@ public class DynamicAdapter extends BaseAdapter {
 		DamiInfo.zanOperation(DamiCommon.getUid(mContext), 1, typeBean.id, 0, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub]
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					if (typeBean.isZan == 0) {

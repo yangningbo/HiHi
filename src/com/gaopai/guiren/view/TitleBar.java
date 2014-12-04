@@ -276,7 +276,7 @@ public class TitleBar extends ViewGroup {
 		popupWindow.setFocusable(true);
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
-		popupWindow.showAsDropDown(parent, 0, popMargin + 2);
+		popupWindow.showAsDropDown(parent, -MyUtils.dip2px(mContext, 10), popMargin + 2);
 	}
 
 	public void closeWindow() {

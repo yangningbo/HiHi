@@ -180,7 +180,6 @@
     <string name="ok">确定</string>
     <string name="toast_sdcard_mounted">SD卡拔出，不能使用某些功能!</string>
     <string name="toast_sdcard_available">SD卡存储空间不足!</string>
-    <string name="send_message">发私信</string>
     <string name="code_left_seconds">剩余</string>
     <string name="nickname">昵称</string>
     <string name="reply_hint">回复...</string>
@@ -331,6 +330,7 @@
     <string name="search_tribe_by_industry">通过行业搜索圈子</string>
     <string name="administrator">管理员</string>
     <string name="tribe_category">分类</string>
+
     <string name="menber_count">成员</string>
     <string name="tribe_qr_code">圈子二维码</string>
     <string name="invite_person_into_tribe">邀请成员加入圈子</string>
@@ -770,6 +770,19 @@
     <string name="data_error">数据出现错误&#8230;</string>
     <string name="tribe_has_been_cancel">圈子已解散</string>
     <string name="cancel_tribe">解散圈子</string>
-    
+    <string name="say_something_to_manager">给管理员说点什么吧&#8230;</string>
+    <string name="spread">扩散</string>
+    <string name="send_message">发消息</string>
+    <string name="renmai">人脉</string>
+    <string name="tribe">圈子</string>
+    <string name="most_recent_dynamic">最新动态</string>
+    <string name="click_view_more">点击查看更多</string>
+    <string name="basic_profile">基本资料</string>
+    <string name="add_tags">贴标签</string>
+    <string name="renmai_tags">人脉标签</string>
+    <string name="contact_information">联系方式</string>
+    <string name="click_verify">点击重新认证</string>
+    <string name="level_count">魅力值</string>
+    <string name="apply_join">申请加入</string>
     
 </resources>

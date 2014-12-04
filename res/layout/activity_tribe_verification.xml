@@ -1,99 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/general_background"
-    android:orientation="vertical" >
+    android:fillViewport="true"
+    android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/ll_enter_password"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/general_paading"
-        android:paddingRight="@dimen/general_paading"
-        android:paddingTop="@dimen/general_paading" >
-
-        <EditText
-            android:id="@+id/et_enter_password"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/general_small_gap"
-            android:layout_weight="2"
-            android:background="@drawable/shape_white_round_corner_with_border"
-            android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/btn_want_in_tribe"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/selector_tribe_detail_btn_blue"
-            android:text="进入圈子"
-            android:textColor="@color/white" />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ll_enter_password"
-        android:layout_marginTop="@dimen/general_large_gap"
-        android:paddingLeft="@dimen/general_paading"
-        android:paddingRight="@dimen/general_paading"
-        android:text="不知道圈子密码？点击这里申请加入"
-        android:textColor="#5370E6" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#F0EFEF"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/general_paading" >
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#C1C0C4" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@drawable/shape_white_round_corner_with_border"
-            android:gravity="top|left"
-            android:hint="给管理员说点什么吧"
-            android:padding="@dimen/general_small_gap"
-            android:layout_marginTop="@dimen/general_large_gap"
-            android:layout_marginLeft="@dimen/general_paading"
-            android:layout_marginRight="@dimen/general_paading" />
+        android:layout_height="match_parent"
+        android:background="@color/general_background"
+        android:orientation="vertical" >
 
         <LinearLayout
+            android:id="@+id/ll_enter_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/general_large_gap"
-            android:orientation="horizontal" >
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/general_paading"
+            android:paddingRight="@dimen/general_paading"
+            android:paddingTop="@dimen/general_paading" >
+
+            <EditText
+                android:id="@+id/et_enter_password"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/general_small_gap"
+                android:layout_weight="3"
+                android:background="@drawable/shape_white_round_corner_with_border"
+                android:hint="@string/please_input_password"
+                android:inputType="textPassword"
+                android:padding="5dp" />
 
             <Button
+                android:id="@+id/btn_enter"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/selector_tribe_detail_btn_green"
-                android:text="申请加入"
-                android:textColor="@color/white" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/selector_tribe_detail_btn_gray"
-                android:text="取消"
+                android:background="@drawable/selector_tribe_detail_btn_blue"
+                android:text="进入"
                 android:textColor="@color/white" />
         </LinearLayout>
-    </LinearLayout>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_enter_password"
+            android:layout_marginTop="@dimen/general_large_gap"
+            android:paddingLeft="@dimen/general_paading"
+            android:paddingRight="@dimen/general_paading"
+            android:textColor="#5370E6" />
+
+        <LinearLayout
+            android:id="@+id/layout_enter_tribe_window"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#F0EFEF"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/general_paading" >
+
+            <Button
+                android:id="@+id/btn_hide_grid"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/icon_meeting_detail_popup_close_btn" />
+
+            <EditText
+                android:id="@+id/et_say_something_to_manager"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="@dimen/general_paading"
+                android:layout_marginRight="@dimen/general_paading"
+                android:layout_marginTop="@dimen/general_small_gap"
+                android:background="@drawable/shape_white_round_corner_with_border"
+                android:gravity="top|left"
+                android:hint="@string/say_something_to_manager"
+                android:padding="@dimen/general_small_gap" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_large_gap"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btn_confirm"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_tribe_detail_btn_green"
+                    android:text="申请加入"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_tribe_detail_btn_gray"
+                    android:text="取消"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>

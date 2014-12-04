@@ -132,7 +132,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			return;
 		}
 
-		DamiInfo.getDynamic(page, new SimpleResponseListener(getActivity()) {
+		DamiInfo.getDynamic("0", page, new SimpleResponseListener(getActivity()) {
 			@Override
 			public void onSuccess(Object o) {
 				final DynamicBean data = (DynamicBean) o;

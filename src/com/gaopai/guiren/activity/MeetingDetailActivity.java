@@ -276,7 +276,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 
 		case R.id.btn_want_in_meeting:
-			applyWithReason(AddReasonActivity.TYPE_TO_JOIN_MEETING);
+//			applyWithReason(AddReasonActivity.TYPE_TO_JOIN_MEETING);
+			if (mMeeting.ispwd == 0) {
+				wantJoinMeeting();
+			} else {
+				startActivity(TribeVierifyActivity.getIntent(mContext, mMeeting, 1));
+			}
 			break;
 		case R.id.btn_hide_grid:
 			hideMoreWindwo();
@@ -357,7 +362,20 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 	}
 	
-	
+	public void wantJoinMeeting() {
+		DamiInfo.applyMeeting(mMeetingID, "", new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.send_request_success);
+				} else {
+					otherCondition(data.state, MeetingDetailActivity.this);
+				}
+			}
+		});
+	}
 	
 	public void spreadMeeting(Tribe meeting) {
 		DamiInfo.spreadDynamic(3, meeting.id, "", "", "", "", new SimpleResponseListener(mContext) {

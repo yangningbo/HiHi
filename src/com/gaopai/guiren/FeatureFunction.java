@@ -341,6 +341,15 @@ public class FeatureFunction {
 
 		return strDate;
 	}
+	
+	public static String getGeneralTime(long time) {
+		String strDate = "";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date curDate = new Date(time);// 获取当前时间
+		strDate = formatter.format(curDate);
+		
+		return strDate;
+	}
 
 	public static String getNoYearTime(long time) {
 		String strDate = "";

@@ -95,6 +95,8 @@ public class Tribe implements Serializable {
 	public List<Member> member;
 	
 	public boolean isTribeOrMeeting = true;
+	
+	public int  ispwd;
 
 	public static class Member implements Serializable{
 		@Expose

@@ -3,6 +3,9 @@ package com.gaopai.guiren.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
+import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
+import com.gaopai.guiren.bean.dynamic.NewDynamicBean.PicBean;
 import com.google.gson.annotations.Expose;
 
 public class User implements Serializable {
@@ -111,6 +114,10 @@ public class User implements Serializable {
 	public PrivacyConfig privacyconfig;
 
 	public int kuosanlistnum;
+	
+	public TypeHolder newdyna;
+	
+	public String codeurl;//QRcode
 
 	public class RoomIds implements Serializable {
 		@Expose
@@ -135,7 +142,7 @@ public class User implements Serializable {
 		public String uid;
 		public String uname;
 		public String s_path;
-		public String addtime;
+		public long addtime;
 		public CommentContent content;
 	}
 
@@ -152,4 +159,37 @@ public class User implements Serializable {
 		public int weibo;
 		public int renmai;
 	}
+
+	// "newdyna": {
+	// "id": "440",
+	// "uid": "59",
+	// "type": "7",
+	// "title": "扩散了一个动态",
+	// "jsoncontent": {
+	// "pic": [
+	// {
+	// "imgUrlS":
+	// "http://192.168.1.239:8081/Data/upload/dynamic/59/s_547fbbbea5f6b.jpg",
+	// "imgUrlL":
+	// "http://192.168.1.239:8081/Data/upload/dynamic/59/547fbbbea5f6b.jpg",
+	// "imgWidth": 200,
+	// "imgHeight": 200
+	// }
+	// ],
+	// "content": "寂寞吗",
+	// "sid": "439",
+	// "uid": "59",
+	// "realname": "Android4.1.2"
+	// },
+	// "tag": "厄尔,万科,",
+	// "time": "1417657871",
+	// "isanonymous": "0",
+	// "totalkuosan": "0",
+	// "totalzan": "0",
+	// "totalcomment": "0",
+	// "from": "439",
+	// "isdelete": "0"
+	// }
+	// },
+
 }

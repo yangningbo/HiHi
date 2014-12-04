@@ -41,7 +41,7 @@ public class NotificationFragment extends BaseFragment {
 		if (mView == null) {
 			mView = mInflater.inflate(R.layout.general_pulltorefresh_listview, null);
 			initView();
-		} 
+		}
 		return mView;
 	}
 
@@ -74,14 +74,8 @@ public class NotificationFragment extends BaseFragment {
 					startActivity(NotifySystemActivity.class);
 					break;
 				case 100: {
-					Intent intent = new Intent();
-					com.gaopai.guiren.bean.User user = new com.gaopai.guiren.bean.User();
-					user.uid = conversationBean.toid;
-					user.realname = conversationBean.name;
-					user.headsmall = conversationBean.headurl;
-					intent.putExtra(ChatMessageActivity.KEY_USER, user);
-					intent.setClass(getActivity(), ChatMessageActivity.class);
-					startActivity(intent);
+					startActivity(ChatMessageActivity.getIntent(act, conversationBean.toid, conversationBean.name,
+							conversationBean.headurl));
 					break;
 				}
 				case 200:

@@ -815,13 +815,7 @@ public class DamiInfo implements Serializable {
 				LOGIN_TYPE_NEED_LOGIN);
 	}
 
-	public static void joinMeetingByPassword(String meetingid, String password, IResponseListener listener) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("meetingid", meetingid);
-		params.put("password", password);
-		request(Method.GET, SimpleStateBean.class, params, SimpleStateBean.TYPE_JOIN_MEETING_BY_PASSWORD, listener,
-				LOGIN_TYPE_NEED_LOGIN);
-	}
+
 
 	/**
 	 * 获取临时身份
@@ -895,17 +889,19 @@ public class DamiInfo implements Serializable {
 		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
-	public static void getMyDynamic(int page, IResponseListener listener) {
+//	public static void getMyDynamic(int page, IResponseListener listener) {
+//		Parameters bundle = new Parameters();
+//		bundle.add("page", String.valueOf(page));
+//		bundle.add("my", String.valueOf(1));
+//		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
+//		String url_ = SERVER + "/user/getDynamic";
+//		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.class, listener);
+//	}
+	
+	public static void getDynamic(String userid, int page, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("page", String.valueOf(page));
-		bundle.add("my", String.valueOf(1));
-		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
-		String url_ = SERVER + "/user/getDynamic";
-		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.class, listener);
-	}
-	public static void getDynamic(int page, IResponseListener listener) {
-		Parameters bundle = new Parameters();
-		bundle.add("page", String.valueOf(page));
+		bundle.add("userid", userid);
 		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
 		String url_ = SERVER + "/user/getDynamic";
 		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.class, listener);
@@ -2329,6 +2325,21 @@ public class DamiInfo implements Serializable {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/UserInvitationNum";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, InviteNumResult.class, listener);
+	}
+	
+	public static void joinMeetingByPassword(String meetingid, String password, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("meetingid", meetingid);
+		bundle.add("password", password);
+		String url = SERVER + "meeting/joinMeetingByPasswd";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+	public static void joinTribeByPasswd(String tid, String password, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("tid", tid);
+		bundle.add("password", password);
+		String url = SERVER + "tribe/joinTribeByPasswd";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
 }

@@ -135,7 +135,7 @@ public class DynamicDetailActivity extends BaseActivity {
 		chatBox = findViewById(R.id.chat_box);
 		mSendTextBtn = (Button) findViewById(R.id.send_text_btn);
 
-		// playerWrapper should initial before addHeaderView
+		// playerWrapper should be initialed before addHeaderView
 		mPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
 			@Override
 			public void onSuccess(MessageInfo messageInfo) {
@@ -529,16 +529,43 @@ public class DynamicDetailActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		JsonContent jsonContent = typeBean.jsoncontent;
 		buildCommonView(viewHolder);
-		viewHolder.tvContent.setText(jsonContent.content);
-
+		if (TextUtils.isEmpty(jsonContent.content)) {
+			viewHolder.tvContent.setVisibility(View.VISIBLE);
+			viewHolder.tvContent.setText(jsonContent.content);
+		} else {
+			viewHolder.tvContent.setVisibility(View.GONE);
+		}
 		if (jsonContent.pic != null) {
 			buidImageViews(viewHolder.gridLayout, jsonContent.pic);
 		}
+		viewHolder.flTags.removeAllViews();
 		viewHolder.flTags.setVisibility(View.GONE);
+		if (!TextUtils.isEmpty(typeBean.tag)) {
+			String[] tags = typeBean.tag.split(",");
+
+			if (tags.length > 0) {
+				viewHolder.flTags.setVisibility(View.VISIBLE);
+				for (String tag : tags) {
+					if (TextUtils.isEmpty(tag)) {
+						break;
+					}
+					viewHolder.flTags.addView(creatTagWithoutDelete(tag), viewHolder.flTags.getTextLayoutParams());
+				}
+			}
+		}
+	}
+	
+	private View creatTagWithoutDelete(String text) {
+		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
+		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
+		textView.setText(text);
+		v.findViewById(R.id.btn_delete_tag).setVisibility(View.GONE);
+		return v;
 	}
 
 	private void buidImageViews(MyGridLayout gridLayout, List<PicBean> pics) {
 		// TODO Auto-generated method stub
+		gridLayout.removeAllViews();
 		for (PicBean bean : pics) {
 			gridLayout.addView(getImageView(bean.imgUrlS));
 		}
@@ -547,7 +574,6 @@ public class DynamicDetailActivity extends BaseActivity {
 	private ImageView getImageView(String url) {
 		ImageView imageView = new ImageView(mContext);
 		ImageLoaderUtil.displayImage(url, imageView);
-		imageView.setImageResource(R.drawable.logo);
 		android.view.ViewGroup.LayoutParams lp = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		imageView.setLayoutParams(lp);
@@ -556,6 +582,7 @@ public class DynamicDetailActivity extends BaseActivity {
 		imageView.setPadding(padding, padding, padding, padding);
 		return imageView;
 	}
+
 
 	static class ViewHolderSendDynamic extends ViewHolderCommon {
 		TextView tvContent;
@@ -930,7 +957,7 @@ public class DynamicDetailActivity extends BaseActivity {
 		if (showReply) {
 			etContent.setHint("回复：" + name);
 		} else {
-			etContent.setHint("请输入评论");
+			etContent.setHint(getString(R.string.please_input_comment));
 		}
 	}
 

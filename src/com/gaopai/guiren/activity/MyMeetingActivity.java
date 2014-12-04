@@ -3,6 +3,7 @@ package com.gaopai.guiren.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -14,12 +15,13 @@ import com.gaopai.guiren.adapter.MeetingAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
 import com.gaopai.guiren.fragment.MeetingFragment;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
-public class MyMeetingActivity extends BaseActivity{
+public class MyMeetingActivity extends BaseActivity implements OnClickListener{
 	private PullToRefreshListView mListView;
 	private MeetingAdapter mAdapter;
 	
@@ -33,6 +35,10 @@ public class MyMeetingActivity extends BaseActivity{
 		setAbContentView(R.layout.fragment_meeting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText("我的会议");
+		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
+		view.setId(R.id.ab_add);
+		view.setOnClickListener(this);
+		ViewUtil.findViewById(this, R.id.layout_meeting_titlebar).setVisibility(View.GONE);
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false); // 下拉刷新
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
@@ -101,6 +107,19 @@ public class MyMeetingActivity extends BaseActivity{
 				mListView.onPullComplete();
 			}
 		});
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.ab_add:
+			startActivity(CreatMeetingActivity.class);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 }

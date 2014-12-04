@@ -66,9 +66,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	private Fragment page4;
 	private User mUser;
 
-	/** 左边滑动菜单 **/
-	public static SlidingMenu mSlidingMenu;
-
 	public final static int LOGIN_REQUEST = 29312;
 	public final static int SHOW_GUIDE_REQUEST = 6541;
 	public final static int UNLOGIN_REQUEST = 1634365;
@@ -86,8 +83,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// initSlidingMenu();
-		// initTitleBar();
 		setContentView(R.layout.activity_main);
 		addTitleBar();
 		initTitleBarLocal();
@@ -219,7 +214,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				startActivity(MyFavoriteActivity.class);
 				break;
 			case R.id.slide_btn_my_dynamics:
-				startActivity(MyDynamicActivity.class);
+				startActivity(MyDynamicActivity.getIntent(mContext, mUser.uid));
 				break;
 			case R.id.slide_btn_invite_friend:
 				startActivity(InviteFriendActivity.class);
@@ -309,6 +304,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	};
 
 	private boolean isIntialed = false;
+
 	private void initPage() {
 		if (isIntialed) {
 			mTabPager.setCurrentItem(0);
@@ -328,28 +324,14 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		FragmentManager mFragmentManager = this.getSupportFragmentManager();
 		CustomFragmentPagerAdapter mFragmentPagerAdapter = new CustomFragmentPagerAdapter(mFragmentManager,
 				pagerItemList);
-		
+
 		mTabPager.setAdapter(mFragmentPagerAdapter);
 		mTabPager.setOnPageChangeListener(new MyOnPageChangeListener());
 		mTabPager.setOffscreenPageLimit(3);
 		changeBg(0);
 		mTabPager.setCurrentItem(0);
+		setTitleBarText(0);
 	}
-
-	/** 初始化左边滑动菜单 **/
-	// private void initSlidingMenu() {
-	// setBehindContentView(R.layout.slidingmenu_behind);
-	// mSlidingMenu = getSlidingMenu();
-	// mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-	// mSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);
-	// mSlidingMenu.setShadowDrawable(R.drawable.shadow);
-	// mSlidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-	// mSlidingMenu.setBehindScrollScale(0.5f);
-	// mSlidingMenu.setFadeDegree(0.25f);
-	//
-	// View btnProfile = mSlidingMenu.getMenu().findViewById(R.id.btn_profile);
-	// btnProfile.setOnClickListener(slideMenuClickListener);
-	// }
 
 	public void toggle() {
 		dragLayout.toggle();
@@ -442,19 +424,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		Log.d("keydown", "00000");
-//		if (keyCode == KeyEvent.KEYCODE_BACK) {
-//			if (backPressedListener != null && backPressedListener.onBack()) {
-//				return true;
-//			}
-//			moveTaskToBack(true);
-//			return true;
-//		}
-		return super.onKeyDown(keyCode, event);
-	}
-
-	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		MyVolley.getRequestQueue().cancelAll(this);
@@ -464,6 +433,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		bindUserView();
 	}
 
 	public void changeItem(int index) {
@@ -478,12 +448,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	private void getLogin() {
 		DamiInfo.hiddenLogin(new IResponseListener() {
-
 			@Override
 			public void onSuccess(Object o) {
 				LoginResult data = (LoginResult) o;
 				if (data.state != null && data.state.code == 0) {
-
 					if (data.data != null) {
 						DamiCommon.saveLoginResult(MainActivity.this, data.data);
 						DamiCommon.setUid(data.data.uid);
@@ -493,22 +461,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 						if (data.data.roomids != null)
 							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
 					}
-					if (data.data.auth == 0) {
-						if (data.data.authStage == 1) {
-							Intent intent = new Intent(MainActivity.this, InvitationVerifyActivity.class);
-							intent.putExtra("user", data.data);
-							startActivityForResult(intent, INVITATION_VERIFY_REQUEST);
-						} else {
-							Intent intent = new Intent(MainActivity.this, RealVerifyActivity.class);
-							intent.putExtra("user", data.data);
-							startActivityForResult(intent, REAL_VERIFY_REQUEST);
-						}
-					} else {// 开启服务 刷新提示 隐登录成功
-						bindUserView();
-						dragLayout.close();
-						FeatureFunction.startService(MainActivity.this);
-						initPage();
-					}
+					bindUserView();
+					dragLayout.close();
+					FeatureFunction.startService(MainActivity.this);
+					initPage();
 					return;
 				} else {
 					String str;
@@ -589,7 +545,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				dragLayout.close();
 				FeatureFunction.startService(mContext);
 			} else if (resultCode == UNLOGIN_REQUEST) {
-				initPage();
 				FeatureFunction.startService(mContext);
 			} else {
 				MainActivity.this.finish();
@@ -608,12 +563,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 		case INVITATION_VERIFY_REQUEST:
-			initPage();
 			sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
 			break;
 
 		case REAL_VERIFY_REQUEST:
-			initPage();
 			sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
 			break;
 
@@ -659,34 +612,33 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		case R.id.ab_logo:
 			toggle();
 			break;
-		case R.id.tv_creat_meeting: {
-			startActivity(CreatMeetingActivity.class);
+		case R.id.tv_feedback: {
+			startActivity(CommentGeneralActivity.getIntent(mContext, CommentGeneralActivity.TYPE_FEED_BACK));
 			mTitleBar.closeWindow();
 			break;
 		}
-		case R.id.tv_send_dynamic_:
+		case R.id.tv_send_dynamic:
 			startActivity(SendDynamicMsgActivity.class);
 			mTitleBar.closeWindow();
 			break;
-		case R.id.tv_creat_tribe:
-			startActivity(CreatTribeActivity.class);
+		case R.id.tv_scan:
+			startActivity(CaptureActivity.class);
 			mTitleBar.closeWindow();
 			break;
 		case R.id.tv_start_chat:
+			startActivity(ContactActivity.getIntent(mContext, ContactActivity.TYPE_FOLLOWERS, mUser.uid, true));
 			mTitleBar.closeWindow();
 			break;
 		}
 	}
 
 	private void initAddMoreViews(ViewGroup viewGroup, LayoutInflater inflater) {
-		View tvCreatMeeting = viewGroup.findViewById(R.id.tv_creat_meeting);
+		View tvCreatMeeting = viewGroup.findViewById(R.id.tv_scan);
 		tvCreatMeeting.setOnClickListener(this);
-		View tvSendDynamicMsg = viewGroup.findViewById(R.id.tv_send_dynamic_);
+		View tvSendDynamicMsg = viewGroup.findViewById(R.id.tv_send_dynamic);
 		tvSendDynamicMsg.setOnClickListener(this);
-		View tvCreatTribe = viewGroup.findViewById(R.id.tv_creat_tribe);
+		View tvCreatTribe = viewGroup.findViewById(R.id.tv_feedback);
 		tvCreatTribe.setOnClickListener(this);
-		View tvAddFriend = viewGroup.findViewById(R.id.tv_add_friends);
-		tvAddFriend.setOnClickListener(this);
 		View tvStartChat = viewGroup.findViewById(R.id.tv_start_chat);
 		tvStartChat.setOnClickListener(this);
 	}

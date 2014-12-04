@@ -15,39 +15,40 @@
         android:contentDescription="@string/desc"
         android:src="@drawable/default_header" />
 
-    <TextView
-        android:id="@+id/tv_user_name"
-        style="@style/dynamic_item_title_name"
+    <LinearLayout
+        android:id="@+id/layout_dy_name_info_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼" />
+        android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/tv_user_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_user_name"
-        android:layout_marginLeft="2dp"
-        android:layout_toRightOf="@id/tv_user_name"
-        android:text="疼惜总裁"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_user_name"
+            style="@style/dynamic_item_title_name" />
 
-    <TextView
-        android:id="@+id/tv_spread_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_user_name"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/tv_user_info"
-        android:text="扩散了一个连接"
-        android:textColor="@color/general_text_gray"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_user_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/general_text_black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_spread_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/general_text_gray"
+            android:textSize="14sp" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rl_spread_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_user_name"
-        android:layout_below="@id/tv_user_name"
+        android:layout_alignLeft="@id/layout_dy_name_info_holder"
+        android:layout_below="@id/layout_dy_name_info_holder"
         android:layout_marginTop="10dp"
         android:background="@color/general_light_gray"
         android:padding="@dimen/general_header_padding" >
@@ -63,8 +64,7 @@
         <TextView
             android:id="@+id/tv_title1"
             style="@style/dynamic_item_title_name"
-            android:layout_toRightOf="@id/iv_header1"
-            android:text="马虎疼" />
+            android:layout_toRightOf="@id/iv_header1"/>
 
         <RelativeLayout
             android:id="@+id/ll_dynamic_msg_holder"
@@ -129,7 +129,7 @@
         android:id="@+id/iv_picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_alignLeft="@id/layout_dy_name_info_holder"
         android:layout_below="@id/rl_spread_holder"
         android:maxHeight="40dp"
         android:scaleType="fitStart" />
@@ -138,10 +138,9 @@
         android:id="@+id/tv_date_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_alignLeft="@id/layout_dy_name_info_holder"
         android:layout_below="@id/iv_picture"
         android:layout_marginTop="7dp"
-        android:text="2天前        朋友的朋友"
         android:textColor="@color/general_text_gray" />
 
     <ImageButton
@@ -157,7 +156,7 @@
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_alignLeft="@id/layout_dy_name_info_holder"
         android:layout_below="@id/btn_dynamic_ation"
         layout="@layout/layout_dynamic_detail_cover_top_bottom" />
 

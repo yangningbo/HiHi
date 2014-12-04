@@ -2,71 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/icon_pop_background"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/tv_creat_meeting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="创建会议" />
+        android:id="@+id/tv_send_dynamic"
+        style="@style/titlebar_pop_text"
+        android:background="@drawable/selector_btn_transparent_drak_top"
+        android:drawableLeft="@drawable/icon_pop_send_dy"
+        android:text="发表动态" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/black" />
+    <View style="@style/general_thin_divider_in_drak" />
 
     <TextView
-        android:id="@+id/tv_creat_tribe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="创建圈子" />
+        android:id="@+id/tv_scan"
+        style="@style/titlebar_pop_text"
+        android:drawableLeft="@drawable/icon_pop_scan"
+        android:text="扫一扫" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/black" />
+    <View style="@style/general_thin_divider_in_drak" />
 
     <TextView
-        android:id="@+id/tv_add_friends"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="添加好友" />
+        android:id="@+id/tv_feedback"
+        style="@style/titlebar_pop_text"
+        android:drawableLeft="@drawable/icon_pop_feedback"
+        android:text="反馈意见" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/black" />
+    <View style="@style/general_thin_divider_in_drak" />
 
     <TextView
         android:id="@+id/tv_start_chat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
-        android:gravity="center"
-        android:padding="10dp"
+        style="@style/titlebar_pop_text"
+        android:background="@drawable/selector_btn_transparent_drak_bottom"
+        android:drawableLeft="@drawable/icon_pop_chat"
         android:text="发起聊天" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/black" />
-
-    <TextView
-        android:id="@+id/tv_send_dynamic_"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_titlebar_dropwindow_btn_bg"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="发表动态" />
 
 </LinearLayout>

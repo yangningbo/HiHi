@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <EditText 
+    android:layout_height="match_parent"
+    android:background="@color/general_background"
+    android:orientation="vertical"
+    android:padding="@dimen/general_paading" >
+
+    <EditText
         android:id="@+id/et_reason"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/please_input_reason"/>
-    <Button 
-        android:id="@+id/btn_add"
-        android:layout_width="wrap_content"
-        android:layout_below="@id/et_reason"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/ok"/>
+        android:layout_height="100dp"
+        android:background="@drawable/shape_white_round_corner_with_border"
+        android:gravity="top|left"
+        android:hint="@string/please_input_reason"
+        android:padding="@dimen/general_paading" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/general_large_gap"
+        android:background="@drawable/selector_tribe_detail_btn_green"
+        android:text="@string/ok"
+        android:textColor="@color/white" />
+
+</LinearLayout>

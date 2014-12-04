@@ -2,6 +2,7 @@ package com.gaopai.guiren.activity.chat;
 
 import java.util.UUID;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -47,6 +48,22 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 			buildRetweetMessageInfo(messageInfo);
 			addSaveSendMessage(messageInfo);
 		}
+	}
+	
+	public static Intent getIntent(Context context, String uid, String name, String headsmall) {
+		User user = new User();
+		user.uid = uid;
+		user.realname = name;
+		user.headsmall = headsmall;
+		Intent intent = new Intent(context, ChatMessageActivity.class);
+		intent.putExtra(ChatMessageActivity.KEY_USER, user);
+		return intent;
+	}
+	
+	public static Intent getIntent(Context context, User user) {
+		Intent intent = new Intent(context, ChatMessageActivity.class);
+		intent.putExtra(ChatMessageActivity.KEY_USER, user);
+		return intent;
 	}
 	
 

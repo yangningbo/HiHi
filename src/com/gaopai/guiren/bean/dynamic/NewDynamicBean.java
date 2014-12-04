@@ -13,7 +13,7 @@ public class NewDynamicBean extends BaseNetBean{
 	public static class TypeHolder implements Serializable {
 		public String id;
 		public String uid;
-		public int type;
+		public int type;//1=扩散 2=评论 3=赞
 		public String realname;
 		public String head;
 		public JsonContent jsoncontent;
@@ -23,10 +23,14 @@ public class NewDynamicBean extends BaseNetBean{
 	public static class JsonContent implements Serializable {
 		public String content;
 		public String sid;
+		//如果外面的type=赞，此type为DynamicBean里面的type
+		//如果外面的type=评论，此type为1：动态，实名评论 2：会议室 3：圈子 4：聊天室 5：人脉，
+		//如果外面的type=扩散，此type为7？
 		public int type;
 		public String name;
 		public List<PicBean> pic;
 		public String recontent;
+		public String image;
 	}
 	public static class PicBean implements Serializable {
 		public String imgUrlS;

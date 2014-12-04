@@ -22,18 +22,26 @@
             android:id="@+id/tv_user_name"
             style="@style/connection_item_title1"
             android:layout_toRightOf="@id/iv_header"
-            android:text="马虎疼"
             android:textColor="@color/white"
             android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tv_meilizhi_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_user_name"
+            android:layout_marginLeft="@dimen/general_paading"
+            android:layout_toRightOf="@id/tv_user_name"
+            android:text="@string/level_count"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tv_star_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_user_name"
-            android:layout_marginLeft="@dimen/general_paading"
-            android:layout_toRightOf="@id/tv_user_name"
-            android:text="250"
+            android:layout_toRightOf="@id/tv_meilizhi_info"
             android:textColor="@color/red_dongtai_bg"
             android:textSize="18sp" />
 
@@ -42,7 +50,6 @@
             style="@style/connection_item_info1"
             android:layout_alignLeft="@id/tv_user_name"
             android:layout_below="@id/tv_user_name"
-            android:text="疼惜总裁"
             android:textColor="@color/white" />
 
         <ImageView
@@ -51,26 +58,26 @@
             android:layout_height="250dp"
             android:layout_below="@id/iv_header"
             android:layout_marginTop="@dimen/general_large_gap"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_notification_dami" />
+            android:scaleType="fitXY" />
 
         <View
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_alignLeft="@id/iv_erweima"
             android:layout_alignTop="@id/iv_erweima"
-            android:layout_marginLeft="97dp"
-            android:layout_marginTop="97dp"
+            android:layout_marginLeft="107dp"
+            android:layout_marginTop="107dp"
             android:background="@color/white" />
 
         <ImageView
             android:id="@+id/iv_header1"
             style="@style/connection_item_header1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignLeft="@id/iv_erweima"
             android:layout_alignTop="@id/iv_erweima"
-            android:layout_marginLeft="100dp"
-            android:layout_marginTop="100dp"
-            android:contentDescription="@string/desc" />
+            android:layout_marginLeft="110dp"
+            android:layout_marginTop="110dp" />
 
         <TextView
             android:layout_width="250dp"
@@ -80,7 +87,8 @@
             android:layout_marginTop="@dimen/general_paading"
             android:gravity="center_horizontal"
             android:text="扫一扫上面的二维码图案，关注我的贵人"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="12sp" />
     </RelativeLayout>
 
 </LinearLayout>

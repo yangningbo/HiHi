@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -25,7 +26,7 @@ import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
-public class TribeActivity extends BaseActivity {
+public class TribeActivity extends BaseActivity implements OnClickListener {
 	private PullToRefreshListView mListView;
 	private TribeAdapter mAdapter;
 
@@ -40,6 +41,9 @@ public class TribeActivity extends BaseActivity {
 		setAbContentView(R.layout.general_pulltorefresh_listview);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.my_tribe);
+		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
+		view.setId(R.id.ab_add);
+		view.setOnClickListener(this);
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false);
 		mListView.setPullLoadEnabled(false);
@@ -66,14 +70,12 @@ public class TribeActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-//				Tribe tribe = new Tribe();
-//				tribe.id = ((Tribe) mAdapter.getItem(position)).id;
-				
-				intent.putExtra(ChatTribeActivity.KEY_TRIBE, (Tribe) mAdapter.getItem(position));
-				intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, ChatTribeActivity.CHAT_TYPE_TRIBE);
-				intent.setClass(mContext, ChatTribeActivity.class);
-				startActivity(intent);
+				Tribe tribe = (Tribe) mAdapter.getItem(position);
+//				if (tribe.ispwd == 1) {
+//					startActivity(TribeVierifyActivity.getIntent(mContext, tribe, 0));
+//				} else {
+					startActivity(ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE));
+//				}
 			}
 		});
 
@@ -158,6 +160,19 @@ public class TribeActivity extends BaseActivity {
 			}
 
 		});
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.ab_add:
+			startActivity(CreatTribeActivity.class);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 }
