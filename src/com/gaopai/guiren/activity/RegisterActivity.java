@@ -148,29 +148,29 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void getSmsCode(String phone, String countryCode) {
+		
 		DamiInfo.getSmsCode(phone, countryCode, new SimpleResponseListener(mContext) {
-
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
 				final VerificationResult data = (VerificationResult) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
-						VerificationResult.SmsCode sms = data.data;
-						btnSendVeryfication.setEnabled(false);
-						etVeryfication.setText(sms.code);
-						moveEditTextCursor(etVeryfication);
-						phoneNum = sms.phone;
-						smsCode = sms.code;
-						addRightCountDownText();
-						isCountDown = true;
-						new Thread(new CountDownRunnable()).start();
+//						VerificationResult.SmsCode sms = data.data;
+//						etVeryfication.setText(sms.code);
+//						moveEditTextCursor(etVeryfication);
+//						phoneNum = sms.phone;
+//						smsCode = sms.code;
 					}
 				} else {
 					otherCondition(data.state, RegisterActivity.this);
 				}
 			}
 		});
+		addRightCountDownText();
+		isCountDown = true;
+		btnSendVeryfication.setEnabled(false);
+		new Thread(new CountDownRunnable()).start();
 	}
 
 	private void register(String phone, String password, String code) {
@@ -250,6 +250,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private void confirm() {
 		String password = etPassword.getText().toString();
 		String veryfication = etVeryfication.getText().toString();
+		if (TextUtils.isEmpty(etPhone.getText())) {
+			showToast(R.string.phone_can_not_be_empty);
+			return;
+		}
 		if (TextUtils.isEmpty(password)) {
 			showToast(R.string.password_can_not_be_empty);
 			return;
@@ -259,7 +263,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			return;
 		}
 
-		register(phoneNum, password, veryfication);
+		register(etPhone.getText().toString(), password, veryfication);
 	}
 
 }

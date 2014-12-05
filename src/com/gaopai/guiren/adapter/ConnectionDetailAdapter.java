@@ -64,17 +64,17 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 
 	private void buildJoinView(ViewHolderGeneral viewHolder, TypeHolder typeBean, int position) {
 		// TODO Auto-generated method stub
-		if (!TextUtils.isEmpty(typeBean.headsmall)) {
-			ImageLoaderUtil.displayImage(typeBean.headsmall, viewHolder.ivHeader);
-		} else {
-			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-		}
+//		if (!TextUtils.isEmpty(typeBean.headsmall)) {
+//			ImageLoaderUtil.displayImage(typeBean.headsmall, viewHolder.ivHeader);
+//		} else {
+//			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
+//		}
+		viewHolder.ivHeader.setImageResource(R.drawable.icon_connection_default);
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		User user = mData.get(position);
 		if (typeBean.type == ConnectionAdapter.TYPE_SOMEONE_FOLLOW_ME) {
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
-					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "关注了你",
-					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "关注了你"));
 		} else if (typeBean.type == ConnectionAdapter.TYPE_SOMEONE_I_FOLLOW_FOLLOW) {
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
 					MyTextUtils.addSingleUserSpan(typeBean.jsoncontent.realname, typeBean.jsoncontent.uid), "关注了",

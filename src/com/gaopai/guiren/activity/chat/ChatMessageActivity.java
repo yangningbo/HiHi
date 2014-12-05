@@ -66,6 +66,12 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		return intent;
 	}
 	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		checkHasDraft(user.uid);
+	}
 
 	@Override
 	protected void setTitleText() {

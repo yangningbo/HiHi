@@ -52,7 +52,7 @@ public class ReverificationActivity extends BaseActivity {
 					showToast(R.string.input_can_not_be_empty);
 					return;
 				}
-				DamiInfo.reAuth(mUser.phone, etName.getText().toString(), etCompany.getText().toString(), etJob
+				DamiInfo.reAuth(etPartment.getText().toString(), etName.getText().toString(), etCompany.getText().toString(), etJob
 						.getText().toString(), new SimpleResponseListener(mContext, R.string.request_internet_now) {
 					@Override
 					public void onSuccess(Object o) {

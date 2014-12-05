@@ -55,6 +55,7 @@ public class ConverseationTable {
 			columnNameAndType.put(COLUMN_TO_ID, COLUMN_TEXT_TYPE);
 			columnNameAndType.put(COLUMN_ANONYMOUS, COLUMN_INTEGER_TYPE);
 			columnNameAndType.put(COLUMN_UNFINISH_INPUT, COLUMN_TEXT_TYPE);
+			columnNameAndType.put(COLUMN_LOGIN_ID, COLUMN_TEXT_TYPE);
 			
 
 			String primary_key = PRIMARY_KEY_TYPE + COLUMN_TO_ID + "," + COLUMN_LOGIN_ID + ")";
@@ -157,7 +158,7 @@ public class ConverseationTable {
 	public ConversationBean queryByID(String id) {
 		Cursor cursor = null;
 		try {
-			String querySql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance());
+			String querySql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TO_ID + "='" +id+"' AND "+  COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance())+"'";
 			cursor = mDBStore.rawQuery(querySql, null);
 			if (cursor != null && cursor.moveToFirst()) {
 				ConversationBean bean = new ConversationBean();
@@ -208,6 +209,7 @@ public class ConverseationTable {
 		allPromotionInfoValues.put(COLUMN_UNREAD_COUNT, message.unreadcount);
 		allPromotionInfoValues.put(COLUMN_NAME, message.name);
 		allPromotionInfoValues.put(COLUMN_TYPE, message.type);
+		allPromotionInfoValues.put(COLUMN_UNFINISH_INPUT, message.unfinishinput);
 		try {
 			mDBStore.update(TABLE_NAME, allPromotionInfoValues,
 					COLUMN_TO_ID + " = '" + message.toid + "' AND " + COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance()) + "'", null);

@@ -364,33 +364,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			removeProgressDialog();
 		}
 		switch (requestCode) {
-		case INVITATION_VERIFY_REQUEST:
-			if (resultCode != InvitationVerifyActivity.VERIFY_TOKEN_EXPIRED) {
-				setResult(resultCode);
-				if (resultCode == RESULT_OK) {
-					sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-					if (DamiCommon.getInstallFirst(LoginActivity.this)) {
-						Intent intent = new Intent(LoginActivity.this, RecommendActivity.class);
-						startActivity(intent);
-					}
-				}
-			}
-			this.finish();
-
-			break;
-		case REAL_VERIFY_REQUEST:
-			if (resultCode != InvitationVerifyActivity.VERIFY_TOKEN_EXPIRED) {
-				setResult(resultCode);
-				if (resultCode == RESULT_OK) {
-					sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-					if (DamiCommon.getInstallFirst(LoginActivity.this)) {
-						Intent intent = new Intent(LoginActivity.this, RecommendActivity.class);
-						startActivity(intent);
-					}
-				}
-			}
-			this.finish();
-			break;
 		default:
 			break;
 		}
@@ -418,15 +391,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 						if (data.data.roomids != null)
 							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
 						if (data.data.auth == 0) {
-							if (data.data.authStage == 1) {
-								Intent intent = new Intent(LoginActivity.this, InvitationVerifyActivity.class);
-								intent.putExtra("user", data.data);
-								startActivityForResult(intent, INVITATION_VERIFY_REQUEST);
-							} else {
-								Intent intent = new Intent(LoginActivity.this, RealVerifyActivity.class);
-								intent.putExtra("user", data.data);
-								startActivityForResult(intent, REAL_VERIFY_REQUEST);
-							}
 
 						} else {
 							setResult(RESULT_OK);

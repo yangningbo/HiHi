@@ -43,7 +43,7 @@ public class DynamicDetailActivity extends BaseActivity {
 	private String sid;
 	private MyAdapter mAdapter;
 	private DynamicHelper dynamicHelper;
-	
+
 	private User user;
 
 	@Override
@@ -125,18 +125,16 @@ public class DynamicDetailActivity extends BaseActivity {
 				boolean isShowSpread, boolean isShowZan) {
 			// TODO Auto-generated method stub
 			if (isShowSpread || isShowZan) {
-				if (!isShowComment) {
-					viewHolder.layoutCoverBottom.setVisibility(View.VISIBLE);
-				} else {
-					viewHolder.layoutCoverBottom.setVisibility(View.GONE);
-				}
-			}else {
+				viewHolder.layoutCoverBottom.setVisibility(View.VISIBLE);
+			}
+			if (isShowComment) {
 				viewHolder.layoutCoverBottom.setVisibility(View.GONE);
 			}
 			if (isShowComment || isShowSpread || isShowZan) {
 				viewHolder.layoutCoverTop.setVisibility(View.VISIBLE);
 			} else {
 				viewHolder.layoutCoverTop.setVisibility(View.GONE);
+				viewHolder.layoutCoverBottom.setVisibility(View.GONE);
 			}
 		}
 	};
@@ -154,8 +152,10 @@ public class DynamicDetailActivity extends BaseActivity {
 						initComponent();
 					} else {
 						typeBean = data.data;
-//						getHeaderView();
-						dynamicHelper.buildCommonView((com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
+						// getHeaderView();
+						dynamicHelper.buildCommonView(
+								(com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon) headerView.getTag(),
+								typeBean);
 						mAdapter.notifyDataSetChanged();
 					}
 				}
@@ -168,7 +168,6 @@ public class DynamicDetailActivity extends BaseActivity {
 		etContent = (EditText) findViewById(R.id.chat_box_edit_keyword);
 		chatBox = findViewById(R.id.chat_box);
 		mSendTextBtn = (Button) findViewById(R.id.send_text_btn);
-
 
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
 		mListView.getRefreshableView().setDivider(null);
@@ -195,10 +194,7 @@ public class DynamicDetailActivity extends BaseActivity {
 		});
 	}
 
-
 	View convertView = null;
-
-
 
 	public void commentMessage(final String content) {
 		hideChatBox();
@@ -273,7 +269,6 @@ public class DynamicDetailActivity extends BaseActivity {
 					}
 					dynamicHelper.setCommentHolderForReply(typeBean, commentBean);
 					callback.onCommentButtonClick(typeBean, true);
-					showSoftKeyboard();
 				}
 			});
 			return convertView;

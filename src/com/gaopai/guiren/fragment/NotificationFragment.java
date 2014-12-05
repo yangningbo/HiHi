@@ -3,8 +3,6 @@ package com.gaopai.guiren.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.tsz.afinal.FinalActivity;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +33,7 @@ public class NotificationFragment extends BaseFragment {
 	private NotificationAdapter mAdapter;
 	private List<ConversationBean> conversationBeans = new ArrayList<ConversationBean>();
 	public final static String ACTION_MSG_NOTIFY = "com.gaopai.guiren.intent.action.ACTION_MSG_NOTIFY";
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class NotificationFragment extends BaseFragment {
 		}
 		return mView;
 	}
-
+	
 	private void initView() {
 		mListView = (PullToRefreshListView) mView.findViewById(R.id.listView);
 		mListView.setPullLoadEnabled(false);
@@ -107,6 +106,13 @@ public class NotificationFragment extends BaseFragment {
 		getDataFromDb();
 	}
 
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver();
+	}
+
 	private void getDataFromDb() {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
@@ -125,14 +131,12 @@ public class NotificationFragment extends BaseFragment {
 	}
 
 	private boolean mIsRegisterReceiver = false;
-
 	private void registerReceiver() {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_MSG_NOTIFY);
 		getActivity().registerReceiver(mReceiver, filter);
 		mIsRegisterReceiver = true;
 	}
-
 	BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -144,5 +148,11 @@ public class NotificationFragment extends BaseFragment {
 			}
 		}
 	};
+	private void unregisterReceiver() {
+		if (mIsRegisterReceiver) {
+			getActivity().unregisterReceiver(mReceiver);
+		}
+		mIsRegisterReceiver = false;
+	}
 
 }

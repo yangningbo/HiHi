@@ -69,7 +69,6 @@ public class DynamicAdapter extends BaseAdapter {
 	private Context mContext;
 	private DynamicFragment mFragment;
 
-	private boolean isMyDynamic = false;
 	private DynamicHelper dynamicHelper;
 
 	public void showSoftKeyboard() {
@@ -91,7 +90,8 @@ public class DynamicAdapter extends BaseAdapter {
 	public DynamicAdapter(Activity activity) {
 		mContext = activity;
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		isMyDynamic = true;
+		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_MY_LIST);
+		user = DamiCommon.getLoginResult(mContext);
 	}
 
 	private DynamicHelper.DyCallback callback = new DyCallback() {
@@ -232,6 +232,16 @@ public class DynamicAdapter extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		DynamicBean.TypeHolder typeBean = mData.get(position);
 		return dynamicHelper.getView(convertView, typeBean);
+	}
+	
+	@Override
+	public int getViewTypeCount() {
+		return 7;
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		return mData.get(position).type - 1;
 	}
 
 	private OnClickListener moreCommentClickListener = new OnClickListener() {

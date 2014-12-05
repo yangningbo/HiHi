@@ -75,12 +75,20 @@ public class AddReasonActivity extends BaseActivity {
 
 		case TYPE_TO_BE_CUSTOM:
 			title = getString(R.string.back_to_normal);
+			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
+			break;
 		case TYPE_TO_BE_GUEST:
 			title = getString(R.string.apply_to_jiabin);
+			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
+			break;
 		case TYPE_TO_BE_HOST:
 			title = getString(R.string.apply_to_host);
+			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
+			break;
 		case TYPE_TO_JOIN_MEETING:
 			title = getString(R.string.apply_add);
+			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
+			break;
 		case TYPE_DISMISS_MEETING:
 			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
 			break;

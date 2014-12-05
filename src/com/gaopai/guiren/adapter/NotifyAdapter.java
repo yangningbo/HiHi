@@ -5,6 +5,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -128,6 +131,8 @@ public class NotifyAdapter extends BaseAdapter {
 
 		return convertView;
 	}
+
+
 
 	final static class ViewHolder {
 		TextView mContentView;

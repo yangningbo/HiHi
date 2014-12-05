@@ -6,6 +6,7 @@ import java.util.List;
 import com.gaopai.guiren.bean.AppState;
 import com.gaopai.guiren.bean.PageInfo;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.google.gson.annotations.Expose;
 
 public class DynamicBean implements Serializable {
@@ -75,10 +76,13 @@ public class DynamicBean implements Serializable {
 		public String name;
 		public List<GuestBean> guest;
 		public String time;
+		public String logo;//会议圈子图标
+		
 
 		// type==2扩散了聊天室（会议、圈子、私聊）中的消息
-		public String displayname;
+		public String displayName;
 		public String headsmall;
+		public String headImgUrl;//发消息人的头像
 		public String messageid;
 		public int fileType;
 		public String voiceUrl;
@@ -106,9 +110,7 @@ public class DynamicBean implements Serializable {
 
 	}
 
-	public static class GuestBean implements Serializable {
-		public String realname;
-		public String uid;
+	public static class GuestBean extends SpanUser {
 	}
 
 	public static class PicBean implements Serializable {
@@ -140,7 +142,7 @@ public class DynamicBean implements Serializable {
 		public String uname;
 	}
 
-	public static class SpreadBean implements Serializable {
+	public static class SpreadBean extends SpanUser {
 		public String uid;
 		public String nickname;
 		public String realname;

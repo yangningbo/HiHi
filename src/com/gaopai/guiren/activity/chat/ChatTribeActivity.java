@@ -29,6 +29,7 @@ import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.adapter.TribeChatAdapter;
+import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
@@ -39,6 +40,7 @@ import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.IdentitityResult;
 import com.gaopai.guiren.bean.net.SendMessageResult;
+import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
@@ -54,6 +56,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	public static final String KEY_CHAT_TYPE = "chat_type";
 	public static final String KEY_TRIBE = "tribe";
 	public static final String KEY_TRIBE_ID = "tribe_id";
+	public static final String KEY_IS_ONLOOKER = "onlooker";
 
 	private int mSceneType = 0;
 	public final static int IS_SCENE_ONLOOK = 1;
@@ -65,19 +68,28 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	protected Identity mIdentity;
 
 	private MessageInfo messageInfo;
+	private boolean isOnLooker = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mChatType = getIntent().getIntExtra(KEY_CHAT_TYPE, CHAT_TYPE_MEETING);
 		mTribe = (Tribe) getIntent().getSerializableExtra(KEY_TRIBE);// before
+		isOnLooker = getIntent().getBooleanExtra(KEY_IS_ONLOOKER, false);
 		super.onCreate(savedInstanceState);
 		// mTribeId = getIntent().getStringExtra(KEY_TRIBE_ID)
 		updateTribe();
 		getIdentity();
 		initTribeComponent();
 	}
+	
+	private void hideOnLookerView() {
+		hideChatBox();
+	}
 
 	protected void initTribeComponent() {
+		if (isOnLooker) {
+			hideOnLookerView();
+		}
 		mAdapter = new TribeChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
 		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0));
@@ -110,23 +122,32 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			addSaveSendMessage(messageInfo);
 		}
 	}
-	
+
 	public static Intent getIntent(Context context, Tribe tribe, int type) {
 		Intent intent = new Intent(context, ChatTribeActivity.class);
 		intent.putExtra(KEY_TRIBE, tribe);
 		intent.putExtra(KEY_CHAT_TYPE, type);
 		return intent;
 	}
+
 	@Override
 	protected boolean isAvoidDisturb() {
 		// TODO Auto-generated method stub
 		return spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0) == 1;
 	}
-	
+
 	@Override
 	protected void setTitleText() {
 		mTitleBar.addLeftTextView(mTribe.name);
 	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		checkHasDraft(mTribe.id);
+	}
+
 
 	// 通知过来的tribe没有role，发送消息时需要用到，所以这里尽快更新呀
 	private void updateTribe() {
@@ -150,13 +171,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			DamiInfo.getTribeDetail(mTribe.id, listener);
 		}
 	}
-	
-	
 
 	@Override
 	protected void getMessageListLocal(boolean isFirstTime) {
 		// TODO Auto-generated method stub
-		Logger.d(this, "tribe id="+mTribe.id);
+		Logger.d(this, "tribe id=" + mTribe.id);
 		if (isFirstTime) {
 			initMessage(mTribe.id, mChatType);
 		} else {
@@ -232,7 +251,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.zan_cancel))) {
 			zanMessage(msgInfo);
 		} else if (result.equals(getString(R.string.retrweet))) {
-//			goToRetrweet(msgInfo);
+			// goToRetrweet(msgInfo);
 			spreadToDy(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {
 			showReportDialog(msgInfo);
@@ -244,10 +263,10 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			communicatePeople(msgInfo);
 		}
 	}
-	
+
 	private void spreadToDy(MessageInfo messageInfo) {
 		DamiInfo.spreadDynamic(2, messageInfo.id, "", "", "", "", new SimpleResponseListener(mContext) {
-			
+
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
@@ -363,7 +382,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		buildConversation(msg);
 		return msg;
 	}
-	
+
 	private void buildConversation(MessageInfo msg) {
 		ConversationInnerBean bean = new ConversationInnerBean();
 		bean.headurl = mTribe.logosmall;

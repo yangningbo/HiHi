@@ -45,6 +45,7 @@ import com.gaopai.guiren.fragment.DynamicFragment.BackPressedListener;
 import com.gaopai.guiren.fragment.MeetingFragment;
 import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.slidemenu.SlidingMenu;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -170,8 +171,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			return;
 		}
 		ImageView ivHeader = (ImageView) findViewById(R.id.iv_user_header);
-		Picasso.with(mContext).load(mUser.headsmall).placeholder(R.drawable.default_header)
-				.error(R.drawable.default_header).into(ivHeader);
+		if (!TextUtils.isEmpty(mUser.headsmall)) {
+			Picasso.with(mContext).load(mUser.headsmall).placeholder(R.drawable.default_header)
+					.error(R.drawable.default_header).into(ivHeader);
+		} 
+
 		TextView textView = (TextView) findViewById(R.id.tv_user_name);
 		textView.setText(mUser.realname);
 
@@ -436,6 +440,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		Logger.d(this, "onResume");
 		bindUserView();
 	}
 
@@ -615,11 +620,14 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		case R.id.ab_logo:
 			toggle();
 			break;
-		case R.id.tv_feedback: {
-			startActivity(CommentGeneralActivity.getIntent(mContext, CommentGeneralActivity.TYPE_FEED_BACK));
+		case R.id.tv_creat_meeting:
+			startActivity(CreatMeetingActivity.class);
 			mTitleBar.closeWindow();
 			break;
-		}
+		case R.id.tv_creat_tribe:
+			startActivity(CreatTribeActivity.class);
+			mTitleBar.closeWindow();
+			break;
 		case R.id.tv_send_dynamic:
 			startActivity(SendDynamicMsgActivity.class);
 			mTitleBar.closeWindow();
@@ -640,7 +648,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		tvCreatMeeting.setOnClickListener(this);
 		View tvSendDynamicMsg = viewGroup.findViewById(R.id.tv_send_dynamic);
 		tvSendDynamicMsg.setOnClickListener(this);
-		View tvCreatTribe = viewGroup.findViewById(R.id.tv_feedback);
+		View tvCreatTribe = viewGroup.findViewById(R.id.tv_creat_meeting);
+		tvCreatTribe.setOnClickListener(this);
+		tvCreatTribe = viewGroup.findViewById(R.id.tv_creat_tribe);
 		tvCreatTribe.setOnClickListener(this);
 		View tvStartChat = viewGroup.findViewById(R.id.tv_start_chat);
 		tvStartChat.setOnClickListener(this);

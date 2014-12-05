@@ -16,12 +16,12 @@
 -->
 
 <scale xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="300"
-    android:fromXScale="0.98"
-    android:fromYScale="0.98"
+    android:duration="8000"
+    android:fromXScale="1"
+    android:fromYScale="1"
     android:pivotX="50%"
     android:pivotY="50%"
-    android:toXScale="1.2"
-    android:toYScale="1.2" >
+    android:toXScale="1.4"
+    android:toYScale="1.4" >
 
 </scale>

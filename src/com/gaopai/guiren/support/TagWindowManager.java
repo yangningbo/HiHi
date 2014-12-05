@@ -69,6 +69,9 @@ public class TagWindowManager implements OnClickListener {
 	}
 
 	public void setTagList(List<TagBean> tagList) {
+		if (tagList == null) {
+			return;
+		}
 		this.tagList = tagList;
 	}
 

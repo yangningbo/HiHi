@@ -38,19 +38,36 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 		ViewUtil.findViewById(this, R.id.btn_fill_profile).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.btn_invite_to_guiren).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.btn_confirm).setOnClickListener(this);
-		getInviteUserNum();
+//		getInviteUserNum();
+		getVerifyDetail(); 
 	}
 
 	private void getInviteUserNum() {
 		// TODO Auto-generated method stub
 		DamiInfo.getUserInvitationNum(new SimpleResponseListener(mContext) {
-			
+
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
 				InviteNumResult data = (InviteNumResult) o;
 				if (data.state != null && data.state.code == 0) {
 					InviteNumberBean bean = data.data;
 					setInviteNumText(bean.complete);
+				}
+			}
+		});
+	}
+
+	private void getVerifyDetail() {
+		DamiInfo.getVerifyResult(new SimpleResponseListener(mContext) {
+
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				GetVerifyResult data = (GetVerifyResult) o;
+				if (data.state != null && data.state.code == 0) {
+
+				} else {
+					otherCondition(data.state, ApplyActivity.this);
 				}
 			}
 		});
@@ -105,5 +122,47 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 
 	public static class InviteUrlResult extends BaseNetBean {
 		public String data;
+	}
+
+	// "data": {
+	// "base": { //认证资料
+	// "iscomplete": 0, //是否完成，0没有完成，1完成
+	// "case": {
+	// "realname": 1, //真实姓名是否填写，0没有填写，1填写
+	// "company": 1, //公司是否填写，0没有填写，1填写
+	// "depa": 0, //部门是否填写，0没有填写，1填写
+	// "post": 1 //职位/职业是否填写，0没有填写，1填写
+	// }
+	// },
+	// "invite": { //邀请好友数据
+	// "num": "0", //已完成的邀请数据
+	// "totalnum": 20 //需邀请的用户总数
+	// }
+	// },
+
+	public static class GetVerifyResult extends BaseNetBean {
+		public Data data;
+
+		public static class Data {
+			public Base base;
+			public Invite invite;
+		}
+
+		public static class Base {
+			public int iscomplete;
+			// public Case case;
+		}
+
+		public static class Case {
+			public int realname;
+			public int company;
+			public int depa;
+			public int post;
+		}
+
+		public static class Invite {
+			public int num;
+			public int totalnum;
+		}
 	}
 }

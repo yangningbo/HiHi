@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.android.volley.Request.Method;
+import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult;
 import com.gaopai.guiren.activity.ApplyActivity.InviteUrlResult;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
@@ -1731,9 +1732,14 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void reAuth(String phone, String realname, String company, String post, IResponseListener listener) {
+//	realname	true	string	真实姓名
+//	company	true	string	公司
+//	depa	true	string	部门
+//	post	true	string	职位
+
+	public static void reAuth(String depa, String realname, String company, String post, IResponseListener listener) {
 		Parameters bundle = new Parameters();
-		bundle.add("phone", phone);
+		bundle.add("depa", depa);
 		bundle.add("realname", realname);
 		bundle.add("company", company);
 		bundle.add("post", post);
@@ -2337,6 +2343,12 @@ public class DamiInfo implements Serializable {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/UserInvitationNum";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, InviteNumResult.class, listener);
+	}
+	
+	public static void getVerifyResult(IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		String url = SERVER + "user/UserAuthItem";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, GetVerifyResult.class, listener);
 	}
 
 	public static void joinMeetingByPassword(String meetingid, String password, IResponseListener listener) {

@@ -72,6 +72,7 @@ public class DynamicHelper {
 	public final static int DY_LIST = 0;
 	public final static int DY_DETAIL = 1;
 	public final static int DY_PROFILE = 2;
+	public final static int DY_MY_LIST = 3;
 	private int mDyKind = 0;
 
 	private Context mContext;
@@ -83,7 +84,7 @@ public class DynamicHelper {
 
 	public DynamicHelper(Context context, int dyKind) {
 		mContext = context;
-		mIsDyList = dyKind == DY_LIST;
+		mIsDyList = (dyKind == DY_LIST || dyKind == DY_MY_LIST);
 		mDyKind = dyKind;
 		user = DamiCommon.getLoginResult(mContext);
 		mInflater = LayoutInflater.from(mContext);
@@ -219,6 +220,7 @@ public class DynamicHelper {
 							commentBean.uname = user.realname;
 							commentBean.type = commnetHolder.type;
 							commentBean.dataid = commnetHolder.dataid;
+							commentBean.uid = user.uid;
 							if (typeHolder.commentlist == null) {
 								typeHolder.commentlist = new ArrayList<CommentBean>();
 							}
@@ -552,6 +554,12 @@ public class DynamicHelper {
 		notHideViews(viewHolder, content.fileType);
 		viewHolder.ivVoice.setLayoutParams(ChatMsgHelper.getVoiceViewLengthParams(mContext, content.voiceTime));
 		viewHolder.msgHolder.setOnClickListener(null);
+		if (!TextUtils.isEmpty(content.headImgUrl)) {
+			ImageLoaderUtil.displayImage(content.headImgUrl, viewHolder.ivHeader1);
+		} else {
+			viewHolder.ivHeader1.setImageResource(R.drawable.default_header);
+		}
+		viewHolder.tvUserName1.setText(content.displayName);
 		switch (content.fileType) {
 		case MessageType.TEXT:
 			viewHolder.tvText.setText(MyTextUtils.addHttpLinks(content.content));
@@ -632,7 +640,10 @@ public class DynamicHelper {
 		viewHolder.tvMeetingTitle.setText(jsonContent.name);
 		viewHolder.tvMeetingTime.setText(jsonContent.time);
 		viewHolder.tvMeetingGuest.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-		viewHolder.tvMeetingGuest.setText(MyTextUtils.addGuestUserList(jsonContent.guest, "嘉宾："));
+		// viewHolder.tvMeetingGuest.setText(MyTextUtils.addGuestUserList(jsonContent.guest,
+		// "嘉宾："));
+		viewHolder.tvMeetingGuest.setText(MyTextUtils.getSpannableString("嘉宾：",
+				MyTextUtils.addUserSpans(jsonContent.guest)));
 
 		viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
 			@Override
@@ -663,10 +674,18 @@ public class DynamicHelper {
 
 			break;
 		case TYPE_SPREAD_TRIBE:
-			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1);
+			if (!TextUtils.isEmpty(jsonContent.logo)) {
+				ImageLoaderUtil.displayImage(jsonContent.logo, viewHolder.ivHeader1);
+			} else {
+				viewHolder.ivHeader1.setImageResource(R.drawable.default_tribe);
+			}
 			viewHolder.tvTitle1.setText(jsonContent.name);
 			viewHolder.tvInfo1.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-			viewHolder.tvInfo1.setText(MyTextUtils.addGuestUserList(jsonContent.guest, "圈子知名人物："));
+			viewHolder.tvInfo1.setText(MyTextUtils.getSpannableString("圈子知名人物：",
+					MyTextUtils.addUserSpans(jsonContent.guest)));
+
+			// viewHolder.tvInfo1.setText(MyTextUtils.addGuestUserList(jsonContent.guest,
+			// "圈子知名人物："));
 			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -735,12 +754,20 @@ public class DynamicHelper {
 		}
 
 		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)));
+		
+		if (mDyKind == DY_MY_LIST) {
+			viewHolder.rlDynamicInteractive.setVisibility(View.GONE);
+			viewHolder.btnDynamicAction.setVisibility(View.GONE);
+			return;
+		}
 
 		if (typeBean.spread != null && typeBean.spread.size() > 0) {
 			isShowSpread = true;
 			viewHolder.tvSpread.setVisibility(View.VISIBLE);
 			viewHolder.tvSpread.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			viewHolder.tvSpread.setText(MyTextUtils.addSpreadUserList(typeBean.spread));
+			// viewHolder.tvSpread.setText(MyTextUtils.addUserSpans(typeBean.spread));
+
 		} else {
 			viewHolder.tvSpread.setVisibility(View.GONE);
 		}
@@ -848,19 +875,22 @@ public class DynamicHelper {
 		if (commentBean.toid != null && (!commentBean.toid.equals("0"))) {
 			return MyTextUtils.addEmotions(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), "回复",
-					MyTextUtils.addSingleUserSpan(commentBean.toname, commentBean.toid), ":", commentBean.content.content));
+					MyTextUtils.addSingleUserSpan(commentBean.toname, commentBean.toid), ":",
+					commentBean.content.content));
 		} else {
-			return MyTextUtils.addEmotions(MyTextUtils.getSpannableString(
-					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), ":", commentBean.content.content));
+			return MyTextUtils
+					.addEmotions(MyTextUtils.getSpannableString(
+							MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), ":",
+							commentBean.content.content));
 		}
 	}
-	
+
 	public void makeCommentNotNull(CommentBean commentBean) {
 		if (TextUtils.isEmpty(commentBean.toname)) {
 			commentBean.toname = "匿名";
-		} 
+		}
 		if (TextUtils.isEmpty(commentBean.uname)) {
 			commentBean.uname = "匿名";
-		} 
+		}
 	}
 }

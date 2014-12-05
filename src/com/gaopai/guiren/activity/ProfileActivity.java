@@ -255,7 +255,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		layoutDyContent = ViewUtil.findViewById(this, R.id.layout_profile_dy_content);
 
 		tvBottomFavorite = (TextView) findViewById(R.id.tv_bottom_favorite);
-		// tvBottomFavorite.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		tvBottomFavorite.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		tvBottomSpread = (TextView) findViewById(R.id.tv_bottom_spread);
 		tvBottomSpread.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		layoutBottomComment = (LinearLayout) findViewById(R.id.layout_bottom_comment);
@@ -281,8 +281,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			layoutConnection.setVisibility(View.VISIBLE);
 		}
 	}
-	
-
 
 	private void bindView() {
 		if (isSelf) {
@@ -302,7 +300,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		bindContactView();
 		bindDyView();
-		tagList = tUser.tag;
+		if (tUser.tag != null) {
+			tagList = tUser.tag;
+		}
 		bindUserTags();
 		bindBottomDynamicView();
 		bindBottomView();
@@ -413,7 +413,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				user.realname = bean.realname;
 				userList.add(user);
 			}
-			tvBottomFavorite.setText(MyTextUtils.addConnectionUserList(userList, "赞过"));
+			tvBottomFavorite.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList), "赞过"));
+//			tvBottomFavorite.setText(MyTextUtils.addConnectionUserList(userList, "赞过"));
 		} else {
 			layoutZanHolder.setVisibility(View.GONE);
 		}
@@ -427,7 +428,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				user.realname = bean.realname;
 				userList.add(user);
 			}
-			tvBottomSpread.setText(MyTextUtils.addConnectionUserList(userList, "扩散过"));
+			tvBottomSpread.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList), "扩散过"));
+//			tvBottomSpread.setText(MyTextUtils.addConnectionUserList(userList, "扩散过"));
 		} else {
 			layoutSpreadHolder.setVisibility(View.GONE);
 		}
@@ -470,36 +472,37 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				TextView nameView = (TextView) view.findViewById(R.id.tv_title);
 				TextView infoView = (TextView) view.findViewById(R.id.tv_info);
 				TextView dateView = (TextView) view.findViewById(R.id.tv_date);
-				
+
 				ImageView headerView = (ImageView) view.findViewById(R.id.iv_header);
 				nameView.setText(bean.uname);
 				infoView.setText(bean.content.content);
-				dateView.setText(FeatureFunction.getGeneralTime(bean.addtime*1000));
+				dateView.setText(FeatureFunction.getGeneralTime(bean.addtime * 1000));
 				if (!TextUtils.isEmpty(bean.s_path)) {
 					Picasso.with(mContext).load(bean.s_path).placeholder(R.drawable.default_header)
 							.error(R.drawable.default_header).into(headerView);
 				}
-				
-//				if (isSelf) {
-//					TextView tvDelete = (TextView) view.findViewById(R.id.tv_delete);
-//					tvDelete.setVisibility(View.VISIBLE);
-//					tvDelete.setOnClickListener(new OnClickListener() {
-//						@Override
-//						public void onClick(View v) {
-//							// TODO Auto-generated method stub
-//							
-//						}
-//					});
-//				}
+
+				// if (isSelf) {
+				// TextView tvDelete = (TextView)
+				// view.findViewById(R.id.tv_delete);
+				// tvDelete.setVisibility(View.VISIBLE);
+				// tvDelete.setOnClickListener(new OnClickListener() {
+				// @Override
+				// public void onClick(View v) {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				// });
+				// }
 				view.setOnClickListener(new OnClickListener() {
-					
+
 					@Override
 					public void onClick(View v) {
 						startActivity(ProfileActivity.getIntent(mContext, bean.uid));
-						
+
 					}
 				});
-				
+
 				layoutBottomComment.addView(view);
 				View lineView = new View(mContext);
 				lineView.setBackgroundColor(getResources().getColor(R.color.general_horizon_divider));
@@ -724,16 +727,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				}
 			});
 		}
-	}
-
-	private boolean checkIsTagInList(String tag) {
-		for (TagBean tagBean : tagList) {
-			if (tagBean.equals(tag)) {
-				showToast(R.string.tag_exist);
-				return true;
-			}
-		}
-		return false;
 	}
 
 }

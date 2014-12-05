@@ -26,40 +26,19 @@ public class BaseFragment extends Fragment implements OnClickListener {
 
 	private static final String TAG = BaseFragment.class.getName();
 
-	/** 全局的LayoutInflater对象，已经完成初始化. */
 	public LayoutInflater mInflater;
-
-	/**
-	 * LinearLayout.LayoutParams，已经初始化为FILL_PARENT, FILL_PARENT
-	 */
 	public LinearLayout.LayoutParams layoutParamsFF = null;
-
-	/**
-	 * LinearLayout.LayoutParams，已经初始化为FILL_PARENT, WRAP_CONTENT
-	 */
 	public LinearLayout.LayoutParams layoutParamsFW = null;
-
-	/**
-	 * LinearLayout.LayoutParams，已经初始化为WRAP_CONTENT, FILL_PARENT
-	 */
 	public LinearLayout.LayoutParams layoutParamsWF = null;
-
-	/**
-	 * LinearLayout.LayoutParams，已经初始化为WRAP_CONTENT, WRAP_CONTENT
-	 */
 	public LinearLayout.LayoutParams layoutParamsWW = null;
 
 	public LinearLayout windowLayout = null;
 	public TitleBar mTitleBar = null;
 	protected FrameLayout contentLayout = null;
 
-	/** 屏幕宽度. */
 	public int displayWidth = 320;
-
-	/** 屏幕高度. */
 	public int displayHeight = 480;
 
-	/** Window 管理�?. */
 	private WindowManager mWindowManager = null;
 
 	protected BaseActivity act;
@@ -67,6 +46,8 @@ public class BaseFragment extends Fragment implements OnClickListener {
 	protected View mView;
 
 	protected DamiApp mApplication;
+	
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +66,6 @@ public class BaseFragment extends Fragment implements OnClickListener {
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 		if (windowLayout == null) {
 			initTitleBar();
-
 			contentLayout.setClickable(true);
 			addChildView(contentLayout);
 		} else {

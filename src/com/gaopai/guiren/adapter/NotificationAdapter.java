@@ -3,8 +3,13 @@ package com.gaopai.guiren.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import u.aly.be;
+
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,13 +105,18 @@ public class NotificationAdapter extends BaseAdapter {
 			holder.ivTitleIcon.setVisibility(View.GONE);
 		}
 		holder.tvName.setText(bean.name);
-		holder.tvInfo.setText(bean.lastmsgcontent);
-		if (bean.type % 100 == 2) {
-			holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_notification_voice, 0, 0, 0);
-			holder.tvInfo.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 3));
+		if (TextUtils.isEmpty(bean.unfinishinput)) {
+			holder.tvInfo.setText(bean.lastmsgcontent);
+			if (bean.type % 100 == 2) {
+				holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_notification_voice, 0, 0, 0);
+				holder.tvInfo.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 3));
+			} else {
+				holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+			}
 		} else {
-			holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+			holder.tvInfo.setText(buildDraft(bean.unfinishinput));
 		}
+		
 		if (bean.unreadcount > 0) {
 			holder.tvMsgCount.setVisibility(View.VISIBLE);
 			holder.tvMsgCount.setText(String.valueOf(bean.unreadcount));
@@ -114,6 +124,14 @@ public class NotificationAdapter extends BaseAdapter {
 			holder.tvMsgCount.setVisibility(View.GONE);
 		}
 		return convertView;
+	}
+	
+	private SpannableString buildDraft(String draft) {
+		String draftInfo = "[草稿]";
+		SpannableString spannableString = new SpannableString(draftInfo + draft);
+		spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.red_dongtai_bg)), 0,
+				draftInfo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return spannableString;
 	}
 
 	private class ViewHolder {

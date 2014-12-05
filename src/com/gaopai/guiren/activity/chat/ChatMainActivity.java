@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,17 +34,22 @@ import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.BaseChatAdapter;
+import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
+import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
+import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
+import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.utils.ChatBoxManager;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.ChatGridLayout;
 import com.gaopai.guiren.view.RecordDialog;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
@@ -67,9 +74,9 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	private EditText mContentEdit;
 	private Button mSwitchVoiceTextBtn;
 	private ChatBoxManager boxManager;
+	private View layoutChatbox;
 
 	protected SimpleResponseListener getMessageListListener;
-
 	protected PreferenceOperateUtils spo;
 
 	protected boolean mHasLocalData = true;
@@ -117,6 +124,10 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 				mListView.onPullComplete();
 			}
 		};
+	}
+	
+	protected void hideChatBox() {
+		layoutChatbox.setVisibility(View.GONE);
 	}
 
 	protected void getMessageListLocal(boolean isFirstTime) {
@@ -210,6 +221,20 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		voiceModeToast.startAnimation(animation);
 	}
 
+	public void checkHasDraft(String id) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
+		ConverseationTable table = new ConverseationTable(dbDatabase);
+		ConversationBean conversationBean = table.queryByID(id);
+		if (conversationBean != null && !TextUtils.isEmpty(conversationBean.unfinishinput)) {
+			setDraft(conversationBean.unfinishinput);
+		}
+	}
+
+	public void setDraft(String draft) {
+		mContentEdit.setText(draft);
+		boxManager.switchToText(false);
+	}
+
 	public void changePlayMode() {
 		if (isModeInCall) {// 如果是听筒
 			setPlayMode(false);// 那么就喇叭
@@ -225,13 +250,12 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		}
 	}
 
-	
 	private void initTitleBarLocal() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		setTitleText();
 		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
 		ivDisturb = (ImageView) mTitleBar.addLeftImageViewWithDefaultSize(R.drawable.icon_chat_title_avoid_disturb_off);
-		
+
 		int imageId = R.drawable.icon_chat_title_ear_phone;
 		if (!isModeInCall) {
 			imageId = R.drawable.icon_chat_title_speaker;
@@ -249,8 +273,9 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		view.setId(R.id.ab_chat_more);
 		view.setOnClickListener(this);
 	}
-	
+
 	protected abstract boolean isAvoidDisturb();
+
 	protected void switchAvoidDisturb() {
 		if (isAvoidDisturb()) {
 			ivDisturb.setVisibility(View.VISIBLE);
@@ -259,13 +284,15 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		}
 
 	}
-	protected void setTitleText(){
-		//call before add ivDisturb
+
+	protected void setTitleText() {
+		// call before add ivDisturb
 	};
 
 	protected void initViewComponent() {
 		mSwitchVoiceTextBtn = (Button) findViewById(R.id.chat_box_btn_switch_voice_text);
 		mSwitchVoiceTextBtn.setOnClickListener(this);
+		layoutChatbox = ViewUtil.findViewById(this, R.id.chat_box);
 
 		mContentEdit = (EditText) findViewById(R.id.chat_box_edit_keyword);
 		mContentEdit.setOnClickListener(new OnClickListener() {
@@ -354,8 +381,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		});
 
 	}
-	
-	
 
 	@Override
 	protected void onResume() {
@@ -382,7 +407,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			return false;
 		}
 	};
-	
 
 	public void showSoftKeyboard() {
 		InputMethodManager imm = (InputMethodManager) mContentEdit.getContext().getSystemService(
@@ -532,5 +556,33 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			}
 			return false;
 		}
+	}
+
+	@Override
+	protected void onOtherChatBroadCastAction(Intent intent) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void notifyMessage(MessageInfo msg) {
+		// TODO Auto-generated method stub
+	}
+
+	
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		saveDraft(mContentEdit.getText().toString());
+		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+	}
+
+	public void saveDraft(String draft) {
+		MessageInfo msg = buildMessage();
+		msg.fileType = MessageType.TEXT;
+		msg.content = draft;
+		ConversationHelper.saveDraft(mContext, msg);
 	}
 }

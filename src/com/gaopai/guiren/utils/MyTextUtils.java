@@ -113,64 +113,65 @@ public class MyTextUtils {
 			return SpannableString.valueOf("");
 		}
 		SpannableString result = new SpannableString(text);
-		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id1,  WeiboTextUrlSpan.TYPE_CONNECTION), 0, name1.length(), 0);
+		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id1, WeiboTextUrlSpan.TYPE_CONNECTION), 0, name1.length(), 0);
 		int start = name1.length() + DamiApp.getInstance().getString(R.string.comment_reply_info_no_colon).length();
 		if (name2 != null) {
-			result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id2, WeiboTextUrlSpan.TYPE_CONNECTION), start, start + name2.length(), 0);
+			result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id2, WeiboTextUrlSpan.TYPE_CONNECTION), start, start
+					+ name2.length(), 0);
 		}
 		addEmotions(result);
 		return result;
 	}
 
-	public static SpannableString addConnectionJoin(String text1, String name, String id, String text2) {
-		if (TextUtils.isEmpty(name)) {
-			name = "";
-		}
-		SpannableString result = SpannableString.valueOf(text1 + name + text2);
-		int start = text1.length();
-		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id, WeiboTextUrlSpan.TYPE_CONNECTION), start,
-				start + name.length(), 0);
-		return result;
-	}
+//	public static SpannableString addConnectionJoin(String text1, String name, String id, String text2) {
+//		if (TextUtils.isEmpty(name)) {
+//			name = "";
+//		}
+//		SpannableString result = SpannableString.valueOf(text1 + name + text2);
+//		int start = text1.length();
+//		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id, WeiboTextUrlSpan.TYPE_CONNECTION), start,
+//				start + name.length(), 0);
+//		return result;
+//	}
 
-	public static SpannableString addConnectionJoin(String text1, String name1, String id1, String text2, String name2,
-			String id2) {
-		name1 = forceNotNull(name1);
-		name2 = forceNotNull(name2);
-		SpannableString result = SpannableString.valueOf(text1 + name1 + text2 + name2);
-		int start = text1.length();
-		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id1, WeiboTextUrlSpan.TYPE_CONNECTION), start,
-				start + name1.length(), 0);
-		start = (text1 + name1 + text2).length();
-		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id2, WeiboTextUrlSpan.TYPE_CONNECTION), start,
-				start + name2.length(), 0);
-		return result;
-	}
+//	public static SpannableString addConnectionJoin(String text1, String name1, String id1, String text2, String name2,
+//			String id2) {
+//		name1 = forceNotNull(name1);
+//		name2 = forceNotNull(name2);
+//		SpannableString result = SpannableString.valueOf(text1 + name1 + text2 + name2);
+//		int start = text1.length();
+//		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id1, WeiboTextUrlSpan.TYPE_CONNECTION), start,
+//				start + name1.length(), 0);
+//		start = (text1 + name1 + text2).length();
+//		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id2, WeiboTextUrlSpan.TYPE_CONNECTION), start,
+//				start + name2.length(), 0);
+//		return result;
+//	}
+//
+//	public static SpannableString addConnectionRec(String text, String name, String id) {
+//		return addConnectionJoin(text, name, id, "");
+//	}
 
-	public static SpannableString addConnectionRec(String text, String name, String id) {
-		return addConnectionJoin(text, name, id, "");
-	}
-
-	public static SpannableString addConnectionTribe(String userName, String id, String text, String tribeName,
-			String tribeId, boolean isTribe) {
-		if (TextUtils.isEmpty(userName)) {
-			userName = "";
-		}
-		if (TextUtils.isEmpty(tribeName)) {
-			tribeName = "";
-		}
-		SpannableString result = SpannableString.valueOf(userName + text + tribeName);
-		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id), 0, userName.length(), 0);
-		int start = (userName + text).length();
-		if (isTribe) {
-			result.setSpan(new WeiboTextUrlSpan(TRIBE_SCHEME + tribeId, WeiboTextUrlSpan.TYPE_CONNECTION), start, start
-					+ tribeName.length(), 0);
-		} else {
-			result.setSpan(new WeiboTextUrlSpan(MEETING_SCHEME + tribeId, WeiboTextUrlSpan.TYPE_CONNECTION), start,
-					start + tribeName.length(), 0);
-		}
-		return result;
-	}
+//	public static SpannableString addConnectionTribe(String userName, String id, String text, String tribeName,
+//			String tribeId, boolean isTribe) {
+//		if (TextUtils.isEmpty(userName)) {
+//			userName = "";
+//		}
+//		if (TextUtils.isEmpty(tribeName)) {
+//			tribeName = "";
+//		}
+//		SpannableString result = SpannableString.valueOf(userName + text + tribeName);
+//		result.setSpan(new WeiboTextUrlSpan(USER_SCHEME + id), 0, userName.length(), 0);
+//		int start = (userName + text).length();
+//		if (isTribe) {
+//			result.setSpan(new WeiboTextUrlSpan(TRIBE_SCHEME + tribeId, WeiboTextUrlSpan.TYPE_CONNECTION), start, start
+//					+ tribeName.length(), 0);
+//		} else {
+//			result.setSpan(new WeiboTextUrlSpan(MEETING_SCHEME + tribeId, WeiboTextUrlSpan.TYPE_CONNECTION), start,
+//					start + tribeName.length(), 0);
+//		}
+//		return result;
+//	}
 
 	public static String ToDBC(String input) {
 		char[] c = input.toCharArray();
@@ -208,7 +209,7 @@ public class MyTextUtils {
 		}
 		return result;
 	}
-	
+//
 	public static Spannable addSpreadUserList(List<SpreadBean> userList) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (SpreadBean user : userList) {
@@ -233,30 +234,30 @@ public class MyTextUtils {
 		return result;
 	}
 
-	public static Spannable addGuestUserList(List<GuestBean> userList, String infoText) {
-		StringBuilder stringBuilder = new StringBuilder();
-		for (GuestBean user : userList) {
-			stringBuilder.append(user.realname);
-			stringBuilder.append("、");
-		}
-		String text = stringBuilder.substring(0, stringBuilder.length() - 1).toString();
-		SpannableString result = SpannableString.valueOf(text);
-		Linkify.addLinks(result, USER_PATTERN, USER_SCHEME);
-		URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
-		WeiboTextUrlSpan weiboTextUrlSpan = null;
-		for (int i = 0; i < urlSpans.length; i++) {
-			URLSpan urlSpan = urlSpans[i];
-			int start = result.getSpanStart(urlSpan);
-			int end = result.getSpanEnd(urlSpan);
-			weiboTextUrlSpan = new WeiboTextUrlSpan(USER_SCHEME + userList.get(i / 2).uid,
-					WeiboTextUrlSpan.TYPE_CONNECTION);// USER_SCHEME+
-			// user.uid
-			result.removeSpan(urlSpan);
-			result.setSpan(weiboTextUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
-		SpannableStringBuilder builder = new SpannableStringBuilder();
-		return builder.append(infoText).append(result);
-	}
+//	public static Spannable addGuestUserList(List<GuestBean> userList, String infoText) {
+//		StringBuilder stringBuilder = new StringBuilder();
+//		for (GuestBean user : userList) {
+//			stringBuilder.append(user.realname);
+//			stringBuilder.append("、");
+//		}
+//		String text = stringBuilder.substring(0, stringBuilder.length() - 1).toString();
+//		SpannableString result = SpannableString.valueOf(text);
+//		Linkify.addLinks(result, USER_PATTERN, USER_SCHEME);
+//		URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+//		WeiboTextUrlSpan weiboTextUrlSpan = null;
+//		for (int i = 0; i < urlSpans.length; i++) {
+//			URLSpan urlSpan = urlSpans[i];
+//			int start = result.getSpanStart(urlSpan);
+//			int end = result.getSpanEnd(urlSpan);
+//			weiboTextUrlSpan = new WeiboTextUrlSpan(USER_SCHEME + userList.get(i / 2).uid,
+//					WeiboTextUrlSpan.TYPE_CONNECTION);// USER_SCHEME+
+//			// user.uid
+//			result.removeSpan(urlSpan);
+//			result.setSpan(weiboTextUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//		}
+//		SpannableStringBuilder builder = new SpannableStringBuilder();
+//		return builder.append(infoText).append(result);
+//	}
 
 	public static String stringFilter(String str) {
 		str = str.replaceAll("【", "[").replaceAll("】", "]").replaceAll("！", "!").replaceAll("：", ":");// 替换中文标号
@@ -266,38 +267,7 @@ public class MyTextUtils {
 		return m.replaceAll("").trim();
 	}
 
-	public static Spannable addConnectionUserList(List<User> userList, String infoText) {
-		StringBuilder stringBuilder = new StringBuilder();
-		for (User user : userList) {
-			stringBuilder.append(user.realname);
-			stringBuilder.append("、");
-		}
-		String text = stringBuilder.substring(0, stringBuilder.length() - 1).toString();
-		// text = stringFilter(text);
-		SpannableString result = SpannableString.valueOf(StringUtils.fullWidthToHalfWidth(text));
-		Linkify.addLinks(result, USER_PATTERN, USER_SCHEME);
-		URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
-		WeiboTextUrlSpan weiboTextUrlSpan = null;
-		for (int i = 0; i < urlSpans.length; i++) {
-			URLSpan urlSpan = urlSpans[i];
-			int start = result.getSpanStart(urlSpan);
-			int end = result.getSpanEnd(urlSpan);
-			weiboTextUrlSpan = new WeiboTextUrlSpan(USER_SCHEME + userList.get(i / 2).uid,
-					WeiboTextUrlSpan.TYPE_CONNECTION);// USER_SCHEME+
-			// user.uid
-			result.removeSpan(urlSpan);
-			result.setSpan(weiboTextUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
-		SpannableStringBuilder builder = new SpannableStringBuilder();
-		return builder.append(result).append(stringFilter(infoText));
-	}
 
-	public static Spannable addConnectionUserListExtra(List<User> userList, String userName, String uid, String text1,
-			String text2, String text3) {
-		SpannableStringBuilder builder = new SpannableStringBuilder();
-		return builder.append(addConnectionJoin(text1, userName, uid, text2)).append(
-				addConnectionUserList(userList, text3));
-	}
 
 	public static Spannable addEmotions(Spannable value) {
 		Matcher matcher = EMOTION_PATTERN.matcher(value);
@@ -324,65 +294,71 @@ public class MyTextUtils {
 		}
 		return src;
 	}
-	
+
 	public static View.OnTouchListener mTextOnTouchListener = new View.OnTouchListener() {
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			TextView textView = (TextView) v;
-			
-			int x = (int) event.getX();
-			int y = (int) event.getY();
-			x -= textView.getTotalPaddingLeft();
-			y -= textView.getTotalPaddingTop();
+			try {
+				TextView textView = (TextView) v;
 
-			x += textView.getScrollX();
-			y += textView.getScrollY();
+				int x = (int) event.getX();
+				int y = (int) event.getY();
+				x -= textView.getTotalPaddingLeft();
+				y -= textView.getTotalPaddingTop();
 
-			Layout layout = textView.getLayout();
-			int offset = 0;
-			if (layout != null) {
-				int line = layout.getLineForVertical(y);
-				offset = layout.getOffsetForHorizontal(line, x);
-			}
-			SpannableString text = SpannableString.valueOf(textView.getText());
-			LongClickableLinkMovementMethod.getInstance().onTouchEvent(textView, text, event);
-			switch (event.getActionMasked()) {
-			case MotionEvent.ACTION_DOWN:
-				WeiboTextUrlSpan[] spans = text.getSpans(0, text.length(), WeiboTextUrlSpan.class);
-				boolean found = false;
-				int foundStart = 0;
-				int foundEnd = 0;
-				for (WeiboTextUrlSpan span : spans) {
-					int start = text.getSpanStart(span);
-					int end = text.getSpanEnd(span);
-					if (start <= offset && offset <= end) {
-						found = true;
-						foundStart = start;
-						foundEnd = end;
-						break;
+				x += textView.getScrollX();
+				y += textView.getScrollY();
+
+				Layout layout = textView.getLayout();
+				int offset = 0;
+				if (layout != null) {
+					int line = layout.getLineForVertical(y);
+					offset = layout.getOffsetForHorizontal(line, x);
+				}
+				SpannableString text = SpannableString.valueOf(textView.getText());
+				LongClickableLinkMovementMethod.getInstance().onTouchEvent(textView, text, event);
+				switch (event.getActionMasked()) {
+				case MotionEvent.ACTION_DOWN:
+					WeiboTextUrlSpan[] spans = text.getSpans(0, text.length(), WeiboTextUrlSpan.class);
+					boolean found = false;
+					int foundStart = 0;
+					int foundEnd = 0;
+					for (WeiboTextUrlSpan span : spans) {
+						int start = text.getSpanStart(span);
+						int end = text.getSpanEnd(span);
+						if (start <= offset && offset <= end) {
+							found = true;
+							foundStart = start;
+							foundEnd = end;
+							break;
+						}
 					}
-				}
-				boolean consumeEvent = false;
-				if (found && true) {
-					consumeEvent = true;
-				}
-				if (found && !consumeEvent) {
+					boolean consumeEvent = false;
+					if (found && true) {
+						consumeEvent = true;
+					}
+					if (found && !consumeEvent) {
+						clearBackgroundColorSpans(text, textView);
+					}
+					if (consumeEvent) {
+						BackgroundColorSpan span = new BackgroundColorSpan(DamiApp.getInstance().getResources()
+								.getColor(R.color.holo_blue_light));
+						text.setSpan(span, foundStart, foundEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+						textView.setText(text);
+					}
+					return consumeEvent;
+				case MotionEvent.ACTION_CANCEL:
+				case MotionEvent.ACTION_UP:
+					LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
 					clearBackgroundColorSpans(text, textView);
+					break;
 				}
-				if (consumeEvent) {
-					BackgroundColorSpan span = new BackgroundColorSpan(DamiApp.getInstance().getResources()
-							.getColor(R.color.holo_blue_light));
-					text.setSpan(span, foundStart, foundEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-					textView.setText(text);
-				}
-				return consumeEvent;
-			case MotionEvent.ACTION_CANCEL:
-			case MotionEvent.ACTION_UP:
-				LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
-				clearBackgroundColorSpans(text, textView);
-				break;
+				return false;
+			} catch (NullPointerException e) {
+				// TODO: handle exception
 			}
 			return false;
+
 		}
 
 		private void clearBackgroundColorSpans(SpannableString text, TextView textView) {
@@ -393,32 +369,35 @@ public class MyTextUtils {
 			}
 		}
 	};
-	
+
 	public static void changeToBold(TextView textView) {
-		TextPaint tp = textView.getPaint(); 
+		TextPaint tp = textView.getPaint();
 		tp.setFakeBoldText(true);
 	}
-	
-	
+
 	public static SpannableString addSingleMeetingSpan(String text, String uid) {
 		return addSingleSpanGeneral(text, uid, MEETING_SCHEME);
 	}
+
 	public static SpannableString addSingleTribeSpan(String text, String uid) {
 		return addSingleSpanGeneral(text, uid, TRIBE_SCHEME);
 	}
+
 	public static SpannableString addSingleUserSpan(String text, String uid) {
 		return addSingleSpanGeneral(text, uid, USER_SCHEME);
 	}
+
 	public static SpannableString addSingleSpanGeneral(String text, String uid, String scheme) {
 		if (TextUtils.isEmpty(text)) {
 			return new SpannableString("");
 		}
 		SpannableString result = new SpannableString(text);
-		result.setSpan(new WeiboTextUrlSpan(scheme + uid, WeiboTextUrlSpan.TYPE_CONNECTION), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		result.setSpan(new WeiboTextUrlSpan(scheme + uid, WeiboTextUrlSpan.TYPE_CONNECTION), 0, text.length(),
+				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return result;
 	}
-	
-	public static <T extends SpanUser>SpannableString addUserSpans(List<T> spanUsers) {
+
+	public static <T extends SpanUser> SpannableString addUserSpans(List<T> spanUsers) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (SpanUser user : spanUsers) {
 			stringBuilder.append(user.realname);
@@ -433,13 +412,14 @@ public class MyTextUtils {
 			URLSpan urlSpan = urlSpans[i];
 			int start = result.getSpanStart(urlSpan);
 			int end = result.getSpanEnd(urlSpan);
-			weiboTextUrlSpan = new WeiboTextUrlSpan(USER_SCHEME + spanUsers.get(i / 2).uid, WeiboTextUrlSpan.TYPE_CONNECTION);// USER_SCHEME+
+			weiboTextUrlSpan = new WeiboTextUrlSpan(USER_SCHEME + spanUsers.get(i / 2).uid,
+					WeiboTextUrlSpan.TYPE_CONNECTION);// USER_SCHEME+
 			result.removeSpan(urlSpan);
 			result.setSpan(weiboTextUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 		return result;
 	}
-	
+
 	public static Spannable getSpannableString(CharSequence... strings) {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		for (CharSequence spannableString : strings) {
@@ -447,7 +427,7 @@ public class MyTextUtils {
 		}
 		return builder;
 	}
-	
+
 	public static class SpanUser implements Serializable {
 		public String uid;
 		public String realname;

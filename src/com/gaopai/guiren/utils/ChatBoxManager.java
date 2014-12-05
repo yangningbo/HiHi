@@ -100,23 +100,31 @@ public class ChatBoxManager {
 	public void switchTextVoice() {
 		boolean sendVoice = (mContentEdit.getVisibility() == View.VISIBLE);
 		if (sendVoice) {// true 文字
-			mSwitchVoiceTextBtn.setBackgroundResource(R.drawable.chatting_setmode_keyboard_btn_normal);
-			mEmotionBtn.setVisibility(View.GONE);
-			mContentEdit.setVisibility(View.GONE);
-			mVoiceSendBtn.setVisibility(View.VISIBLE);
-			hideEmotion();
-			hideAddGrid();
-			hideSoftKeyboard();
+			switchToVoice();
 		} else {
-			mSwitchVoiceTextBtn.setBackgroundResource(R.drawable.chatting_setmode_voice_btn_normal);
-			mVoiceSendBtn.setVisibility(View.GONE);
-			mEmotionBtn.setVisibility(View.VISIBLE);
-			mContentEdit.setVisibility(View.VISIBLE);
-			mContentEdit.setFocusable(true);
-			mContentEdit.setFocusableInTouchMode(true);
-			mContentEdit.requestFocus();
-			hideAddGrid();
-			hideEmotion();
+			switchToText(true);
+		}
+	}
+	public void switchToVoice() {
+		mSwitchVoiceTextBtn.setBackgroundResource(R.drawable.chatting_setmode_keyboard_btn_normal);
+		mEmotionBtn.setVisibility(View.GONE);
+		mContentEdit.setVisibility(View.GONE);
+		mVoiceSendBtn.setVisibility(View.VISIBLE);
+		hideEmotion();
+		hideAddGrid();
+		hideSoftKeyboard();
+	}
+	public void switchToText(boolean showKeyboard) {
+		mSwitchVoiceTextBtn.setBackgroundResource(R.drawable.chatting_setmode_voice_btn_normal);
+		mVoiceSendBtn.setVisibility(View.GONE);
+		mEmotionBtn.setVisibility(View.VISIBLE);
+		mContentEdit.setVisibility(View.VISIBLE);
+		mContentEdit.setFocusable(true);
+		mContentEdit.setFocusableInTouchMode(true);
+		mContentEdit.requestFocus();
+		hideAddGrid();
+		hideEmotion();
+		if (showKeyboard) {
 			showSoftKeyboard();
 		}
 	}

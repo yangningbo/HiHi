@@ -69,10 +69,34 @@ public class ConversationHelper {
 		table.insert(conversation);
 	}
 	
-	public static void saveDraft(Context context, String draft, String toid) {
+	public static void creatNewItem() {
+		
+	}
+	
+	public static void saveDraft(Context context, MessageInfo messageInfo) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
-		table.updateDraft(draft, toid);
+		ConversationInnerBean bean = messageInfo.conversion;
+		ConversationBean conversation = table.queryByID(bean.toid);
+		if (conversation == null) {
+			conversation = new ConversationBean();
+			conversation.name = bean.name;
+			conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
+			conversation.toid = bean.toid;
+			conversation.unfinishinput = messageInfo.content;
+			if (messageInfo.fileType == MessageType.VOICE) {
+				conversation.type = bean.type + 2;
+			} else {
+				conversation.type = bean.type;
+			}
+			conversation.anonymous = 0;
+			table.insert(conversation);
+		} else {
+			conversation.unfinishinput = messageInfo.content;
+			table.update(conversation);
+		}
+
+	
 	}
 
 }

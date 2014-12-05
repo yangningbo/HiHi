@@ -129,11 +129,13 @@ public class ConnectionAdapter extends BaseAdapter {
 	}
 
 	private void buildPicGridView(ViewHolderPicGridGeneral viewHolder, TypeHolder typeBean, int position, int type) {
-		if (!TextUtils.isEmpty(typeBean.headsmall)) {
-			ImageLoaderUtil.displayImage(typeBean.headsmall, viewHolder.ivHeader);
-		} else {
-			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-		}
+		// if (!TextUtils.isEmpty(typeBean.headsmall)) {
+		// ImageLoaderUtil.displayImage(typeBean.headsmall,
+		// viewHolder.ivHeader);
+		// } else {
+		// viewHolder.ivHeader.setImageResource(R.drawable.default_header);
+		// }
+		viewHolder.ivHeader.setImageResource(R.drawable.icon_connection_default);
 
 		JsonContent jsonContent = typeBean.jsoncontent;
 		List<User> userList = jsonContent.user;
@@ -183,11 +185,12 @@ public class ConnectionAdapter extends BaseAdapter {
 
 	private void buildJoinView(ViewHolderGeneral viewHolder, TypeHolder typeBean, int position, int type) {
 		// TODO Auto-generated method stub
-		if (!TextUtils.isEmpty(typeBean.headsmall)) {
-			ImageLoaderUtil.displayImage(typeBean.headsmall, viewHolder.ivHeader);
-		} else {
-			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-		}
+//		if (!TextUtils.isEmpty(typeBean.headsmall)) {
+//			ImageLoaderUtil.displayImage(typeBean.headsmall, viewHolder.ivHeader);
+//		} else {
+//			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
+//		}
+		viewHolder.ivHeader.setImageResource(R.drawable.icon_connection_default);
 		JsonContent content = typeBean.jsoncontent;
 		User user = getSingleUser(content);
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);

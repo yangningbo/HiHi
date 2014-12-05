@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.gaopai.guiren.R;
 
@@ -17,6 +20,9 @@ public class WelcomeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcome);
+		ImageView view = (ImageView) findViewById(R.id.iv_back);
+		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.scale);
+		view.startAnimation(welcomeAnimation);
 		showMainpage();
 	}
 
@@ -30,6 +36,7 @@ public class WelcomeActivity extends Activity {
 						MainActivity.class);
 				WelcomeActivity.this.startActivity(intentt);
 				WelcomeActivity.this.finish();
+				
 			}
 		}, 2000);
 	}

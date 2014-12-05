@@ -6,11 +6,19 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/tv_send_dynamic"
+        android:id="@+id/tv_creat_meeting"
         style="@style/titlebar_pop_text"
         android:background="@drawable/selector_btn_transparent_drak_top"
-        android:drawableLeft="@drawable/icon_pop_send_dy"
-        android:text="发表动态" />
+        android:drawableLeft="@drawable/icon_pop_creat_meeting"
+        android:text="创建会议" />
+
+    <View style="@style/general_thin_divider_in_drak" />
+
+    <TextView
+        android:id="@+id/tv_creat_tribe"
+        style="@style/titlebar_pop_text"
+        android:drawableLeft="@drawable/icon_pop_creat_tribe"
+        android:text="创建圈子" />
 
     <View style="@style/general_thin_divider_in_drak" />
 
@@ -23,10 +31,10 @@
     <View style="@style/general_thin_divider_in_drak" />
 
     <TextView
-        android:id="@+id/tv_feedback"
+        android:id="@+id/tv_send_dynamic"
         style="@style/titlebar_pop_text"
-        android:drawableLeft="@drawable/icon_pop_feedback"
-        android:text="反馈意见" />
+        android:drawableLeft="@drawable/icon_pop_send_dy"
+        android:text="发表动态" />
 
     <View style="@style/general_thin_divider_in_drak" />
 
