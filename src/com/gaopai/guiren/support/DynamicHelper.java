@@ -9,8 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.text.Spannable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +39,7 @@ import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentContetnHolder;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.CommnetHolder;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.PicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
@@ -67,8 +68,7 @@ public class DynamicHelper {
 	public final static int TYPE_SPREAD_USER = 5;
 
 	public final static int TYPE_SPREAD_OTHER_DYNAMIC = 7;
-	
-	
+
 	public final static int DY_LIST = 0;
 	public final static int DY_DETAIL = 1;
 	public final static int DY_PROFILE = 2;
@@ -106,7 +106,7 @@ public class DynamicHelper {
 	}
 
 	private DyCallback callback;
-	
+
 	public void setCallback(DyCallback callback) {
 		this.callback = callback;
 	}
@@ -122,7 +122,8 @@ public class DynamicHelper {
 
 		public void onBindComment(TypeHolder typeHolder, ViewHolderCommon holder);
 
-		public void onBindCommenViewBottom(TypeHolder typeHolder, ViewHolderCommon holder);
+		public void onBindCommenViewBottom(TypeHolder typeHolder, ViewHolderCommon holder, boolean isShowComment,
+				boolean isShowSpread, boolean isShowZan);
 
 		public void onDownVoiceSuccess();
 
@@ -177,7 +178,7 @@ public class DynamicHelper {
 	}
 
 	public void spread(final TypeHolder typeBean) {
-		DamiInfo.spreadDynamic(1, typeBean.id, "", "", "", "", new SimpleResponseListener(mContext) {
+		DamiInfo.spreadDynamic(-1, typeBean.id, "", "", "", "", new SimpleResponseListener(mContext) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -200,18 +201,9 @@ public class DynamicHelper {
 		});
 	}
 
-	public static class CommnetHolder {
-		public String toid;
-		public int type;
-		public String dataid;
-		public String content;
-		public String displayname;
-		public String todisplayname;
-	}
-
-	private CommnetHolder commnetHolder = new CommnetHolder();
-
 	public void commentMessage(final String content, final TypeHolder typeHolder) {
+		// final CommnetHolder commnetHolder = typeHolder.commnetHolder;
+		final CommnetHolder commnetHolder = typeHolder.commnetHolder;
 		DamiInfo.addComment(commnetHolder.toid, commnetHolder.type, commnetHolder.dataid, content, 0,
 				commnetHolder.displayname, commnetHolder.todisplayname, new SimpleResponseListener(mContext) {
 					@Override
@@ -226,10 +218,10 @@ public class DynamicHelper {
 							commentBean.toname = commnetHolder.todisplayname;
 							commentBean.uname = user.realname;
 							commentBean.type = commnetHolder.type;
+							commentBean.dataid = commnetHolder.dataid;
 							if (typeHolder.commentlist == null) {
 								typeHolder.commentlist = new ArrayList<CommentBean>();
 							}
-							Log.d("typeholder", "id===" + typeHolder.id);
 							typeHolder.commentlist.add(commentBean);
 							callback.onCommentSuccess();
 						} else {
@@ -274,13 +266,10 @@ public class DynamicHelper {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				commnetHolder.toid = typeHolder.uid;
-				commnetHolder.todisplayname = typeHolder.realname;
+				CommnetHolder commnetHolder = typeHolder.commnetHolder;
 				commnetHolder.displayname = user.realname;
 				commnetHolder.dataid = typeHolder.id;
 				commnetHolder.type = 1;// 实名还是匿名？
-				// mFragment.showChatBox(commnetHolder.todisplayname,
-				// typeHolder);
 				callback.onCommentButtonClick(typeHolder, false);
 				actionWindow.dismiss();
 			}
@@ -320,7 +309,7 @@ public class DynamicHelper {
 
 	public static class ViewHolderCommon {
 		ImageButton btnDynamicAction;
-		LinearLayout rlDynamicInteractive;
+		public LinearLayout rlDynamicInteractive;
 		LinearLayout layoutSpread;
 		TextView tvSpread;
 		LinearLayout layoutZan;
@@ -336,11 +325,11 @@ public class DynamicHelper {
 		View lineSpread;
 		View lineZan;
 
-		View layoutCoverTop;
-		LinearLayout layoutComment;
-		TextView tvMoreComment;
-		
-		View layoutDetailCoverTop;
+		public View layoutCoverTop;
+		public View layoutCoverBottom;
+		public View layoutCoverTopBottomHolder;
+		public LinearLayout layoutComment;
+		public TextView tvMoreComment;
 
 		public void initialBottom(ViewHolderCommon viewHolder, View view) {
 			viewHolder.tvSpread = (TextView) view.findViewById(R.id.tv_spread);
@@ -352,10 +341,11 @@ public class DynamicHelper {
 				viewHolder.rlDynamicInteractive = (LinearLayout) view.findViewById(R.id.rl_dynamic_interactive);
 				viewHolder.tvMoreComment = (TextView) view.findViewById(R.id.tv_more_comment);
 				viewHolder.layoutComment = (LinearLayout) view.findViewById(R.id.ll_comment);
-			} else { // in detail page
-				viewHolder.layoutDetailCoverTop = ViewUtil.findViewById(view, R.id.layout_dynamic_detail_bottom);
+			} else {
+				viewHolder.layoutCoverBottom = view.findViewById(R.id.view_cover_bottom);
+				viewHolder.layoutCoverTopBottomHolder = view.findViewById(R.id.layout_dynamic_detail_bottom);
 			}
-			
+
 			viewHolder.layoutCoverTop = view.findViewById(R.id.view_cover_top);
 			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
 			viewHolder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
@@ -643,7 +633,7 @@ public class DynamicHelper {
 		viewHolder.tvMeetingTime.setText(jsonContent.time);
 		viewHolder.tvMeetingGuest.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		viewHolder.tvMeetingGuest.setText(MyTextUtils.addGuestUserList(jsonContent.guest, "嘉宾："));
-		
+
 		viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -660,7 +650,9 @@ public class DynamicHelper {
 		// TODO Auto-generated method stub
 		buildCommonView(viewHolder, typeBean);
 		final JsonContent jsonContent = typeBean.jsoncontent;
-
+		if (jsonContent == null) {
+			return;
+		}
 		switch (typeBean.type) {
 		case TYPE_SPREAD_LINK:
 			// url
@@ -704,9 +696,9 @@ public class DynamicHelper {
 		}
 	}
 
-	private void buildCommonView(ViewHolderCommon viewHolder, TypeHolder typeBean) {
+	public void buildCommonView(ViewHolderCommon viewHolder, TypeHolder typeBean) {
 		int type = typeBean.type;
-	
+
 		if (mDyKind == DY_PROFILE) {
 			viewHolder.tvAction.setVisibility(View.VISIBLE);
 			if (type == TYPE_SEND_DYNAMIC) {
@@ -719,13 +711,14 @@ public class DynamicHelper {
 			viewHolder.tvUserName.setVisibility(View.GONE);
 			viewHolder.tvUserInfo.setVisibility(View.GONE);
 			viewHolder.ivHeader.setVisibility(View.GONE);
-			viewHolder.layoutDetailCoverTop.setVisibility(View.GONE);
+			viewHolder.layoutCoverTopBottomHolder.setVisibility(View.GONE);
 			return;
 		}
+
 		boolean isShowZan = false, isShowComment = false, isShowSpread = false;
 		viewHolder.lineZan.setVisibility(View.GONE);
 		viewHolder.lineSpread.setVisibility(View.GONE);
-		
+
 		if (!TextUtils.isEmpty(typeBean.s_path)) {
 			ImageLoaderUtil.displayImage(typeBean.s_path, viewHolder.ivHeader);
 		} else {
@@ -741,7 +734,7 @@ public class DynamicHelper {
 			viewHolder.tvAction.setText(typeBean.title);
 		}
 
-		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)) + "     天山上的来客");
+		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)));
 
 		if (typeBean.spread != null && typeBean.spread.size() > 0) {
 			isShowSpread = true;
@@ -765,49 +758,13 @@ public class DynamicHelper {
 		if (typeBean.commentlist != null && typeBean.commentlist.size() > 0) {
 			viewHolder.lineZan.setVisibility((isShowSpread || isShowZan) ? View.VISIBLE : View.GONE);
 			isShowComment = true;
-			if (mIsDyList) {
-				viewHolder.layoutComment.setVisibility(View.VISIBLE); // in list
-				buildCommentView(viewHolder.layoutComment, typeBean);// in list
-			} else {
-				viewHolder.layoutCoverTop.setVisibility(View.VISIBLE); // in
-																		// detail
-			}
-			// callback.onBindComment(typeBean, viewHolder);
-		} else {
-			viewHolder.layoutComment.setVisibility(View.GONE);
 		}
 
-		if (mIsDyList) {
-			if (typeBean.totalcomment > 5) {
-				viewHolder.tvMoreComment.setVisibility(View.VISIBLE);
-				viewHolder.tvMoreComment.setTag(typeBean);
-				viewHolder.tvMoreComment.setOnClickListener(moreCommentClickListener);
-			} else {
-				viewHolder.tvMoreComment.setVisibility(View.GONE);
-			}
-		}
-
-		if (isShowComment || isShowSpread || isShowZan) {
-			viewHolder.rlDynamicInteractive.setVisibility(View.VISIBLE);
-		} else {
-			viewHolder.rlDynamicInteractive.setVisibility(View.GONE);
-		}
-
-		callback.onBindCommenViewBottom(typeBean, viewHolder);
+		callback.onBindCommenViewBottom(typeBean, viewHolder, isShowComment, isShowSpread, isShowZan);
 
 		viewHolder.btnDynamicAction.setTag(typeBean);
 		viewHolder.btnDynamicAction.setOnClickListener(moreWindowClickListener);
 	}
-
-	private OnClickListener moreCommentClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			Intent intent = new Intent(mContext, DynamicDetailActivity.class);
-			intent.putExtra(DynamicDetailActivity.KEY_TYPEHOLDER, (TypeHolder) v.getTag());
-			mContext.startActivity(intent);
-		}
-	};
 
 	private OnClickListener moreWindowClickListener = new OnClickListener() {
 
@@ -817,57 +774,6 @@ public class DynamicHelper {
 			showActionWindow(v);
 		}
 	};
-
-	// put in list
-	private void buildCommentView(ViewGroup parent, final TypeHolder typeBean) {
-		List<CommentBean> commentBeans = typeBean.commentlist;
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		parent.removeAllViews();
-		int textPadding = MyUtils.dip2px(mContext, 3);
-		for (int i = 0, count = commentBeans.size(); i < count; i++) {
-			final CommentBean commentBean = commentBeans.get(i);
-			TextView textView = new TextView(mContext);
-			textView.setBackgroundResource(R.drawable.selector_text_btn);
-			textView.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 5));
-			textView.setPadding(textPadding, textPadding, textPadding, textPadding);
-			if (i == 0) {
-				textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_comment, 0, 0, 0);
-			} else {
-				textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_comment_transparent, 0, 0, 0);
-			}
-			textView.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-			commentBean.uname = makeNameNotNull(commentBean.uname);
-			commentBean.toname = makeNameNotNull(commentBean.toname);
-			textView.setText(MyTextUtils.addUserHttpLinks(commentBean.uname + "回复" + commentBean.toname + "："
-					+ commentBean.content.content, commentBean.uname, commentBean.toname, commentBean.uid,
-					commentBean.toid));
-
-			// textView.setText(commentBean.uname + "回复" + commentBean.toname +
-			// "：" + commentBean.content.content);
-			textView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					commnetHolder.toid = commentBean.uid;
-					commnetHolder.todisplayname = commentBean.uname;
-					commnetHolder.displayname = DamiCommon.getLoginResult(mContext).displayName;
-					commnetHolder.dataid = commentBean.dataid;
-					commnetHolder.type = commentBean.type;
-					callback.onCommentButtonClick(typeBean, true);
-					// mFragment.showChatBox(commnetHolder.todisplayname,
-					// mData.get(position));
-					// showSoftKeyboard();
-				}
-			});
-			parent.addView(textView, lp);
-		}
-	}
-
-	private String makeNameNotNull(String name) {
-		if (TextUtils.isEmpty(name)) {
-			return "匿名";
-		}
-		return name;
-	}
 
 	private void buildDynamicView(ViewHolderSendDynamic viewHolder, TypeHolder typeBean) {
 		// TODO Auto-generated method stub
@@ -921,4 +827,40 @@ public class DynamicHelper {
 		return imageView;
 	}
 
+	public void setCommentHolder(TypeHolder typeBean) {
+		CommnetHolder commnetHolder = typeBean.commnetHolder;
+		commnetHolder.displayname = user.realname;
+		commnetHolder.dataid = typeBean.id;
+		commnetHolder.type = 1;
+	}
+
+	public void setCommentHolderForReply(TypeHolder typeBean, CommentBean commentBean) {
+		CommnetHolder commnetHolder = typeBean.commnetHolder;
+		commnetHolder.toid = commentBean.uid;
+		commnetHolder.todisplayname = commentBean.uname;
+		commnetHolder.displayname = user.realname;
+		commnetHolder.dataid = commentBean.dataid;
+		commnetHolder.type = 1;
+	}
+
+	public Spannable getCommentString(CommentBean commentBean) {
+		makeCommentNotNull(commentBean);
+		if (commentBean.toid != null && (!commentBean.toid.equals("0"))) {
+			return MyTextUtils.addEmotions(MyTextUtils.getSpannableString(
+					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), "回复",
+					MyTextUtils.addSingleUserSpan(commentBean.toname, commentBean.toid), ":", commentBean.content.content));
+		} else {
+			return MyTextUtils.addEmotions(MyTextUtils.getSpannableString(
+					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), ":", commentBean.content.content));
+		}
+	}
+	
+	public void makeCommentNotNull(CommentBean commentBean) {
+		if (TextUtils.isEmpty(commentBean.toname)) {
+			commentBean.toname = "匿名";
+		} 
+		if (TextUtils.isEmpty(commentBean.uname)) {
+			commentBean.uname = "匿名";
+		} 
+	}
 }

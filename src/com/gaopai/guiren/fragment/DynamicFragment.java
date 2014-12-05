@@ -230,7 +230,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			return;
 		}
 		tvDyCount.setVisibility(View.VISIBLE);
-		tvDyCount.setText("您有" + newalertcount + "条新动态");
+		tvDyCount.setText("您有" + newalertcount + "条新消息");
 	}
 	
 

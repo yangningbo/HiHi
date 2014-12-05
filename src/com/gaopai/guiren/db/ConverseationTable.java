@@ -28,6 +28,7 @@ public class ConverseationTable {
 	public static final String COLUMN_ANONYMOUS = "anonymous";
 	public static final String COLUMN_UNFINISH_INPUT = "unfinishinput";
 
+	public static final String COLUMN_LOGIN_ID = "loginId";
 	public static final String COLUMN_TEXT_TYPE = "text";
 	public static final String COLUMN_INTEGER_TYPE = "integer";
 	public static final String PRIMARY_KEY_TYPE = "primary key(";
@@ -54,8 +55,9 @@ public class ConverseationTable {
 			columnNameAndType.put(COLUMN_TO_ID, COLUMN_TEXT_TYPE);
 			columnNameAndType.put(COLUMN_ANONYMOUS, COLUMN_INTEGER_TYPE);
 			columnNameAndType.put(COLUMN_UNFINISH_INPUT, COLUMN_TEXT_TYPE);
+			
 
-			String primary_key = PRIMARY_KEY_TYPE + COLUMN_TO_ID + ")";
+			String primary_key = PRIMARY_KEY_TYPE + COLUMN_TO_ID + "," + COLUMN_LOGIN_ID + ")";
 
 			mSQLCreateWeiboInfoTable = SqlHelper.formCreateTableSqlString(TABLE_NAME, columnNameAndType, primary_key);
 		}
@@ -82,6 +84,7 @@ public class ConverseationTable {
 		allPromotionInfoValues.put(COLUMN_TO_ID, bean.toid);
 		allPromotionInfoValues.put(COLUMN_ANONYMOUS, bean.anonymous);
 		allPromotionInfoValues.put(COLUMN_UNFINISH_INPUT, bean.unfinishinput);
+		allPromotionInfoValues.put(COLUMN_LOGIN_ID, DamiCommon.getUid(DamiApp.getInstance()));
 		try {
 			mDBStore.insertOrThrow(TABLE_NAME, null, allPromotionInfoValues);
 		} catch (SQLiteConstraintException e) {
@@ -104,7 +107,8 @@ public class ConverseationTable {
 		Cursor cursor = null;
 		mDBStore.beginTransaction();
 		try {
-			String querySql = "SELECT * FROM " + TABLE_NAME;
+			String querySql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance())
+					+ "' ORDER BY " + COLUMN_LAST_MSG_TIME + " DESC ";
 			cursor = mDBStore.rawQuery(querySql, null);
 			while (cursor.moveToNext()) {
 				ConversationBean bean = new ConversationBean();
@@ -153,8 +157,7 @@ public class ConverseationTable {
 	public ConversationBean queryByID(String id) {
 		Cursor cursor = null;
 		try {
-			String querySql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TO_ID + "='" + id + "'" + " ORDER BY "
-					+ COLUMN_LAST_MSG_TIME + " DESC ";
+			String querySql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance());
 			cursor = mDBStore.rawQuery(querySql, null);
 			if (cursor != null && cursor.moveToFirst()) {
 				ConversationBean bean = new ConversationBean();
@@ -206,7 +209,21 @@ public class ConverseationTable {
 		allPromotionInfoValues.put(COLUMN_NAME, message.name);
 		allPromotionInfoValues.put(COLUMN_TYPE, message.type);
 		try {
-			mDBStore.update(TABLE_NAME, allPromotionInfoValues, COLUMN_TO_ID + " = '" + message.toid + "'", null);
+			mDBStore.update(TABLE_NAME, allPromotionInfoValues,
+					COLUMN_TO_ID + " = '" + message.toid + "' AND " + COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance()) + "'", null);
+			return true;
+		} catch (SQLiteConstraintException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean updateDraft(String draft, String toid) {
+		ContentValues allPromotionInfoValues = new ContentValues();
+		allPromotionInfoValues.put(COLUMN_UNFINISH_INPUT, draft);
+		try {
+			mDBStore.update(TABLE_NAME, allPromotionInfoValues,
+					COLUMN_TO_ID + " = '" + toid + "' AND " + COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance()) + "'", null);
 			return true;
 		} catch (SQLiteConstraintException e) {
 			e.printStackTrace();

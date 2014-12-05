@@ -19,8 +19,7 @@
         android:background="@drawable/selector_gray_blue_btn"
         android:drawableLeft="@drawable/icon_dynamic_spread"
         android:drawablePadding="5dp"
-        android:padding="5dp"
-        android:text="360" />
+        android:padding="5dp"/>
 
     <View
         android:id="@+id/line_spread_bottom"
@@ -36,8 +35,7 @@
         android:background="@drawable/selector_gray_blue_btn"
         android:drawableLeft="@drawable/icon_dynamic_favourite"
         android:drawablePadding="5dp"
-        android:padding="5dp"
-        android:text="百度" />
+        android:padding="5dp"/>
 
     <View
         android:id="@+id/line_zan_bottom"
@@ -45,5 +43,11 @@
         android:layout_height="1px"
         android:background="@color/dynamic_horizon_divider"
         android:visibility="visible" />
+    <LinearLayout
+        android:id="@+id/view_cover_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:background="@drawable/fuck"
+        android:orientation="vertical" />
 
 </LinearLayout>

@@ -121,6 +121,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		registerReceiver(mReceiver, filter);
 	}
 
+	public static Intent getIntent(Context context, String tid) {
+		Intent intent = new Intent(context, MeetingDetailActivity.class);
+		intent.putExtra(KEY_MEETING_ID, tid);
+		return intent;
+	}
+	
 	private void initComponent() {
 		tvMeetingTitle = (TextView) findViewById(R.id.tv_meeting_title);
 		tvMeetingTime = (TextView) findViewById(R.id.tv_meeting_time);

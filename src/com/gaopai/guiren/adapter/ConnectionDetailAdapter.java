@@ -72,10 +72,13 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		User user = mData.get(position);
 		if (typeBean.type == ConnectionAdapter.TYPE_SOMEONE_FOLLOW_ME) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionJoin("", user.realname, user.uid, "关注了你"));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "关注了你",
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 		} else if (typeBean.type == ConnectionAdapter.TYPE_SOMEONE_I_FOLLOW_FOLLOW) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionJoin("您的通互相关注好友", typeBean.jsoncontent.realname,
-					typeBean.jsoncontent.uid, "关注了", user.realname, user.uid));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+					MyTextUtils.addSingleUserSpan(typeBean.jsoncontent.realname, typeBean.jsoncontent.uid), "关注了",
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 		}
 
 		if (!TextUtils.isEmpty(user.headsmall)) {
@@ -86,7 +89,7 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 		viewHolder.tvUserName.setText(user.realname);
 		viewHolder.tvUserInfo.setText(user.company);
 		viewHolder.tvDateInfo.setText(FeatureFunction.getHumanReadTime(Long.valueOf(typeBean.addtime)));
-		
+
 		viewHolder.rlInfoLayout.setTag(user.uid);
 		viewHolder.rlInfoLayout.setOnClickListener(infoClickListener);
 	}
@@ -122,7 +125,7 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 			return viewHolder;
 		}
 	}
-	
+
 	private void goToUserActivity(String uid) {
 		if (TextUtils.isEmpty(uid)) {
 			return;
@@ -131,7 +134,7 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 		intent.putExtra(ProfileActivity.KEY_UID, uid);
 		mContext.startActivity(intent);
 	}
-	
+
 	private OnClickListener infoClickListener = new OnClickListener() {
 
 		@Override

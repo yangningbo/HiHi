@@ -57,6 +57,7 @@ import com.gaopai.guiren.net.DamiException;
 import com.gaopai.guiren.net.MorePicture;
 import com.gaopai.guiren.net.Parameters;
 import com.gaopai.guiren.net.Utility;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MD5;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.volley.GsonObj;
@@ -68,7 +69,8 @@ public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
 	// public static final String HOST =
-//	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+	// public static final String HOST =
+	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
 	public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
@@ -401,6 +403,7 @@ public class DamiInfo implements Serializable {
 		}
 		request(Method.GET, RegisterResult.class, params, 1, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
 	}
+
 	public static void register(String phone, String password, String code, IResponseListener listener) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (!TextUtils.isEmpty(phone)) {
@@ -815,8 +818,6 @@ public class DamiInfo implements Serializable {
 				LOGIN_TYPE_NEED_LOGIN);
 	}
 
-
-
 	/**
 	 * 获取临时身份
 	 * 
@@ -877,7 +878,9 @@ public class DamiInfo implements Serializable {
 	public static void spreadDynamic(int type, String sid, String title, String image, String url, String desc,
 			IResponseListener listener) {
 		Parameters bundle = new Parameters();
-		bundle.add("type", String.valueOf(type));
+		if (type != -1) {
+			bundle.add("type", String.valueOf(type));
+		}
 		if (!TextUtils.isEmpty(sid)) {
 			bundle.add("sid", String.valueOf(sid));
 		}
@@ -889,20 +892,21 @@ public class DamiInfo implements Serializable {
 		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
-//	public static void getMyDynamic(int page, IResponseListener listener) {
-//		Parameters bundle = new Parameters();
-//		bundle.add("page", String.valueOf(page));
-//		bundle.add("my", String.valueOf(1));
-//		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
-//		String url_ = SERVER + "/user/getDynamic";
-//		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.class, listener);
-//	}
-	
+	// public static void getMyDynamic(int page, IResponseListener listener) {
+	// Parameters bundle = new Parameters();
+	// bundle.add("page", String.valueOf(page));
+	// bundle.add("my", String.valueOf(1));
+	// bundle.add("pageSize", String.valueOf(LOAD_SIZE));
+	// String url_ = SERVER + "/user/getDynamic";
+	// request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN,
+	// DynamicBean.class, listener);
+	// }
+
 	public static void getDynamic(String userid, int page, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("page", String.valueOf(page));
 		bundle.add("userid", userid);
-		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
+		bundle.add("pageSize", "5");
 		String url_ = SERVER + "/user/getDynamic";
 		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.class, listener);
 	}
@@ -1547,16 +1551,24 @@ public class DamiInfo implements Serializable {
 		addProfileComment(toid, type, dataid, content, isanonymous, displayname, todisplayname, "", listener);
 	}
 
+	// comment profile set tabletype=2
 	public static void addProfileComment(String toid, int type, String dataid, String content, int isanonymous,
 			String displayname, String todisplayname, String tabletype, IResponseListener listener) {
 		Parameters bundle = new Parameters();
-		bundle.add("toid", toid);
+		Logger.d(DamiInfo.class, "   toid=" + toid + "   type=" + type + "   dataid=" + dataid + "   content="
+				+ content + "   isanonymous=" + isanonymous + "   displayname=" + displayname + "   todisplayname="
+				+ todisplayname + "   tabletype=" + tabletype);
+		if (!TextUtils.isEmpty(toid)) {
+			bundle.add("toid", toid);
+		}
+		if (!TextUtils.isEmpty(todisplayname)) {
+			bundle.add("todisplayname", todisplayname);
+		}
 		bundle.add("type", String.valueOf(type));
 		bundle.add("dataid", dataid);
 		bundle.add("content", forceNotNull(content));
 		bundle.add("isanonymous", String.valueOf(isanonymous));
 		bundle.add("displayname", forceNotNull(displayname));
-		bundle.add("todisplayname", forceNotNull(todisplayname));
 		bundle.add("tabletype", tabletype);
 
 		String url = SERVER + "user/addComment";
@@ -1861,6 +1873,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "tribe/quit";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
+
 	/**
 	 * 解散部落
 	 * 
@@ -1871,11 +1884,10 @@ public class DamiInfo implements Serializable {
 	public static void cancelTribe(String id, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("tid", id);
-		
+
 		String url = SERVER + "tribe/disbanded";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-
 
 	/**
 	 * 申请加入部落
@@ -2155,7 +2167,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "index/update";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, CheckUpdateResult.class, listener);
 	}
-	
+
 	/**
 	 * 意见反馈
 	 * 
@@ -2170,7 +2182,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/feedback";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-	
+
 	/**
 	 * 获取举报列表
 	 * 
@@ -2178,14 +2190,14 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void getTribeReportMsgList(String tid, IResponseListener listener){
+	public static void getTribeReportMsgList(String tid, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("tid", tid);
 		bundle.add("paegSize", "100");
 		String url = SERVER + "tribe/jubaoList";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ReportMsgResult.class, listener);
 	}
-	
+
 	/**
 	 * 获取会议举报列表
 	 * 
@@ -2201,7 +2213,6 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "meeting/jubaoList";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ReportMsgResult.class, listener);
 	}
-	
 
 	/**
 	 * 同意部落消息举报
@@ -2213,7 +2224,7 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void agreeReport(String msgid, String fuid ,IResponseListener listener) {
+	public static void agreeReport(String msgid, String fuid, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("msgid", msgid);
 		if (!TextUtils.isEmpty(fuid)) {
@@ -2223,7 +2234,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "tribe/agreeJubao";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-	
+
 	/**
 	 * 不同意部落消息举报
 	 * 
@@ -2232,14 +2243,14 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void refuseReport(String msgid ,IResponseListener listener) {
+	public static void refuseReport(String msgid, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("msgid", msgid);
 
 		String url = SERVER + "tribe/disagreeJubao";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-	
+
 	/**
 	 * 同意会议消息举报
 	 * 
@@ -2250,7 +2261,7 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void agreeMeetingReport(String msgid, String fuid,IResponseListener listener) {
+	public static void agreeMeetingReport(String msgid, String fuid, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("msgid", msgid);
 		if (!TextUtils.isEmpty(fuid)) {
@@ -2269,16 +2280,17 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void refuseMeetingReport(String msgid,IResponseListener listener) {
+	public static void refuseMeetingReport(String msgid, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("msgid", msgid);
 
 		String url = SERVER + "meeting/disagreeJubao";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
+
 	/**
-	 *  获取新的动态
-	 *  有个参数uid
+	 * 获取新的动态 有个参数uid
+	 * 
 	 * @return
 	 * @throws DamiException
 	 */
@@ -2287,8 +2299,8 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/getNewDynamic";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, NewDynamicBean.class, listener);
 	}
-	
-	//举报用户
+
+	// 举报用户
 	public static void reportUser(String fuid, String content, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("fuid", fuid);
@@ -2296,37 +2308,37 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/ReportUser";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-	
-	//获取动态详情
+
+	// 获取动态详情
 	public static void getDynamicDetails(String dynaid, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("dynaid", dynaid);
 		String url = SERVER + "user/DynamicDetails";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.DySingleBean.class, listener);
 	}
-	
-	//获取用户二维码
+
+	// 获取用户二维码
 	public static void getUserQrCord(String fid, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("fid", fid);
 		String url = SERVER + "user/UserQrCord";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, QrCordBean.class, listener);
 	}
-	
-	//外发注册连接 need uid
+
+	// 外发注册连接 need uid
 	public static void getUserInvitation(IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/UserInvitation";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, InviteUrlResult.class, listener);
 	}
-	
-	//成功邀请用户数(/api/user/UserInvitationNum)
+
+	// 成功邀请用户数(/api/user/UserInvitationNum)
 	public static void getUserInvitationNum(IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/UserInvitationNum";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, InviteNumResult.class, listener);
 	}
-	
+
 	public static void joinMeetingByPassword(String meetingid, String password, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("meetingid", meetingid);
@@ -2334,6 +2346,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "meeting/joinMeetingByPasswd";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
+
 	public static void joinTribeByPasswd(String tid, String password, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("tid", tid);

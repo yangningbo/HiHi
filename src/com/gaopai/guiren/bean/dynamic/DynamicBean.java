@@ -8,19 +8,19 @@ import com.gaopai.guiren.bean.PageInfo;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.google.gson.annotations.Expose;
 
-public class DynamicBean implements Serializable{
+public class DynamicBean implements Serializable {
 	public List<TypeHolder> data;
 	@Expose
 	public DyState state;
 	@Expose
 	public PageInfo pageInfo;
-	
+
 	public static class DySingleBean extends BaseNetBean {
 		public TypeHolder data;
 	}
 
 	public static class DyState extends AppState {
-		public int newalertcount; 
+		public int newalertcount;
 	}
 
 	public static class TypeHolder implements Serializable {
@@ -50,7 +50,21 @@ public class DynamicBean implements Serializable{
 		public String post;
 
 		public int isZan = 0;
+
+		public CommnetHolder commnetHolder = new CommnetHolder() ;// for transfer
+																	// comment
 	}
+	
+
+	public static class CommnetHolder implements Serializable{
+		public String toid;
+		public int type;
+		public String dataid;
+		public String content;
+		public String displayname;
+		public String todisplayname;
+	}
+
 
 	public static class JsonContent implements Serializable {
 
@@ -89,7 +103,7 @@ public class DynamicBean implements Serializable{
 		public String uid;
 		public String sid;
 		public String realname;
-	
+
 	}
 
 	public static class GuestBean implements Serializable {
@@ -125,7 +139,7 @@ public class DynamicBean implements Serializable{
 		public String uid;
 		public String uname;
 	}
-	
+
 	public static class SpreadBean implements Serializable {
 		public String uid;
 		public String nickname;

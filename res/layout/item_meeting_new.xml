@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="15dp"
     android:paddingTop="15dp" >
 
     <ImageView
@@ -11,7 +10,7 @@
         android:layout_height="140dp"
         android:contentDescription="@string/desc"
         android:scaleType="centerCrop"
-        android:src="@drawable/default_header" />
+        android:src="@drawable/icon_default_meeting" />
 
     <TextView
         android:id="@+id/title"
@@ -22,25 +21,28 @@
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
         android:singleLine="true"
-        android:text="asdfa"
         android:textColor="@color/white"
         android:textSize="15sp" />
 
     <LinearLayout
+        android:id="@+id/layout_meeting_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
-        android:background="@color/white"
+        android:background="@drawable/icon_meeting_triangle"
         android:orientation="vertical"
-        android:padding="5dp" >
+        android:paddingLeft="5dp" >
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:drawableLeft="@drawable/icon_meeting_clock"
+            android:drawablePadding="3dp"
+            android:paddingBottom="3dp"
+            android:paddingTop="6dp"
             android:singleLine="true"
-            android:text="asdfa"
             android:textColor="@color/general_text_gray"
             android:textSize="13sp" />
 
@@ -49,10 +51,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:drawableLeft="@drawable/icon_meeting_guest"
+            android:drawablePadding="3dp"
+            android:paddingBottom="6dp"
+            android:paddingTop="3dp"
             android:singleLine="true"
-            android:text="asdfa"
             android:textColor="@color/general_text_gray"
             android:textSize="13sp" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_meeting_info"
+        android:text="系统精选"
+        android:gravity="center"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/general_text_gray"
+        android:textSize="13sp" />
 
 </RelativeLayout>

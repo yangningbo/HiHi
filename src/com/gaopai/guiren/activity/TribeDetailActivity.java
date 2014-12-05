@@ -140,6 +140,12 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 		getTribeDetail();
 	}
+	
+	public static Intent getIntent(Context context, String tid) {
+		Intent intent = new Intent(context, TribeDetailActivity.class);
+		intent.putExtra(KEY_TRIBE_ID, tid);
+		return intent;
+	}
 
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override

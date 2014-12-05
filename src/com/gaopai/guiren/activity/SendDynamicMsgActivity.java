@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -23,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -237,7 +240,8 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 					flowLayout.getTextLayoutParams());
 			break;
 		case R.id.btn_camera:
-			showMoreWindow();
+//			showMoreWindow();
+			showChosePicDialog();
 			break;
 		case R.id.tv_send_dy_realname:
 			isHideName = 1 - isHideName;
@@ -266,48 +270,24 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 	};
 
-	PopupWindow moreWindow;
-
-	private void showMoreWindow() {
-		LinearLayout linearLayout = new LinearLayout(mContext);
-		linearLayout.setOrientation(LinearLayout.VERTICAL);
-		linearLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		Button btnCamera = new Button(mContext);
-		btnCamera.setText("相机");
-		btnCamera.setGravity(Gravity.CENTER);
-		btnCamera.setOnClickListener(new OnClickListener() {
+	
+	public void showChosePicDialog () {
+		String[] array = new String[2];
+		array[0] = getString(R.string.camera);
+		array[1] = getString(R.string.gallery);
+		AlertDialog dialog = new AlertDialog.Builder(mContext).setItems(array, new DialogInterface.OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				btnCameraAction();
-				hideMoreWindow();
+				if (which==0) {
+					btnCameraAction();
+				} else {
+					btnPhotoAction();
+				}
 			}
-		});
-		linearLayout.addView(btnCamera, new LayoutParams(LayoutParams.MATCH_PARENT, MyUtils.dip2px(mContext, 50)));
-		Button btnPhoto = new Button(mContext);
-		btnPhoto.setGravity(Gravity.CENTER);
-		btnPhoto.setText("相册");
-		btnPhoto.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				btnPhotoAction();
-				hideMoreWindow();
-			}
-		});
-		linearLayout.addView(btnPhoto, new LayoutParams(LayoutParams.MATCH_PARENT, MyUtils.dip2px(mContext, 50)));
-		if (moreWindow == null) {
-			moreWindow = new PopupWindow(linearLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		}
-		moreWindow.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
-		moreWindow.setAnimationStyle(R.style.window_bottom_animation);
-		moreWindow.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-	}
-
-	private void hideMoreWindow() {
-		if (moreWindow != null && moreWindow.isShowing()) {
-			moreWindow.dismiss();
-		}
+		}).create();
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.show();
 	}
 
 	protected void btnCameraAction() {

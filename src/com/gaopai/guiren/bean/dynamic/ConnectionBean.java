@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 
 public class ConnectionBean extends BaseNetBean {
 	public List<TypeHolder> data;
@@ -41,9 +42,7 @@ public class ConnectionBean extends BaseNetBean {
 		public List<User> content;
 	}
 
-	public static class User implements Serializable {
-		public String uid;
-		public String realname;
+	public static class User extends SpanUser {
 		public String headsmall;
 		public String company;
 		public String post;

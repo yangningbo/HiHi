@@ -1,10 +1,12 @@
 package com.gaopai.guiren.adapter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
 import com.gaopai.guiren.fragment.ConnectionFragment;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.MyGridLayout;
 
@@ -91,7 +94,6 @@ public class ConnectionAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		int type = getItemViewType(position);
 		TypeHolder typeBean = mData.get(position);
-		Log.d("TAG", "type = " + (type + 1));
 		switch (type + 1) {
 		case TYPE_SOMEONE_JOIN_MY_MEETING:
 		case TYPE_SOMEONE_JOIN_MY_TRIBE:
@@ -127,7 +129,6 @@ public class ConnectionAdapter extends BaseAdapter {
 	}
 
 	private void buildPicGridView(ViewHolderPicGridGeneral viewHolder, TypeHolder typeBean, int position, int type) {
-		// TODO Auto-generated method stub
 		if (!TextUtils.isEmpty(typeBean.headsmall)) {
 			ImageLoaderUtil.displayImage(typeBean.headsmall, viewHolder.ivHeader);
 		} else {
@@ -138,19 +139,27 @@ public class ConnectionAdapter extends BaseAdapter {
 		List<User> userList = jsonContent.user;
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		if (type == TYPE_SOMEONE_FOLLOW_ME) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionUserList(userList, "等" + userList.size() + "人关注了你"));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList), "关注了你"));
 		} else if (type == TYPE_SOMEONE_I_FOLLOW_FOLLOW) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionUserListExtra(userList, typeBean.realname,
-					typeBean.uid, "您的好友", "关注了", "等" + userList.size() + "人"));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
+					MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList))));
 		}
-		viewHolder.gridLayout.removeAllViews();
+		viewHolder.tvViewDetail.setVisibility(View.GONE);
 		if (userList != null && userList.size() > 0) {
 			int length = userList.size();
 			if (userList.size() > 16) {
 				length = 16;
+				viewHolder.tvViewDetail.setVisibility(View.VISIBLE);
 			}
+			cacheImage(viewHolder.gridLayout, length);
 			for (int i = 0; i < length; i++) {
-				viewHolder.gridLayout.addView(getImageView(userList.get(i).headsmall));
+				ImageView iv = (ImageView) viewHolder.gridLayout.getChildAt(i);
+				if (!TextUtils.isEmpty(userList.get(i).headsmall)) {
+					ImageLoaderUtil.displayImage(userList.get(i).headsmall, iv);
+				} else {
+					iv.setImageResource(R.drawable.default_header);
+				}
 			}
 		}
 		viewHolder.tvDateInfo.setText(FeatureFunction.getHumanReadTime(Long.valueOf(typeBean.addtime)));
@@ -183,34 +192,36 @@ public class ConnectionAdapter extends BaseAdapter {
 		User user = getSingleUser(content);
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		if (type == TYPE_WEIBO_USER_JOIN) {
-			viewHolder.tvTitle.setText(MyTextUtils
-					.addConnectionJoin("您关注的微博用户", content.realname, content.uid, "加入了贵人"));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您关注的微博用户",
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了贵人"));
 		} else if (type == TYPE_PHONE_USER_JOIN) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionJoin("您的通讯录好友", user.realname, user.uid, "加入了贵人"));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的通讯录好友",
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了贵人"));
 		} else if (type == TYPE_SYS_REC_USER) {
-			
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionRec("系统根据您的标签给您推荐了一条人脉信息", user.realname,
-					user.uid));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("系统根据您的标签给您推荐了一条人脉信息",
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 		} else if (type == TYPE_SOMEONE_JOIN_MY_MEETING) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionTribe(user.realname, user.uid, "加入了您的会议", "「"
-					+ content.roomname + "」", content.roomid, false));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了您的会议",
+					MyTextUtils.addSingleMeetingSpan("「" + content.roomname + "」", content.roomid)));
 		} else if (type == TYPE_SOMEONE_JOIN_MY_TRIBE) {
-			viewHolder.tvTitle.setText(MyTextUtils.addConnectionTribe(user.realname, user.uid, "加入了您的部落", "「"
-					+ content.roomname + "」", content.roomid, true));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了您的部落",
+					MyTextUtils.addSingleTribeSpan("「" + content.roomname + "」", content.roomid)));
 		} else {
 			viewHolder.tvTitle.setText(typeBean.tips);
 		}
 
-		if (!TextUtils.isEmpty(typeBean.jsoncontent.headsmall)) {
-			ImageLoaderUtil.displayImage(typeBean.jsoncontent.headsmall, viewHolder.ivUserHeader);
+		if (!TextUtils.isEmpty(user.headsmall)) {
+			ImageLoaderUtil.displayImage(user.headsmall, viewHolder.ivUserHeader);
 		} else {
 			viewHolder.ivUserHeader.setImageResource(R.drawable.default_header);
 		}
-		viewHolder.tvUserName.setText(typeBean.jsoncontent.realname);
-		viewHolder.tvUserInfo.setText(typeBean.jsoncontent.company);
+		viewHolder.tvUserName.setText(user.realname);
+		viewHolder.tvUserInfo.setText(user.company);
 		viewHolder.tvDateInfo.setText(FeatureFunction.getHumanReadTime(Long.valueOf(typeBean.addtime)));
 
-		viewHolder.rlInfoLayout.setTag(content.uid);
+		viewHolder.rlInfoLayout.setTag(user.uid);
 		viewHolder.rlInfoLayout.setOnClickListener(infoClickListener);
 	}
 
@@ -220,6 +231,10 @@ public class ConnectionAdapter extends BaseAdapter {
 			user = content.user.get(0);
 		} else {
 			user = new User();
+			user.headsmall = content.headsmall;
+			user.realname = content.realname;
+			user.company = content.company;
+			user.uid = content.uid;
 		}
 		return user;
 	}
@@ -233,13 +248,8 @@ public class ConnectionAdapter extends BaseAdapter {
 		}
 	};
 
-	private ImageView getImageView(String url) {
+	private ImageView getImageView() {
 		ImageView imageView = new ImageView(mContext);
-		if (TextUtils.isEmpty(url)) {
-			imageView.setImageResource(R.drawable.bg);
-		} else {
-			ImageLoaderUtil.displayImage(url, imageView);
-		}
 		android.view.ViewGroup.LayoutParams lp = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		imageView.setLayoutParams(lp);
@@ -319,7 +329,29 @@ public class ConnectionAdapter extends BaseAdapter {
 
 	List<ImageView> imageCacheList = new ArrayList<ImageView>();
 
-	public void cacheImage() {
+	public void cacheImage(MyGridLayout gridLayout, int length) {
+		int count = gridLayout.getChildCount();
+		if (count == length) {
+			return;
+		}
+		if (count > length) {
+			int del = count - length;
+			for (int i = 0; i < del; i++) {
+				imageCacheList.add((ImageView) gridLayout.getChildAt(i));
+			}
+			gridLayout.removeViews(0, del);
+		} else {
+			int del = length - count;
+			for (int i = 0; i < del; i++) {
+				ImageView imageView;
+				if (imageCacheList.size() > 0) {
+					imageView = imageCacheList.remove(0);
+				} else {
+					imageView = getImageView();
+				}
+				gridLayout.addView(imageView);
+			}
+		}
 	}
 
 }

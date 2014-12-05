@@ -76,7 +76,7 @@ public class MeetingAdapter extends BaseAdapter {
 		if (!TextUtils.isEmpty(mData.get(position).logosmall)) {
 			ImageLoaderUtil.displayImage(mData.get(position).logosmall, holder.mMeetingIcon);
 		} else {
-			holder.mMeetingIcon.setImageResource(R.drawable.default_tribe);
+			holder.mMeetingIcon.setImageResource(R.drawable.icon_default_meeting);
 		}
 
 

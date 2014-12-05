@@ -166,6 +166,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	private void bindUserView() {
 		mUser = DamiCommon.getLoginResult(this);
+		if (mUser == null) {
+			return;
+		}
 		ImageView ivHeader = (ImageView) findViewById(R.id.iv_user_header);
 		Picasso.with(mContext).load(mUser.headsmall).placeholder(R.drawable.default_header)
 				.error(R.drawable.default_header).into(ivHeader);

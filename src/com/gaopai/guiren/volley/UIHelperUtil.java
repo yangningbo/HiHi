@@ -37,6 +37,7 @@ public class UIHelperUtil {
 			case command_success:
 				if (UIHelperUtil.this.getResponse() == null) {
 					Toast.makeText(cxt, cxt.getString(R.string.data_error), Toast.LENGTH_SHORT).show();
+					UIHelperUtil.this.listener.onFinish();
 					return;
 				}
 				UIHelperUtil.this.listener.onSuccess(UIHelperUtil.this.getResponse());

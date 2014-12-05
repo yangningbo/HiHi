@@ -1,5 +1,6 @@
 package com.gaopai.guiren.utils;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -32,9 +33,11 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.GuestBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.widget.emotion.EmotionManager;
+import com.umeng.socialize.net.v;
 
 public class MyTextUtils {
 	private static final Pattern USER_PATTERN = Pattern.compile("[^、]*");
+	private static final String USER_SPLIT_DOT = "、";
 	private static final String USER_SCHEME = "guiren.user://";
 	private static final String TRIBE_SCHEME = "guiren.tribe://";
 	private static final String MEETING_SCHEME = "guiren.meeting://";
@@ -296,7 +299,7 @@ public class MyTextUtils {
 				addConnectionUserList(userList, text3));
 	}
 
-	public static void addEmotions(SpannableString value) {
+	public static Spannable addEmotions(Spannable value) {
 		Matcher matcher = EMOTION_PATTERN.matcher(value);
 		while (matcher.find()) {
 			int k = matcher.start();
@@ -312,6 +315,7 @@ public class MyTextUtils {
 				}
 			}
 		}
+		return value;
 	}
 
 	public static String forceNotNull(String src) {
@@ -393,5 +397,59 @@ public class MyTextUtils {
 	public static void changeToBold(TextView textView) {
 		TextPaint tp = textView.getPaint(); 
 		tp.setFakeBoldText(true);
+	}
+	
+	
+	public static SpannableString addSingleMeetingSpan(String text, String uid) {
+		return addSingleSpanGeneral(text, uid, MEETING_SCHEME);
+	}
+	public static SpannableString addSingleTribeSpan(String text, String uid) {
+		return addSingleSpanGeneral(text, uid, TRIBE_SCHEME);
+	}
+	public static SpannableString addSingleUserSpan(String text, String uid) {
+		return addSingleSpanGeneral(text, uid, USER_SCHEME);
+	}
+	public static SpannableString addSingleSpanGeneral(String text, String uid, String scheme) {
+		if (TextUtils.isEmpty(text)) {
+			return new SpannableString("");
+		}
+		SpannableString result = new SpannableString(text);
+		result.setSpan(new WeiboTextUrlSpan(scheme + uid, WeiboTextUrlSpan.TYPE_CONNECTION), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return result;
+	}
+	
+	public static <T extends SpanUser>SpannableString addUserSpans(List<T> spanUsers) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (SpanUser user : spanUsers) {
+			stringBuilder.append(user.realname);
+			stringBuilder.append(USER_SPLIT_DOT);
+		}
+		String text = stringBuilder.substring(0, stringBuilder.length() - 1).toString();
+		SpannableString result = SpannableString.valueOf(text);
+		Linkify.addLinks(result, USER_PATTERN, USER_SCHEME);
+		URLSpan[] urlSpans = result.getSpans(0, result.length(), URLSpan.class);
+		WeiboTextUrlSpan weiboTextUrlSpan = null;
+		for (int i = 0; i < urlSpans.length; i++) {
+			URLSpan urlSpan = urlSpans[i];
+			int start = result.getSpanStart(urlSpan);
+			int end = result.getSpanEnd(urlSpan);
+			weiboTextUrlSpan = new WeiboTextUrlSpan(USER_SCHEME + spanUsers.get(i / 2).uid, WeiboTextUrlSpan.TYPE_CONNECTION);// USER_SCHEME+
+			result.removeSpan(urlSpan);
+			result.setSpan(weiboTextUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+		return result;
+	}
+	
+	public static Spannable getSpannableString(CharSequence... strings) {
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+		for (CharSequence spannableString : strings) {
+			builder.append(spannableString);
+		}
+		return builder;
+	}
+	
+	public static class SpanUser implements Serializable {
+		public String uid;
+		public String realname;
 	}
 }

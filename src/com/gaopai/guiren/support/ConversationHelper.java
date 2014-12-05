@@ -68,5 +68,11 @@ public class ConversationHelper {
 		conversation.anonymous = 0;
 		table.insert(conversation);
 	}
+	
+	public static void saveDraft(Context context, String draft, String toid) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
+		ConverseationTable table = new ConverseationTable(dbDatabase);
+		table.updateDraft(draft, toid);
+	}
 
 }
