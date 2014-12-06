@@ -33,14 +33,14 @@ import com.gaopai.guiren.bean.User.ZanBean;
 import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
-import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.support.DynamicHelper;
+import com.gaopai.guiren.support.DynamicHelper.DyCallback;
+import com.gaopai.guiren.support.DynamicHelper.DySoftCallback;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.support.comment.CommentProfile;
-import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -142,10 +142,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		hideSomeViewsBasedOnUser();
 
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
+		dynamicHelper.setCallback(dynamicCallback);
 		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
 		getUserInfo();
 		getTags();
 	}
+	
+	private DyCallback dynamicCallback = new DySoftCallback() {
+
+		@Override
+		public void notifyUpdateView() {
+			// TODO Auto-generated method stub
+			bindDyView();
+		}
+	};
 
 	public static Intent getIntent(Context context, String uid) {
 		Intent intent = new Intent(context, ProfileActivity.class);

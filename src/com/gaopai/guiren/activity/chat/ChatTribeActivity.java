@@ -2,6 +2,8 @@ package com.gaopai.guiren.activity.chat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import android.app.AlertDialog;
@@ -29,7 +31,6 @@ import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.adapter.TribeChatAdapter;
-import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
@@ -38,9 +39,9 @@ import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.bean.net.ChatMessageBean;
 import com.gaopai.guiren.bean.net.IdentitityResult;
 import com.gaopai.guiren.bean.net.SendMessageResult;
-import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
@@ -57,9 +58,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	public static final String KEY_TRIBE = "tribe";
 	public static final String KEY_TRIBE_ID = "tribe_id";
 	public static final String KEY_IS_ONLOOKER = "onlooker";
-
-	private int mSceneType = 0;
-	public final static int IS_SCENE_ONLOOK = 1;
 
 	private String mTribeId;
 
@@ -82,13 +80,42 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		initTribeComponent();
 	}
 	
-	private void hideOnLookerView() {
+	private void setUpForOnLooker() {
 		hideChatBox();
+		startTimer();
+	}
+	private Timer mTimer;
+	private TimerTask mTask;
+	private final int mRefreshTime = 10 * 1000;
+	private void startTimer() {
+		mTimer = new Timer();
+		mTask = new TimerTask() {
+			@Override
+			public void run() {
+				getMessageList(true);
+			}
+		};
+		mTimer.schedule(mTask, mRefreshTime, mRefreshTime);
+	}
+
+	private void stopTimer() {
+		if (mTimer != null) {
+			mTimer.cancel();
+			mTimer.purge();
+			mTimer = null;
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		stopTimer();
 	}
 
 	protected void initTribeComponent() {
 		if (isOnLooker) {
-			hideOnLookerView();
+			setUpForOnLooker();
 		}
 		mAdapter = new TribeChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
@@ -129,6 +156,13 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		intent.putExtra(KEY_CHAT_TYPE, type);
 		return intent;
 	}
+	public static Intent getIntent(Context context, Tribe tribe, int type, boolean isOnLooker) {
+		Intent intent = new Intent(context, ChatTribeActivity.class);
+		intent.putExtra(KEY_TRIBE, tribe);
+		intent.putExtra(KEY_CHAT_TYPE, type);
+		intent.putExtra(KEY_IS_ONLOOKER, isOnLooker);
+		return intent;
+	}
 
 	@Override
 	protected boolean isAvoidDisturb() {
@@ -147,8 +181,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		super.onResume();
 		checkHasDraft(mTribe.id);
 	}
-
-
 	// 通知过来的tribe没有role，发送消息时需要用到，所以这里尽快更新呀
 	private void updateTribe() {
 		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
@@ -251,8 +283,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.zan_cancel))) {
 			zanMessage(msgInfo);
 		} else if (result.equals(getString(R.string.retrweet))) {
-			// goToRetrweet(msgInfo);
-			spreadToDy(msgInfo);
+			 goToRetrweet(msgInfo);
+//			spreadToDy(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {
 			showReportDialog(msgInfo);
 		} else if (result.equals(getString(R.string.favorite))) {
@@ -418,10 +450,15 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	@Override
-	protected void getMessageList(boolean isRefresh) {
-		super.getMessageList(isRefresh);
+	protected void getMessageList(boolean isPullUp) {
+		super.getMessageList(isPullUp);
+		String minID = getMessageMinId();
 		String maxID = getMessageMaxId();
-		DamiInfo.getMessageList(mChatType, mTribe.id, maxID, "", getMessageListListener);
+		if (isPullUp) {
+			DamiInfo.getMessageList(mChatType, mTribe.id, maxID, "", new GetMessageListener(mContext, true));
+		} else {
+			DamiInfo.getMessageList(mChatType, mTribe.id, "", minID, new GetMessageListener(mContext, false));
+		}
 	}
 
 	protected void updateIdentity(Identity mIdentity) {

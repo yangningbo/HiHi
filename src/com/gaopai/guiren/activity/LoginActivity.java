@@ -62,7 +62,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	private Button mLookBtn;
 	private RelativeLayout mSinaLoginBtn, mQQLoginBtn;
 	private RelativeLayout mRootLayout;
-	
+
 	private Button btnQQLogin;
 	private Button btnWeixinLogin;
 	private Button btnWeiboLogin;
@@ -116,11 +116,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		mQQLoginBtn = (RelativeLayout) findViewById(R.id.tencentlogin);
 		mLookBtn = (Button) findViewById(R.id.look);
 		mAgreeProtocalView = (ImageView) findViewById(R.id.agree_protocal);
-		
+
 		btnQQLogin = (Button) findViewById(R.id.btn_qq_login);
 		btnWeiboLogin = (Button) findViewById(R.id.btn_weibo_login);
 		btnWeixinLogin = (Button) findViewById(R.id.btn_weixin_login);
-		
+
 		btnQQLogin.setOnClickListener(this);
 		btnWeiboLogin.setOnClickListener(this);
 		btnWeixinLogin.setOnClickListener(this);
@@ -202,7 +202,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			break;
 		}
 	}
-	
+
 	private void startRegister(int type) {
 		Intent intent = new Intent(mContext, RegisterActivity.class);
 		intent.putExtra(RegisterActivity.KEY_TYPE, type);
@@ -213,7 +213,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		// TODO Auto-generated method stub
 		String userName = etUserName.getText().toString();
 		String password = etPassword.getText().toString();
-		if(TextUtils.isEmpty(password) || TextUtils.isEmpty(userName)) {
+		if (TextUtils.isEmpty(password) || TextUtils.isEmpty(userName)) {
 			showToast(R.string.input_can_not_be_empty);
 			return;
 		}
@@ -390,19 +390,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 						MessageTable table = new MessageTable(db);
 						if (data.data.roomids != null)
 							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
-						if (data.data.auth == 0) {
+						// if (data.data.auth == 0) {
+						//
+						// } else {
+						setResult(RESULT_OK);
+						sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
 
-						} else {
-							setResult(RESULT_OK);
-							sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-
-							if (DamiCommon.getInstallFirst(LoginActivity.this)) {
-								Intent intent = new Intent(LoginActivity.this, RecommendActivity.class);
-								startActivity(intent);
-							}
-
-							LoginActivity.this.finish();
+						if (DamiCommon.getInstallFirst(LoginActivity.this)) {
+							Intent intent = new Intent(LoginActivity.this, RecommendActivity.class);
+							startActivity(intent);
 						}
+
+						LoginActivity.this.finish();
+						// }
 
 					} else {
 						showToast(R.string.login_error);

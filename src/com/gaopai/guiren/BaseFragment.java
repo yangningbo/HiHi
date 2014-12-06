@@ -247,5 +247,13 @@ public class BaseFragment extends Fragment implements OnClickListener {
 	public void removeProgressDialog() {
 		((BaseActivity) getActivity()).removeDialog(Constant.DIALOGPROGRESS);
 	}
+	
+	public BaseActivity getBaseActivity() {
+		return ((BaseActivity) getActivity());
+	}
+	
+	
+	
+	
 
 }

@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -21,20 +22,26 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.DySingleBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
+import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.ViewUtil;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.volley.SimpleResponseListener;
+import com.gaopai.guiren.widget.emotion.EmotionPicker;
 
-public class DynamicDetailActivity extends BaseActivity {
+public class DynamicDetailActivity extends BaseActivity implements OnClickListener {
 	private PullToRefreshListView mListView;
 	private View headerView;
 	private TextView tvZan;
 	private EditText etContent;
 	private View chatBox;
-	private Button mSendTextBtn;
+	private ChatBoxManager chaBoxManager;
 
 	public final static String KEY_TYPEHOLDER = "typeholder";
 	public final static String KEY_SID = "sid";
@@ -71,52 +78,16 @@ public class DynamicDetailActivity extends BaseActivity {
 	private DynamicHelper.DyCallback callback = new DyCallback() {
 
 		@Override
-		public void onZanSuccess() {
-			// TODO Auto-generated method stub
-			dynamicHelper.buildCommonView((DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
-		}
-
-		@Override
-		public void onVoicePlayStart() {
-			// TODO Auto-generated method stub
-			dynamicHelper.buildCommonView((DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
-		}
-
-		@Override
-		public void onVoicePlayEnd() {
-			// TODO Auto-generated method stub
-			dynamicHelper.buildCommonView((DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
-		}
-
-		@Override
-		public void onSpreadSuccess() {
-			// TODO Auto-generated method stub
-			dynamicHelper.buildCommonView((DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
-		}
-
-		@Override
-		public void onDownVoiceSuccess() {
-			// TODO Auto-generated method stub
-			dynamicHelper.buildCommonView((DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
-		}
-
-		@Override
 		public void onCommentSuccess() {
 			// TODO Auto-generated method stub
+			dynamicHelper.buildCommonView((DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
 			mAdapter.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onCommentButtonClick(TypeHolder typeHolder, boolean isShowReply) {
-			// TODO Auto-generated method stub
-			showChatBox(typeHolder.realname, isShowReply);
-			showSoftKeyboard();
 		}
 
 		@Override
 		public void onBindComment(TypeHolder typeHolder, com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon holder) {
 			// TODO Auto-generated method stub
-
+			dynamicHelper.buildCommonView((DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
 		}
 
 		@Override
@@ -136,6 +107,18 @@ public class DynamicDetailActivity extends BaseActivity {
 				viewHolder.layoutCoverTop.setVisibility(View.GONE);
 				viewHolder.layoutCoverBottom.setVisibility(View.GONE);
 			}
+		}
+
+		@Override
+		public void onCommentButtonClick(TypeHolder typeHolder, String name, boolean isShowReply) {
+			// TODO Auto-generated method stub
+			showChatBox(name, isShowReply);
+			showSoftKeyboard();
+		}
+
+		@Override
+		public void notifyUpdateView() {
+			dynamicHelper.getView(headerView, typeBean);
 		}
 	};
 
@@ -158,8 +141,19 @@ public class DynamicDetailActivity extends BaseActivity {
 								typeBean);
 						mAdapter.notifyDataSetChanged();
 					}
+				} else {
+					otherCondition(data.state, DynamicDetailActivity.this);
 				}
+				mListView.onPullComplete();
 			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				super.onFinish();
+				mListView.onPullComplete();
+			}
+			
 		});
 	}
 
@@ -167,31 +161,34 @@ public class DynamicDetailActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		etContent = (EditText) findViewById(R.id.chat_box_edit_keyword);
 		chatBox = findViewById(R.id.chat_box);
-		mSendTextBtn = (Button) findViewById(R.id.send_text_btn);
+		ViewUtil.findViewById(this, R.id.send_text_btn).setOnClickListener(this);
+		Button emotionBtn = ViewUtil.findViewById(this, R.id.emotion_btn);
+		emotionBtn.setOnClickListener(this);
+		emotionBtn.setVisibility(View.VISIBLE);
+		EmotionPicker emotionPicker = ViewUtil.findViewById(this, R.id.emotion_picker);
+		emotionPicker.setEditText(this, null, etContent);
+		chaBoxManager = new ChatBoxManager(this, etContent, emotionPicker, emotionBtn);
 
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
+		mListView.setPullRefreshEnabled(true);
 		mListView.getRefreshableView().setDivider(null);
 		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
+		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			@Override
+			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+				getDynamicDetail();
+			}
 
-		// headerView = getHeaderView();
+			@Override
+			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+			}
+		});
 		headerView = dynamicHelper.getView(convertView, typeBean);
 		if (headerView != null) {
 			mListView.getRefreshableView().addHeaderView(headerView);
 		}
 		mAdapter = new MyAdapter(this);
 		mListView.setAdapter(mAdapter);
-		mSendTextBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (etContent.getText().length() == 0) {
-					showToast(R.string.input_can_not_be_empty);
-					return;
-				}
-				String teString = etContent.getText().toString();
-				commentMessage(teString);
-			}
-		});
 	}
 
 	View convertView = null;
@@ -268,7 +265,7 @@ public class DynamicDetailActivity extends BaseActivity {
 						return;
 					}
 					dynamicHelper.setCommentHolderForReply(typeBean, commentBean);
-					callback.onCommentButtonClick(typeBean, true);
+					callback.onCommentButtonClick(typeBean, commentBean.uname, true);
 				}
 			});
 			return convertView;
@@ -315,5 +312,27 @@ public class DynamicDetailActivity extends BaseActivity {
 			}
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.emotion_btn:
+			chaBoxManager.emotionClick();
+			break;
+		case R.id.send_text_btn:
+			if (etContent.getText().length() == 0) {
+				showToast(R.string.input_can_not_be_empty);
+				return;
+			}
+			String teString = etContent.getText().toString();
+			commentMessage(teString);
+			break;
+
+		default:
+			break;
+		}
+
 	}
 }

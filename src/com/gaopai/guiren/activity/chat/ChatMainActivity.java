@@ -1,7 +1,6 @@
 package com.gaopai.guiren.activity.chat;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -44,8 +43,8 @@ import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
+import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.support.ConversationHelper;
-import com.gaopai.guiren.utils.ChatBoxManager;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -76,7 +75,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	private ChatBoxManager boxManager;
 	private View layoutChatbox;
 
-	protected SimpleResponseListener getMessageListListener;
 	protected PreferenceOperateUtils spo;
 
 	protected boolean mHasLocalData = true;
@@ -92,6 +90,42 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		initViewComponent();
 	}
 
+	public class GetMessageListener extends SimpleResponseListener {
+		boolean isPullUp;
+
+		public GetMessageListener(Context context, boolean isPullUp) {
+			super(context);
+			this.isPullUp = isPullUp;
+		}
+
+		@Override
+		public void onSuccess(Object o) {
+			// TODO Auto-generated method stub
+			final ChatMessageBean data = (ChatMessageBean) o;
+			if (data.state != null && data.state.code == 0) {
+				if (data.data != null && data.data.size() > 0) {
+					isFull = data.data.size() < 20;
+					if (isPullUp) {//上拉加载的加到列表后面
+						mAdapter.addAll(parseMessageList(data.data, 0));
+					} else {//下拉刷新的加到列表前面
+						mAdapter.addAll(parseMessageList(data.data, 1));
+					}
+					mListView.getRefreshableView().setSelection(data.data.size());
+				} else {
+					isFull = true;
+				}
+				mListView.setHasMoreData(!isFull);
+			} else {
+				otherCondition(data.state, ChatMainActivity.this);
+			}
+		}
+
+		@Override
+		public void onFinish() {
+			mListView.onPullComplete();
+		}
+	}
+
 	private void initComponent() {
 		// TODO Auto-generated method stub
 		mLogin = DamiCommon.getLoginResult(mContext);
@@ -100,32 +134,8 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		recordDialog = new RecordDialog(this);
 		recordDialog.getClass().getClass().getClass();
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
-		getMessageListListener = new SimpleResponseListener(mContext) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				final ChatMessageBean data = (ChatMessageBean) o;
-				if (data.state != null && data.state.code == 0) {
-					if (data.data != null && data.data.size() > 0) {
-						isFull = data.data.size() < 20;// true not has more page
-						mAdapter.addAll(parseMessageList(data.data, 1));
-						mListView.getRefreshableView().setSelection(data.data.size());
-					} else {
-						isFull = true;
-					}
-					mListView.setHasMoreData(!isFull);
-				} else {
-					otherCondition(data.state, ChatMainActivity.this);
-				}
-			}
-
-			@Override
-			public void onFinish() {
-				mListView.onPullComplete();
-			}
-		};
 	}
-	
+
 	protected void hideChatBox() {
 		layoutChatbox.setVisibility(View.GONE);
 	}
@@ -397,6 +407,14 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		return maxID;
 	}
 
+	protected String getMessageMinId() {
+		String minID = "";
+		if (messageInfos != null && messageInfos.size() != 0) {
+			minID = messageInfos.get(messageInfos.size() - 1).id;
+		}
+		return minID;
+	}
+
 	protected EditText.OnEditorActionListener mEditActionLister = new EditText.OnEditorActionListener() {
 		@Override
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -477,7 +495,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 	private boolean isFull = false;
 
-	protected void getMessageList(final boolean isRefresh) {
+	protected void getMessageList(final boolean isPullUp) {
 		if (isFull) {
 			mListView.setHasMoreData(!isFull);
 			mListView.onPullComplete();
@@ -569,20 +587,20 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		// TODO Auto-generated method stub
 	}
 
-	
-
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		saveDraft(mContentEdit.getText().toString());
-		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		
 	}
 
 	public void saveDraft(String draft) {
 		MessageInfo msg = buildMessage();
 		msg.fileType = MessageType.TEXT;
 		msg.content = draft;
-		ConversationHelper.saveDraft(mContext, msg);
+		if (ConversationHelper.saveDraft(mContext, msg)){
+			sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		}
 	}
 }

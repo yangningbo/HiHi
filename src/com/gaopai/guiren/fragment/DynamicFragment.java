@@ -5,7 +5,6 @@ import net.tsz.afinal.annotation.view.ViewInject;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,13 +28,15 @@ import com.gaopai.guiren.activity.NewDynamicActivity;
 import com.gaopai.guiren.adapter.DynamicAdapter;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
+import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.support.view.CustomEditText;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
+import com.gaopai.guiren.widget.emotion.EmotionPicker;
 
 public class DynamicFragment extends BaseFragment implements OnClickListener {
 
@@ -43,13 +44,13 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	private PullToRefreshListView mListView;
 	private DynamicAdapter mAdapter;
 	private String TAG = DynamicFragment.class.getName();
+	
 
 	@ViewInject(id = R.id.chat_box)
 	private View chatBox;
 	@ViewInject(id = R.id.chat_box_edit_keyword)
 	private CustomEditText etComment;
-	@ViewInject(id = R.id.send_text_btn)
-	private Button mSendTextBtn;
+	private ChatBoxManager chaBoxManager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,12 +58,12 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			mView = mInflater.inflate(R.layout.fragment_dynamic, null);
 			((MainActivity) getActivity()).setBackPressedListener(onBackPressedListener);
 			FinalActivity.initInjectedView(this, mView);
-			initView();
+			initView(mView);
 		}
 		return mView;
 	}
 
-	private void initView() {
+	private void initView(View view) {
 		mListView.setPullLoadEnabled(true);
 		mListView.setPullRefreshEnabled(true);
 		mListView.setScrollLoadEnabled(false);
@@ -92,20 +93,13 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				mAdapter.viewDynamicDetail((TypeHolder) mAdapter.getItem(pos));
 			}
 		});
-		mSendTextBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (etComment.getText().length() == 0) {
-					((BaseActivity) getActivity()).showToast(R.string.input_can_not_be_empty);
-					return;
-				}
-				String teString = etComment.getText().toString();
-				mAdapter.commentMessage(teString, (TypeHolder) etComment.getTag());
-
-			}
-		});
+		ViewUtil.findViewById(view, R.id.send_text_btn).setOnClickListener(this);
+		Button emotionBtn = ViewUtil.findViewById(view, R.id.emotion_btn);
+		emotionBtn.setOnClickListener(this);
+		emotionBtn.setVisibility(View.VISIBLE);
+		EmotionPicker emotionPicker = ViewUtil.findViewById(view, R.id.emotion_picker);
+		emotionPicker.setEditText(getActivity(), null, etComment);
+		chaBoxManager = new ChatBoxManager(getActivity(), etComment, emotionPicker, emotionBtn);
 		etComment.setBackPressedListener(onBackPressedListener);
 		etComment.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
@@ -118,6 +112,29 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			}
 		});
 	}
+
+	
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.emotion_btn:
+			chaBoxManager.emotionClick();
+			break;
+		case R.id.send_text_btn:
+			if (etComment.getText().length() == 0) {
+				((BaseActivity) getActivity()).showToast(R.string.input_can_not_be_empty);
+				return;
+			}
+			String teString = etComment.getText().toString();
+			mAdapter.commentMessage(teString, (TypeHolder) etComment.getTag());
+			break;
+
+		default:
+			break;
+		}
+	}
+
 
 	private int page = 1;
 	private boolean isFull = false;

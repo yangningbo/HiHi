@@ -47,11 +47,10 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.fragment_connection, null);
 		initView(view);
-		
 		getUserList(false);
 		return view;
 	}
-
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -65,6 +64,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 			}
 		};
 	}
+	
 
 	private void initView(View mView) {
 		// TODO Auto-generated method stub
@@ -73,6 +73,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 
 		mListView.getRefreshableView().addHeaderView(creatHeaderView());
 		mListView.getRefreshableView().setVerticalScrollBarEnabled(false);
+		mListView.getRefreshableView().setHeaderDividersEnabled(true);
 		mListView.setPullRefreshEnabled(false);
 		mListView.setPullLoadEnabled(false);
 		mListView.setScrollLoadEnabled(false);
@@ -83,7 +84,12 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
 				if (mAdapter.getItem(pos) instanceof Item) {
 					User user = ((Item) mAdapter.getItem(pos)).user;
-					showDialog(user);
+					if (getType() == ShareActivity.TYPE_SHARE) {
+						showDialog(user);
+					} else {
+						toggleUser(user);
+						mAdapter.notifyDataSetChanged();
+					}
 				}
 			}
 		});
@@ -93,12 +99,12 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 	}
+	
+
 
 	protected View creatHeaderView() {
 		return null;
 	}
-
-
 
 	protected void getUserList(final boolean isRefresh) {
 		DamiInfo.getFriendsList(new SimpleResponseListener(getActivity()) {
@@ -194,6 +200,14 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 	}
 	protected String getTribeId() {
 		return ((ShareActivity) getActivity()).tribeId;
+	}
+	
+	public ShareActivity getShareActivity() {
+		return (ShareActivity) getActivity();
+	}
+	
+	public void toggleUser(User user) {
+		getShareActivity().toggleUser(user);
 	}
 
 	public String getCheckedId() {

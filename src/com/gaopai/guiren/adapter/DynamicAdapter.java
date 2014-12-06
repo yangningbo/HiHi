@@ -1,67 +1,32 @@
 package com.gaopai.guiren.adapter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.DamiCommon;
-import com.gaopai.guiren.DamiInfo;
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.DynamicDetailActivity;
-import com.gaopai.guiren.activity.ProfileActivity;
-import com.gaopai.guiren.activity.ShowImagesActivity;
-import com.gaopai.guiren.activity.TribeDetailActivity;
-import com.gaopai.guiren.activity.WebActivity;
-import com.gaopai.guiren.bean.MessageInfo;
-import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentBean;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.CommnetHolder;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.JsonContent;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.PicBean;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
-import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.fragment.DynamicFragment;
-import com.gaopai.guiren.media.MediaUIHeper;
-import com.gaopai.guiren.media.SpeexPlayerWrapper;
-import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
-import com.gaopai.guiren.utils.ImageLoaderUtil;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
-import com.gaopai.guiren.utils.ViewUtil;
-import com.gaopai.guiren.view.FlowLayout;
-import com.gaopai.guiren.view.MyGridLayout;
-import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class DynamicAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;
@@ -97,39 +62,9 @@ public class DynamicAdapter extends BaseAdapter {
 	private DynamicHelper.DyCallback callback = new DyCallback() {
 
 		@Override
-		public void onZanSuccess() {
-			DynamicAdapter.this.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onVoicePlayStart() {
-			DynamicAdapter.this.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onVoicePlayEnd() {
-			DynamicAdapter.this.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onSpreadSuccess() {
+		public void onCommentButtonClick(TypeHolder typeHolder, String name, boolean isShowReply) {
 			// TODO Auto-generated method stub
-			DynamicAdapter.this.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onDownVoiceSuccess() {
-		}
-
-		@Override
-		public void onCommentSuccess() {
-			DynamicAdapter.this.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onCommentButtonClick(TypeHolder typeHolder, boolean isShowReply) {
-			// TODO Auto-generated method stub
-			mFragment.showChatBox(typeHolder.realname, typeHolder, isShowReply);
+			mFragment.showChatBox(name, typeHolder, isShowReply);
 			showSoftKeyboard();
 		}
 
@@ -165,6 +100,16 @@ public class DynamicAdapter extends BaseAdapter {
 			}
 		}
 
+		@Override
+		public void notifyUpdateView() {
+			DynamicAdapter.this.notifyDataSetChanged();
+		}
+
+		@Override
+		public void onCommentSuccess() {
+			DynamicAdapter.this.notifyDataSetChanged();
+		}
+
 	};
 
 	// put in list
@@ -193,7 +138,7 @@ public class DynamicAdapter extends BaseAdapter {
 						return;
 					}
 					dynamicHelper.setCommentHolderForReply(typeBean, commentBean);
-					callback.onCommentButtonClick(typeBean, true);
+					callback.onCommentButtonClick(typeBean, commentBean.uname, true);
 				}
 			});
 			parent.addView(textView, lp);
@@ -233,7 +178,7 @@ public class DynamicAdapter extends BaseAdapter {
 		DynamicBean.TypeHolder typeBean = mData.get(position);
 		return dynamicHelper.getView(convertView, typeBean);
 	}
-	
+
 	@Override
 	public int getViewTypeCount() {
 		return 7;

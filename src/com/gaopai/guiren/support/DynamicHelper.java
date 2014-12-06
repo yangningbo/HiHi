@@ -50,6 +50,7 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -71,8 +72,10 @@ public class DynamicHelper {
 
 	public final static int DY_LIST = 0;
 	public final static int DY_DETAIL = 1;
-	public final static int DY_PROFILE = 2;
-	public final static int DY_MY_LIST = 3;
+	public final static int DY_PROFILE = 2;// not show user header, info,
+											// comments
+	public final static int DY_MY_LIST = 3;// not show action window, comments
+											// and so on
 	private int mDyKind = 0;
 
 	private Context mContext;
@@ -102,7 +105,7 @@ public class DynamicHelper {
 		if (mPlayerWrapper.getMessageTag().equals(msg.tag)) {
 			mPlayerWrapper.start(msg);
 			msg.isReadVoice = 1;
-			callback.onDownVoiceSuccess();
+			// callback.notifyUpdateView();
 		}
 	}
 
@@ -113,37 +116,56 @@ public class DynamicHelper {
 	}
 
 	public static interface DyCallback {
-		public void onZanSuccess();
+		public void notifyUpdateView();
 
 		public void onCommentSuccess();
 
-		public void onSpreadSuccess();
-
-		public void onCommentButtonClick(TypeHolder typeHolder, boolean isShowReply);
+		public void onCommentButtonClick(TypeHolder typeHolder, String name, boolean isShowReply);
 
 		public void onBindComment(TypeHolder typeHolder, ViewHolderCommon holder);
 
 		public void onBindCommenViewBottom(TypeHolder typeHolder, ViewHolderCommon holder, boolean isShowComment,
 				boolean isShowSpread, boolean isShowZan);
 
-		public void onDownVoiceSuccess();
+	}
 
-		public void onVoicePlayStart();
+	public static class DySoftCallback implements DyCallback {
+		@Override
+		public void onBindComment(TypeHolder typeHolder, ViewHolderCommon holder) {
 
-		public void onVoicePlayEnd();
+		}
+
+		@Override
+		public void onBindCommenViewBottom(TypeHolder typeHolder, ViewHolderCommon holder, boolean isShowComment,
+				boolean isShowSpread, boolean isShowZan) {
+		}
+
+		@Override
+		public void onCommentButtonClick(TypeHolder typeHolder, String name, boolean isShowReply) {
+		}
+
+		@Override
+		public void notifyUpdateView() {
+		}
+
+		@Override
+		public void onCommentSuccess() {
+			// TODO Auto-generated method stub
+
+		}
 	}
 
 	private class PlayCallback extends MediaUIHeper.PlayCallback {
 
 		@Override
 		public void onStart() {
-			callback.onVoicePlayStart();
+			callback.notifyUpdateView();
 		}
 
 		@Override
 		public void onStop(boolean stopAutomatic) {
 			// TODO Auto-generated method stub
-			callback.onVoicePlayEnd();
+			callback.notifyUpdateView();
 		}
 	}
 
@@ -158,7 +180,7 @@ public class DynamicHelper {
 						typeBean.isZan = 1;
 						ZanBean zanBean = new ZanBean();
 						zanBean.uid = user.uid;
-						zanBean.uname = user.realname;
+						zanBean.uname = getUserName(user);
 						zanList.add(zanBean);
 					} else {
 						for (ZanBean zanBean : zanList) {
@@ -169,7 +191,7 @@ public class DynamicHelper {
 							}
 						}
 					}
-					callback.onZanSuccess();
+					callback.notifyUpdateView();
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}
@@ -189,12 +211,12 @@ public class DynamicHelper {
 					SpreadBean spreadBean = new SpreadBean();
 					spreadBean.uid = user.uid;
 					spreadBean.nickname = user.displayName;
-					spreadBean.realname = user.realname;
+					spreadBean.realname = getUserName(user);
 					if (typeBean.spread == null) {
 						typeBean.spread = new ArrayList<SpreadBean>();
 					}
 					typeBean.spread.add(spreadBean);
-					callback.onSpreadSuccess();
+					callback.notifyUpdateView();
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}
@@ -217,7 +239,7 @@ public class DynamicHelper {
 							commentBean.content.content = content;
 							commentBean.toid = commnetHolder.toid;
 							commentBean.toname = commnetHolder.todisplayname;
-							commentBean.uname = user.realname;
+							commentBean.uname = commnetHolder.displayname;
 							commentBean.type = commnetHolder.type;
 							commentBean.dataid = commnetHolder.dataid;
 							commentBean.uid = user.uid;
@@ -268,11 +290,8 @@ public class DynamicHelper {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				CommnetHolder commnetHolder = typeHolder.commnetHolder;
-				commnetHolder.displayname = user.realname;
-				commnetHolder.dataid = typeHolder.id;
-				commnetHolder.type = 1;// 实名还是匿名？
-				callback.onCommentButtonClick(typeHolder, false);
+				setCommentHolder(typeHolder);
+				callback.onCommentButtonClick(typeHolder, "", false);
 				actionWindow.dismiss();
 			}
 		});
@@ -587,7 +606,10 @@ public class DynamicHelper {
 				}
 			});
 			AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
-			if (mPlayerWrapper.isPlay() && mPlayerWrapper.getMessageTag().equals(palyedMessagTag)) {
+			if (mPlayerWrapper.isPlay()) {
+				Logger.d(this,mPlayerWrapper.getMessageTag()+"   "+ typeBean.id);
+			}
+			if (mPlayerWrapper.isPlay() && mPlayerWrapper.getMessageTag().equals(typeBean.id)) {
 				drawable.start();
 			} else {
 				drawable.stop();
@@ -754,7 +776,7 @@ public class DynamicHelper {
 		}
 
 		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)));
-		
+
 		if (mDyKind == DY_MY_LIST) {
 			viewHolder.rlDynamicInteractive.setVisibility(View.GONE);
 			viewHolder.btnDynamicAction.setVisibility(View.GONE);
@@ -838,7 +860,10 @@ public class DynamicHelper {
 		// TODO Auto-generated method stub
 		gridLayout.removeAllViews();
 		for (PicBean bean : pics) {
-			gridLayout.addView(getImageView(bean.imgUrlS));
+			ImageView imageView = getImageView(bean.imgUrlS);
+			imageView.setTag(ChatMsgHelper.creatPicMsg(bean.imgUrlS, bean.imgUrlL, ""));
+			imageView.setOnClickListener(photoClickListener);
+			gridLayout.addView(imageView);
 		}
 	}
 
@@ -856,7 +881,7 @@ public class DynamicHelper {
 
 	public void setCommentHolder(TypeHolder typeBean) {
 		CommnetHolder commnetHolder = typeBean.commnetHolder;
-		commnetHolder.displayname = user.realname;
+		commnetHolder.displayname = getUserName(user);
 		commnetHolder.dataid = typeBean.id;
 		commnetHolder.type = 1;
 	}
@@ -865,9 +890,19 @@ public class DynamicHelper {
 		CommnetHolder commnetHolder = typeBean.commnetHolder;
 		commnetHolder.toid = commentBean.uid;
 		commnetHolder.todisplayname = commentBean.uname;
-		commnetHolder.displayname = user.realname;
+		commnetHolder.displayname = getUserName(user);
 		commnetHolder.dataid = commentBean.dataid;
 		commnetHolder.type = 1;
+	}
+
+	public String getUserName(User user) {
+		if (!TextUtils.isEmpty(user.realname)) {
+			return user.realname;
+		}
+		if (!TextUtils.isEmpty(user.nickname)) {
+			return user.nickname;
+		}
+		return mContext.getString(R.string.no_name);
 	}
 
 	public Spannable getCommentString(CommentBean commentBean) {
@@ -876,21 +911,26 @@ public class DynamicHelper {
 			return MyTextUtils.addEmotions(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), "回复",
 					MyTextUtils.addSingleUserSpan(commentBean.toname, commentBean.toid), ":",
-					commentBean.content.content));
+					MyTextUtils.addEmotions(commentBean.content.content)));
 		} else {
-			return MyTextUtils
-					.addEmotions(MyTextUtils.getSpannableString(
-							MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), ":",
-							commentBean.content.content));
+			return MyTextUtils.addEmotions(MyTextUtils.getSpannableString(
+					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), ":",
+					MyTextUtils.addEmotions(commentBean.content.content)));
 		}
 	}
 
 	public void makeCommentNotNull(CommentBean commentBean) {
 		if (TextUtils.isEmpty(commentBean.toname)) {
-			commentBean.toname = "匿名";
+			commentBean.toname = mContext.getString(R.string.no_name);
 		}
 		if (TextUtils.isEmpty(commentBean.uname)) {
-			commentBean.uname = "匿名";
+			commentBean.uname = mContext.getString(R.string.no_name);
+		}
+		if (commentBean.content == null) {
+			commentBean.content = new CommentContetnHolder();
+		}
+		if (TextUtils.isEmpty(commentBean.content.content)) {
+			commentBean.content.content="";
 		}
 	}
 }

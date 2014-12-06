@@ -269,6 +269,9 @@ public class MyTextUtils {
 
 
 
+	public static Spannable addEmotions(String value) {
+		return addEmotions(new SpannableString(value));
+	}
 	public static Spannable addEmotions(Spannable value) {
 		Matcher matcher = EMOTION_PATTERN.matcher(value);
 		while (matcher.find()) {

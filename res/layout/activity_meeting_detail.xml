@@ -24,7 +24,7 @@
                 android:layout_height="120dp"
                 android:contentDescription="@string/desc"
                 android:scaleType="centerCrop"
-                android:src="@drawable/logo" />
+                android:src="@drawable/icon_default_meeting" />
 
             <TextView
                 android:id="@+id/tv_meeting_title"

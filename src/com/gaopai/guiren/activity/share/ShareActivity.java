@@ -3,33 +3,24 @@ package com.gaopai.guiren.activity.share;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
-import android.annotation.TargetApi;
-import android.os.Build;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.MessageInfo;
-import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.utils.ImageLoaderUtil;
-import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class ShareActivity extends BaseActivity implements OnClickListener {
 
@@ -78,30 +69,94 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 				.addToBackStack(null).commit();
 	}
 
+	public boolean isShare() {
+		return !(messageInfo == null);
+	}
+
 	private void initComponent() {
 		// TODO Auto-generated method stub
 		fragmentHodler = (FrameLayout) findViewById(R.id.fl_fragment_holder);
 		etSearch = (EditText) findViewById(R.id.et_share_search);
-		etSearch.addTextChangedListener(new TextWatcher() {
-
+		listener = new SimpleResponseListener(this, R.string.request_internet_now) {
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
-				cancelCallback.cancel(s.toString());
+			public void onSuccess(Object o) {
+				ShareActivity.this.finish();
 			}
+		};
+	}
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO Auto-generated method stub
+	public void setTitleText(int text) {
+		mTitleBar.setTitleText(text);
+	}
 
-			}
+	public void toggleUser(User user) {
+		if (userMap.containsKey(user.uid)) {
+			userMap.remove(user.uid);
+		} else {
+			userMap.put(user.uid, user);
+		}
+		addRightTitleButton();
+	}
 
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
+	private TextView rightButtonView;
 
-			}
-		});
+	public void addRightTitleButton() {
+		if (rightButtonView == null) {
+			rightButtonView = mTitleBar.addRightTextView("确定(" + userMap.size() + ")");
+			rightButtonView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showDialog("确认邀请", "", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							invite(getCheckedId(), tribeId);
+						}
+					});
+				}
+			});
+		}
+		if (userMap.size() == 0) {
+			rightButtonView.setVisibility(View.GONE);
+		} else {
+			rightButtonView.setVisibility(View.VISIBLE);
+		}
+		rightButtonView.setText("确定(" + userMap.size() + ")");
+	}
+
+	public String getCheckedId() {
+		String result = "";
+		StringBuffer sb = new StringBuffer();
+		Set<String> keyset = userMap.keySet();
+		for (String key : keyset) {
+			sb.append(key + ",");
+		}
+		if (sb.length() > 0) {
+			result = sb.substring(0, sb.length() - 1);
+		}
+		return result;
+	}
+
+	private SimpleResponseListener listener;
+
+	private void invite(String uid, String tribeid) {
+		switch (type) {
+		case ShareActivity.TYPE_INVITE_USER:
+			DamiInfo.sendMeetingInvite(tribeid, uid, listener);
+			break;
+		case ShareActivity.TYPE_INVITE_HOST:
+			DamiInfo.invitemeeting(tribeid, uid, 2, listener);
+			break;
+		case ShareActivity.TYPE_INVITE_GUEST:
+			DamiInfo.invitemeeting(tribeid, uid, 3, listener);
+			break;
+		case ShareActivity.TYPE_INVITE_TRIBE:
+			DamiInfo.sendInvite(tribeid, uid, listener);
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override

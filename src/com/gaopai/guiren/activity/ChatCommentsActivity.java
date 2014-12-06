@@ -87,7 +87,7 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
-import com.gaopai.guiren.utils.ChatBoxManager;
+import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;

@@ -9,11 +9,13 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.R.string;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -104,6 +106,13 @@ public class ImageLoaderUtil {
 
 	public static void displayImage(String url, ImageView imageView) {
 		imageLoader.displayImage(url, imageView, options);
+	}
+	public static void displayImage(String url, ImageView imageView, int defultImage) {
+		if (!TextUtils.isEmpty(url)) {
+			imageLoader.displayImage(url, imageView, options);
+		} else {
+			imageView.setImageResource(defultImage);
+		}
 	}
 
 	public static void displayImage(String url, ImageView imageView,

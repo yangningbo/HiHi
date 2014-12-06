@@ -173,7 +173,6 @@ public class ContactActivity extends BaseActivity {
 		mListView.setAdapter(mAdapter);
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
-
 		getUserList();
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.R;
@@ -96,6 +98,23 @@ public class NotificationFragment extends BaseFragment {
 				}
 			}
 		});
+		mListView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				final ConversationBean conversationBean = (ConversationBean) mAdapter.getItem(position);
+				// TODO Auto-generated method stub
+				getBaseActivity().showMutiDialog("", new String[]{"删除"}, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						deleteItem(conversationBean.toid);
+						getDataFromDb();
+					}
+				});
+				return false;
+			}
+		});
 		registerReceiver();
 	}
 
@@ -111,6 +130,12 @@ public class NotificationFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		unregisterReceiver();
+	}
+	
+	private void deleteItem(String id) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
+		ConverseationTable table = new ConverseationTable(dbDatabase);
+		table.delete(id);
 	}
 
 	private void getDataFromDb() {

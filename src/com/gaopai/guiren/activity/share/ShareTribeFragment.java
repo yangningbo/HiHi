@@ -28,9 +28,16 @@ public class ShareTribeFragment extends BaseShareFragment {
 		View view = inflater.inflate(R.layout.general_pulltorefresh_listview, null);
 		initView(view);
 		getTribeList();
+		
 		return view;
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		getShareActivity().setTitleText(R.string.tribe);
+	}
 	private void initView(View mView) {
 		// TODO Auto-generated method stub
 		mListView = (PullToRefreshListView) mView.findViewById(R.id.listView);

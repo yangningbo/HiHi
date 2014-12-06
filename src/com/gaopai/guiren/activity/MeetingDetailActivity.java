@@ -103,13 +103,13 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.meeting_detail_title));
-		
+
 		initComponent();
 		if (isPreview) {
 			bindBasicView();
 			return;
 		}
-		
+
 		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
 		view.setId(R.id.ab_share);
 		view.setOnClickListener(this);
@@ -126,7 +126,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		intent.putExtra(KEY_MEETING_ID, tid);
 		return intent;
 	}
-	
+
 	private void initComponent() {
 		tvMeetingTitle = (TextView) findViewById(R.id.tv_meeting_title);
 		tvMeetingTime = (TextView) findViewById(R.id.tv_meeting_time);
@@ -231,7 +231,11 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		tvMeetingTime.setText(FeatureFunction.getTime(mMeeting.start) + "~" + FeatureFunction.getTime(mMeeting.end));
 		tvMeetingTimeDiff.setText(FeatureFunction.timeDifference(mMeeting.start));
 		if (!isPreview) {
-			ImageLoaderUtil.displayImage(mMeeting.logosmall, ivMeetingHeader);
+			if (!TextUtils.isEmpty(mMeeting.logosmall)) {
+				ImageLoaderUtil.displayImage(mMeeting.logosmall, ivMeetingHeader);
+			} else {
+				ivMeetingHeader.setImageResource(R.drawable.icon_default_meeting);
+			}
 			return;
 		}
 		if (!TextUtils.isEmpty(mMeeting.logosmall)) {
@@ -271,18 +275,15 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 		case R.id.btn_on_look:
-		case R.id.btn_enter_meeting:
-		case R.id.grid_enter_meeting: {
-			Intent intent = new Intent();
-			intent.setClass(mContext, ChatTribeActivity.class);
-			intent.putExtra(ChatTribeActivity.KEY_TRIBE, mMeeting);
-			intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, ChatTribeActivity.CHAT_TYPE_MEETING);
-			startActivity(intent);
+			startActivity(ChatTribeActivity.getIntent(mContext, mMeeting, ChatTribeActivity.CHAT_TYPE_MEETING, true));
 			break;
-		}
+		case R.id.btn_enter_meeting:
+		case R.id.grid_enter_meeting:
+			startActivity(ChatTribeActivity.getIntent(mContext, mMeeting, ChatTribeActivity.CHAT_TYPE_MEETING));
+			break;
 
 		case R.id.btn_want_in_meeting:
-//			applyWithReason(AddReasonActivity.TYPE_TO_JOIN_MEETING);
+			// applyWithReason(AddReasonActivity.TYPE_TO_JOIN_MEETING);
 			if (mMeeting.ispwd == 0) {
 				wantJoinMeeting();
 			} else {
@@ -351,7 +352,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 		case R.id.ab_share:
-//			share();
+			// share();
 			ShareManager shareManager = new ShareManager(this);
 			shareManager.shareContentRecommend("aaaaaaa", "http://www.baidu.com");
 			shareManager.setDyCallback(new CallDyback() {
@@ -367,7 +368,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 
 	}
-	
+
 	public void wantJoinMeeting() {
 		DamiInfo.applyMeeting(mMeetingID, "", new SimpleResponseListener(mContext) {
 			@Override
@@ -382,7 +383,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			}
 		});
 	}
-	
+
 	public void spreadMeeting(Tribe meeting) {
 		DamiInfo.spreadDynamic(3, meeting.id, "", "", "", "", new SimpleResponseListener(mContext) {
 			@Override
@@ -396,7 +397,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				}
 			}
 		});
-		
+
 	}
 
 	private void setAlarmForMeeting() {

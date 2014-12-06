@@ -100,13 +100,14 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		messageInfo.time = System.currentTimeMillis();
 		messageInfo.readState = 1;
 		messageInfo.to = user.uid;
+		buildConversation(messageInfo);
 	}
 
 	@Override
 	protected void getMessageList(boolean isRefresh) {
 		super.getMessageList(isRefresh);
 		String maxID = getMessageMaxId();
-		DamiInfo.getPrivateMessageList(user.uid, maxID, "", getMessageListListener);
+		DamiInfo.getPrivateMessageList(user.uid, maxID, "", new GetMessageListener(mContext, false));
 	}
 
 	@Override
@@ -128,6 +129,11 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		bean.toid = user.uid;
 		bean.name = user.realname;
 		bean.type = 100;
+		if (msg.fileType == MessageType.VOICE) {
+			bean.localtype = 1;
+		} else {
+			bean.localtype = 0;
+		}
 		msg.conversion = bean;
 	}
 

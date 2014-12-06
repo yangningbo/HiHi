@@ -30,7 +30,6 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 
 	public static final class Section extends Row {
 		public final String text;
-
 		public Section(String text) {
 			this.text = text;
 		}
@@ -55,7 +54,6 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 			// TODO Auto-generated method stub
 			return this.pingYinText.compareTo(another.pingYinText);
 		}
-
 	}
 
 	private List<Row> rows;
@@ -149,7 +147,6 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 
 	@Override
 	public int getPositionForSection(int section) {
-		// TODO Auto-generated method stub
 		for (int i = section; i >= 0; i--) {
 			for (int j = 0; j < getCount(); j++) {
 				Row row = getItem(j);

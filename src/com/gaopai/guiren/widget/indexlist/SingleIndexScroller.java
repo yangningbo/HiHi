@@ -151,7 +151,9 @@ public class SingleIndexScroller extends View {
 
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		mIndexbarRect = new RectF(0, 0, w, h);
+		if (mIndexbarRect == null) {
+			mIndexbarRect = new RectF(0, 0, w, h);
+		}
 	}
 
 	public void setAdapter(Adapter adapter) {

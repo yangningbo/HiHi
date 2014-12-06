@@ -91,6 +91,9 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 				final ConnectionBean data = (ConnectionBean) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
+						if (isRefresh) {
+							mAdapter.clear();
+						}
 						mAdapter.addAll(data.data);
 						page++;
 					}

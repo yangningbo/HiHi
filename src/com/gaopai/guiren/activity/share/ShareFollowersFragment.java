@@ -10,10 +10,8 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
-
 public class ShareFollowersFragment extends BaseShareFragment {
 	private SimpleResponseListener listener;
-
 	@Override
 	protected View creatHeaderView() {
 		LinearLayout layout = new LinearLayout(getActivity());
@@ -21,9 +19,9 @@ public class ShareFollowersFragment extends BaseShareFragment {
 				android.widget.AbsListView.LayoutParams.MATCH_PARENT,
 				android.widget.AbsListView.LayoutParams.WRAP_CONTENT));
 		layout.setOrientation(LinearLayout.VERTICAL);
-
+		
 		LayoutParams textLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-
+		
 		View view = creatHeaderTextView("我的粉丝");
 		view.setOnClickListener(new OnClickListener() {
 
@@ -38,8 +36,8 @@ public class ShareFollowersFragment extends BaseShareFragment {
 			}
 		});
 		layout.addView(view, textLp);
-		
-		if (((ShareActivity)getActivity()).type != ShareActivity.TYPE_SHARE) {
+		getShareActivity().setTitleText(R.string.follow);
+		if (((ShareActivity) getActivity()).type != ShareActivity.TYPE_SHARE) {
 			return layout;
 		}
 		if (((ShareActivity) getActivity()).type == ShareActivity.TYPE_SHARE) {
@@ -60,7 +58,15 @@ public class ShareFollowersFragment extends BaseShareFragment {
 			});
 			layout.addView(view, textLp);
 		}
+
 		return layout;
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		getShareActivity().setTitleText(R.string.follow);
 	}
 
 	private TextView creatHeaderTextView(String text) {
@@ -69,8 +75,8 @@ public class ShareFollowersFragment extends BaseShareFragment {
 		view.setText(text);
 		view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_text_btn));
 		view.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.profile_tab_arrow, 0);
-		view.setPadding(padding, padding, padding, padding);
+		view.setPadding(padding, padding, padding + padding, padding);
 		return view;
 	}
-	
+
 }

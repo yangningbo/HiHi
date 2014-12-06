@@ -3,8 +3,6 @@ package com.gaopai.guiren.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import u.aly.be;
-
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -107,7 +105,7 @@ public class NotificationAdapter extends BaseAdapter {
 		holder.tvName.setText(bean.name);
 		if (TextUtils.isEmpty(bean.unfinishinput)) {
 			holder.tvInfo.setText(bean.lastmsgcontent);
-			if (bean.type % 100 == 2) {
+			if (bean.localtype == 1) {
 				holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_notification_voice, 0, 0, 0);
 				holder.tvInfo.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 3));
 			} else {

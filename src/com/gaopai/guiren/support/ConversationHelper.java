@@ -2,6 +2,7 @@ package com.gaopai.guiren.support;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -33,10 +34,11 @@ public class ConversationHelper {
 		ConversationBean conversation = table.queryByID(bean.toid);
 		if (conversation != null) {
 			if (messageInfo.fileType == MessageType.VOICE) {
-				conversation.type = bean.type + 2;
+				conversation.localtype = 1;
 			} else {
-				conversation.type = bean.type;
+				conversation.localtype = 0;
 			}
+			conversation.type = bean.type;
 			conversation.headurl = bean.headurl;
 			if (!isRead) {
 				conversation.unreadcount = conversation.unreadcount + 1;
@@ -61,10 +63,11 @@ public class ConversationHelper {
 		conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
 		conversation.toid = bean.toid;
 		if (messageInfo.fileType == MessageType.VOICE) {
-			conversation.type = bean.type + 2;
+			conversation.localtype = 1;
 		} else {
-			conversation.type = bean.type;
+			conversation.localtype = 0;
 		}
+		conversation.type = bean.type;
 		conversation.anonymous = 0;
 		table.insert(conversation);
 	}
@@ -73,30 +76,33 @@ public class ConversationHelper {
 		
 	}
 	
-	public static void saveDraft(Context context, MessageInfo messageInfo) {
+	public static boolean saveDraft(Context context, MessageInfo messageInfo) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
 		ConversationInnerBean bean = messageInfo.conversion;
 		ConversationBean conversation = table.queryByID(bean.toid);
 		if (conversation == null) {
+			if (TextUtils.isEmpty(messageInfo.content)) {
+				return false;
+			}
 			conversation = new ConversationBean();
 			conversation.name = bean.name;
 			conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
 			conversation.toid = bean.toid;
 			conversation.unfinishinput = messageInfo.content;
 			if (messageInfo.fileType == MessageType.VOICE) {
-				conversation.type = bean.type + 2;
+				conversation.localtype = 1;
 			} else {
-				conversation.type = bean.type;
+				conversation.localtype = 0;
 			}
+			conversation.type = bean.type;
 			conversation.anonymous = 0;
 			table.insert(conversation);
 		} else {
 			conversation.unfinishinput = messageInfo.content;
 			table.update(conversation);
 		}
-
-	
+		return true;
 	}
 
 }

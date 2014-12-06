@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -121,7 +122,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
+//		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
 		mContext = this;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -153,32 +154,15 @@ public class BaseActivity extends FragmentActivity {
 		holder.addView(ViewUtil.creatTitleBarLineView(mContext));
 	}
 
-	/**
-	 * 描述：用指定的View填充主界
-	 * 
-	 * @param contentView
-	 *            指定的View
-	 */
 	public void setAbContentView(View contentView) {
 		contentLayout.removeAllViews();
 		contentLayout.addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 
-	/**
-	 * 描述：用指定资源ID表示的View填充主界
-	 * 
-	 * @param resId
-	 *            指定的View的资源ID
-	 */
 	public void setAbContentView(int resId) {
 		setAbContentView(mInflater.inflate(resId, null));
 	}
 
-	/**
-	 * toast提示
-	 * 
-	 * @param resId
-	 */
 	public void showToast(int resId) {
 		showToast(this.getResources().getText(resId).toString());
 	}
@@ -192,10 +176,7 @@ public class BaseActivity extends FragmentActivity {
 		});
 
 	}
-
-	/**
-	 * 结束fragment
-	 */
+	
 	public void backToFragment() {
 		getSupportFragmentManager().popBackStack();
 	}
@@ -364,19 +345,11 @@ public class BaseActivity extends FragmentActivity {
 
 	}
 
-	/**
-	 * 描述：对话框dialog （确认，取消�?.
-	 * 
-	 * @param title
-	 *            对话框标题内�?
-	 * @param msg
-	 *            对话框提示内�?
-	 * @param mOkOnClickListener
-	 *            点击确认按钮的事件监�?
-	 */
 	public void showDialog(String title, String msg, DialogInterface.OnClickListener mOkOnClickListener) {
 		AlertDialog.Builder builder = new Builder(this);
-		builder.setMessage(msg);
+		if (!TextUtils.isEmpty(msg)) {
+			builder.setMessage(msg);
+		}
 		builder.setTitle(title);
 		builder.setPositiveButton("确认", mOkOnClickListener);
 		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -388,16 +361,6 @@ public class BaseActivity extends FragmentActivity {
 		builder.create().show();
 	}
 
-	/**
-	 * 描述：对话框dialog （确认，取消�?.
-	 * 
-	 * @param title
-	 *            对话框标题内�?
-	 * @param view
-	 *            对话框提示内�?
-	 * @param mOkOnClickListener
-	 *            点击确认按钮的事件监�?
-	 */
 	public AlertDialog showDialog(String title, View view, DialogInterface.OnClickListener mOkOnClickListener) {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setTitle(title);
@@ -414,14 +377,6 @@ public class BaseActivity extends FragmentActivity {
 		return mAlertDialog;
 	}
 
-	/**
-	 * 描述：对话框dialog （无按钮�?.
-	 * 
-	 * @param title
-	 *            对话框标题内�?
-	 * @param msg
-	 *            对话框提示内�?
-	 */
 	public AlertDialog showDialog(String title, String msg) {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setMessage(msg);
@@ -432,14 +387,6 @@ public class BaseActivity extends FragmentActivity {
 		return mAlertDialog;
 	}
 
-	/**
-	 * 描述：对话框dialog （无按钮�?.
-	 * 
-	 * @param title
-	 *            对话框标题内�?
-	 * @param view
-	 *            对话框提示内�?
-	 */
 	public AlertDialog showDialog(String title, View view) {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setTitle(title);
@@ -448,6 +395,16 @@ public class BaseActivity extends FragmentActivity {
 		AlertDialog mAlertDialog = builder.create();
 		mAlertDialog.show();
 		return mAlertDialog;
+	}
+	
+	public void showMutiDialog (String title, String[] array, DialogInterface.OnClickListener onClickListener) {
+		AlertDialog dialog = new AlertDialog.Builder(mContext).setItems(array, onClickListener).create();
+		if (TextUtils.isEmpty(title)) {
+			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		} else {
+			dialog.setTitle(title);
+		}
+		dialog.show();
 	}
 
 	@Override
