@@ -78,6 +78,7 @@ import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
 import com.gaopai.guiren.bean.net.SendMessageResult;
@@ -91,13 +92,13 @@ import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.gaopai.guiren.view.ChatGridLayout;
 import com.gaopai.guiren.view.RecordDialog;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
-import com.gaopai.guiren.widget.emotion.EmotionParser;
 import com.gaopai.guiren.widget.emotion.EmotionPicker;
 import com.nineoldandroids.animation.ObjectAnimator;
 
@@ -320,10 +321,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
-				mContentEdit.setHint(getString(R.string.comment_reply_info_colon)
-						+ messageInfos.get(pos).displayname);
-				mVoiceSendBtn.setText(getString(R.string.comment_reply_info_colon)
-						+ messageInfos.get(pos).displayname);
+				mContentEdit.setHint(getString(R.string.comment_reply_info_colon) + messageInfos.get(pos).displayname);
+				mVoiceSendBtn.setText(getString(R.string.comment_reply_info_colon) + messageInfos.get(pos).displayname);
 				commenterid = messageInfos.get(pos).from;
 				commenterName = messageInfos.get(pos).displayname;
 			}
@@ -433,7 +432,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		// mVoiceModeImage = (ImageView) findViewById(R.id.voice_mode_image);
 		View view = mInflater.inflate(R.layout.activity_chat_comment_layout, null);
 		zanText = (TextView) view.findViewById(R.id.zan_text);
-		zanText.setOnTouchListener(new BlockTouchListener());
+		zanText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		tvText = (TextView) view.findViewById(R.id.iv_chat_text);
 		tvVoiceLength = (TextView) view.findViewById(R.id.tv_chat_voice_time_length);
 		ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
@@ -467,7 +466,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
 		viewCoverTop = view.findViewById(R.id.view_cover_top);
 		viewCoverBottom = view.findViewById(R.id.view_cover_bottom);
-		
+
 		bindZanCommentBorderView();
 		return view;
 
@@ -539,7 +538,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, headImageView);
 		}
 		nameTextView.setText(messageInfo.displayname);
-		tvText.setOnTouchListener(blockTouchListener);
+		tvText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		notHideViews(messageInfo.fileType);
 		switch (messageInfo.fileType) {
 		case MessageType.TEXT:
@@ -590,9 +589,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_active);
 		}
 	}
-	
+
 	private void bindZanCommentBorderView() {
-		if(zanList.size() == 0) {
+		if (zanList.size() == 0) {
 			layoutZan.setVisibility(View.GONE);
 			viewCoverBottom.setVisibility(View.GONE);
 			if (messageInfos.size() == 0) {
@@ -612,7 +611,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		}
 	}
-	
 
 	private OnClickListener photoClickListener = new OnClickListener() {
 
@@ -628,75 +626,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	};
 
-	private CharSequence setLinkOfSpannable(CharSequence charSequence) {
-		SpannableString spannable = new SpannableString(charSequence);
-		Matcher matcher = Patterns.WEB_URL.matcher(spannable);
-		while (matcher.find()) {
-			int s = matcher.start();
-			int e = matcher.end();
-			spannable.setSpan(urlClickSpan, s, e, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
-		return spannable;
-	}
-
-	//
-	// private void updateZanView() {
-	// // if (animator != null) {
-	// // animator.end();
-	// // }
-	// // likeCountBtn.clearAnimation();
-	// likeCountBtn.setEnabled(true);
-	// messageInfo.agreeCount = zanList.size();
-	// likeCountText.setText(String.valueOf(zanList.size()));
-	// likeCountBtn.setImageDrawable(this.getResources().getDrawable(R.drawable.zan_btn));
-	// if (zanList.size() > 0) {
-	// chatLikeLayout.setVisibility(View.VISIBLE);
-	// zanText.setText(getColorfulClickText());
-	// for (MessageInfo info : zanList) {
-	// if (info.uid.equals(mLogin.uid)) {
-	// likeCountBtn.setImageDrawable(this.getResources().getDrawable(R.drawable.zan_btn_on));
-	// }
-	// }
-	// } else {
-	// chatLikeLayout.setVisibility(View.GONE);
-	// }
-	// }
-	//
-	private Spannable getColorfulClickText() {
-		int dotlen = "，".length();
-		StringBuilder sb = new StringBuilder();
-		for (MessageInfo info : zanList) {
-			sb.append(info.displayname);
-			sb.append("，");
-		}
-		SpannableString s = new SpannableString(sb.subSequence(0, sb.length() - 1));// 去掉最后一个逗号
-		int offset = 0;
-		int namelen;
-		for (int i = 0, len = zanList.size(); i < len; i++) {
-			final int index = i;
-			final MessageInfo info = zanList.get(i);
-			namelen = info.displayname.length();
-			s.setSpan(new ForegroundColorSpan(Color.BLUE), offset, offset + namelen, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			s.setSpan(new ClickableSpan() {
-				@Override
-				public void updateDrawState(TextPaint ds) {
-					super.updateDrawState(ds);
-					ds.setUnderlineText(false);
-				}
-
-				@Override
-				public void onClick(View widget) {
-					// TODO Auto-generated method stub
-					if (!TextUtils.isEmpty(info.role) && !info.role.equals("null") && Integer.valueOf(info.role) > 0) {
-						goToUserActivity(info.uid);
-					}
-				}
-
-			}, offset, offset + namelen, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			offset = offset + namelen + dotlen;
-		}
-		return s;
-	}
 
 	private ImageView chatCommentIcon;
 	private boolean onBottom = false;
@@ -723,7 +652,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private final static int MAX_SECOND = 10;
 	private final static int MIN_SECOND = 2;
-	private BlockTouchListener blockTouchListener = new BlockTouchListener();
 	private int palyedPosition;
 
 	class MyAdapter extends BaseAdapter {
@@ -789,7 +717,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 						R.drawable.icon_dynamic_comment_transparent, 0, 0, 0);
 			}
 			if (position == getCount() - 1) {
-				viewHolder.rootLayout.setVisibility(View.INVISIBLE);
+				viewHolder.rootLayout.setVisibility(View.GONE);
 				viewHolder.rootLayoutFake.setBackgroundResource(R.drawable.icon_dynamic_bottom);
 				return convertView;
 			} else {
@@ -798,13 +726,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 			final MessageInfo commentInfo = messageInfos.get(position);
 			viewHolder.messageNameText.setTag(position);
-			viewHolder.messageNameText.setOnTouchListener(blockTouchListener);
-			String replyFromToText;
+			viewHolder.messageNameText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+			CharSequence replyFromToText;
+
 			if (!TextUtils.isEmpty(commentInfo.commenterid) && (Integer.valueOf(commentInfo.commenterid)) > 0) {
-				replyFromToText = commentInfo.displayname + getString(R.string.comment_reply_info_no_colon)
-						+ commentInfo.commentername + ":";
+				replyFromToText = MyTextUtils.getSpannableString(
+						MyTextUtils.addSingleUserSpan(commentInfo.displayname, commentInfo.from), "回复",
+						MyTextUtils.addSingleUserSpan(commentInfo.commentername, commentInfo.commenterid), ":");
 			} else {
-				replyFromToText = commentInfo.displayname + ":";
+				replyFromToText = MyTextUtils.getSpannableString(
+						MyTextUtils.addSingleUserSpan(commentInfo.displayname, commentInfo.from), ":");
 			}
 
 			if (commentInfo.sendState == 0) {
@@ -812,8 +743,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder.resendImageView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						// showResendDialog(commentInfo);
+
 					}
 				});
 			} else {
@@ -824,15 +754,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 2000));
 				notHideViews(viewHolder, MessageType.TEXT);
 				if (commentInfo.mIsShide == 0) {// not hide
-					if (!TextUtils.isEmpty(commentInfo.commenterid) && (Integer.valueOf(commentInfo.commenterid)) > 0) {
-						viewHolder.messageNameText.setText(buildColorSpannable(commentInfo.displayname,
-								commentInfo.commentername,
-								EmotionParser.replaceContent(replyFromToText + commentInfo.content)));
-					} else {
-						viewHolder.messageNameText.setText(buildColorSpannable(commentInfo.displayname,
-								EmotionParser.replaceContent(replyFromToText + commentInfo.content)));
-					}
-
+					viewHolder.messageNameText.setText(MyTextUtils.getSpannableString(replyFromToText,
+							MyTextUtils.addHttpLinks(commentInfo.content)));
 				} else {
 					viewHolder.messageNameText.setText(mContext.getString(R.string.shide_msg_prompt));
 				}
@@ -842,12 +765,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				if (mCurrentModel == TEXT_MODEL) {
 					replyFromToText = replyFromToText + commentInfo.content;
 				}
-				if (!TextUtils.isEmpty(commentInfo.commenterid) && (Integer.valueOf(commentInfo.commenterid)) > 0) {
-					viewHolder.messageNameText.setText(buildColorSpannable(commentInfo.displayname,
-							commentInfo.commentername, replyFromToText));
-				} else {
-					viewHolder.messageNameText.setText(buildColorSpannable(commentInfo.displayname, replyFromToText));
-				}
+				viewHolder.messageNameText.setText(replyFromToText);
 
 				if (commentInfo.sendState == 2) {// now sending
 					notHideViews(viewHolder, MessageType.MAP);
@@ -884,12 +802,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				notHideViews(viewHolder, MessageType.PICTURE);
 				viewHolder.picImageView.getLayoutParams().width = commentInfo.imgWidth;
 				viewHolder.picImageView.getLayoutParams().height = commentInfo.imgHeight;
-				if (!TextUtils.isEmpty(commentInfo.commenterid) && (Integer.valueOf(commentInfo.commenterid)) > 0) {
-					viewHolder.messageNameText.setText(buildColorSpannable(commentInfo.displayname,
-							commentInfo.commentername, replyFromToText));
-				} else {
-					viewHolder.messageNameText.setText(buildColorSpannable(commentInfo.displayname, replyFromToText));
-				}
+				viewHolder.messageNameText.setText(replyFromToText);
 				final String path = commentInfo.imgUrlS;
 				if (path.startsWith("http://")) {
 					viewHolder.progressBar.setVisibility(View.VISIBLE);
@@ -973,54 +886,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		ProgressBar progressBar;
 	}
 
-	// private void showResendDialog(final MessageInfo messageInfo) {
-	// final Dialog dlg = new Dialog(mContext, R.style.MMThem_DataSheet);
-	// LayoutInflater inflater = (LayoutInflater)
-	// mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	// // LinearLayout layout = (LinearLayout)
-	// // inflater.inflate(R.layout.message_delete_dialog, null);
-	// LinearLayout layout = null;
-	// final int cFullFillWidth = 10000;
-	// layout.setMinimumWidth(cFullFillWidth);
-	//
-	// final Button deleteBtn = (Button) layout.findViewById(R.id.deletebtn);
-	// deleteBtn.setText(mContext.getString(R.string.send));
-	// final Button cancelBtn = (Button) layout.findViewById(R.id.cancelbtn);
-	//
-	// deleteBtn.setOnClickListener(new OnClickListener() {
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// Message message = new Message();
-	// // message.what = ChatAdapter.MSG_SEND_MSG;
-	// message.obj = messageInfo;
-	// mHandler.sendMessage(message);
-	// }
-	// });
-	//
-	// cancelBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// }
-	// });
-	//
-	// // set a large value put it in bottom
-	// Window w = dlg.getWindow();
-	// WindowManager.LayoutParams lp = w.getAttributes();
-	// lp.x = 0;
-	// final int cMakeBottom = -1000;
-	// lp.y = cMakeBottom;
-	// lp.gravity = Gravity.BOTTOM;
-	// dlg.onWindowAttributesChanged(lp);
-	// dlg.setCanceledOnTouchOutside(true);
-	// dlg.setCancelable(true);
-	//
-	// dlg.setContentView(layout);
-	// dlg.show();
-	// }
-
 	/* 重发信息 */
 	private void btnResendAction(MessageInfo messageInfo) {
 		if (messageInfo != null) {
@@ -1047,162 +912,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	private TextView touchedTextView;
-
-	private class BlockTouchListener implements OnTouchListener {
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			boolean ret = false;
-			CharSequence text = ((TextView) v).getText();
-			Spannable stext = Spannable.Factory.getInstance().newSpannable(text);
-			TextView widget = (TextView) v;
-			touchedTextView = widget;
-			int action = event.getAction();
-			try {
-				if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
-					int x = (int) event.getX();
-					int y = (int) event.getY();
-
-					x -= widget.getTotalPaddingLeft();
-					y -= widget.getTotalPaddingTop();
-
-					x += widget.getScrollX();
-					y += widget.getScrollY();
-
-					Layout layout = widget.getLayout();
-					int line = layout.getLineForVertical(y);
-					int off = layout.getOffsetForHorizontal(line, x);
-
-					ClickableSpan[] link = stext.getSpans(off, off, ClickableSpan.class);
-					if (link.length != 0) {
-						if (action == MotionEvent.ACTION_UP) {
-							link[0].onClick(widget);
-							stext.setSpan(new BackgroundColorSpan(Color.TRANSPARENT), 0, stext.length(),
-									Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-							widget.setText(stext);
-						} else if (action == MotionEvent.ACTION_DOWN) {
-							stext.setSpan(new BackgroundColorSpan(Color.GRAY), stext.getSpanStart(link[0]),
-									stext.getSpanEnd(link[0]), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-							widget.setText(stext);
-						}
-						ret = true;
-					}
-				}
-			} catch (NullPointerException e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-			return ret;
-		}
-	}
-
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
-		boolean re = super.dispatchTouchEvent(ev);
-		if (ev.getAction() == MotionEvent.ACTION_UP) {
-
-			if (touchedTextView != null) {
-				Spannable stext = Spannable.Factory.getInstance().newSpannable(touchedTextView.getText());
-				stext.setSpan(new BackgroundColorSpan(Color.TRANSPARENT), 0, stext.length(),
-						Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				touchedTextView.setText(stext);
-			}
-		}
-		return re;
-	}
-
-	private class UserClickSpan extends ClickableSpan {
-
-		@Override
-		public void updateDrawState(TextPaint ds) {
-			super.updateDrawState(ds);
-			ds.setUnderlineText(false);
-		}
-
-		@Override
-		public void onClick(View widget) {
-			TextView tv = (TextView) widget;
-			Spanned s = (Spanned) tv.getText();
-			int start = s.getSpanStart(this);
-			int end = s.getSpanEnd(this);
-			int pos = (Integer) tv.getTag();
-			MessageInfo info = messageInfos.get(pos);
-			if (start == 0) {
-				if (!TextUtils.isEmpty(info.fromrole) && !info.fromrole.equals("null")
-						&& Integer.valueOf(info.fromrole) > 0) {
-					goToUserActivity(info.from);
-				}
-			} else {
-				if (!TextUtils.isEmpty(info.commenterrole) && !info.commenterrole.equals("null")
-						&& Integer.valueOf(info.commenterrole) > 0) {
-					goToUserActivity(info.commenterid);
-				}
-			}
-
-		}
-	}
-
-	private UrlClickSpan urlClickSpan = new UrlClickSpan();
-
-	private CharSequence buildColorSpannable(String name1, String name2, CharSequence charSequence) {
-		SpannableString spannable = new SpannableString(charSequence);
-
-		spannable.setSpan(new UserClickSpan(), 0, name1.length(), 0);
-		int start = name1.length() + getString(R.string.comment_reply_info_no_colon).length();
-		spannable.setSpan(new UserClickSpan(), start, start + name2.length(), 0);
-
-		Matcher matcher = Patterns.WEB_URL.matcher(spannable);
-		while (matcher.find()) {
-			int s = matcher.start();
-			int e = matcher.end();
-			spannable.setSpan(urlClickSpan, s, e, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
-		return spannable;
-	}
-
-	private CharSequence buildColorSpannable(String name1, CharSequence charSequence) {
-		SpannableString spannable = new SpannableString(charSequence);
-		spannable.setSpan(new UserClickSpan(), 0, name1.length(), 0);
-
-		Matcher matcher = Patterns.WEB_URL.matcher(spannable);
-		while (matcher.find()) {
-			int s = matcher.start();
-			int e = matcher.end();
-			spannable.setSpan(urlClickSpan, s, e, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
-		return spannable;
-	}
-
-	private class UrlClickSpan extends ClickableSpan {
-
-		@Override
-		public void updateDrawState(TextPaint ds) {
-			super.updateDrawState(ds);
-			ds.setUnderlineText(false);
-			ds.setColor(Color.parseColor("#226666"));
-		}
-
-		@Override
-		public void onClick(View widget) {
-			TextView tv = (TextView) widget;
-			Spanned s = (Spanned) tv.getText();
-			int start = s.getSpanStart(this);
-			int end = s.getSpanEnd(this);
-			String url = s.subSequence(start, end).toString();
-			// Intent intent = new Intent(mContext, ReportDetailActivity.class);
-			// intent.putExtra("title", url);
-			// intent.putExtra("url", url);
-			// startActivity(intent);
-		}
-	}
-
-	private void goToUserActivity(String uid) {
-		Intent i = new Intent();
-		i.setClass(ChatCommentsActivity.this, UserInfoActivity.class);
-		i.putExtra("uid", uid);
-		startActivity(i);
-	}
 
 	// private Handler mHandler = new Handler() {
 	//
@@ -2156,15 +1865,26 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		likeCountText.setText(String.valueOf(zanList.size()));
 		zanCountBtn.setImageDrawable(this.getResources().getDrawable(R.drawable.icon_msg_detail_zan_normal));
 		if (zanList.size() > 0) {
-			zanText.setText(getColorfulClickText());
+			zanText.setText(MyTextUtils.addUserSpans(getZanUserList(zanList)));
 			for (MessageInfo info : zanList) {
 				if (info.uid.equals(mLogin.uid)) {
 					zanCountBtn
 							.setImageDrawable(this.getResources().getDrawable(R.drawable.icon_msg_detail_zan_active));
 				}
 			}
-		} 
+		}
 		bindZanCommentBorderView();
+	}
+	
+	private List<SpanUser> getZanUserList(List<MessageInfo> messageInfos) {
+		List<SpanUser> spanUsers = new ArrayList<SpanUser>();
+		for (MessageInfo messageInfo : messageInfos) {
+			SpanUser spanUser = new SpanUser();
+			spanUser.realname = messageInfo.displayname;
+			spanUser.uid = messageInfo.uid;
+			spanUsers.add(spanUser);
+		}
+		return spanUsers;
 	}
 
 	//
@@ -2759,7 +2479,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			DamiApp.getInstance().setPlayMode();
 		}
 	}
-	
+
 	private void notifyDataSetChanged() {
 		bindZanCommentBorderView();
 		mAdapter.notifyDataSetChanged();

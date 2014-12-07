@@ -69,10 +69,8 @@ import com.gaopai.guiren.volley.UIHelperUtil;
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
-	// public static final String HOST =
-	// public static final String HOST =
-	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-	public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+//	public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
@@ -1736,10 +1734,10 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-//	realname	true	string	真实姓名
-//	company	true	string	公司
-//	depa	true	string	部门
-//	post	true	string	职位
+	// realname true string 真实姓名
+	// company true string 公司
+	// depa true string 部门
+	// post true string 职位
 
 	public static void reAuth(String depa, String realname, String company, String post, IResponseListener listener) {
 		Parameters bundle = new Parameters();
@@ -2348,7 +2346,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/UserInvitationNum";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, InviteNumResult.class, listener);
 	}
-	
+
 	public static void getVerifyResult(IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/UserAuthItem";
