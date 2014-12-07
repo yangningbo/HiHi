@@ -15,6 +15,7 @@ import android.view.LayoutInflater.Filter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.gaopai.guiren.DamiInfo;
@@ -71,7 +72,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		indexScroller = (SingleIndexScroller) mView.findViewById(R.id.scroller);
 		mListView = (PullToRefreshIndexableListView) mView.findViewById(R.id.listView);
 
-		mListView.getRefreshableView().addHeaderView(creatHeaderView());
+		creatHeaderView(mListView.getRefreshableView());
 		mListView.getRefreshableView().setVerticalScrollBarEnabled(false);
 		mListView.getRefreshableView().setHeaderDividersEnabled(true);
 		mListView.setPullRefreshEnabled(false);
@@ -102,8 +103,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 	
 
 
-	protected View creatHeaderView() {
-		return null;
+	protected void creatHeaderView(ListView listView) {
 	}
 
 	protected void getUserList(final boolean isRefresh) {

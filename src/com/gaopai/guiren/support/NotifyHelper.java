@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -28,10 +29,15 @@ import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.NotifySystemActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
+import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
+import com.gaopai.guiren.db.ConverseationTable;
+import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -149,22 +155,25 @@ public class NotifyHelper {
 		builder.setContentIntent(getChatIntent(messageInfo));
 
 		if (messageInfo.type == 100) {// 单聊
-			if (isActivityTop(mContext, "ChatMessageActivity")) {
+			if (isActivityTop(mContext, ".activity.chat.ChatMessageActivity")) {
+				ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
 				return;
 			}
+			ConversationHelper.saveToLastMsgList(messageInfo, mContext);
 			if (poChat.getInt(SPConst.getTribeUserId(mContext, messageInfo.from), 0) == 1) {
 				return;
 			}
 			notificationManager.notify(NOTIFYID_PRIVATE, builder.build());
 		} else { // 部落
-			if (isActivityTop(mContext, "ChatTribeActivity")) {
+			if (isActivityTop(mContext, ".activity.chat.ChatTribeActivity")) {
+				ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
 				return;
 			}
 
 			if (!messageInfo.parentid.equals("0")) {
 				return;
 			}
-
+			ConversationHelper.saveToLastMsgList(messageInfo, mContext);
 			if (poChat.getInt(SPConst.getTribeUserId(mContext, messageInfo.to), 0) == 1) {
 				return;
 			}
@@ -183,7 +192,7 @@ public class NotifyHelper {
 		if (!isNeedNotify()) {
 			return;
 		}
-		if (isActivityTop(mContext, "NotifySystemActivity")) {
+		if (isActivityTop(mContext, ".activity.NotifySystemActivity")) {
 			return;
 		}
 		NotificationCompat.Builder builder = getNotificationBuilder();
@@ -252,7 +261,8 @@ public class NotifyHelper {
 		try {
 			ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 			ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-			if (cn.getClassName().equals(cn.getPackageName() + "." + name)) {
+			Logger.d(NotifyHelper.class, cn.getClassName());
+			if (cn.getClassName().equals(cn.getPackageName() + name)) {
 				if (FeatureFunction.isAppOnForeground(context)) {
 					return true;
 				}
@@ -262,5 +272,7 @@ public class NotifyHelper {
 		}
 		return false;
 	}
+	
+	
 
 }

@@ -86,8 +86,8 @@ public class NotifyChatMessage implements NotifyMessage {
 			// MessageInfo info = chatBean.messageInfo;
 
 			Log.d(TAG, "save()");
-			ConversationHelper.saveToLastMsgList(info, xmppManager.getSnsService());
-			xmppManager.getSnsService().sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+//			ConversationHelper.saveToLastMsgList(info, xmppManager.getSnsService());
+		
 
 			if (info.istranslate == 1) {
 				SQLiteDatabase dbDatabase = DBHelper.getInstance(xmppManager.getSnsService()).getWritableDatabase();
@@ -152,11 +152,11 @@ public class NotifyChatMessage implements NotifyMessage {
 		 * refreshIntent.putExtra("message", info);
 		 * xmppManager.getSnsService().sendBroadcast(refreshIntent);
 		 */
-
 		Intent intent = new Intent(ACTION_NOTIFY_CHAT_MESSAGE);
 		intent.putExtra(EXTRAS_NOTIFY_CHAT_MESSAGE, info);
 		// intent.putExtra(EXTRAS_NOTIFY_SESSION_MESSAGE, sessionList);
 		chatMessageNotifiy.notifiy(info);
+		xmppManager.getSnsService().sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 		if (xmppManager != null && xmppManager.getSnsService() != null) {
 			xmppManager.getSnsService().sendBroadcast(intent);
 		}

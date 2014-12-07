@@ -475,7 +475,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private View creatFooterView() {
 		View view = new View(mContext);
-		view.setBackgroundResource(R.drawable.icon_dynamic_detail_cover_bottom);
+		view.setBackgroundResource(R.drawable.icon_dynamic_bottom);
 		view.setPadding(MyUtils.dip2px(mContext, 60), 0, MyUtils.dip2px(mContext, 10), 0);
 		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		view.setLayoutParams(lp);
@@ -790,7 +790,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 			if (position == getCount() - 1) {
 				viewHolder.rootLayout.setVisibility(View.INVISIBLE);
-				viewHolder.rootLayoutFake.setBackgroundResource(R.drawable.fuck);
+				viewHolder.rootLayoutFake.setBackgroundResource(R.drawable.icon_dynamic_bottom);
 				return convertView;
 			} else {
 				viewHolder.rootLayout.setVisibility(View.VISIBLE);

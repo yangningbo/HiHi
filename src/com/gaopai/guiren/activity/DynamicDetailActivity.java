@@ -234,7 +234,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 				convertView = mInflater.inflate(R.layout.item_dynamic_detail_comment, null);
 				viewHolder = new ViewHolder();
 				viewHolder.tvComment = (TextView) convertView.findViewById(R.id.tv_comment_item);
-				viewHolder.layoutFake = convertView.findViewById(R.id.tv_comment_item_fake);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
@@ -248,8 +247,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 						R.drawable.icon_dynamic_comment_transparent, 0, 0, 0);
 			}
 			if (position == getCount() - 1) {
-				viewHolder.tvComment.setVisibility(View.INVISIBLE);
-				viewHolder.layoutFake.setBackgroundResource(R.drawable.fuck);
+				viewHolder.tvComment.setVisibility(View.GONE);
 				return convertView;
 			} else {
 				viewHolder.tvComment.setVisibility(View.VISIBLE);
@@ -286,7 +284,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 
 	static class ViewHolder {
 		TextView tvComment;
-		View layoutFake;
 	}
 
 	public void showChatBox(String name, boolean showReply) {

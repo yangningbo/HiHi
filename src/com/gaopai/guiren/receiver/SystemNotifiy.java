@@ -499,7 +499,6 @@ public class SystemNotifiy extends AbstractNotifiy {
 				msg = notifiyVo.content;
 				break;
 			}
-			saveToLastMsgList(notifiyVo);
 			mContext.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 			// if (!(notifiyVo.user==null) &&
 			// !TextUtils.isEmpty(notifiyVo.user.uid)) {
@@ -548,33 +547,4 @@ public class SystemNotifiy extends AbstractNotifiy {
 		}
 	}
 
-	
-
-	private void saveToLastMsgList(NotifiyVo notifiyVo) {
-		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
-		ConversationInnerBean bean = notifiyVo.conversion;
-		ConverseationTable table = new ConverseationTable(dbDatabase);
-		ConversationBean conversation = table.queryByID(bean.toid);
-		if (conversation != null) {
-			conversation.headurl = bean.headurl;
-			conversation.unreadcount = conversation.unreadcount + 1;
-			conversation.name = bean.name;
-			conversation.lastmsgcontent = notifiyVo.content;
-			conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
-			table.update(conversation);
-			return;
-		}
-		if (conversation == null) {
-			conversation = new ConversationBean();
-		}
-		conversation.headurl = bean.headurl;
-		conversation.unreadcount = 1;
-		conversation.name = bean.name;
-		conversation.lastmsgcontent = notifiyVo.content;
-		conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
-		conversation.toid = bean.toid;
-		conversation.type = bean.type;
-		conversation.anonymous = 0;
-		table.insert(conversation);
-	}
 }

@@ -3,13 +3,13 @@ package com.gaopai.guiren.activity.share;
 import com.gaopai.guiren.R;
 
 import android.view.View;
+import android.widget.ListView;
 
 public class ShareFansFragment extends BaseShareFragment {
 	
 	@Override
-	protected View creatHeaderView() {
-		
-		return new View(getActivity());
+	protected void creatHeaderView(ListView listView) {
+		listView.addHeaderView(new View(getActivity()));
 	}
 	
 	@Override

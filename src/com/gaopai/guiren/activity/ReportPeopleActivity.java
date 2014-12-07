@@ -65,6 +65,8 @@ public class ReportPeopleActivity extends BaseActivity implements OnClickListene
 					if (data.state != null && data.state.code == 0) {
 						showToast(R.string.report_success);
 						ReportPeopleActivity.this.finish();
+					} else {
+						otherCondition(data.state, ReportPeopleActivity.this);
 					}
 				}
 			});

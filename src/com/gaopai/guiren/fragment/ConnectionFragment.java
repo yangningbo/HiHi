@@ -70,7 +70,20 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 				getDynamicList(false);
 			}
 		});
-		getDynamicList(false);
+//		getDynamicList(false);
+	}
+	
+	
+	private boolean isInitialed = false;
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			if (!isInitialed) {
+				mListView.doPullRefreshing(true, 0);
+				isInitialed = true;
+			}
+		}
 	}
 
 	private int page = 1;

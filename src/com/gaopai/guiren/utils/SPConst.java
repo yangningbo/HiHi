@@ -22,4 +22,7 @@ public class SPConst {
 	public final static String KEY_NOTIFY_PLAY_RINGTONES = "notify_play_ringtones";
 	public final static String KEY_NOTIFY_VIBRATE = "notify_vibrate";
 	public final static String KEY_NOTIFY_DAMI = "notify_dami";
+	
+	//default
+	public final static String KEY_HAS_NOTIFICATION = "has_notification";
 }

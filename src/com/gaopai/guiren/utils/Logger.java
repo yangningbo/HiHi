@@ -9,4 +9,7 @@ public class Logger {
 	public static void d(Class clazz, String info) {
 		Log.d(clazz.getName(), info);
 	}
+	public static void d(String tag, String info) {
+		Log.d(tag, info);
+	}
 }

@@ -12,17 +12,18 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,9 +45,10 @@ import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.fragment.DynamicFragment.BackPressedListener;
 import com.gaopai.guiren.fragment.MeetingFragment;
 import com.gaopai.guiren.fragment.NotificationFragment;
-import com.gaopai.guiren.slidemenu.SlidingMenu;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.slide.DragLayout;
@@ -80,6 +82,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	/** 注销 */
 	public static final String ACTION_LOGIN_OUT = "com.guiren.intent.action.ACTION_LOGIN_OUT";
 	public final static String LOGIN_SUCCESS_ACTION = "com.guiren.intent.action.LOGIN_SUCCESS_ACTION";
+	
+	private View layoutWelcome;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,21 +95,36 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		mTabPager = (ViewPager) findViewById(R.id.vPager);
 		main_bottom = (LinearLayout) findViewById(R.id.main_bottom);
 		registerNetWorkMonitor();
-
-		if (!startGuidePage()) {
-			if (TextUtils.isEmpty(DamiCommon.getToken(this))) {
-				Intent intent = new Intent(this, LoginActivity.class);
-				startActivityForResult(intent, LOGIN_REQUEST);
-			} else {
-				getLogin();
+		
+		layoutWelcome = ViewUtil.findViewById(this, R.id.layout_welcome);
+		ImageView view = (ImageView) findViewById(R.id.iv_back);
+		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.scale);
+		view.startAnimation(welcomeAnimation);
+		showMainpage();
+	}
+	
+	public void showMainpage() {
+		Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				layoutWelcome.setVisibility(View.GONE);
+				if (!startGuidePage()) {
+					if (TextUtils.isEmpty(DamiCommon.getToken(mContext))) {
+						Intent intent = new Intent(mContext, LoginActivity.class);
+						startActivityForResult(intent, LOGIN_REQUEST);
+					} else {
+						getLogin();
+					}
+				}
 			}
-		}
-
+		}, 4000);
 	}
 
 	private void addTitleBar() {
 		addTitleBar((ViewGroup) ViewUtil.findViewById(this, R.id.layout_titlebar));
 	}
+	
 
 	private void initTitleBarLocal() {
 		View view = mTitleBar.setLogo(R.drawable.selector_titlebar_home);
@@ -174,7 +193,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		if (!TextUtils.isEmpty(mUser.headsmall)) {
 			Picasso.with(mContext).load(mUser.headsmall).placeholder(R.drawable.default_header)
 					.error(R.drawable.default_header).into(ivHeader);
-		} 
+		}
 
 		TextView textView = (TextView) findViewById(R.id.tv_user_name);
 		textView.setText(mUser.realname);

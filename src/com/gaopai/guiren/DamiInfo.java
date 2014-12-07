@@ -768,9 +768,13 @@ public class DamiInfo implements Serializable {
 				} catch (DamiException e) {
 					e.printStackTrace();
 					uhu.sendTimeOutMessage();
+					uhu.sendFailureMessage(null);
+					uhu.sendFinishMessage();
 				} catch (JSONException e) {
 					e.printStackTrace();
 					uhu.sendErrorMessage();
+					uhu.sendFailureMessage(null);
+					uhu.sendFinishMessage();
 				}
 			}
 		}.start();
@@ -907,7 +911,7 @@ public class DamiInfo implements Serializable {
 		Parameters bundle = new Parameters();
 		bundle.add("page", String.valueOf(page));
 		bundle.add("userid", userid);
-		bundle.add("pageSize", "5");
+		bundle.add("pageSize", "20");
 		String url_ = SERVER + "/user/getDynamic";
 		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.class, listener);
 	}

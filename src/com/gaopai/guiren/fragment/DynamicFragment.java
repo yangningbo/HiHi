@@ -30,6 +30,7 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.support.view.CustomEditText;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
@@ -89,6 +90,9 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
+				if (view instanceof TextView) {
+					return;
+				}
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
 				mAdapter.viewDynamicDetail((TypeHolder) mAdapter.getItem(pos));
 			}
@@ -111,6 +115,18 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				}
 			}
 		});
+	}
+	
+	private boolean isInitialed = false;
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			if (!isInitialed) {
+				mListView.doPullRefreshing(true, 0);
+				isInitialed = true;
+			}
+		} 
 	}
 
 	
@@ -175,6 +191,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 
 			@Override
 			public void onFinish() {
+				Logger.d(this, "onPullComplete");
 				mListView.onPullComplete();
 			}
 		});

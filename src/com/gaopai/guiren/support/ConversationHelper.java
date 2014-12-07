@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
@@ -96,6 +97,7 @@ public class ConversationHelper {
 				conversation.localtype = 0;
 			}
 			conversation.type = bean.type;
+			conversation.unreadcount = 0;
 			conversation.anonymous = 0;
 			table.insert(conversation);
 		} else {
@@ -103,6 +105,35 @@ public class ConversationHelper {
 			table.update(conversation);
 		}
 		return true;
+	}
+	
+	//for system
+	public static void saveToLastMsgList(NotifiyVo notifiyVo, Context mContext) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
+		ConversationInnerBean bean = notifiyVo.conversion;
+		ConverseationTable table = new ConverseationTable(dbDatabase);
+		ConversationBean conversation = table.queryByID(bean.toid);
+		if (conversation != null) {
+			conversation.headurl = bean.headurl;
+			conversation.unreadcount = conversation.unreadcount + 1;
+			conversation.name = bean.name;
+			conversation.lastmsgcontent = notifiyVo.content;
+			conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
+			table.update(conversation);
+			return;
+		}
+		if (conversation == null) {
+			conversation = new ConversationBean();
+		}
+		conversation.headurl = bean.headurl;
+		conversation.unreadcount = 1;
+		conversation.name = bean.name;
+		conversation.lastmsgcontent = notifiyVo.content;
+		conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
+		conversation.toid = bean.toid;
+		conversation.type = bean.type;
+		conversation.anonymous = 0;
+		table.insert(conversation);
 	}
 
 }

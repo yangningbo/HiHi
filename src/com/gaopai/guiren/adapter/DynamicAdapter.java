@@ -27,6 +27,7 @@ import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
+import com.umeng.socialize.net.v;
 
 public class DynamicAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;

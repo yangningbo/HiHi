@@ -180,6 +180,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		// TODO Auto-generated method stub
 		super.onResume();
 		checkHasDraft(mTribe.id);
+		resetCount(mTribe.id);
 	}
 	// 通知过来的tribe没有role，发送消息时需要用到，所以这里尽快更新呀
 	private void updateTribe() {

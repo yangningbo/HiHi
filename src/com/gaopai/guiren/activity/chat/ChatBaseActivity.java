@@ -50,6 +50,7 @@ import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.SendMessageResult;
+import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
@@ -573,6 +574,12 @@ public abstract class ChatBaseActivity extends BaseActivity {
 				|| (messageInfos.size() - mListView.getRefreshableView().getLastVisiblePosition() <= 1)) {
 			mListView.getRefreshableView().setSelection(messageInfos.size());// 定位到最后一行
 		}
+	}
+	
+	protected void resetCount(String id) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(this).getWritableDatabase();
+		ConverseationTable table = new ConverseationTable(dbDatabase);
+		table.resetCount(id);
 	}
 
 }

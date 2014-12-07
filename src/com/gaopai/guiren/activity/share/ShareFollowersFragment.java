@@ -3,6 +3,7 @@ package com.gaopai.guiren.activity.share;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -12,16 +13,10 @@ import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class ShareFollowersFragment extends BaseShareFragment {
 	private SimpleResponseListener listener;
+
 	@Override
-	protected View creatHeaderView() {
-		LinearLayout layout = new LinearLayout(getActivity());
-		layout.setLayoutParams(new android.widget.AbsListView.LayoutParams(
-				android.widget.AbsListView.LayoutParams.MATCH_PARENT,
-				android.widget.AbsListView.LayoutParams.WRAP_CONTENT));
-		layout.setOrientation(LinearLayout.VERTICAL);
-		
-		LayoutParams textLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		
+	protected void creatHeaderView(ListView listView) {
+
 		View view = creatHeaderTextView("我的粉丝");
 		view.setOnClickListener(new OnClickListener() {
 
@@ -35,16 +30,10 @@ public class ShareFollowersFragment extends BaseShareFragment {
 
 			}
 		});
-		layout.addView(view, textLp);
-		getShareActivity().setTitleText(R.string.follow);
-		if (((ShareActivity) getActivity()).type != ShareActivity.TYPE_SHARE) {
-			return layout;
-		}
-		if (((ShareActivity) getActivity()).type == ShareActivity.TYPE_SHARE) {
-			view = new View(getActivity());
-			view.setBackgroundColor(getResources().getColor(R.color.black));
-			layout.addView(view, new LayoutParams(LayoutParams.MATCH_PARENT, 1));
 
+		listView.addHeaderView(view);
+
+		if (((ShareActivity) getActivity()).type == ShareActivity.TYPE_SHARE) {
 			view = creatHeaderTextView("我的圈子");
 			view.setOnClickListener(new OnClickListener() {
 				@Override
@@ -56,10 +45,8 @@ public class ShareFollowersFragment extends BaseShareFragment {
 							.addToBackStack(null).commit();
 				}
 			});
-			layout.addView(view, textLp);
+			listView.addHeaderView(view);
 		}
-
-		return layout;
 	}
 
 	@Override

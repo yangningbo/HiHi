@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/fuck" />
+        android:background="@drawable/icon_dynamic_bottom" />
 
     <RelativeLayout
         android:id="@+id/chat_talk_msg_info"

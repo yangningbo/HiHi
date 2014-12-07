@@ -143,9 +143,7 @@ public class DynamicBean implements Serializable {
 	}
 
 	public static class SpreadBean extends SpanUser {
-		public String uid;
 		public String nickname;
-		public String realname;
 	}
 
 }

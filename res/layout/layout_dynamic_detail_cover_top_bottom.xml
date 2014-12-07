@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/view_cover_top"
         android:layout_width="match_parent"
-        android:layout_height="18dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/icon_dynamic_detail_cover_top"
         android:orientation="vertical" />
 
@@ -19,7 +19,7 @@
         android:background="@drawable/selector_gray_blue_btn"
         android:drawableLeft="@drawable/icon_dynamic_spread"
         android:drawablePadding="5dp"
-        android:padding="5dp"/>
+        android:padding="5dp" />
 
     <View
         android:id="@+id/line_spread_bottom"
@@ -46,8 +46,8 @@
     <LinearLayout
         android:id="@+id/view_cover_bottom"
         android:layout_width="match_parent"
-        android:layout_height="18dp"
-        android:background="@drawable/fuck"
+        android:layout_height="wrap_content"
+        android:background="@drawable/icon_dynamic_bottom"
         android:orientation="vertical" />
 
 </LinearLayout>

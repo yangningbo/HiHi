@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +24,8 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
+import com.gaopai.guiren.db.ConverseationTable;
+import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.utils.SPConst;
 
 //私信界面
@@ -71,7 +74,10 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		// TODO Auto-generated method stub
 		super.onResume();
 		checkHasDraft(user.uid);
+		resetCount(user.uid);
 	}
+	
+
 
 	@Override
 	protected void setTitleText() {

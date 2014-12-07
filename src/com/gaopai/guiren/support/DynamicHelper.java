@@ -11,6 +11,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +30,6 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.DynamicDetailActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
@@ -52,6 +52,7 @@ import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.FlowLayout;
@@ -530,39 +531,49 @@ public class DynamicHelper {
 	public View getView(View convertView, TypeHolder typeBean) {
 		// TODO Auto-generated method stub
 		// DynamicBean.TypeHolder typeBean = mData.get(position);
-		switch (typeBean.type) {
+		try {
+			switch (typeBean.type) {
 
-		case TYPE_SPREAD_OTHER_DYNAMIC:
-		case TYPE_SEND_DYNAMIC:
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_SEND_DYNAMIC);
+			case TYPE_SPREAD_OTHER_DYNAMIC:
+			case TYPE_SEND_DYNAMIC:
+				if (shouldInflateNew(convertView)) {
+					convertView = inflateItemView(TYPE_SEND_DYNAMIC);
+				}
+				buildDynamicView((ViewHolderSendDynamic) convertView.getTag(), typeBean);
+				break;
+			case TYPE_SPREAD_USER:
+			case TYPE_SPREAD_TRIBE:
+			case TYPE_SPREAD_LINK: {
+				if (shouldInflateNew(convertView)) {
+					convertView = inflateItemView(TYPE_SPREAD_LINK);
+				}
+				buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag(), typeBean);
+				break;
 			}
-			buildDynamicView((ViewHolderSendDynamic) convertView.getTag(), typeBean);
-			break;
-		case TYPE_SPREAD_USER:
-		case TYPE_SPREAD_TRIBE:
-		case TYPE_SPREAD_LINK: {
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_SPREAD_LINK);
+			case TYPE_SPREAD_MEETING: {
+				if (shouldInflateNew(convertView)) {
+					convertView = inflateItemView(TYPE_SPREAD_MEETING);
+				}
+				buildMeetingView((ViewHolderMeeting) convertView.getTag(), typeBean);
+				break;
 			}
-			buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag(), typeBean);
-			break;
+			case TYPE_SPREAD_MSG:
+				if (shouldInflateNew(convertView)) {
+					convertView = inflateItemView(TYPE_SPREAD_MSG);
+				}
+				buildMsgView((ViewHolderSpreadMsg) convertView.getTag(), typeBean);
+				break;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			convertView = buildErrorView();
 		}
-		case TYPE_SPREAD_MEETING: {
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_SPREAD_MEETING);
-			}
-			buildMeetingView((ViewHolderMeeting) convertView.getTag(), typeBean);
-			break;
-		}
-		case TYPE_SPREAD_MSG:
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_SPREAD_MSG);
-			}
-			buildMsgView((ViewHolderSpreadMsg) convertView.getTag(), typeBean);
-			break;
-		}
+
 		return convertView;
+	}
+
+	private boolean shouldInflateNew(View convertView) {
+		return (convertView == null) || (convertView instanceof TextView);
 	}
 
 	private void buildMsgView(ViewHolderSpreadMsg viewHolder, final TypeHolder typeBean) {
@@ -607,7 +618,7 @@ public class DynamicHelper {
 			});
 			AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
 			if (mPlayerWrapper.isPlay()) {
-				Logger.d(this,mPlayerWrapper.getMessageTag()+"   "+ typeBean.id);
+				Logger.d(this, mPlayerWrapper.getMessageTag() + "   " + typeBean.id);
 			}
 			if (mPlayerWrapper.isPlay() && mPlayerWrapper.getMessageTag().equals(typeBean.id)) {
 				drawable.start();
@@ -737,6 +748,16 @@ public class DynamicHelper {
 		}
 	}
 
+	public TextView buildErrorView() {
+		TextView tvDyCount = new TextView(mContext);
+		tvDyCount.setTextColor(mContext.getResources().getColor(R.color.general_text_gray));
+		int padding = MyUtils.dip2px(mContext, 5);
+		tvDyCount.setPadding(3 * padding, padding, 3 * padding, padding);
+		tvDyCount.setGravity(Gravity.CENTER);
+		tvDyCount.setText("数据出现错误...");
+		return tvDyCount;
+	}
+
 	public void buildCommonView(ViewHolderCommon viewHolder, TypeHolder typeBean) {
 		int type = typeBean.type;
 
@@ -787,9 +808,7 @@ public class DynamicHelper {
 			isShowSpread = true;
 			viewHolder.tvSpread.setVisibility(View.VISIBLE);
 			viewHolder.tvSpread.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-			viewHolder.tvSpread.setText(MyTextUtils.addSpreadUserList(typeBean.spread));
-			// viewHolder.tvSpread.setText(MyTextUtils.addUserSpans(typeBean.spread));
-
+			viewHolder.tvSpread.setText(MyTextUtils.addUserSpans(typeBean.spread));
 		} else {
 			viewHolder.tvSpread.setVisibility(View.GONE);
 		}
@@ -799,7 +818,8 @@ public class DynamicHelper {
 			viewHolder.lineSpread.setVisibility(isShowSpread ? View.VISIBLE : View.GONE);
 			viewHolder.tvZan.setVisibility(View.VISIBLE);
 			viewHolder.tvZan.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-			viewHolder.tvZan.setText(MyTextUtils.addZanUserList(typeBean.zanList));
+//			viewHolder.tvZan.setText(MyTextUtils.addZanUserList(typeBean.zanList));
+			viewHolder.tvZan.setText(MyTextUtils.addUserSpans(getZanUserList(typeBean.zanList)));
 		} else {
 			viewHolder.tvZan.setVisibility(View.GONE);
 		}
@@ -813,6 +833,17 @@ public class DynamicHelper {
 
 		viewHolder.btnDynamicAction.setTag(typeBean);
 		viewHolder.btnDynamicAction.setOnClickListener(moreWindowClickListener);
+	}
+
+	private List<SpanUser> getZanUserList(List<ZanBean> zanList) {
+		List<SpanUser> spanUsers = new ArrayList<SpanUser>();
+		for (ZanBean zanBean : zanList) {
+			SpanUser spanUser = new SpanUser();
+			spanUser.realname = zanBean.uname;
+			spanUser.uid = zanBean.uid;
+			spanUsers.add(spanUser);
+		}
+		return spanUsers;
 	}
 
 	private OnClickListener moreWindowClickListener = new OnClickListener() {
@@ -930,7 +961,7 @@ public class DynamicHelper {
 			commentBean.content = new CommentContetnHolder();
 		}
 		if (TextUtils.isEmpty(commentBean.content.content)) {
-			commentBean.content.content="";
+			commentBean.content.content = "";
 		}
 	}
 }

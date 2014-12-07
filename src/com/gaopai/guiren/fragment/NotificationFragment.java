@@ -2,6 +2,7 @@ package com.gaopai.guiren.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,6 +29,9 @@ import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
+import com.gaopai.guiren.utils.SPConst;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 
 public class NotificationFragment extends BaseFragment {
@@ -105,24 +109,28 @@ public class NotificationFragment extends BaseFragment {
 				final ConversationBean conversationBean = (ConversationBean) mAdapter.getItem(position);
 				// TODO Auto-generated method stub
 				getBaseActivity().showMutiDialog("", new String[]{"删除"}, new DialogInterface.OnClickListener() {
-					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						deleteItem(conversationBean.toid);
 						getDataFromDb();
 					}
 				});
-				return false;
+				return true;
 			}
 		});
 		registerReceiver();
 	}
 
+	private boolean isInitialed = false;
 	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		getDataFromDb();
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			if (!isInitialed) {
+				getDataFromDb();
+				isInitialed = true;
+			}
+		}
 	}
 
 	@Override
@@ -142,8 +150,29 @@ public class NotificationFragment extends BaseFragment {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
 		conversationBeans = table.query();
+		setNotificationSp(conversationBeans);
 		mAdapter.addAll(conversationBeans);
-		mAdapter.notifyDataSetChanged();
+	}
+	
+	private void setNotificationSp(List<ConversationBean> conversationBeans) {
+		int count = 0;
+		for (ConversationBean conversationBean : conversationBeans) {
+			count += conversationBean.unreadcount;
+		}
+		PreferenceOperateUtils spo =  new PreferenceOperateUtils(getActivity());
+		spo.setBoolean(SPConst.KEY_HAS_NOTIFICATION, count > 0);
+		showNotificationDot();
+	}
+	
+	private void showNotificationDot() {
+		PreferenceOperateUtils operateUtils = new PreferenceOperateUtils(getActivity());
+		boolean hasNotification = operateUtils.getBoolean(SPConst.KEY_HAS_NOTIFICATION, false);
+		View viewDot = ViewUtil.findViewById(getActivity(), R.id.iv_count_4);
+		if (hasNotification) {
+			viewDot.setVisibility(View.VISIBLE);
+		} else {
+			viewDot.setVisibility(View.GONE);
+		}
 	}
 
 	private void resetCount(String id) {
@@ -151,6 +180,7 @@ public class NotificationFragment extends BaseFragment {
 		ConverseationTable table = new ConverseationTable(dbDatabase);
 		if (table.resetCount(id)) {
 			conversationBeans = table.query();
+			setNotificationSp(conversationBeans);
 			mAdapter.addAll(conversationBeans);
 		}
 	}
@@ -162,6 +192,7 @@ public class NotificationFragment extends BaseFragment {
 		getActivity().registerReceiver(mReceiver, filter);
 		mIsRegisterReceiver = true;
 	}
+	
 	BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -173,6 +204,7 @@ public class NotificationFragment extends BaseFragment {
 			}
 		}
 	};
+	
 	private void unregisterReceiver() {
 		if (mIsRegisterReceiver) {
 			getActivity().unregisterReceiver(mReceiver);
