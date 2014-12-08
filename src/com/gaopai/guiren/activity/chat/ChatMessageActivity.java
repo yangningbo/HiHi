@@ -15,7 +15,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.ChatCommentsActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.PrivacyChatSettingActivity;
 import com.gaopai.guiren.adapter.PrivateChatAdapter;

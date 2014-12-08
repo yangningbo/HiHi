@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -147,7 +148,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		getUserInfo();
 		getTags();
 	}
-	
+
 	private DyCallback dynamicCallback = new DySoftCallback() {
 
 		@Override
@@ -424,7 +425,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				userList.add(user);
 			}
 			tvBottomFavorite.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList), "赞过"));
-//			tvBottomFavorite.setText(MyTextUtils.addConnectionUserList(userList, "赞过"));
+			// tvBottomFavorite.setText(MyTextUtils.addConnectionUserList(userList,
+			// "赞过"));
 		} else {
 			layoutZanHolder.setVisibility(View.GONE);
 		}
@@ -439,7 +441,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				userList.add(user);
 			}
 			tvBottomSpread.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList), "扩散过"));
-//			tvBottomSpread.setText(MyTextUtils.addConnectionUserList(userList, "扩散过"));
+			// tvBottomSpread.setText(MyTextUtils.addConnectionUserList(userList,
+			// "扩散过"));
 		} else {
 			layoutSpreadHolder.setVisibility(View.GONE);
 		}
@@ -597,6 +600,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 		case R.id.layout_profile_bottom_follow:
+			if (isFollow()) {
+				showCancelFollowDialog();
+				return;
+			}
 			followUser();
 			break;
 		case R.id.layout_profile_bottom_msg:
@@ -606,9 +613,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			spreadUser();
 			break;
 		case R.id.iv_profile_erweima: {
-			Intent intent = new Intent(mContext, TwoDimensionActivity.class);
-			intent.putExtra("user", tUser);
-			startActivity(intent);
+			startActivity(TwoDimensionActivity.getIntent(mContext, tUser));
 			break;
 		}
 		case R.id.tv_profile_dy_more:
@@ -621,7 +626,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private void followUser() {
 		DamiInfo.follow(tUser.uid, new SimpleResponseListener(mContext, R.string.request_internet_now) {
-
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
@@ -654,6 +658,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				}
 			}
 		});
+	}
+
+	private boolean isFollow() {
+		return (tUser.isfollow == 1 || tUser.isfollow == 3);
 	}
 
 	private void spreadUser() {
@@ -737,6 +745,17 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				}
 			});
 		}
+	}
+
+	private void showCancelFollowDialog() {
+		showDialog(getString(R.string.confirm_cancel_follow), null, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				followUser();
+			}
+		});
 	}
 
 }

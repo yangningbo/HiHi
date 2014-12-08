@@ -7,16 +7,22 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.ProfileActivity;
+import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.adapter.RecommendAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.RecommendAddResult;
+import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -57,7 +63,7 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				Log.d(TAG, "pulldown");
+				getTribeList();
 				// TODO Auto-generated method stub
 			}
 
@@ -70,18 +76,35 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 
 		mAdapter = new RecommendAdapter<Tribe>(act, RecommendAdapter.RECOMMEND_TRIBE, new AddClickListener());
 		mListView.setAdapter(mAdapter);
-		getTribeList();
+		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				String tid = ((Tribe) mAdapter.getItem(position)).id;
+				startActivity(TribeDetailActivity.getIntent(act, tid));
+			}
+		});
+		mListView.doPullRefreshing(true, 0);
+
 	}
 
 	private class BackClickListener implements OnClickListener {
-
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			getFragmentManager().popBackStack();
+//			RecommendFriendFragment tribeFragment = (RecommendFriendFragment) getFragmentManager().findFragmentByTag(
+//					"user");
+//			if (tribeFragment == null) {
+//				tribeFragment = new RecommendFriendFragment();
+//			}
+//			getFragmentManager().beginTransaction().replace(android.R.id.content, tribeFragment, "user")
+//					.addToBackStack(null).commit();
+			FragmentHelper.replaceFragment(android.R.id.content, getFragmentManager(), RecommendFriendFragment.class);
+
 		}
 	}
-
+	
 	private void getTribeList() {
 		DamiInfo.getRecommendTribeList(new SimpleResponseListener(getActivity()) {
 

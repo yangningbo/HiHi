@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,7 +18,6 @@ import android.provider.MediaStore.MediaColumns;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -31,8 +29,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -63,7 +59,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private MyGridLayout picGrid;
 
 	private List<TagBean> recTagList = new ArrayList<TagBean>();
-	
 	private TextView tvUseRealName;
 	private int isHideName = 0;
 
@@ -74,10 +69,16 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		initTitleBar();
 		setAbContentView(R.layout.activity_send_dynamic);
 		mTitleBar.setTitleText(R.string.send_dynamic);
-		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		mTitleBar.setLogo(R.drawable.selector_titlebar_back).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showExitDialog();
+			}
+		});
 		View v = mTitleBar.addRightTextView(R.string.send);
 		v.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -415,5 +416,14 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	private void showExitDialog() {
+		showDialog(getString(R.string.confirm_cancel_send_dynamic), null, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				SendDynamicMsgActivity.this.finish();
+			}
+		});
 	}
 }

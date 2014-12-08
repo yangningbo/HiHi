@@ -26,7 +26,6 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.AddReasonActivity;
-import com.gaopai.guiren.activity.ChatCommentsActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;

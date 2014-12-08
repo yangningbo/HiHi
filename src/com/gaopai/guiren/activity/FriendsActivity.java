@@ -1,11 +1,7 @@
 package com.gaopai.guiren.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -19,13 +15,11 @@ import com.gaopai.guiren.adapter.RecommendAdapter;
 import com.gaopai.guiren.bean.NewUser;
 import com.gaopai.guiren.bean.NewUserList;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.bean.net.RecommendAddResult;
 import com.gaopai.guiren.bean.net.SimpleStateBean;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
-import com.umeng.socialize.net.u;
 
 public class FriendsActivity extends BaseActivity {
 	public static final String KEY_NEW_OR_REC = "new_or_rec";

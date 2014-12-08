@@ -11,7 +11,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@color/u_blue"
-        android:text="一键加好友"
+        android:text="关注"
         android:textColor="@color/white"
         android:textSize="@dimen/u_recommend_btn_text_size" />
 

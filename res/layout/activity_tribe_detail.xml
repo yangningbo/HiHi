@@ -191,6 +191,7 @@
             <View style="@style/tribe_detail_thin_divider" />
 
             <TextView
+                android:id="@+id/tv_erweima"
                 style="@style/tribe_detail_item_text_with_drawable"
                 android:drawableRight="@drawable/icon_slide_erweima"
                 android:text="二维码" />

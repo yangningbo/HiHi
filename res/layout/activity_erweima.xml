@@ -50,6 +50,8 @@
             style="@style/connection_item_info1"
             android:layout_alignLeft="@id/tv_user_name"
             android:layout_below="@id/tv_user_name"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@color/white" />
 
         <ImageView

@@ -20,6 +20,7 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class ShareActivity extends BaseActivity implements OnClickListener {
@@ -62,11 +63,15 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 		initComponent();
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		tribeId = (String) getIntent().getSerializableExtra(KEY_TRIBE_ID);
-		ShareFollowersFragment shareFollowersFragment = new ShareFollowersFragment();
-
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.fl_fragment_holder, shareFollowersFragment, ShareFollowersFragment.class.getName())
-				.addToBackStack(null).commit();
+		// ShareFollowersFragment shareFollowersFragment = new
+		// ShareFollowersFragment();
+		//
+		// getSupportFragmentManager().beginTransaction()
+		// .replace(R.id.fl_fragment_holder, shareFollowersFragment,
+		// ShareFollowersFragment.class.getName())
+		// .addToBackStack(null).commit();
+		FragmentHelper.replaceFragment(R.id.fl_fragment_holder, getSupportFragmentManager(),
+				ShareFollowersFragment.class);
 	}
 
 	public boolean isShare() {

@@ -74,7 +74,7 @@ public class User implements Serializable {
 	@Expose
 	public String sign = ""; // 个性签名
 	@Expose
-	public int isfollow = 0; // 0-没有关系 1-关注 2-被关注 3-相互关注
+	public int isfollow = 0; // 0-没有关系 1-关注 2-被关注 3-相互关注   关注指的是我关注别人
 	@Expose
 	public String displayName = "";
 	@Expose

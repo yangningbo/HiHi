@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
@@ -308,7 +309,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 
 		case R.id.grid_login_out:
-			logOut();
+			showExitDialog();
 			break;
 
 		case R.id.grid_want_to_be_host:
@@ -367,6 +368,16 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 
+	}
+
+	private void showExitDialog() {
+		showDialog(getString(R.string.confirm_exit_meeting), null, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				logOut();
+			}
+		});
 	}
 
 	public void wantJoinMeeting() {

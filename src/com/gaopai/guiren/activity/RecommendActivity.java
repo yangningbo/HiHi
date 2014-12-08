@@ -1,16 +1,12 @@
 package com.gaopai.guiren.activity;
 
-import net.tsz.afinal.FinalActivity;
 import android.os.Bundle;
-import android.widget.ListView;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.TribeAdapter;
 import com.gaopai.guiren.fragment.RecommendFriendFragment;
-import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
+import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
-import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 
 public class RecommendActivity extends BaseActivity {
 
@@ -22,7 +18,17 @@ public class RecommendActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		getSupportFragmentManager().beginTransaction().replace(android.R.id.content, new RecommendFriendFragment())
-				.commit();
+		// RecommendFriendFragment tribeFragment = (RecommendFriendFragment)
+		// getSupportFragmentManager()
+		// .findFragmentByTag("user");
+		// if (tribeFragment == null) {
+		// tribeFragment = new RecommendFriendFragment();
+		// }
+		//
+		// getSupportFragmentManager().beginTransaction()
+		// .replace(android.R.id.content, new RecommendFriendFragment(),
+		// "user").commit();
+		FragmentHelper
+				.replaceFragment(android.R.id.content, getSupportFragmentManager(), RecommendFriendFragment.class);
 	}
 }

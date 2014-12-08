@@ -33,7 +33,6 @@ import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.MsgConfigResult;
 import com.gaopai.guiren.bean.NewUserList;
 import com.gaopai.guiren.bean.PrivacySettingResult;
-import com.gaopai.guiren.bean.QrCordBean;
 import com.gaopai.guiren.bean.ReportMsgResult;
 import com.gaopai.guiren.bean.TagResultBean;
 import com.gaopai.guiren.bean.TribeInfoBean;
@@ -69,8 +68,8 @@ import com.gaopai.guiren.volley.UIHelperUtil;
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
-	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-//	public static final String HOST = "http://192.168.1.239:8081/index.php/";
+//	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+	public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
@@ -232,26 +231,6 @@ public class DamiInfo implements Serializable {
 		request(Method.POST, LoginResult.class, params, 1, listener, 1);
 	}
 
-	/**
-	 * 实名认证
-	 * 
-	 * @param phone
-	 *            手机号
-	 * @param realname
-	 *            真实姓名
-	 * @param company
-	 *            公司
-	 * @param post
-	 *            职位
-	 */
-	public static void realVerify(String phone, String realname, String company, String post, IResponseListener listener) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("phone", phone);
-		params.put("realname", realname);
-		params.put("company", company);
-		params.put("post", post);
-		request(Method.GET, BaseBean.class, params, 1, listener, 1);
-	}
 
 	/**
 	 * 获取推荐部落列表
@@ -2325,13 +2304,6 @@ public class DamiInfo implements Serializable {
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.DySingleBean.class, listener);
 	}
 
-	// 获取用户二维码
-	public static void getUserQrCord(String fid, IResponseListener listener) {
-		Parameters bundle = new Parameters();
-		bundle.add("fid", fid);
-		String url = SERVER + "user/UserQrCord";
-		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, QrCordBean.class, listener);
-	}
 
 	// 外发注册连接 need uid
 	public static void getUserInvitation(IResponseListener listener) {

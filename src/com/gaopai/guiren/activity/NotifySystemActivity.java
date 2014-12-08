@@ -25,6 +25,7 @@ import android.widget.ListView;
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.chat.ChatCommentsActivity;
 import com.gaopai.guiren.adapter.NotifyAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;

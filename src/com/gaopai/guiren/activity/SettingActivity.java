@@ -2,6 +2,7 @@ package com.gaopai.guiren.activity;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -65,18 +66,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			}).start();
 			break;
 		case R.id.btn_login_out:
-			SharedPreferences preferences = mContext.getSharedPreferences(DamiCommon.LOGIN_SHARED, 0);
-			Editor editor = preferences.edit();
-			editor.remove(DamiCommon.LOGIN_RESULT);
-			editor.commit();
-			DamiCommon.setUid("");
-			DamiCommon.setToken("");
-			FeatureFunction.stopService(mContext);
-			sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_OUT));
-			SettingActivity.this.finish();
-			NotificationManager notificationManager = (NotificationManager) mContext
-					.getSystemService(Context.NOTIFICATION_SERVICE);
-			notificationManager.cancelAll();
+			showExitDialog();
 			break;
 		case R.id.tv_privacy_setting:
 			startActivity(PrivacySettingActivity.class);
@@ -126,5 +116,25 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			super.handleMessage(msg);
 		}
 	};
+	
+	private void showExitDialog() {
+		showDialog(getString(R.string.confirm_exit), null, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				SharedPreferences preferences = mContext.getSharedPreferences(DamiCommon.LOGIN_SHARED, 0);
+				Editor editor = preferences.edit();
+				editor.remove(DamiCommon.LOGIN_RESULT);
+				editor.commit();
+				DamiCommon.setUid("");
+				DamiCommon.setToken("");
+				FeatureFunction.stopService(mContext);
+				sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_OUT));
+				SettingActivity.this.finish();
+				NotificationManager notificationManager = (NotificationManager) mContext
+						.getSystemService(Context.NOTIFICATION_SERVICE);
+				notificationManager.cancelAll();
+			}
+		});
+	}
 
 }

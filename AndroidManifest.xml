@@ -115,7 +115,7 @@
             android:name="com.gaopai.guiren.activity.RecommendActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.gaopai.guiren.activity.ChatCommentsActivity"
+            android:name="com.gaopai.guiren.activity.chat.ChatCommentsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.SearchActivity"

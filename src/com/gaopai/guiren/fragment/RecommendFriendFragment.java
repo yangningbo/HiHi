@@ -16,11 +16,13 @@ import android.widget.ListView;
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.activity.UserInfoActivity;
 import com.gaopai.guiren.adapter.RecommendAdapter;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.bean.net.RecommendAddResult;
+import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -47,8 +49,8 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 	}
 
 	private void initView() {
-		mTitleBar.setTitleText(R.string.recommend_friend);
 
+		mTitleBar.setTitleText(R.string.recommend_friend);
 		btnJumpOver = mTitleBar.addRightTextView("跳过");
 		btnJumpOver.setOnClickListener(new JumpOverClickListener());
 
@@ -78,10 +80,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				String uid = ((User) mAdapter.getItem(position)).uid;
-				Intent intent = new Intent();
-				intent.putExtra(UserInfoActivity.KEY_UID, uid);
-				intent.setClass(getActivity(), UserInfoActivity.class);
-				startActivity(intent);
+				startActivity(ProfileActivity.getIntent(act, uid));
 			}
 		});
 		getUserList();
@@ -92,15 +91,21 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			RecommendTribeFragment tribeFragment = (RecommendTribeFragment) getFragmentManager().findFragmentByTag(
-					"tribe");
-			if (tribeFragment == null) {
-				tribeFragment = new RecommendTribeFragment();
-			}
-			getFragmentManager().beginTransaction().replace(android.R.id.content, tribeFragment, "tribe")
-					.addToBackStack(null).commit();
-
+			gotoRecTribeFragment();
 		}
+	}
+
+	private void gotoRecTribeFragment() {
+		// RecommendTribeFragment tribeFragment = (RecommendTribeFragment)
+		// getFragmentManager().findFragmentByTag("tribe");
+		// if (tribeFragment == null) {
+		// tribeFragment = new RecommendTribeFragment();
+		// }
+		// getFragmentManager().beginTransaction().replace(android.R.id.content,
+		// tribeFragment, "tribe")
+		// .addToBackStack(null).commit();
+		FragmentHelper.replaceFragment(android.R.id.content, getFragmentManager(), RecommendTribeFragment.class);
+
 	}
 
 	private void getUserList() {
@@ -157,6 +162,9 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 				final RecommendAddResult data = (RecommendAddResult) o;
 				if (data.state != null && data.state.code == 0) {
 					changeAddInfo(userList);
+					if (userList.size() > 1) {
+						gotoRecTribeFragment();
+					}
 				} else {
 					this.otherCondition(data.state, getActivity());
 				}

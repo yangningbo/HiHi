@@ -25,6 +25,7 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.TwoDimensionActivity.QrHolder;
 import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.Tribe;
@@ -36,6 +37,7 @@ import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -129,6 +131,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		layoutTags = (FlowLayout) findViewById(R.id.tribe_tags);
 		tvMoreTags = (TextView) findViewById(R.id.tv_more_tags);
 		tvMoreTags.setOnClickListener(this);
+		ViewUtil.findViewById(this, R.id.tv_erweima).setOnClickListener(this);
 
 		layoutAdmin = findViewById(R.id.layout_tribe_detail_admin);
 		layoutSetting = findViewById(R.id.layout_tribe_detail_setting);
@@ -140,7 +143,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 		getTribeDetail();
 	}
-	
+
 	public static Intent getIntent(Context context, String tid) {
 		Intent intent = new Intent(context, TribeDetailActivity.class);
 		intent.putExtra(KEY_TRIBE_ID, tid);
@@ -290,7 +293,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 	private void showDialog(String title, final int type, final Member member) {// 0提出部落
 																				// 1退出部落
-		                                                                        // 2解散圈子
+																				// 2解散圈子
 		Dialog dialog = new AlertDialog.Builder(mContext).setTitle(title)
 				.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
@@ -386,6 +389,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		case R.id.tv_cancel_tribe:
 			showDialog(getString(R.string.cancel_tribe), 2, null);
 			break;
+		case R.id.tv_erweima:
+			startActivity(TwoDimensionActivity.getIntent(mContext, mTribe));
+			break;
 		default:
 			break;
 		}
@@ -420,7 +426,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			startActivity(TribeVierifyActivity.getIntent(mContext, mTribe, 0));
 		}
 	}
-	
+
 	public void wantJoinTribe() {
 		DamiInfo.applyTribe(mTribe.id, "", new SimpleResponseListener(mContext) {
 			@Override
@@ -435,10 +441,10 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			}
 		});
 	}
-	
+
 	private void cancelTribe() {
 		DamiInfo.cancelTribe(mTribeID, new SimpleResponseListener(mContext, R.string.request_internet_now) {
-			
+
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub

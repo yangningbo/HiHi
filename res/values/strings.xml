@@ -78,7 +78,7 @@
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="login">登录</string>
-    <string name="confirm_exit">确定要退出?</string>
+    
     <string name="exit">退出</string>
     <string name="cancel">取消</string>
     <string name="notification">通知</string>
@@ -784,5 +784,13 @@
     <string name="click_verify">点击重新认证</string>
     <string name="level_count">魅力值</string>
     <string name="apply_join">申请加入</string>
+    
+    <string name="confirm_exit">确定退出?</string>
+    <string name="confirm_cancel_follow">确定取消关注?</string>
+    <string name="confirm_cancel_tribe">确定解散圈子?</string>
+    <string name="confirm_exit_tribe">确定退出圈子?</string>
+    <string name="confirm_cancel_meeting">确定解散会议?</string>
+    <string name="confirm_exit_meeting">确定退出会议?</string>
+    <string name="confirm_cancel_send_dynamic">确定取消发布?</string>
     
 </resources>

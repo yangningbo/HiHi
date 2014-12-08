@@ -63,7 +63,6 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 					data.toString().indexOf("//") + 2);
 			mTitle = mReportUrl;
 		}
-		
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(mTitle);
 
