@@ -292,7 +292,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			}
 			break;
 		case R.id.btn_hide_grid:
-			hideMoreWindwo();
+			hideMoreWindow();
 			break;
 		case R.id.grid_notify_meeting_start: {
 			setAlarmForMeeting();
@@ -367,7 +367,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		default:
 			break;
 		}
-
+		
+		hideMoreWindow();
 	}
 
 	private void showExitDialog() {
@@ -544,7 +545,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		moreWindow.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 	}
 
-	private void hideMoreWindwo() {
+	private void hideMoreWindow() {
 		if (moreWindow != null && moreWindow.isShowing()) {
 			moreWindow.dismiss();
 		}

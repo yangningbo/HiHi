@@ -18,16 +18,6 @@ public class RecommendActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		// RecommendFriendFragment tribeFragment = (RecommendFriendFragment)
-		// getSupportFragmentManager()
-		// .findFragmentByTag("user");
-		// if (tribeFragment == null) {
-		// tribeFragment = new RecommendFriendFragment();
-		// }
-		//
-		// getSupportFragmentManager().beginTransaction()
-		// .replace(android.R.id.content, new RecommendFriendFragment(),
-		// "user").commit();
 		FragmentHelper
 				.replaceFragment(android.R.id.content, getSupportFragmentManager(), RecommendFriendFragment.class);
 	}

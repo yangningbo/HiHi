@@ -1,22 +1,18 @@
 package com.gaopai.guiren.activity.share;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.LayoutInflater.Filter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
@@ -24,15 +20,18 @@ import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.activity.share.ShareActivity.CancelInterface;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Item;
-import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Row;
-import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Section;
 import com.gaopai.guiren.adapter.ShareContactAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
+import com.gaopai.guiren.support.FragmentHelper;
+import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
+import com.gaopai.guiren.widget.indexlist.IndexableListView;
 import com.gaopai.guiren.widget.indexlist.SingleIndexScroller;
 
 public abstract class BaseShareFragment extends Fragment implements CancelInterface {
@@ -42,21 +41,36 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 
 	private SimpleResponseListener listener;
 
+	public interface OnBackListener {
+		public boolean onBack();
+	}
 
+	public OnBackListener backToShareFollower = new OnBackListener() {
+		@Override
+		public boolean onBack() {
+			FragmentHelper.replaceFragment(R.id.fl_fragment_holder, getFragmentManager(), ShareFollowersFragment.class);
+			return true;
+		}
+	};
+
+	View view;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.fragment_connection, null);
-		initView(view);
-		getUserList(false);
+		if (view == null) {
+			view = inflater.inflate(R.layout.fragment_connection, null);
+			initView(view);
+			mListView.doPullRefreshing(true, 0);
+		} else {
+			((ViewGroup) view.getParent()).removeView(view);
+		}
 		return view;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		((ShareActivity)getActivity()).setCancelCallback(this);
 		listener = new SimpleResponseListener(getActivity(), R.string.request_internet_now) {
 			@Override
 			public void onSuccess(Object o) {
@@ -65,7 +79,6 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 			}
 		};
 	}
-	
 
 	private void initView(View mView) {
 		// TODO Auto-generated method stub
@@ -78,6 +91,16 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		mListView.setPullRefreshEnabled(false);
 		mListView.setPullLoadEnabled(false);
 		mListView.setScrollLoadEnabled(false);
+		mListView.setOnRefreshListener(new OnRefreshListener<IndexableListView>() {
+			@Override
+			public void onPullDownToRefresh(PullToRefreshBase<IndexableListView> refreshView) {
+				getUserList(false);
+			}
+
+			@Override
+			public void onPullUpToRefresh(PullToRefreshBase<IndexableListView> refreshView) {
+			}
+		});
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -100,8 +123,6 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 	}
-	
-
 
 	protected void creatHeaderView(ListView listView) {
 	}
@@ -198,14 +219,15 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 	protected int getType() {
 		return ((ShareActivity) getActivity()).type;
 	}
+
 	protected String getTribeId() {
 		return ((ShareActivity) getActivity()).tribeId;
 	}
-	
+
 	public ShareActivity getShareActivity() {
 		return (ShareActivity) getActivity();
 	}
-	
+
 	public void toggleUser(User user) {
 		getShareActivity().toggleUser(user);
 	}
@@ -221,7 +243,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		}
 		return result;
 	}
-	
+
 	@Override
 	public void cancel(String s) {
 		// TODO Auto-generated method stub

@@ -70,7 +70,6 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				// TODO Auto-generated method stub
-				Log.d(TAG, "pull up to");
 			}
 		});
 
@@ -86,22 +85,12 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 			}
 		});
 		mListView.doPullRefreshing(true, 0);
-
 	}
 
 	private class BackClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-//			RecommendFriendFragment tribeFragment = (RecommendFriendFragment) getFragmentManager().findFragmentByTag(
-//					"user");
-//			if (tribeFragment == null) {
-//				tribeFragment = new RecommendFriendFragment();
-//			}
-//			getFragmentManager().beginTransaction().replace(android.R.id.content, tribeFragment, "user")
-//					.addToBackStack(null).commit();
 			FragmentHelper.replaceFragment(android.R.id.content, getFragmentManager(), RecommendFriendFragment.class);
-
 		}
 	}
 	

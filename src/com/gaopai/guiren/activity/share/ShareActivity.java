@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import u.aly.ba;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -18,9 +21,11 @@ import android.widget.TextView;
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.share.BaseShareFragment.OnBackListener;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.support.FragmentHelper;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class ShareActivity extends BaseActivity implements OnClickListener {
@@ -63,13 +68,6 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 		initComponent();
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		tribeId = (String) getIntent().getSerializableExtra(KEY_TRIBE_ID);
-		// ShareFollowersFragment shareFollowersFragment = new
-		// ShareFollowersFragment();
-		//
-		// getSupportFragmentManager().beginTransaction()
-		// .replace(R.id.fl_fragment_holder, shareFollowersFragment,
-		// ShareFollowersFragment.class.getName())
-		// .addToBackStack(null).commit();
 		FragmentHelper.replaceFragment(R.id.fl_fragment_holder, getSupportFragmentManager(),
 				ShareFollowersFragment.class);
 	}
@@ -173,20 +171,24 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-	private CancelInterface cancelCallback;
-
-	public void setCancelCallback(CancelInterface callback) {
-		cancelCallback = callback;
-	}
-
 	public static interface CancelInterface {
 		public void cancel(String s);
+	}
+
+	public OnBackListener backListener;
+
+	public void setBackListener(OnBackListener backListener) {
+		this.backListener = backListener;
 	}
 
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+		if (backListener != null && backListener.onBack()) {
+			return;
+		}
+		Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fl_fragment_holder);
+		if (fragment instanceof ShareFollowersFragment) {
 			this.finish();
 			return;
 		}

@@ -2,12 +2,11 @@ package com.gaopai.guiren.activity.share;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -23,11 +22,7 @@ public class ShareFollowersFragment extends BaseShareFragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				ShareFansFragment shareFansFragment = new ShareFansFragment();
-				getFragmentManager().beginTransaction()
-						.replace(R.id.fl_fragment_holder, shareFansFragment, ShareFansFragment.class.getName())
-						.addToBackStack(null).commit();
-
+				FragmentHelper.replaceFragment(R.id.fl_fragment_holder, getFragmentManager(), ShareFansFragment.class);
 			}
 		});
 
@@ -38,11 +33,8 @@ public class ShareFollowersFragment extends BaseShareFragment {
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					ShareTribeFragment shareTribeFragment = new ShareTribeFragment();
-					getFragmentManager().beginTransaction()
-							.replace(R.id.fl_fragment_holder, shareTribeFragment, ShareTribeFragment.class.getName())
-							.addToBackStack(null).commit();
+					FragmentHelper.replaceFragment(R.id.fl_fragment_holder, getFragmentManager(),
+							ShareTribeFragment.class);
 				}
 			});
 			listView.addHeaderView(view);
@@ -54,6 +46,7 @@ public class ShareFollowersFragment extends BaseShareFragment {
 		// TODO Auto-generated method stub
 		super.onResume();
 		getShareActivity().setTitleText(R.string.follow);
+		getShareActivity().setBackListener(null);
 	}
 
 	private TextView creatHeaderTextView(String text) {

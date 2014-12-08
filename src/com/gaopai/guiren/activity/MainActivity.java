@@ -114,8 +114,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 						Intent intent = new Intent(mContext, LoginActivity.class);
 						startActivityForResult(intent, LOGIN_REQUEST);
 					} else {
-//						getLogin();
-						reLogin();
+						getLogin();
 					}
 				}
 			}

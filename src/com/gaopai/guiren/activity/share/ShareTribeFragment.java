@@ -3,10 +3,13 @@ package com.gaopai.guiren.activity.share;
 import java.util.List;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.gaopai.guiren.DamiInfo;
@@ -14,8 +17,13 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.TribeAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
+import com.gaopai.guiren.support.FragmentHelper;
+import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.volley.SimpleResponseListener;
+import com.gaopai.guiren.widget.indexlist.IndexableListView;
 
 public class ShareTribeFragment extends BaseShareFragment {
 
@@ -25,10 +33,13 @@ public class ShareTribeFragment extends BaseShareFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.general_pulltorefresh_listview, null);
-		initView(view);
-		getTribeList();
-		
+		if (view == null) {
+			view = inflater.inflate(R.layout.general_pulltorefresh_listview, null);
+			initView(view);
+			mListView.doPullRefreshing(true, 0);
+		} else {
+			((ViewGroup) view.getParent()).removeView(view);
+		}
 		return view;
 	}
 
@@ -37,7 +48,9 @@ public class ShareTribeFragment extends BaseShareFragment {
 		// TODO Auto-generated method stub
 		super.onResume();
 		getShareActivity().setTitleText(R.string.tribe);
+		getShareActivity().setBackListener(backToShareFollower);
 	}
+
 	private void initView(View mView) {
 		// TODO Auto-generated method stub
 		mListView = (PullToRefreshListView) mView.findViewById(R.id.listView);
@@ -52,6 +65,16 @@ public class ShareTribeFragment extends BaseShareFragment {
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
 				Tribe tribe = (Tribe) mAdapter.getItem(pos);
 				showDialog(tribe);
+			}
+		});
+		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			@Override
+			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+				getTribeList();
+			}
+
+			@Override
+			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 			}
 		});
 		mAdapter = new TribeAdapter(getActivity());
