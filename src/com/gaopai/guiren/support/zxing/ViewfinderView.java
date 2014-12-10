@@ -24,13 +24,16 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.camera.CameraManager;
+import com.gaopai.guiren.support.zxing.camera.CameraManager;
+import com.gaopai.guiren.utils.MyUtils;
 import com.google.zxing.ResultPoint;
 
 /**
@@ -43,7 +46,7 @@ import com.google.zxing.ResultPoint;
 public final class ViewfinderView extends View {
 
 	private static final int[] SCANNER_ALPHA = { 0, 64, 128, 192, 255, 192, 128, 64 };
-	private static final long ANIMATION_DELAY = 0L;
+	private static final long ANIMATION_DELAY = 20L;
 	private static final int OPAQUE = 0xFF;
 
 	private final Paint paint;
@@ -60,6 +63,8 @@ public final class ViewfinderView extends View {
 	private Bitmap lineBitmap;
 	private Bitmap borderBitmap;
 	private Rect lineRect = new Rect();
+	private String scanInfo = "将二维码放入框内，即可自动扫描";
+	private Paint textPaint;
 
 	// This constructor is used when the class is built from an XML resource.
 	public ViewfinderView(Context context, AttributeSet attrs) {
@@ -79,6 +84,11 @@ public final class ViewfinderView extends View {
 
 		lineBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_scan_line);
 		borderBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_scan_border);
+		textPaint = new Paint();
+		textPaint.setColor(Color.WHITE);
+		textPaint.setAntiAlias(true);
+		textPaint.setTextAlign(Align.CENTER);
+		textPaint.setTextSize(MyUtils.dip2px(getContext(), 16));
 	}
 
 	@Override
@@ -104,12 +114,16 @@ public final class ViewfinderView extends View {
 		} else {
 
 			// Draw a two pixel solid black border inside the framing rect
-//			paint.setColor(frameColor);
-//			canvas.drawRect(frame.left, frame.top, frame.right + 1, frame.top + 2, paint);
-//			canvas.drawRect(frame.left, frame.top + 2, frame.left + 2, frame.bottom - 1, paint);
-//			canvas.drawRect(frame.right - 1, frame.top, frame.right + 1, frame.bottom - 1, paint);
-//			canvas.drawRect(frame.left, frame.bottom - 1, frame.right + 1, frame.bottom + 1, paint);
-//
+			// paint.setColor(frameColor);
+			// canvas.drawRect(frame.left, frame.top, frame.right + 1, frame.top
+			// + 2, paint);
+			// canvas.drawRect(frame.left, frame.top + 2, frame.left + 2,
+			// frame.bottom - 1, paint);
+			// canvas.drawRect(frame.right - 1, frame.top, frame.right + 1,
+			// frame.bottom - 1, paint);
+			// canvas.drawRect(frame.left, frame.bottom - 1, frame.right + 1,
+			// frame.bottom + 1, paint);
+			//
 			// ===================add=================
 			canvas.drawBitmap(borderBitmap, null, frame, paint);
 			if (barLinePosTotal > frame.height()) {
@@ -120,16 +134,19 @@ public final class ViewfinderView extends View {
 			lineRect.left = frame.left;
 			lineRect.right = frame.right;
 			canvas.drawBitmap(lineBitmap, null, lineRect, paint);
-			barLinePosTotal = barLinePosTotal + 5;
+			barLinePosTotal = barLinePosTotal + 8;
+
+			canvas.drawText(scanInfo, frame.centerX(), frame.bottom + MyUtils.dip2px(getContext(), 40), textPaint);
 			// ==================add=======================
 
 			// Draw a red "laser scanner" line through the middle to show
 			// decoding is active
-//			paint.setColor(laserColor);
-//			paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
-//			scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
-//			int middle = frame.height() / 2 + frame.top;
-//			canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1, middle + 2, paint);
+			// paint.setColor(laserColor);
+			// paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
+			// scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
+			// int middle = frame.height() / 2 + frame.top;
+			// canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1,
+			// middle + 2, paint);
 
 			Collection<ResultPoint> currentPossible = possibleResultPoints;
 			Collection<ResultPoint> currentLast = lastPossibleResultPoints;

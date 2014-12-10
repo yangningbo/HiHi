@@ -22,10 +22,10 @@ import android.widget.LinearLayout;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.camera.CameraManager;
-import com.gaopai.guiren.decoding.CaptureActivityHandler;
-import com.gaopai.guiren.decoding.InactivityTimer;
 import com.gaopai.guiren.support.zxing.ViewfinderView;
+import com.gaopai.guiren.support.zxing.camera.CameraManager;
+import com.gaopai.guiren.support.zxing.decoding.CaptureActivityHandler;
+import com.gaopai.guiren.support.zxing.decoding.InactivityTimer;
 import com.gaopai.guiren.utils.Logger;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
