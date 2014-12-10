@@ -90,7 +90,8 @@
         <com.gaopai.guiren.view.FlowLayout
             android:id="@+id/flow_tags_recommend"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            custom:tag_columns="3" >
         </com.gaopai.guiren.view.FlowLayout>
     </ScrollView>
 

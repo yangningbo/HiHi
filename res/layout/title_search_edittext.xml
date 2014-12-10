@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:completionThreshold="1"
+    android:background="@drawable/selector_edit_white_round_corner"
+    android:padding="5dp"
     android:ems="20" >
     <requestFocus />
 </AutoCompleteTextView>

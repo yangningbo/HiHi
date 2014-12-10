@@ -313,7 +313,7 @@ public class DynamicHelper {
 				actionWindow.dismiss();
 			}
 		});
-		actionWindow = new PopupWindow(v, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		actionWindow = new PopupWindow(v, LayoutParams.WRAP_CONTENT, MyUtils.dip2px(mContext, 40));
 		actionWindow.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
 		actionWindow.setAnimationStyle(R.style.window_slide_right);
 		actionWindow.setOutsideTouchable(true);

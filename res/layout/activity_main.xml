@@ -249,11 +249,11 @@
             android:src="@drawable/icon_welcom_background_2" />
 
         <ImageView
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="-60dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/icon_welcom_info" />
     </RelativeLayout>
 

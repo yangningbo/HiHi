@@ -1,26 +1,20 @@
 package com.gaopai.guiren.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.adapter.RecommendAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
-import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.RecommendAddResult;
 import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
@@ -93,7 +87,7 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 			FragmentHelper.replaceFragment(android.R.id.content, getFragmentManager(), RecommendFriendFragment.class);
 		}
 	}
-	
+
 	private void getTribeList() {
 		DamiInfo.getRecommendTribeList(new SimpleResponseListener(getActivity()) {
 
@@ -120,44 +114,27 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 	}
 
 	private class AddClickListener implements OnClickListener {
-
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			Tribe tribe = (Tribe) v.getTag();
-			List<Tribe> tribeList = new ArrayList<Tribe>();
-			tribeList.add(tribe);
-			addTribe(tribeList);
+			mAdapter.addIdToChoseSet(tribe.id);
 		}
 	}
 
-	private void addTribe(final List<Tribe> tribeList) {
-		StringBuilder builder = new StringBuilder();
-		for (Tribe tribe : tribeList) {
-			builder.append(tribe.id);
-			builder.append(",");
-		}
-		String re = builder.toString();
-		DamiInfo.requestAddTribe(re.substring(0, re.length() - 1), "",
-				new SimpleResponseListener(getActivity(), "正在请求") {
-					@Override
-					public void onSuccess(Object o) {
-						// TODO Auto-generated method stub
-						final RecommendAddResult data = (RecommendAddResult) o;
-						if (data.state != null && data.state.code == 0) {
-							changeAddInfo(tribeList);
-						} else {
-							otherCondition(data.state, getActivity());
-						}
-					}
-				});
-	}
-
-	private void changeAddInfo(List<Tribe> tribeList) {
-		for (Tribe tribe : tribeList) {
-			tribe.isInTribe = true;
-		}
-		mAdapter.notifyDataSetChanged();
+	private void addTribe(String ids) {
+		DamiInfo.requestAddTribe(ids, "", new SimpleResponseListener(getActivity(), R.string.request_internet_now) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				final RecommendAddResult data = (RecommendAddResult) o;
+				if (data.state != null && data.state.code == 0) {
+					// changeAddInfo(tribeList);
+				} else {
+					otherCondition(data.state, getActivity());
+				}
+			}
+		});
 	}
 
 	@Override
@@ -165,7 +142,11 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_add_all:
-			addTribe(mAdapter.mData);
+			if (mAdapter.choseSet.size() == 0) {
+				getBaseActivity().showToast(R.string.please_choose_add);
+				return;
+			}
+			addTribe(mAdapter.getChoseIdString());
 			break;
 		case R.id.btn_jump_over:
 			getActivity().finish();

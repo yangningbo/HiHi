@@ -51,8 +51,9 @@
             android:textSize="15sp" />
 
         <RelativeLayout
-            android:id="@+id/rl_msg_info_holder"
-            style="@style/chat_talk_style_txt_msg_info"
+            android:id="@+id/layout_msg_info_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/tv_user_name"
             android:layout_marginTop="5dp"
             android:layout_toLeftOf="@+id/iv_chat_talk_img_head"
@@ -69,7 +70,8 @@
 
             <ImageView
                 android:id="@+id/iv_chat_photo"
-                style="@style/chat_talk_style_txt_msg_info_msg_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_margin="3dp"
                 android:adjustViewBounds="true"
@@ -111,10 +113,10 @@
             android:id="@+id/iv_chat_resend_icon"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_alignTop="@+id/rl_msg_info_holder"
+            android:layout_alignTop="@+id/layout_msg_info_holder"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@+id/rl_msg_info_holder"
+            android:layout_toLeftOf="@+id/layout_msg_info_holder"
             android:src="@drawable/resend_btn"
             android:visibility="gone" />
 
@@ -125,11 +127,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/rl_msg_info_holder"
-            android:layout_marginLeft = "10dp"
+            android:layout_below="@id/layout_msg_info_holder"
+            android:layout_marginLeft="10dp"
             android:gravity="center_vertical|right"
             android:orientation="horizontal" >
-
 
             <TextView
                 android:id="@+id/agreecount"

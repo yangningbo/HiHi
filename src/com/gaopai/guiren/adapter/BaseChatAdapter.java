@@ -331,7 +331,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 
 		public static ViewHolderLeft getInstance(View view) {
 			ViewHolderLeft viewHolderLeft = new ViewHolderLeft();
-			viewHolderLeft.ivVoiceUnread = (ImageView) view.findViewById(R.id.iv_unread_voice_icon);
+//			viewHolderLeft.ivVoiceUnread = (ImageView) view.findViewById(R.id.iv_unread_voice_icon);
 			return (ViewHolderLeft) getInstance(view, viewHolderLeft);
 		}
 	}
@@ -357,7 +357,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		TextView mFavoriteCountView, mCommentCountView, mAgreeCountView, mMoreCommentBtn;
 		
 		public static Object getInstance(View view, ViewHolder holder) {
-			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_info_holder);
+			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_info_holder);
 			holder.msgLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_holder);
 			holder.tvShide = (TextView) view.findViewById(R.id.tv_shide);
 			holder.tvChatTime = (TextView) view.findViewById(R.id.tv_chat_talk_time);

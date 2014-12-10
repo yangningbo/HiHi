@@ -31,7 +31,7 @@
         android:layout_above="@id/btn_jump_over"
         android:layout_centerHorizontal="true"
         android:background="@color/u_yellow"
-        android:text="全部申请加入"
+        android:text="申请加入"
         android:textColor="@color/white"
         android:textSize="@dimen/u_recommend_btn_text_size" />
 

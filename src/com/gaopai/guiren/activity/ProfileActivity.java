@@ -481,7 +481,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private boolean bindCommentView() {
 		if (tUser.commentlist != null && tUser.commentlist.size() > 0) {
 			for (final CommentBean bean : tUser.commentlist) {
-				View view = mInflater.inflate(R.layout.item_general, null);
+				View view = mInflater.inflate(R.layout.item_general_small_head, null);
 				TextView nameView = (TextView) view.findViewById(R.id.tv_title);
 				TextView infoView = (TextView) view.findViewById(R.id.tv_info);
 				TextView dateView = (TextView) view.findViewById(R.id.tv_date);

@@ -259,7 +259,7 @@ public class MyFavoriteActivity extends BaseActivity {
 		TextView tvRoom;
 
 		public static Object getInstance(View view, ViewHolder holder) {
-			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_info_holder);
+			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_info_holder);
 			holder.msgLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_holder);
 			holder.tvShide = (TextView) view.findViewById(R.id.tv_shide);
 			holder.tvChatTime = (TextView) view.findViewById(R.id.tv_chat_talk_time);

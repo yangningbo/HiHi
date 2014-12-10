@@ -1,7 +1,9 @@
 package com.gaopai.guiren.adapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -15,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.NewUser;
 import com.gaopai.guiren.bean.Tribe;
@@ -25,8 +28,6 @@ public class RecommendAdapter<T> extends BaseAdapter {
 
 	public static final int RECOMMEND_FRIEND = 0;
 	public static final int RECOMMEND_TRIBE = 1;
-	public static final int NEW_FRIEND = 2;
-	public static final int REC_FRIEND = 3;
 
 	private final LayoutInflater mInflater;
 	public List<T> mData = new ArrayList<T>();
@@ -36,12 +37,49 @@ public class RecommendAdapter<T> extends BaseAdapter {
 
 	private OnClickListener mAddClickListener;
 
+	public Set<String> choseSet = new HashSet<String>();
+
 	public RecommendAdapter(Context context, int type, OnClickListener addClickListener) {
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mContext = context;
 		mType = type;
 		mAddClickListener = addClickListener;
 
+	}
+
+	public void addIdToChoseSet(String id) {
+		if (choseSet.contains(id)) {
+			choseSet.remove(id);
+			notifyDataSetChanged();
+			return;
+		}
+		choseSet.add(id);
+		notifyDataSetChanged();
+	}
+
+	public String getChoseIdString() {
+		StringBuilder builder = new StringBuilder();
+		for (String id : choseSet) {
+			builder.append(id);
+			builder.append(",");
+		}
+		String re = builder.toString();
+		return re.substring(0, re.length() - 1);
+	}
+
+	public String getAllIdString() {
+		StringBuilder builder = new StringBuilder();
+		for (T data : mData) {
+			if (mType == RECOMMEND_FRIEND) {
+				builder.append(((User) data).uid);
+				builder.append(",");
+			} else {
+				builder.append(((Tribe) data).id);
+				builder.append(",");
+			}
+		}
+		String re = builder.toString();
+		return re.substring(0, re.length() - 1);
 	}
 
 	public void addAll(List<T> o) {
@@ -97,13 +135,12 @@ public class RecommendAdapter<T> extends BaseAdapter {
 			}
 			holder.tvUserName.setText(user.realname);
 			holder.tvRecommend.setText(user.reason);
-			if (user.relation == 0) {
-				holder.btnAdd.setTag(user);
-				holder.btnAdd.setOnClickListener(mAddClickListener);
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_add_btn);
-			} else {
+			holder.btnAdd.setOnClickListener(mAddClickListener);
+			holder.btnAdd.setTag(user);
+			if (choseSet.contains(user.uid)) {
 				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_selected_btn);
-				holder.btnAdd.setOnClickListener(null);
+			} else {
+				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_add_btn);
 			}
 		} else if (mType == RECOMMEND_TRIBE) {
 			Tribe tribe = (Tribe) getItem(position);
@@ -114,47 +151,12 @@ public class RecommendAdapter<T> extends BaseAdapter {
 				holder.ivHeader.setImageResource(R.drawable.default_tribe);
 			}
 			holder.tvUserName.setText(tribe.name);
-			if (!tribe.isInTribe) {
-				holder.btnAdd.setTag(tribe);
-				holder.btnAdd.setOnClickListener(mAddClickListener);
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_add_btn);
-			} else {
+			holder.btnAdd.setOnClickListener(mAddClickListener);
+			holder.btnAdd.setTag(tribe);
+			if (choseSet.contains(tribe.id)) {
 				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_selected_btn);
-				holder.btnAdd.setOnClickListener(null);
-			}
-		} else if (mType == REC_FRIEND) {
-			User user = (User) getItem(position);
-			if (!TextUtils.isEmpty(user.headsmall)) {
-				ImageLoaderUtil.displayImage(user.headsmall, holder.ivHeader);
 			} else {
-				holder.ivHeader.setImageResource(R.drawable.default_header);
-			}
-			holder.tvUserName.setText(user.nickname);
-			holder.tvRecommend.setText(user.reason);
-			if (user.relation == 0) {
-				holder.btnAdd.setTag(user);
-				holder.btnAdd.setOnClickListener(mAddClickListener);
 				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_add_btn);
-			} else {
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_selected_btn);
-				holder.btnAdd.setOnClickListener(null);
-			}
-		} else if (mType == NEW_FRIEND) {
-			NewUser user = (NewUser) getItem(position);
-			if (!TextUtils.isEmpty(user.headsmall)) {
-				ImageLoaderUtil.displayImage(user.headsmall, holder.ivHeader);
-			} else {
-				holder.ivHeader.setImageResource(R.drawable.default_header);
-			}
-			holder.tvUserName.setText(user.realname);
-			holder.tvRecommend.setText(user.reason);
-			if (user.status == 0) {
-				holder.btnAdd.setTag(user);
-				holder.btnAdd.setOnClickListener(mAddClickListener);
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_add_btn);
-			} else {
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_selected_btn);
-				holder.btnAdd.setOnClickListener(null);
 			}
 		}
 		return convertView;

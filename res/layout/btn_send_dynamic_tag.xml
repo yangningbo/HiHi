@@ -14,7 +14,6 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:textSize="13sp"
-        android:text="阿道夫"
         android:textColor="@color/general_blue" />
 
     <Button

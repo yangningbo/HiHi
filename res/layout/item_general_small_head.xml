@@ -2,20 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:padding="@dimen/general_paading"
-    android:background="@drawable/selector_btn_general"
+    android:background="@drawable/selector_btn_transparent_general"
     android:layout_height="wrap_content" >
 
     <ImageView
         android:id="@+id/iv_header"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginRight="10dp"
         android:contentDescription="@string/desc"
         android:src="@drawable/logo" />
 
     <TextView
-        android:id="@+id/tv_user_name"
-        android:layout_width="120dp"
+        android:id="@+id/tv_message_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/iv_header"
+        android:layout_alignTop="@id/iv_header"
+        android:layout_marginRight="-8dp"
+        android:layout_marginTop="-8dp"
+        android:background="@drawable/message_count_bg"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/iv_header"
         android:layout_toRightOf="@id/iv_header"
@@ -25,40 +39,35 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/tv_user_info"
+        android:id="@+id/tv_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_user_name"
+        android:layout_below="@id/tv_title"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/iv_header"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/content_gray_color"
         android:textSize="14sp" />
-    <TextView
-        android:id="@+id/tv_user_fancy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_user_name"
-        android:layout_toRightOf="@id/tv_user_name"
-        android:text="魅力值："
-        android:textSize="14sp" />
-    <TextView
-        android:id="@+id/tv_user_fancy_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_user_name"
-        android:layout_toRightOf="@id/tv_user_fancy"
-        android:textColor="@color/red_dongtai_bg"
-        android:textSize="14sp" />
 
-    <ImageView
-        android:id="@+id/btn_add"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
+    <TextView
+        android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/iv_header"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/content_gray_color"
+        android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tv_delete" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:visibility="gone"
-        android:src="@drawable/logo" />
+        android:layout_below="@id/tv_date"
+        android:layout_alignParentRight="true"
+        android:text="@string/delete"/>
+
 </RelativeLayout>

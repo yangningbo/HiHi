@@ -95,12 +95,21 @@ public class SearchAdapter extends BaseAdapter {
 			viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tv_user_name);
 			viewHolder.tvUserInfo = (TextView) convertView.findViewById(R.id.tv_user_info);
 			viewHolder.ivHeader = (ImageView) convertView.findViewById(R.id.iv_header);
+			viewHolder.tvFancyCount= (TextView) convertView.findViewById(R.id.tv_user_fancy_count);
+			viewHolder.viewFancy= convertView.findViewById(R.id.tv_user_fancy);
 			Object object = ((Item) getItem(position)).object;
 			if (object instanceof User) {
 				User user = (User) object;
+				viewHolder.tvFancyCount.setVisibility(View.VISIBLE);
+				viewHolder.viewFancy.setVisibility(View.VISIBLE);
+				viewHolder.tvFancyCount.setText(String.valueOf(user.integral));
+				viewHolder.ivHeader.setImageResource(R.drawable.default_header);
 				bindSimpleItemView(viewHolder, user.realname, user.reason, user.headsmall);
 			} else if (object instanceof Tribe) {
+				viewHolder.tvFancyCount.setVisibility(View.GONE);
+				viewHolder.viewFancy.setVisibility(View.GONE);
 				Tribe tribe = (Tribe) object;
+				viewHolder.ivHeader.setImageResource(R.drawable.default_tribe);
 				bindSimpleItemView(viewHolder, tribe.name, tribe.content, tribe.logosmall);
 			}
 		} else if (getItemViewType(0) == 0) { // Section
@@ -121,6 +130,8 @@ public class SearchAdapter extends BaseAdapter {
 		private TextView tvUserName;
 		private TextView tvUserInfo;
 		private ImageView ivHeader;
+		private View viewFancy;
+		private TextView tvFancyCount;
 	}
 
 	@Override
@@ -138,8 +149,6 @@ public class SearchAdapter extends BaseAdapter {
 		viewHolder.tvUserInfo.setText(info);
 		if (!TextUtils.isEmpty(head)) {
 			ImageLoaderUtil.displayImage(head, viewHolder.ivHeader);
-		} else {
-			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-		}
+		} 
 	}
 }

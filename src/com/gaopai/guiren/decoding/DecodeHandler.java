@@ -37,45 +37,64 @@ import com.google.zxing.common.HybridBinarizer;
 
 final class DecodeHandler extends Handler {
 
-  private static final String TAG = DecodeHandler.class.getSimpleName();
+	private static final String TAG = DecodeHandler.class.getSimpleName();
 
-  private final CaptureActivity activity;
-  private final MultiFormatReader multiFormatReader;
+	private final CaptureActivity activity;
+	private final MultiFormatReader multiFormatReader;
 
-  DecodeHandler(CaptureActivity activity, Hashtable<DecodeHintType, Object> hints) {
-    multiFormatReader = new MultiFormatReader();
-    multiFormatReader.setHints(hints);
-    this.activity = activity;
-  }
+	DecodeHandler(CaptureActivity activity, Hashtable<DecodeHintType, Object> hints) {
+		multiFormatReader = new MultiFormatReader();
+		multiFormatReader.setHints(hints);
+		this.activity = activity;
+	}
 
-  @Override
-  public void handleMessage(Message message) {
-    switch (message.what) {
-      case R.id.decode:
-        //Log.d(TAG, "Got decode message");
-        decode((byte[]) message.obj, message.arg1, message.arg2);
-        break;
-      case R.id.quit:
-        Looper.myLooper().quit();
-        break;
-    }
-  }
+	@Override
+	public void handleMessage(Message message) {
+		switch (message.what) {
+		case R.id.decode:
+			// Log.d(TAG, "Got decode message");
+			decode((byte[]) message.obj, message.arg1, message.arg2);
+			break;
+		case R.id.quit:
+			Looper.myLooper().quit();
+			break;
+		}
+	}
 
-  /**
-   * Decode the data within the viewfinder rectangle, and time how long it took. For efficiency,
-   * reuse the same reader objects from one decode to the next.
-   *
-   * @param data   The YUV preview frame.
-   * @param width  The width of the preview frame.
-   * @param height The height of the preview frame.
-   */
+	/**
+	 * Decode the data within the viewfinder rectangle, and time how long it
+	 * took. For efficiency, reuse the same reader objects from one decode to
+	 * the next.
+	 * 
+	 * @param data
+	 *            The YUV preview frame.
+	 * @param width
+	 *            The width of the preview frame.
+	 * @param height
+	 *            The height of the preview frame.
+	 */
 	private void decode(byte[] data, int width, int height) {
 		long start = System.currentTimeMillis();
 		Result rawResult = null;
 		PlanarYUVLuminanceSource source = null;
 		try {
-			source = CameraManager.get().buildLuminanceSource(data, width, height);
-			if(source != null){
+			// =================add=========================
+			byte[] rotatedData = new byte[data.length];
+			for (int y = 0; y < height; y++) {
+				for (int x = 0; x < width; x++)
+					rotatedData[x * height + height - y - 1] = data[x + y * width];
+			}
+			int tmp = width; // Here we are swapping, that's the difference to
+								// #11
+			width = height;
+			height = tmp;
+
+			source = CameraManager.get().buildLuminanceSource(rotatedData, width, height);
+			// =================add=========================
+
+			// source = CameraManager.get().buildLuminanceSource(data, width,
+			// height);
+			if (source != null) {
 				BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 				rawResult = multiFormatReader.decodeWithState(bitmap);
 			}
@@ -94,7 +113,7 @@ final class DecodeHandler extends Handler {
 			Bundle bundle = new Bundle();
 			bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
 			message.setData(bundle);
-			//Log.d(TAG, "Sending decode succeeded message...");
+			// Log.d(TAG, "Sending decode succeeded message...");
 			message.sendToTarget();
 		} else {
 			Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);

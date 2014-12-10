@@ -11,17 +11,16 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:padding="4dp"
+        android:text="asdf "
         android:textColor="@color/one_word_prompt_color"
         android:textSize="18sp"
-        android:text="asdf "
         android:visibility="visible" />
-    
 
     <RelativeLayout
         android:id="@+id/rl_msg_holder"
-        android:layout_below="@id/tv_room"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_room" >
 
         <ImageView
             android:id="@+id/iv_chat_talk_img_head"
@@ -44,17 +43,18 @@
 
         <TextView
             android:id="@+id/tv_chat_talk_time"
-            android:layout_marginRight="@dimen/general_paading"
             style="@style/chat_talk_style_txt_time"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/tv_user_name"
+            android:layout_marginRight="@dimen/general_paading"
             android:layout_marginTop="10dp"
             android:text="2012:12:20"
             android:visibility="visible" />
 
         <RelativeLayout
-            android:id="@+id/rl_msg_info_holder"
-            style="@style/chat_talk_style_txt_msg_info"
+            android:id="@+id/layout_msg_info_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/tv_user_name"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/iv_chat_talk_img_head"
@@ -72,7 +72,8 @@
 
             <ImageView
                 android:id="@+id/iv_chat_photo"
-                style="@style/chat_talk_style_txt_msg_info_msg_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="3dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/desc"
@@ -108,7 +109,6 @@
                 android:textSize="12sp"
                 android:visibility="visible" />
         </RelativeLayout>
-
     </RelativeLayout>
 
 </RelativeLayout>

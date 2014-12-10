@@ -781,7 +781,7 @@
     <string name="add_tags">贴标签</string>
     <string name="renmai_tags">人脉标签</string>
     <string name="contact_information">联系方式</string>
-    <string name="click_verify">点击重新认证</string>
+    <string name="click_verify">点击认证</string>
     <string name="level_count">魅力值</string>
     <string name="apply_join">申请加入</string>
     
@@ -792,5 +792,7 @@
     <string name="confirm_cancel_meeting">确定解散会议?</string>
     <string name="confirm_exit_meeting">确定退出会议?</string>
     <string name="confirm_cancel_send_dynamic">确定取消发布?</string>
+    
+    <string name="please_choose_add">请选择添加</string>
     
 </resources>

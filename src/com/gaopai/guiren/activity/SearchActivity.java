@@ -225,7 +225,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 			total = total + data.user.size();
 		}
 		if (data.tribe != null && data.tribe.size() > 0) {
-			rowList.add(new Section("部落", 0));
+			rowList.add(new Section("圈子", 0));
 			for (Tribe tribe : data.tribe) {
 				tribe.isTribeOrMeeting = true;
 				rowList.add(new Item(tribe, 1));

@@ -32,12 +32,12 @@ public class XmppManager {
 	public static final int XMPP_LOGINED_STATE = 0x3;
 	/** 认证失败 */
 	public static final int XMPP_AUTH_ERR = 0xc;
-	
-	private static final String HOST = "http://guirenhui.vicp.cc";
-//	private static final String HOST = "192.168.1.239";
-//	private static final String HOST = "guirenhui.cn";
-	
-//	private static final String HOST = "59.174.108.18";
+
+//	private static final String HOST = "http://guirenhui.vicp.cc";
+	 private static final String HOST = "192.168.1.239";
+	// private static final String HOST = "guirenhui.cn";
+
+	// private static final String HOST = "59.174.108.18";
 
 	private static final int PORT = 5222;
 	// public static final String XMPP_RESOURCE_NAME = "win-9u09bkaji6c";
@@ -116,8 +116,7 @@ public class XmppManager {
 	}
 
 	public boolean isAuthenticated() {
-		return connection != null && connection.isConnected()
-				&& connection.isAuthenticated();
+		return connection != null && connection.isConnected() && connection.isAuthenticated();
 	}
 
 	public XMPPConnection getConnection() {
@@ -259,8 +258,7 @@ public class XmppManager {
 			connectState = XMPP_CONNECT_STATE;
 			if (!xmppManager.isAuthenticated()) {
 				// Create the configuration for this new connection
-				ConnectionConfiguration connConfig = new ConnectionConfiguration(
-						HOST, PORT);
+				ConnectionConfiguration connConfig = new ConnectionConfiguration(HOST, PORT);
 				// connConfig.setSecurityMode(SecurityMode.disabled);
 				connConfig.setReconnectionAllowed(true);
 				connConfig.setSecurityMode(SecurityMode.disabled); // 设置安全模式
@@ -307,9 +305,8 @@ public class XmppManager {
 			if (!xmppManager.isAuthenticated()) {
 				try {
 					// 2.登录
-					xmppManager.getConnection().login(
-							xmppManager.getUsername(),
-							xmppManager.getPassword(), XMPP_RESOURCE_NAME);
+					xmppManager.getConnection().login(xmppManager.getUsername(), xmppManager.getPassword(),
+							XMPP_RESOURCE_NAME);
 					Log.d(LOGTAG, "Loggedn in successfully");
 					// Log.e("XMPP", "Login successfully");
 					loginSuccess();
@@ -322,14 +319,11 @@ public class XmppManager {
 					// + e.getMessage());
 					String INVALID_CREDENTIALS_ERROR_CODE = "401";
 					String errorMessage = e.getMessage();
-					if (errorMessage != null
-							&& errorMessage
-									.contains(INVALID_CREDENTIALS_ERROR_CODE)) {
+					if (errorMessage != null && errorMessage.contains(INVALID_CREDENTIALS_ERROR_CODE)) {
 						// TODO 还没有注册或者用户名密码错误!
 						connectState = XMPP_AUTH_ERR;
 						// 认证错误.
-						getSnsService().saveXmppType(
-								XmppType.XMPP_STATE_AUTHERR);
+						getSnsService().saveXmppType(XmppType.XMPP_STATE_AUTHERR);
 					}
 					xmppManager.startReconnectionThread();
 
@@ -346,8 +340,7 @@ public class XmppManager {
 				xmppManager.runTask();
 				connectState = XMPP_LOGINED_STATE;
 
-				getSnsService()
-						.saveXmppType(XmppType.XMPP_STATE_AUTHENTICATION);
+				getSnsService().saveXmppType(XmppType.XMPP_STATE_AUTHENTICATION);
 			}
 		}
 	}
@@ -374,10 +367,9 @@ public class XmppManager {
 		// getConnection().getRoster().addRosterListener(snsRosterLisenerImpl);
 
 		if (phpServiceThread == null) {
-			phpServiceThread = new PhpServiceThread(getSnsService()
-					.getXmppTypeManager(), getSnsService().getUserInfoVo());
-			new Thread(new PhpServiceThread(getSnsService()
-					.getXmppTypeManager(), getSnsService().getUserInfoVo()))
+			phpServiceThread = new PhpServiceThread(getSnsService().getXmppTypeManager(), getSnsService()
+					.getUserInfoVo());
+			new Thread(new PhpServiceThread(getSnsService().getXmppTypeManager(), getSnsService().getUserInfoVo()))
 					.start();
 		}
 	}

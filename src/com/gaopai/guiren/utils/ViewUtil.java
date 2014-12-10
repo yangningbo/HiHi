@@ -402,6 +402,7 @@ public class ViewUtil {
 			childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 		}
 		view.measure(childWidthSpec, childHeightSpec);
+		Logger.d(ViewUtil.class, "width=" + view.getMeasuredWidth() + "   height=" + view.getMeasuredHeight());
 		return view;
 	}
 

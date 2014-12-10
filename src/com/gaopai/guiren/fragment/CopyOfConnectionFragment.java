@@ -16,11 +16,9 @@ import android.widget.TextView;
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.FriendsActivity;
 import com.gaopai.guiren.activity.SearchActivity;
 import com.gaopai.guiren.activity.TribeActivity;
 import com.gaopai.guiren.activity.UserInfoActivity;
-import com.gaopai.guiren.adapter.ConnectionAdapter;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Item;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Row;
@@ -121,20 +119,6 @@ public class CopyOfConnectionFragment extends BaseFragment implements OnClickLis
 		case R.id.tv_my_tribe:
 			startActivity(TribeActivity.class);
 			break;
-		case R.id.tv_my_new_friends: {
-			Intent intent = new Intent();
-			intent.setClass(act, FriendsActivity.class);
-			intent.putExtra(FriendsActivity.KEY_NEW_OR_REC, FriendsActivity.NEW_FRIEND);
-			startActivity(intent);
-			break;
-		}
-		case R.id.tv_my_recommended_friends: {
-			Intent intent = new Intent();
-			intent.setClass(act, FriendsActivity.class);
-			intent.putExtra(FriendsActivity.KEY_NEW_OR_REC, FriendsActivity.REC_FRIEND);
-			startActivity(intent);
-			break;
-		}
 		case R.id.ab_search: {
 			Intent intent = new Intent();
 			intent.setClass(act, SearchActivity.class);

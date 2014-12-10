@@ -1724,7 +1724,7 @@ public class DamiInfo implements Serializable {
 		bundle.add("realname", realname);
 		bundle.add("company", company);
 		bundle.add("post", post);
-		String url = SERVER + "user/reAuth";
+		String url = SERVER + "user/realnameAuth";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 

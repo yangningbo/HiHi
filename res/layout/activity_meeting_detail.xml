@@ -3,13 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_meeting_setting"
-        android:fillViewport="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:fillViewport="true" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,7 +70,8 @@
 
                     <TextView
                         android:id="@+id/tv_meeting_host"
-                        style="@style/meeting_detail_item_text"/>
+                        android:text="asdfa"
+                        style="@style/meeting_detail_item_text" />
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
@@ -86,7 +86,7 @@
 
                     <TextView
                         android:id="@+id/tv_meeting_guest"
-                        style="@style/meeting_detail_item_text"/>
+                        style="@style/meeting_detail_item_text" />
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
@@ -101,7 +101,7 @@
 
                     <TextView
                         android:id="@+id/tv_meeting_join_in"
-                        style="@style/meeting_detail_item_text"/>
+                        style="@style/meeting_detail_item_text" />
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
@@ -117,7 +117,7 @@
                     <TextView
                         android:id="@+id/tv_meeting_detail"
                         style="@style/meeting_detail_item_text"
-                        android:drawableRight="@color/transparent"/>
+                        android:drawableRight="@color/transparent" />
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
@@ -126,6 +126,7 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:id="@id/layout_meeting_setting"
         android:layout_width="match_parent"

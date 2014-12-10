@@ -1,30 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="40dp"
+    android:background="#878787"
+    android:orientation="horizontal" >
 
     <Button
         android:id="@+id/btn_spread"
-   android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_dynamic_popup_spread"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_btn_dy_action"
+        android:drawableLeft="@drawable/icon_dy_action_spread"
+        android:drawablePadding="5dp"
+        android:padding="5dp"
+        android:text="扩散"
         android:textColor="@color/white"
-        android:text="扩散" />
+        android:textSize="13sp" />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#656565" />
+
     <Button
         android:id="@+id/btn_zan"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_dynamic_popup_zan"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_btn_dy_action"
+        android:drawableLeft="@drawable/icon_dy_action_favorite"
+        android:drawablePadding="5dp"
+        android:padding="5dp"
+        android:text="赞"
         android:textColor="@color/white"
-        android:text="赞" />
+        android:textSize="13sp" />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#656565" />
 
     <Button
         android:id="@+id/btn_comment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_dynamic_popup_comment"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_btn_dy_action"
+        android:drawableLeft="@drawable/icon_dy_action_comment"
+        android:drawablePadding="5dp"
+        android:padding="5dp"
         android:text="评论"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="13sp" />
 
 </LinearLayout>

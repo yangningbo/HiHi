@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_title1"
-            android:layout_below="@id/tv_title1">
+            android:layout_below="@id/tv_title1" >
 
             <RelativeLayout
                 android:id="@+id/chat_voice_layout"
@@ -85,8 +85,8 @@
                     android:id="@+id/iv_chat_voice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:maxHeight="45dp"
                     android:maxWidth="@dimen/voice_max_length_comment"
                     android:minWidth="@dimen/voice_min_length_comment"
@@ -105,10 +105,10 @@
                     android:visibility="visible" />
             </RelativeLayout>
 
-
             <ImageView
                 android:id="@+id/iv_chat_photo"
-                style="@style/chat_talk_style_txt_msg_info_msg_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="3dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/desc"

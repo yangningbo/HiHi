@@ -443,7 +443,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		ivPhoto = (ImageView) view.findViewById(R.id.iv_chat_photo);
 		headImageView = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
 		nameTextView = (TextView) view.findViewById(R.id.tv_user_name);
-		msgInfoLayout = view.findViewById(R.id.rl_msg_info_holder);
+		msgInfoLayout = view.findViewById(R.id.layout_msg_info_holder);
 
 		commentCountText = (TextView) view.findViewById(R.id.chat_comment_count);
 		likeCountText = (TextView) view.findViewById(R.id.chat_zan_count);

@@ -59,10 +59,6 @@ import com.umeng.socialize.sso.UMSsoHandler;
  */
 public class LoginActivity extends BaseActivity implements OnClickListener, OnTouchListener {
 
-	private Button mLookBtn;
-	private RelativeLayout mSinaLoginBtn, mQQLoginBtn;
-	private RelativeLayout mRootLayout;
-
 	private Button btnQQLogin;
 	private Button btnWeixinLogin;
 	private Button btnWeiboLogin;
@@ -111,11 +107,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 	private void initComponent() {
 		mPreferences = this.getSharedPreferences(DamiCommon.REMENBER_SHARED, 0);
-		mRootLayout = (RelativeLayout) findViewById(R.id.rootlayout);
-		mSinaLoginBtn = (RelativeLayout) findViewById(R.id.sinalogin);
-		mQQLoginBtn = (RelativeLayout) findViewById(R.id.tencentlogin);
-		mLookBtn = (Button) findViewById(R.id.look);
-		mAgreeProtocalView = (ImageView) findViewById(R.id.agree_protocal);
 
 		btnQQLogin = (Button) findViewById(R.id.btn_qq_login);
 		btnWeiboLogin = (Button) findViewById(R.id.btn_weibo_login);
@@ -135,13 +126,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		btLogin.setOnClickListener(this);
 		btRegister.setOnClickListener(this);
 		tvForgetPassword.setOnClickListener(this);
-
-		mRootLayout.setOnTouchListener(this);
-		mSinaLoginBtn.setOnClickListener(this);
-		mQQLoginBtn.setOnClickListener(this);
-		mLookBtn.setOnClickListener(this);
-		mAgreeProtocalView.setOnClickListener(this);
-
 	}
 
 	@Override
@@ -177,14 +161,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		case R.id.btn_weixin_login:
 			break;
 
-		case R.id.look:
-			setResult(MainActivity.UNLOGIN_REQUEST);
-			LoginActivity.this.finish();
-			break;
-
-		case R.id.agree_protocal:
-			startActivity(UserProtocalActivity.class);
-			break;
+//		case R.id.look:
+//			setResult(MainActivity.UNLOGIN_REQUEST);
+//			LoginActivity.this.finish();
+//			break;
+//
+//		case R.id.agree_protocal:
+//			startActivity(UserProtocalActivity.class);
+//			break;
 		case R.id.tv_forget_password:
 			startRegister(RegisterActivity.TYPE_FORGET_PASSWORD);
 			break;
