@@ -221,16 +221,16 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		bindBasicView();
 		tvMeetingHost.setText(mMeeting.hosts);
 		tvMeetingGuest.setText(mMeeting.guest);
-		// tvMeetingInfo.setText(mMeeting.j)
-
+		tvMeetingJoinIn.setText(mMeeting.user);
 		bindJoinInView(mMeeting.isjoin == 1);
 	}
 
 	private void bindBasicView() {
 		tvMeetingTitle.setText(mMeeting.name);
 		tvMeetingInfo.setText(mMeeting.content);
-		tvMeetingTime.setText(FeatureFunction.getTime(mMeeting.start) + "~" + FeatureFunction.getTime(mMeeting.end));
-		tvMeetingTimeDiff.setText(FeatureFunction.timeDifference(mMeeting.start));
+		tvMeetingTime.setText(FeatureFunction.getTime(mMeeting.start * 1000) + "~"
+				+ FeatureFunction.getTime(mMeeting.end * 1000));
+		tvMeetingTimeDiff.setText("离会议开始还剩" + FeatureFunction.timeDifference(mMeeting.start * 1000));
 		if (!isPreview) {
 			if (!TextUtils.isEmpty(mMeeting.logosmall)) {
 				ImageLoaderUtil.displayImage(mMeeting.logosmall, ivMeetingHeader);
@@ -295,7 +295,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			hideMoreWindow();
 			break;
 		case R.id.grid_notify_meeting_start: {
-			setAlarmForMeeting();
+			if (isAlarm()) {
+				cancelMeetingAlarm();
+			} else {
+				setAlarmForMeeting();
+			}
+			changeSwitchState(v);
 			break;
 		}
 		case R.id.grid_avoid_disturb: {
@@ -355,7 +360,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		case R.id.ab_share:
 			// share();
 			ShareManager shareManager = new ShareManager(this);
-			shareManager.shareContentRecommend("aaaaaaa", "http://www.baidu.com");
+			shareManager.shareTribeLink(getString(R.string.share_meeting_title), mMeeting.content, DamiInfo.HOST
+					+ DamiInfo.SHARE_MEETING + mMeeting.id);
 			shareManager.setDyCallback(new CallDyback() {
 				@Override
 				public void spreadDy() {
@@ -367,7 +373,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		default:
 			break;
 		}
-		
+
 		hideMoreWindow();
 	}
 
@@ -409,18 +415,37 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				}
 			}
 		});
-
 	}
 
 	private void setAlarmForMeeting() {
-		// TODO Auto-generated method stub
 		Intent intent = new Intent(MeetingDetailActivity.this, AlarmReceiver.class); // 创建Intent对象
-		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 0, intent, 0); // 创建PendingIntent
-		// alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
-		// //设置闹钟
+		intent.putExtra("id", mMeetingID);
+		intent.setAction(this.getPackageName() + ".meeting." + mMeetingID);
+		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 199823, intent, 0); // 创建PendingIntent
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, pi); // 设置闹钟，当前时间就唤醒
-		showToast("success");
+		setAlarm(true);
+		showToast(R.string.set_alarm_success);
+	}
+
+	private void cancelMeetingAlarm() {
+		Intent intent = new Intent(MeetingDetailActivity.this, AlarmReceiver.class); // 创建Intent对象
+		intent.setAction(this.getPackageName() + ".meeting." + mMeetingID);
+		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 199823, intent, 0); // 创建PendingIntent
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(pi);
+		showToast(R.string.cancel_alarm_success);
+		setAlarm(false);
+	}
+
+	private boolean isAlarm() {
+		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM);
+		return po.getBoolean(SPConst.getAlarmId(mContext, mMeetingID), false);
+	}
+
+	private void setAlarm(boolean isAlarm) {
+		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM);
+		po.setBoolean(SPConst.getAlarmId(mContext, mMeetingID), isAlarm);
 	}
 
 	private DeleteCallback deleteCallback = new DeleteCallback() {
@@ -560,6 +585,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view = viewGroup.findViewById(R.id.btn_hide_grid);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
+			setSwitchState(view, isAlarm() ? 1 : 0);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_enter_meeting);
 			view.setOnClickListener(this);
@@ -611,6 +637,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view = viewGroup.findViewById(R.id.grid_clear_local_msg);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
+			setSwitchState(view, isAlarm() ? 1 : 0);
 			view.setOnClickListener(this);
 			break;
 		case 2:// 会议嘉宾或者部落自发申请实名用户
@@ -626,6 +653,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
+			setSwitchState(view, isAlarm() ? 1 : 0);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
 			setSwitchState(view, spo.getInt(SPConst.getTribeUserId(mContext, mMeetingID), 0));
@@ -658,6 +686,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view.setOnClickListener(this);
 
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
+			setSwitchState(view, isAlarm() ? 1 : 0);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
 			setSwitchState(view, spo.getInt(SPConst.getTribeUserId(mContext, mMeetingID), 0));
@@ -671,7 +700,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		default:
 			break;
 		}
+
 		return viewGroup;
 	}
-
 }

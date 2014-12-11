@@ -2,8 +2,12 @@ package com.gaopai.guiren.fragment;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +33,7 @@ import com.gaopai.guiren.adapter.DynamicAdapter;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.support.ChatBoxManager;
+import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.view.CustomEditText;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
@@ -38,6 +43,7 @@ import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.widget.emotion.EmotionPicker;
+import com.umeng.socialize.net.t;
 
 public class DynamicFragment extends BaseFragment implements OnClickListener {
 
@@ -45,7 +51,6 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	private PullToRefreshListView mListView;
 	private DynamicAdapter mAdapter;
 	private String TAG = DynamicFragment.class.getName();
-	
 
 	@ViewInject(id = R.id.chat_box)
 	private View chatBox;
@@ -115,9 +120,11 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				}
 			}
 		});
+		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC);
 	}
-	
+
 	private boolean isInitialed = false;
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
@@ -126,10 +133,9 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				mListView.doPullRefreshing(true, 0);
 				isInitialed = true;
 			}
-		} 
+		}
 	}
 
-	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -150,7 +156,6 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			break;
 		}
 	}
-
 
 	private int page = 1;
 	private boolean isFull = false;
@@ -266,7 +271,6 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		tvDyCount.setVisibility(View.VISIBLE);
 		tvDyCount.setText("您有" + newalertcount + "条新消息");
 	}
-	
 
 	public void hideSoftKeyboard(View view) {
 		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -275,4 +279,18 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		}
 	}
 
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		Logger.d(this, "get Intent");
+		if (intent != null) {
+			String action = intent.getAction();
+			Logger.d(this, "get Intent " + action);
+			if (action.equals(DynamicHelper.ACTION_REFRESH_DYNAMIC)) {
+				String id = intent.getStringExtra("id");
+				Logger.d(this, "get Intent " + id);
+				mAdapter.deleteItem(id);
+			}
+		}
+	}
 }

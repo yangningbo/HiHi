@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,6 +39,8 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public abstract class BaseChatAdapter extends BaseAdapter {
@@ -79,7 +84,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		mData.addAll(0, o);
 		notifyDataSetChanged();
 	}
-	
+
 	public List<MessageInfo> getMessageInfos() {
 		return mData;
 	}
@@ -157,23 +162,27 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			resendView.setTag(messageInfo);
 			resendView.setOnClickListener(resendClickListener);
 		} else {
-			if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == MessageState.VOICE_NOT_READED) {
-				((ViewHolderLeft) viewHolder).ivVoiceUnread.setVisibility(View.VISIBLE);
-			} else {
-				((ViewHolderLeft) viewHolder).ivVoiceUnread.setVisibility(View.GONE);
-			}
+			// if (messageInfo.fileType == MessageType.VOICE &&
+			// messageInfo.isReadVoice == MessageState.VOICE_NOT_READED) {
+			// ((ViewHolderLeft)
+			// viewHolder).ivVoiceUnread.setVisibility(View.VISIBLE);
+			// } else {
+			// ((ViewHolderLeft)
+			// viewHolder).ivVoiceUnread.setVisibility(View.GONE);
+			// }
 		}
-		
+
 		onBindView(viewHolder, messageInfo);
 		displayTime(viewHolder.tvChatTime, position);
-		
+
 		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
 			viewHolder.ivHead.setTag(messageInfo.headImgUrl);
 			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead);
 		}
 
 		notHideViews(viewHolder, messageInfo.fileType);
-		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(messageInfo));
+		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
+				(android.widget.LinearLayout.LayoutParams) viewHolder.ivVoice.getLayoutParams(), messageInfo));
 		viewHolder.msgInfoLayout.setOnClickListener(null);
 		switch (messageInfo.fileType) {
 		case MessageType.TEXT:
@@ -186,12 +195,15 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			break;
 		case MessageType.PICTURE:
 			final String path = messageInfo.imgUrlS.trim();
+			int width = (int) (MyUtils.dip2px(mContext, messageInfo.imgWidth) * 0.7);
+			int height = (int) (MyUtils.dip2px(mContext, messageInfo.imgHeight) * 0.7);
+			viewHolder.ivPhoto.getLayoutParams().height = height;
+			viewHolder.ivPhoto.getLayoutParams().width = width;
+			viewHolder.ivPhotoCover.getLayoutParams().height = height;
+			viewHolder.ivPhotoCover.getLayoutParams().width = width;
 			ImageLoaderUtil.displayImageByProgress(path, viewHolder.ivPhoto, options, viewHolder.wiatProgressBar);
 			if (path.startsWith("http://")) {
-				viewHolder.wiatProgressBar.setVisibility(View.VISIBLE);
 				ImageLoaderUtil.displayImageByProgress(path, viewHolder.ivPhoto, options, viewHolder.wiatProgressBar);
-				viewHolder.ivPhoto.setTag(path);
-
 			} else {
 				ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.ivPhoto, options,
 						viewHolder.wiatProgressBar);
@@ -233,8 +245,8 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			break;
 		}
 	}
-	
-	protected abstract void onBindView(ViewHolder viewHolder, MessageInfo messageInfo) ;
+
+	protected abstract void onBindView(ViewHolder viewHolder, MessageInfo messageInfo);
 
 	private void showWaitProgressBar(MessageInfo messageInfo, ViewHolder viewHolder) {
 		if (MessageState.STATE_SENDING == messageInfo.sendState) {
@@ -245,7 +257,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	}
 
 	private OnClickListener photoClickListener = new OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
@@ -272,19 +283,23 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	}
 
 	private void notHideViews(ViewHolder viewHolder, int which) {
-		viewHolder.ivPhoto.setVisibility(View.GONE);
+		viewHolder.layoutPicHolder.setVisibility(View.GONE);
+
+		viewHolder.layoutTextVoiceHolder.setVisibility(View.GONE);
 		viewHolder.tvText.setVisibility(View.GONE);
 		viewHolder.tvVoiceLength.setVisibility(View.GONE);
 		viewHolder.ivVoice.setVisibility(View.GONE);
 		viewHolder.wiatProgressBar.setVisibility(View.GONE);
 		switch (which) {
 		case MessageType.TEXT:
+			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
 			viewHolder.tvText.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.PICTURE:
-			viewHolder.ivPhoto.setVisibility(View.VISIBLE);
+			viewHolder.layoutPicHolder.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.VOICE:
+			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
 			viewHolder.ivVoice.setVisibility(View.VISIBLE);
 			viewHolder.tvVoiceLength.setVisibility(View.VISIBLE);
 			break;
@@ -293,7 +308,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		}
 	}
 
-	private RelativeLayout.LayoutParams getVoiceViewLengthParams(MessageInfo commentInfo) {
+	private LinearLayout.LayoutParams getVoiceViewLengthParams(LinearLayout.LayoutParams lp, MessageInfo commentInfo) {
 		final int MAX_SECOND = 10;
 		final int MIN_SECOND = 2;
 		int length = commentInfo.voiceTime;
@@ -305,12 +320,13 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		} else if (length > MAX_SECOND) {
 			width = (int) max;
 		}
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, LayoutParams.WRAP_CONTENT);
-		lp.addRule(RelativeLayout.CENTER_VERTICAL);
+		if (lp == null) {
+			lp = new LinearLayout.LayoutParams(width, LayoutParams.WRAP_CONTENT);
+		} else {
+			lp.width = width;
+		}
 		return lp;
 	}
-
-
 
 	private View inflateItemView(View convertView, int type) {
 		ViewHolder viewHolder;
@@ -327,11 +343,9 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	}
 
 	static class ViewHolderLeft extends ViewHolder {
-		ImageView ivVoiceUnread;
 
 		public static ViewHolderLeft getInstance(View view) {
 			ViewHolderLeft viewHolderLeft = new ViewHolderLeft();
-//			viewHolderLeft.ivVoiceUnread = (ImageView) view.findViewById(R.id.iv_unread_voice_icon);
 			return (ViewHolderLeft) getInstance(view, viewHolderLeft);
 		}
 	}
@@ -348,36 +362,37 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 
 	static class ViewHolder {
 		int flag = 0; // 1 好友 0 自己
-		TextView tvChatTime, tvText, tvVoiceLength, tvUserName, tvShide;
-		ImageView ivHead, ivPhoto, ivVoice, ivZan;
+		TextView tvChatTime, tvText, tvVoiceLength, tvUserName;
+		ImageView ivHead, ivPhoto, ivPhotoCover, ivVoice, ivZan;
 		ProgressBar wiatProgressBar;
 
-		RelativeLayout msgInfoLayout, msgLayout;
+		View msgInfoLayout;
+		View layoutPicHolder, layoutTextVoiceHolder;
+
 		LinearLayout mCountLayout;
 		TextView mFavoriteCountView, mCommentCountView, mAgreeCountView, mMoreCommentBtn;
-		
+
 		public static Object getInstance(View view, ViewHolder holder) {
-			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_info_holder);
-			holder.msgLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_holder);
-			holder.tvShide = (TextView) view.findViewById(R.id.tv_shide);
+			holder.msgInfoLayout = view.findViewById(R.id.layout_msg_content);
 			holder.tvChatTime = (TextView) view.findViewById(R.id.tv_chat_talk_time);
 			holder.tvText = (TextView) view.findViewById(R.id.iv_chat_text);
 
 			holder.ivHead = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
-			holder.ivPhoto = (ImageView) view.findViewById(R.id.iv_chat_photo);
-			holder.ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
+			holder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
 
-			holder.wiatProgressBar = (ProgressBar) view.findViewById(R.id.pb_chat_progress);
+			holder.ivPhoto = (ImageView) view.findViewById(R.id.iv_chat_photo);
+			holder.ivPhotoCover = (ImageView) view.findViewById(R.id.iv_chat_photo_cover);
+			holder.ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
 			holder.tvVoiceLength = (TextView) view.findViewById(R.id.tv_chat_voice_time_length);
 
-			holder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
-			
+			holder.layoutPicHolder = view.findViewById(R.id.layout_msg_pic_holder);
+			holder.layoutTextVoiceHolder = view.findViewById(R.id.layout_msg_text_voice_holder);
+
+			holder.wiatProgressBar = (ProgressBar) view.findViewById(R.id.pb_chat_progress);
+
 			holder.mFavoriteCountView = (TextView) view.findViewById(R.id.favoritecount);
-			
 			holder.mCommentCountView = (TextView) view.findViewById(R.id.commentcount);
-			
 			holder.mAgreeCountView = (TextView) view.findViewById(R.id.agreecount);
-			
 			holder.mCountLayout = (LinearLayout) view.findViewById(R.id.countlayout);
 			return holder;
 		}
@@ -387,7 +402,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		mCurrentMode = mode;
 		mPlayerWrapper.setCurrentMode(mode);
 	}
-	
+
 	public int getCurrentMode() {
 		return mCurrentMode;
 	}
@@ -397,7 +412,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		@Override
 		public void onStart() {
 			// TODO Auto-generated method stub
-			if (((ChatBaseActivity)mContext).isModeInCall) {
+			if (((ChatBaseActivity) mContext).isModeInCall) {
 				((ChatMainActivity) mContext).showVoiceModeToastAnimation();
 			}
 			notifyDataSetChanged();
@@ -421,6 +436,39 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			} else {
 				notifyDataSetChanged();
 			}
+		}
+	}
+
+	PopupWindow actionWindow;
+
+	protected void showActionWindow(View anchor, View v, OnClickListener listener) {
+		MessageInfo messageInfo = (MessageInfo) anchor.getTag();
+		actionWindow = new PopupWindow(v, LayoutParams.WRAP_CONTENT, MyUtils.dip2px(mContext, 40));
+		actionWindow.setBackgroundDrawable(new ColorDrawable(android.R.color.transparent));
+
+		if (messageInfo.from.equals(DamiCommon.getUid(mContext))) {
+			actionWindow.setAnimationStyle(R.style.window_slide_right);
+		} else {
+			actionWindow.setAnimationStyle(R.style.window_slide_left);
+		}
+		actionWindow.setOutsideTouchable(true);
+		actionWindow.setFocusable(true);
+		ViewUtil.measure(v);
+		int windowHeightPadding = (v.getMeasuredHeight() + anchor.getMeasuredHeight())
+				+ FeatureFunction.dip2px(mContext, 5);
+		int windowWidthPadding = (anchor.getMeasuredWidth() - v.getMeasuredWidth()) / 2;
+
+		if (actionWindow.isShowing()) {
+			actionWindow.dismiss();
+			return;
+		}
+		actionWindow.showAsDropDown(anchor, windowWidthPadding, -windowHeightPadding);
+	}
+
+	protected void closePopupWindow() {
+		if (actionWindow.isShowing()) {
+			actionWindow.dismiss();
+			return;
 		}
 	}
 

@@ -264,7 +264,6 @@
     <string name="please_start_to_talk">请开始说话</string>
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
-    <string name="copy">复制</string>
     <string name="copy_successfull">复制成功</string>
     <string name="message_net_connect">连接到网络：</string>
     <string name="guiren_report">大蜜汇报</string>
@@ -517,11 +516,11 @@
     <string name="invitation_code_sms_end_prompt">登录后使用呢，贵人的下载地址：http://guirenhui.cn 客户端</string>
     <string name="search_user_keyword">请输入关键字</string>
     <string name="retrweet">转发</string>
-    <string name="communication">求交往</string>
-    <string name="seeking_contacts_reason">求交往理由</string>
-    <string name="refuse_seeking_contacts">拒绝求交往</string>
-    <string name="refuse_seeking_contacts_reason">拒绝求交往理由</string>
-    <string name="send_seeking_contacts_success">成功发送求交往申请</string>
+    <string name="communication">求关注</string>
+    <string name="seeking_contacts_reason">求关注理由</string>
+    <string name="refuse_seeking_contacts">拒绝求关注</string>
+    <string name="refuse_seeking_contacts_reason">拒绝求关注理由</string>
+    <string name="send_seeking_contacts_success">成功发送求关注申请</string>
     <string name="email">邮箱</string>
     <string name="belong_to_company">所属公司</string>
     <string name="user_sign_limt_count">个性签名限制在30字之内</string>
@@ -563,6 +562,7 @@
     <string name="switch_to_mode_in_call">已切换为听筒播放模式</string>
     <string name="switch_to_mode_in_speaker">已切换为扬声器播放模式</string>
     <string name="voice_mode_in_call_toast_text">当前为听筒播放模式</string>
+    <string name="voice_mode_in_cal">听筒播放</string>
     <string name="input_can_not_be_empty">输入不能为空</string>
     <string name="setting">设置</string>
     <string name="spinner_creat_meeting">Blood type</string>
@@ -582,6 +582,8 @@
     <string name="send_request_success">申请已发送!</string>
     <string name="add">添加</string>
     <string name="change_voice">变音</string>
+    <string name="change_weired_voice_mode">已切换变音模式</string>
+    <string name="change_normal_voice_mode">已切换正常模式</string>
     <string name="not_change_voice">不变音</string>
     <string name="create_failed">创建失败</string>
     <string name="create_success">创建成功</string>
@@ -653,10 +655,11 @@
 
     <!-- action -->
     <string name="zan">赞</string>
-    <string name="zan_cancel">取消</string>
+    <string name="cancel_zan">取消</string>
     <string name="zan_success">赞成功</string>
-    <string name="zan_cancel_success">取消赞成功</string>
+    <string name="cancel_zan_success">取消赞成功</string>
     <string name="zan_failed">赞失败</string>
+    <string name="copy">复制</string>
     
     <!-- setting -->
     <string name="clear_cache_now">正在清空缓存&#8230;</string>
@@ -794,5 +797,17 @@
     <string name="confirm_cancel_send_dynamic">确定取消发布?</string>
     
     <string name="please_choose_add">请选择添加</string>
+    <string name="scan_and_scan">扫一扫</string>
+    <string name="host">主持人</string>
+    <string name="guest">嘉宾</string>
+    <string name="meeting_users">参会成员</string>
+    <string name="tribe_users">部落成员</string>
+    <string name="cancel_meeting">解散会议</string>
+    <string name="meeting_profile">会议资料</string>
+    <string name="share_meeting_title">贵人汇-会议详情</string>
+    <string name="share_tribe_title">贵人汇-部落详情</string>
+    
+    <string name="set_alarm_success">提醒已设置</string>
+    <string name="cancel_alarm_success">提醒已取消</string>
     
 </resources>

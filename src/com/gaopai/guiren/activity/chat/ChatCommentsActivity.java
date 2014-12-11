@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,18 +21,9 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.text.Editable;
-import android.text.Layout;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -82,7 +71,6 @@ import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
 import com.gaopai.guiren.bean.net.SendMessageResult;
@@ -95,8 +83,8 @@ import com.gaopai.guiren.media.SpeexRecorderWrapper;
 import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
-import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.ChatGridLayout;
 import com.gaopai.guiren.view.RecordDialog;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
@@ -124,12 +112,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected int mChatType = 0;
 	protected String mNewUrl = "";
 
-	private ImageView ivVoice, ivPhoto, headImageView;
+	private ImageView ivVoice, ivPhoto, ivPhotoCover, headImageView;
+	private View layoutPic;
 	private ImageView mVoiceModeImage;
 	private ProgressBar progressbar;
 	private TextView tvText, tvVoiceLength, commentCountText, likeCountText, favouriteCountText, nameTextView, zanText;
 	private ImageView commentCountBtn, favoriteCountBtn, zanCountBtn;
-	private View msgInfoLayout;
+	private View layoutMsgContent;
 
 	private LinearLayout commentCountLayout, zanCountLayout, favoriteCountLayout;
 
@@ -441,9 +430,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		tvVoiceLength = (TextView) view.findViewById(R.id.tv_chat_voice_time_length);
 		ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
 		ivPhoto = (ImageView) view.findViewById(R.id.iv_chat_photo);
+		ivPhotoCover = (ImageView) view.findViewById(R.id.iv_chat_photo_cover);
+		layoutPic = view.findViewById(R.id.layout_msg_pic_holder);
+		
 		headImageView = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
 		nameTextView = (TextView) view.findViewById(R.id.tv_user_name);
-		msgInfoLayout = view.findViewById(R.id.layout_msg_info_holder);
+		layoutMsgContent = view.findViewById(R.id.layout_msg_text_voice_holder);
 
 		commentCountText = (TextView) view.findViewById(R.id.chat_comment_count);
 		likeCountText = (TextView) view.findViewById(R.id.chat_zan_count);
@@ -514,19 +506,43 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
 	}
 
+//	private void notHideViews(int which) {
+//		ivPhoto.setVisibility(View.GONE);
+//		tvText.setVisibility(View.GONE);
+//		tvVoiceLength.setVisibility(View.GONE);
+//		ivVoice.setVisibility(View.GONE);
+//		switch (which) {
+//		case MessageType.TEXT:
+//			tvText.setVisibility(View.VISIBLE);
+//			break;
+//		case MessageType.PICTURE:
+//			ivPhoto.setVisibility(View.VISIBLE);
+//			break;
+//		case MessageType.VOICE:
+//			ivVoice.setVisibility(View.VISIBLE);
+//			tvVoiceLength.setVisibility(View.VISIBLE);
+//			break;
+//		default:
+//			break;
+//		}
+//	}
+
 	private void notHideViews(int which) {
-		ivPhoto.setVisibility(View.GONE);
+		layoutPic.setVisibility(View.GONE);
+		layoutMsgContent.setVisibility(View.GONE);
 		tvText.setVisibility(View.GONE);
 		tvVoiceLength.setVisibility(View.GONE);
 		ivVoice.setVisibility(View.GONE);
 		switch (which) {
 		case MessageType.TEXT:
+			layoutMsgContent.setVisibility(View.VISIBLE);
 			tvText.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.PICTURE:
-			ivPhoto.setVisibility(View.VISIBLE);
+			layoutPic.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.VOICE:
+			layoutMsgContent.setVisibility(View.VISIBLE);
 			ivVoice.setVisibility(View.VISIBLE);
 			tvVoiceLength.setVisibility(View.VISIBLE);
 			break;
@@ -536,7 +552,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void bindView() {
-
 		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
 			headImageView.setTag(messageInfo.headImgUrl);
 			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, headImageView);
@@ -551,7 +566,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			break;
 		case MessageType.VOICE:
 			tvVoiceLength.setText(messageInfo.voiceTime + "''");
-			msgInfoLayout.setOnClickListener(new OnClickListener() {
+			layoutMsgContent.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -570,7 +585,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			break;
 		case MessageType.PICTURE:
 			final String path = messageInfo.imgUrlS.trim();
-
+			int width = (int) (MyUtils.dip2px(mContext, messageInfo.imgWidth) * 0.7);
+			int height = (int) (MyUtils.dip2px(mContext, messageInfo.imgHeight) * 0.7);
+			ivPhoto.getLayoutParams().height = height;
+			ivPhoto.getLayoutParams().width = width;
+			ivPhotoCover.getLayoutParams().height = height;
+			ivPhotoCover.getLayoutParams().width = width;
 			ImageLoaderUtil.displayImage(path, ivPhoto);
 			if (path.startsWith("http://")) {
 				ImageLoaderUtil.displayImage(path, ivPhoto);
@@ -629,7 +649,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			mContext.startActivity(intent);
 		}
 	};
-
 
 	private ImageView chatCommentIcon;
 	private boolean onBottom = false;
@@ -915,7 +934,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			showToast(mContext.getString(R.string.resend_failed));
 		}
 	}
-
 
 	// private Handler mHandler = new Handler() {
 	//
@@ -1879,7 +1897,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 		bindZanCommentBorderView();
 	}
-	
+
 	private List<SpanUser> getZanUserList(List<MessageInfo> messageInfos) {
 		List<SpanUser> spanUsers = new ArrayList<SpanUser>();
 		for (MessageInfo messageInfo : messageInfos) {
@@ -2388,7 +2406,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		strList.add(getString(R.string.delete));
 
 		if (messageInfo.isAgree == 1) {
-			strList.add(1, getString(R.string.zan_cancel));
+			strList.add(1, getString(R.string.cancel_zan));
 		} else {
 			strList.add(1, getString(R.string.zan));
 		}
@@ -2427,7 +2445,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		} else if (result.equals(getString(R.string.mode_in_speaker))
 				|| result.equals(getString(R.string.mode_in_call))) {
 			changePlayMode();
-		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.zan_cancel))) {
+		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.cancel_zan))) {
 			zanMessage(msgInfo);
 		} else if (result.equals(getString(R.string.retrweet))) {
 			goToRetrweet(msgInfo);

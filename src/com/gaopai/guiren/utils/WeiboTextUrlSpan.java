@@ -60,6 +60,10 @@ public class WeiboTextUrlSpan extends ClickableSpan implements ParcelableSpan {
 		Context context = widget.getContext();
 		openUri(context, uri);
 	}
+	
+	public String getUrl() {
+		return mUrl;
+	}
 
 	public boolean isIntentAvailable(Intent intent) {
 		PackageManager packageManager = DamiApp.getInstance().getPackageManager();

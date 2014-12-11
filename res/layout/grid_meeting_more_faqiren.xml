@@ -151,7 +151,7 @@
 
             <ImageView
                 style="@style/meeting_detail_more_img"
-                android:src="@drawable/icon_meeting_detail_notify_meeting_start_on" />
+                android:src="@drawable/level_meeting_detail_start_alarm" />
 
             <TextView
                 android:layout_width="wrap_content"

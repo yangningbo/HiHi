@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:background="@color/general_background"
             android:orientation="vertical"
-            android:padding="@dimen/general_paading" >
+            android:paddingTop="@dimen/general_paading" >
 
             <ImageView
                 android:id="@+id/iv_meeeting_header"
@@ -57,10 +57,18 @@
                     android:textColor="@color/general_text_gray" />
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon_profile_personal_file"
+                android:drawablePadding="5dp"
+                android:padding="@dimen/general_paading"
+                android:gravity="center_vertical"
+                android:text="@string/meeting_profile" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/general_paading"
                 android:background="@color/white"
                 android:orientation="vertical" >
 
@@ -70,12 +78,11 @@
 
                     <TextView
                         android:id="@+id/tv_meeting_host"
-                        android:text="asdfa"
                         style="@style/meeting_detail_item_text" />
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
-                        android:text="主持人" />
+                        android:text="@string/host" />
                 </RelativeLayout>
 
                 <View style="@style/meeting_detail_divider" />
@@ -90,7 +97,7 @@
 
                     <TextView
                         style="@style/meeting_detail_item_info_text"
-                        android:text="嘉宾" />
+                        android:text="@string/guest" />
                 </RelativeLayout>
 
                 <View style="@style/meeting_detail_divider" />
@@ -141,27 +148,22 @@
             android:id="@+id/bottom_in_meeting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible" >
+            android:visibility="gone" >
 
             <Button
                 android:id="@+id/btn_enter_meeting"
                 style="@style/meeting_detail_btn"
+                android:layout_weight="3"
                 android:background="@drawable/selector_tribe_detail_btn_blue"
-                android:text="进入会议" />
-
-            <Button
-                android:id="@+id/btn_invite_to_meeting"
-                style="@style/meeting_detail_btn"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/selector_tribe_detail_btn_yellow"
-                android:text="邀请参会" />
+                android:text="@string/enter_meeting" />
 
             <Button
                 android:id="@+id/btn_more"
                 style="@style/meeting_detail_btn"
                 android:layout_marginLeft="10dp"
-                android:background="@drawable/selector_tribe_detail_btn_green"
-                android:text="更多" />
+                android:layout_weight="2"
+                android:background="@drawable/selector_tribe_detail_btn_yellow"
+                android:text="@string/more" />
         </LinearLayout>
 
         <LinearLayout
@@ -181,7 +183,7 @@
                 style="@style/meeting_detail_btn"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/selector_tribe_detail_btn_yellow"
-                android:text="围观" />
+                android:text="@string/onlooker" />
         </LinearLayout>
     </LinearLayout>
 

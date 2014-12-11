@@ -78,7 +78,7 @@ public class TagWindowManager implements OnClickListener {
 	public void showTagsWindow() {
 		final Dialog dialog = new Dialog(mContext);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		View view = mInflater.inflate(R.layout.window_add_tags, null);
+		View view = mInflater.inflate(R.layout.popup_window_add_tags, null);
 		flowTagsAdd = (FlowLayout) view.findViewById(R.id.flow_tags_add);
 		setTagTransition(flowTagsAdd, mContext);
 		FlowLayout flowTagsRec = (FlowLayout) view.findViewById(R.id.flow_tags_recommend);

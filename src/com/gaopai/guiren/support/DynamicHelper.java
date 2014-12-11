@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -46,6 +47,7 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
@@ -55,6 +57,7 @@ import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
+import com.gaopai.guiren.utils.WeiboTextUrlSpan;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -128,6 +131,10 @@ public class DynamicHelper {
 		public void onBindCommenViewBottom(TypeHolder typeHolder, ViewHolderCommon holder, boolean isShowComment,
 				boolean isShowSpread, boolean isShowZan);
 
+		public void onDeleteItemSuccess(TypeHolder typeHolder);
+
+		public void onDeleteItem(String dataid);
+
 	}
 
 	public static class DySoftCallback implements DyCallback {
@@ -153,6 +160,19 @@ public class DynamicHelper {
 		public void onCommentSuccess() {
 			// TODO Auto-generated method stub
 
+		}
+
+
+		@Override
+		public void onDeleteItem(String dataid) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onDeleteItemSuccess(TypeHolder typeHolder) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 
@@ -285,7 +305,7 @@ public class DynamicHelper {
 			btnZan.setText(R.string.zan);
 		} else {
 			typeHolder.isZan = 1;
-			btnZan.setText(R.string.zan_cancel);
+			btnZan.setText(R.string.cancel_zan);
 		}
 		btnComment.setOnClickListener(new OnClickListener() {
 			@Override
@@ -582,7 +602,8 @@ public class DynamicHelper {
 		final JsonContent content = typeBean.jsoncontent;
 
 		notHideViews(viewHolder, content.fileType);
-		viewHolder.ivVoice.setLayoutParams(ChatMsgHelper.getVoiceViewLengthParams(mContext, content.voiceTime));
+		viewHolder.ivVoice.setLayoutParams(ChatMsgHelper.getVoiceViewLengthParams(viewHolder.ivVoice.getLayoutParams(),
+				mContext, content.voiceTime));
 		viewHolder.msgHolder.setOnClickListener(null);
 		if (!TextUtils.isEmpty(content.headImgUrl)) {
 			ImageLoaderUtil.displayImage(content.headImgUrl, viewHolder.ivHeader1);
@@ -786,8 +807,15 @@ public class DynamicHelper {
 		} else {
 			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
 		}
+
 		viewHolder.tvUserName.setText(typeBean.realname);
 		viewHolder.tvUserInfo.setText(typeBean.post);
+
+		if (typeBean.isanonymous == 1) {
+			viewHolder.ivHeader.setImageResource(R.drawable.icon_dynamic_anynoms);
+			viewHolder.tvUserName.setText(R.string.no_name);
+			viewHolder.tvUserInfo.setText("");
+		}
 
 		if (type == TYPE_SEND_DYNAMIC) {
 			viewHolder.tvAction.setVisibility(View.GONE);
@@ -796,7 +824,11 @@ public class DynamicHelper {
 			viewHolder.tvAction.setText(typeBean.title);
 		}
 
-		viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)));
+		if (typeBean.uid.equals(user.uid)) {
+			setDateDeleteSpan(viewHolder.tvDateInfo, typeBean);
+		} else {
+			viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)));
+		}
 
 		if (mDyKind == DY_MY_LIST) {
 			viewHolder.rlDynamicInteractive.setVisibility(View.GONE);
@@ -818,7 +850,7 @@ public class DynamicHelper {
 			viewHolder.lineSpread.setVisibility(isShowSpread ? View.VISIBLE : View.GONE);
 			viewHolder.tvZan.setVisibility(View.VISIBLE);
 			viewHolder.tvZan.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-//			viewHolder.tvZan.setText(MyTextUtils.addZanUserList(typeBean.zanList));
+			// viewHolder.tvZan.setText(MyTextUtils.addZanUserList(typeBean.zanList));
 			viewHolder.tvZan.setText(MyTextUtils.addUserSpans(getZanUserList(typeBean.zanList)));
 		} else {
 			viewHolder.tvZan.setVisibility(View.GONE);
@@ -833,6 +865,48 @@ public class DynamicHelper {
 
 		viewHolder.btnDynamicAction.setTag(typeBean);
 		viewHolder.btnDynamicAction.setOnClickListener(moreWindowClickListener);
+	}
+
+	private void setDateDeleteSpan(TextView tView, TypeHolder typeBean) {
+		tView.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		tView.setTag(typeBean);
+		String date = FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)) + "   ";
+		SpannableString spannableString = new SpannableString(date + "删除");
+		spannableString.setSpan(new DeleteSpanClick(typeBean.id, WeiboTextUrlSpan.TYPE_CONNECTION), date.length(),
+				spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tView.setText(spannableString);
+	}
+
+	public class DeleteSpanClick extends WeiboTextUrlSpan {
+		public DeleteSpanClick(String url, int type) {
+			super(url, type);
+		}
+
+		@Override
+		public void onClick(View widget) {
+			// TODO Auto-generated method stub
+			TypeHolder typeHolder = (TypeHolder) widget.getTag();
+			Logger.d(this, getUrl());
+			deleteDynamicItem(typeHolder);
+			// callback.onDeleteItem(getUrl());
+			// super.onClick(widget);
+		}
+	}
+
+	public void deleteDynamicItem(final TypeHolder typeBean) {
+		DamiInfo.delDynamic(typeBean.id, new SimpleResponseListener(mContext) {
+
+			@Override
+			public void onSuccess(Object o) {
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					callback.onDeleteItemSuccess(typeBean);
+				} else {
+					otherCondition(data.state, (Activity) mContext);
+				}
+
+			}
+		});
 	}
 
 	private List<SpanUser> getZanUserList(List<ZanBean> zanList) {
@@ -963,5 +1037,12 @@ public class DynamicHelper {
 		if (TextUtils.isEmpty(commentBean.content.content)) {
 			commentBean.content.content = "";
 		}
+	}
+	
+	public final static String ACTION_REFRESH_DYNAMIC = "com.gaopai.guiren.intent.action.REFRESH_DYNAMIC";
+	public static Intent getDeleteIntent(String id) {
+		Intent intent = new Intent(ACTION_REFRESH_DYNAMIC);
+		intent.putExtra("id", id);
+		return intent;
 	}
 }

@@ -1,6 +1,9 @@
 package com.gaopai.guiren;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Display;
@@ -18,6 +21,7 @@ import com.gaopai.guiren.activity.CreatTribeActivity;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.SearchActivity;
 import com.gaopai.guiren.activity.SendDynamicMsgActivity;
+import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.utils.Constant;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.TitleBar;
@@ -252,8 +256,37 @@ public class BaseFragment extends Fragment implements OnClickListener {
 		return ((BaseActivity) getActivity());
 	}
 	
+	private boolean mIsRegisterReceiver = false;
+	protected IntentFilter registerReceiver(String...actions) {
+		IntentFilter filter = new IntentFilter();
+		for (String action:actions) {
+			filter.addAction(action);
+		}
+		getActivity().registerReceiver(mReceiver, filter);
+		mIsRegisterReceiver = true;
+		return filter;
+	}
 	
+	BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			BaseFragment.this.onReceive(intent);
+		}
+	};
 	
+	protected void onReceive(Intent intent){}; 
 	
-
+	private void unregisterReceiver() {
+		if (mIsRegisterReceiver) {
+			getActivity().unregisterReceiver(mReceiver);
+		}
+		mIsRegisterReceiver = false;
+	}
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver();
+	}
 }

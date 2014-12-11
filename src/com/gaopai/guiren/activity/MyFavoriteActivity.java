@@ -118,7 +118,7 @@ public class MyFavoriteActivity extends BaseActivity {
 	}
 
 	private void showItemLongClickDialog(final int position) {
-		Dialog dialog = new AlertDialog.Builder(this).setTitle("取消收藏")
+		Dialog dialog = new AlertDialog.Builder(this).setTitle(R.string.cancel_favorite)
 				.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 
 					@Override
@@ -252,16 +252,15 @@ public class MyFavoriteActivity extends BaseActivity {
 
 	static class ViewHolder {
 		int flag = 0; // 1 好友 0 自己
-		TextView tvChatTime, tvText, tvVoiceLength, tvUserName, tvShide;
+		TextView tvChatTime, tvText, tvVoiceLength, tvUserName;
 		ImageView ivHead, ivPhoto, ivVoice, ivZan;
 		ProgressBar wiatProgressBar;
 		RelativeLayout msgInfoLayout, msgLayout;
 		TextView tvRoom;
 
 		public static Object getInstance(View view, ViewHolder holder) {
-			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_info_holder);
+			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_text_voice_holder);
 			holder.msgLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_holder);
-			holder.tvShide = (TextView) view.findViewById(R.id.tv_shide);
 			holder.tvChatTime = (TextView) view.findViewById(R.id.tv_chat_talk_time);
 			holder.tvText = (TextView) view.findViewById(R.id.iv_chat_text);
 
@@ -390,9 +389,6 @@ public class MyFavoriteActivity extends BaseActivity {
 		@Override
 		public void onStart() {
 			// TODO Auto-generated method stub
-			// if (((ChatBaseActivity)mContext).isModeInCall) {
-			// ((ChatTribeActivity) mContext).showVoiceModeToastAnimation();
-			// }
 			mAdapter.notifyDataSetChanged();
 		}
 

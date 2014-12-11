@@ -224,16 +224,15 @@ public class ReportMsgActivity extends BaseActivity {
 
 	static class ViewHolder {
 		int flag = 0; // 1 好友 0 自己
-		TextView  tvText, tvVoiceLength, tvUserName, tvShide, tvShideReason;
+		TextView  tvText, tvVoiceLength, tvUserName, tvShideReason;
 		ImageView ivHead, ivPhoto, ivVoice, ivZan;
 		ProgressBar wiatProgressBar;
 		RelativeLayout msgInfoLayout, msgLayout;
 		Button btnErrorReport, btnKikout, btnShide;
 
 		public static Object getInstance(View view, ViewHolder holder) {
-			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_info_holder);
+			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_text_voice_holder);
 			holder.msgLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_holder);
-			holder.tvShide = (TextView) view.findViewById(R.id.tv_shide);
 //			holder.tvChatTime = (TextView) view.findViewById(R.id.tv_chat_talk_time);
 			holder.tvText = (TextView) view.findViewById(R.id.iv_chat_text);
 

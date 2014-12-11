@@ -61,7 +61,22 @@ public class TribeMemberActivity extends BaseActivity {
 		
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTribeID = getIntent().getStringExtra(KEY_TRIBE_ID);
-		mTitleBar.setTitleText("圈子成员");
+		switch (type) {
+		case TYPE_MEETING_HOST:
+			mTitleBar.setTitleText(R.string.host);
+			break;
+		case TYPE_MEETING_GUEST:
+			mTitleBar.setTitleText(R.string.guest);
+			break;
+		case TYPE_MEETING_USER:
+			mTitleBar.setTitleText(R.string.meeting_users);
+			break;
+		case TYPE_TRIBE_USER:
+			mTitleBar.setTitleText(R.string.tribe_users);
+			break;
+		default:
+			break;
+		}
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false);
 		mListView.setPullLoadEnabled(false);

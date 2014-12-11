@@ -33,7 +33,9 @@ import com.gaopai.guiren.bean.Tribe.Member;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.MessageHelper;
+import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
+import com.gaopai.guiren.support.ShareManager.CallDyback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -343,7 +345,17 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_spread:
-			spreadTribe();
+			ShareManager shareManager = new ShareManager(this);
+			shareManager.shareTribeLink(getString(R.string.share_tribe_title), mTribe.content, DamiInfo.HOST
+					+ DamiInfo.SHARE_TRIBE + mTribeID);
+			shareManager.setDyCallback(new CallDyback() {
+				@Override
+				public void spreadDy() {
+					// TODO Auto-generated method stub
+					spreadTribe();
+				}
+			});
+
 			break;
 		case R.id.btn_on_look:
 			if (mTribe.isjoin == 1) {

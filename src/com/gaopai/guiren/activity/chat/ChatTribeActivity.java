@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -235,13 +237,15 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	public void showItemLongClickDialog(final MessageInfo messageInfo) {
 		final List<String> strList = new ArrayList<String>();
-		strList.add(getString(R.string.comment));
+//		strList.add(getString(R.string.comment));
 		strList.add(getString(R.string.favorite));
 		strList.add(getString(R.string.report));
 		strList.add(getString(R.string.delete));
-
+		if (messageInfo.fileType != MessageType.PICTURE) {
+			strList.add(getString(R.string.copy));
+		}
 		if (messageInfo.isAgree == 1) {
-			strList.add(1, getString(R.string.zan_cancel));
+			strList.add(1, getString(R.string.cancel_zan));
 		} else {
 			strList.add(1, getString(R.string.zan));
 		}
@@ -280,11 +284,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (result.equals(getString(R.string.mode_in_speaker))
 				|| result.equals(getString(R.string.mode_in_call))) {
 			changePlayMode();
-		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.zan_cancel))) {
+		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.cancel_zan))) {
 			zanMessage(msgInfo);
 		} else if (result.equals(getString(R.string.retrweet))) {
-			 goToRetrweet(msgInfo);
-//			spreadToDy(msgInfo);
+//			 goToRetrweet(msgInfo);
+			spreadToDy(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {
 			showReportDialog(msgInfo);
 		} else if (result.equals(getString(R.string.favorite))) {
@@ -293,6 +297,10 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			removeMessage(msgInfo);
 		} else if (result.equals(getString(R.string.communication))) {
 			communicatePeople(msgInfo);
+		} else if (result.equals(getString(R.string.copy))) {
+			ClipboardManager cmb = (ClipboardManager) mContext.getSystemService(Activity.CLIPBOARD_SERVICE);
+			cmb.setText(msgInfo.content);
+			showToast(R.string.copy_successfull);
 		}
 	}
 
@@ -472,6 +480,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 	}
 
+	/**
+	 * @update
+	 */
 	private void getIndetityByNet() {
 		DamiInfo.getIndetity(mTribe.id, new SimpleResponseListener(mContext) {
 			@Override
@@ -479,6 +490,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				IdentitityResult data = (IdentitityResult) o;
 				if (data.state != null && data.state.code == 0) {
 					mIdentity = data.data;
+				} else {
+					mIdentity = new Identity();
 				}
 			}
 		});
@@ -752,7 +765,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, mTribe.id);
 				startActivity(intent);
 			}
-
 			break;
 
 		}

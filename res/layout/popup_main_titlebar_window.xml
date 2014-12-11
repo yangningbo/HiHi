@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/icon_pop_background"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_send_dynamic"
+        style="@style/titlebar_pop_text"
+        android:background="@drawable/selector_btn_transparent_drak_top"
+        android:drawableLeft="@drawable/icon_pop_send_dy"
+        android:text="@string/send_dynamic" />
+
+    <View style="@style/general_thin_divider_in_drak" />
+
+    <TextView
+        android:id="@+id/tv_scan"
+        style="@style/titlebar_pop_text"
+        android:drawableLeft="@drawable/icon_pop_scan"
+        android:text="@string/scan_and_scan" />
+
+    <View style="@style/general_thin_divider_in_drak" />
+
+    <TextView
+        android:id="@+id/tv_creat_meeting"
+        style="@style/titlebar_pop_text"
+        android:background="@drawable/selector_btn_transparent_drak_top"
+        android:drawableLeft="@drawable/icon_pop_creat_meeting"
+        android:text="@string/create_meeting" />
+
+    <View style="@style/general_thin_divider_in_drak" />
+
+    <TextView
+        android:id="@+id/tv_creat_tribe"
+        style="@style/titlebar_pop_text"
+        android:background="@drawable/selector_btn_transparent_drak_bottom"
+        android:drawableLeft="@drawable/icon_pop_creat_tribe"
+        android:text="@string/create_tribe" />
+
+</LinearLayout>

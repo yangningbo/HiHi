@@ -25,4 +25,10 @@ public class SPConst {
 	
 	//default
 	public final static String KEY_HAS_NOTIFICATION = "has_notification";
+	
+	public final static String SP_ALARM = "sp_alarm";
+	public static String getAlarmId(Context context, String tribeId) {
+		return DamiCommon.getUid(context)+"&"+tribeId;
+	}
+
 }

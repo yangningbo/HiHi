@@ -64,10 +64,16 @@
         android:id="@+id/tv_delete" 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:visibility="gone"
+        android:layout_marginTop="5dp"
         android:layout_below="@id/tv_date"
         android:layout_alignParentRight="true"
+        android:textColor="@color/white"
+        android:background="@drawable/selector_tribe_detail_btn_green"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textSize="13sp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:text="@string/delete"/>
 
 </RelativeLayout>

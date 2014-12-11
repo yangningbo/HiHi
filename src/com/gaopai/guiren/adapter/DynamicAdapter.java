@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +28,6 @@ import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
-import com.umeng.socialize.net.v;
 
 public class DynamicAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;
@@ -57,6 +57,7 @@ public class DynamicAdapter extends BaseAdapter {
 		mContext = activity;
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_MY_LIST);
+		dynamicHelper.setCallback(callback);
 		user = DamiCommon.getLoginResult(mContext);
 	}
 
@@ -109,6 +110,16 @@ public class DynamicAdapter extends BaseAdapter {
 		@Override
 		public void onCommentSuccess() {
 			DynamicAdapter.this.notifyDataSetChanged();
+		}
+
+		@Override
+		public void onDeleteItemSuccess(TypeHolder typeHolder) {
+			mData.remove(typeHolder);
+			DynamicAdapter.this.notifyDataSetChanged();
+		}
+
+		@Override
+		public void onDeleteItem(String dataid) {
 		}
 
 	};
@@ -206,5 +217,21 @@ public class DynamicAdapter extends BaseAdapter {
 	public void commentMessage(final String content, final TypeHolder typeHolder) {
 		mFragment.hideChatBox();
 		dynamicHelper.commentMessage(content, typeHolder);
+	}
+	
+	public void deleteItem(String id) {
+		if (mData == null) {
+			return;
+		}
+		if(TextUtils.isEmpty(id)) {
+			return;
+		}
+		for (TypeHolder typeHolder : mData) {
+			if (typeHolder.id.equals(id)) {
+				mData.remove(typeHolder);
+				notifyDataSetChanged();
+				return;
+			}
+		}
 	}
 }

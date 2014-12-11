@@ -74,6 +74,9 @@ public class DamiInfo implements Serializable {
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
+	
+	public static final String SHARE_MEETING = "api/Forward/meeting/mid/";
+	public static final String SHARE_TRIBE = "api/Forward/tribe/tid/";
 
 	public static final String SERVER = HOST + "api/";
 	public static final int LOAD_SIZE = 20;
@@ -2338,6 +2341,21 @@ public class DamiInfo implements Serializable {
 		bundle.add("tid", tid);
 		bundle.add("password", password);
 		String url = SERVER + "tribe/joinTribeByPasswd";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+	
+	//删除个人资料界面的评论
+	public static void delComment(String id, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("id", id);
+		String url = SERVER + "user/delComment";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+	//删除动态
+	public static void delDynamic(String id, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("dynaid", id);
+		String url = SERVER + "user/delDynamic";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 

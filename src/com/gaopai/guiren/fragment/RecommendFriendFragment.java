@@ -1,5 +1,6 @@
 package com.gaopai.guiren.fragment;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -134,7 +135,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 
 	private void addUser(String id) {
 
-		DamiInfo.requestAddFriend(mAdapter.getChoseIdString(), "", "", new SimpleResponseListener(getActivity(),
+		DamiInfo.requestAddFriend(id, "", "", new SimpleResponseListener(getActivity(),
 				R.string.request_internet_now) {
 			@Override
 			public void onSuccess(Object o) {
@@ -154,7 +155,10 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_follow_all:
-			addUser(mAdapter.getAllIdString());
+			String ids = mAdapter.getAllIdString();
+			if (!TextUtils.isEmpty(ids)) {
+				addUser(ids);
+			}
 			break;
 		case R.id.btn_follow:
 			if (mAdapter.choseSet.size() == 0) {

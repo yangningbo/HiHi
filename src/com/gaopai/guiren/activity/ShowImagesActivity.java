@@ -81,6 +81,7 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 		pager.setCurrentItem(position);
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		mTitleBar.setTitleText(R.string.picture);
 	}
 
 	private HashSet<ViewGroup> unRecycledViews = new HashSet<ViewGroup>();

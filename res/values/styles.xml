@@ -56,23 +56,32 @@
         <item name="android:layout_centerInParent">true</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/content_gray_color</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:background">@drawable/shape_chat_time</item>
     </style>
 
-    <style name="chat_talk_style_txt_img_head">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">50dp</item>
+    <style name="chat_head">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+    
+    <style name="chat_name">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/general_text_gray</item>
+        <item name="android:textSize">13sp</item>
     </style>
 
 
     <style name="chat_talk_style_txt_msg_info_msg_voice">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:maxHeight">45dp</item>
-        <item name="android:minWidth">@dimen/voice_min_length</item>
-        <item name="android:maxWidth">@dimen/voice_max_length</item>
         <item name="android:src">@drawable/chat_talk_voice</item>
-        <item name="android:visibility">gone</item>
     </style>
 
     <style name="chat_talk_style_txt_msg_info_msg_right_voice">
@@ -157,8 +166,12 @@
     </style>
 
     <style name="window_slide_right">
-        <item name="android:windowEnterAnimation">@anim/popup_dynamic_in</item>
-        <item name="android:windowExitAnimation">@anim/popup_dynamic_out</item>
+        <item name="android:windowEnterAnimation">@anim/popup_right_in</item>
+        <item name="android:windowExitAnimation">@anim/popup_right_out</item>
+    </style>
+    <style name="window_slide_left">
+        <item name="android:windowEnterAnimation">@anim/popup_left_in</item>
+        <item name="android:windowExitAnimation">@anim/popup_left_out</item>
     </style>
 
     <style name="slide_item_layout">

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/iv_chat_talk_img_head"
+        style="@style/chat_head"
+        android:layout_alignParentLeft="true"
+        android:contentDescription="@string/desc"
+        android:src="@drawable/default_header" />
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        style="@style/chat_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_chat_talk_img_head"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/iv_chat_talk_img_head" />
+
+    <FrameLayout
+        android:id="@+id/layout_msg_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_user_name"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/iv_chat_talk_img_head" >
+
+        <ProgressBar
+            android:id="@+id/pb_chat_progress"
+            style="?android:attr/progressBarStyleSmallTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:indeterminate="false" />
+
+        <LinearLayout
+            android:id="@+id/layout_msg_text_voice_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selector_chat_left"
+            android:gravity="left"
+            android:minHeight="40dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/iv_chat_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:maxWidth="220dp"
+                android:minWidth="30dp"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_chat_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/desc"
+                android:maxWidth="60dp"
+                android:minWidth="30dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/anim_btn_audio_play1"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_chat_voice_time_length"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/content_gray_color"
+                android:textSize="12sp"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/layout_msg_pic_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/iv_chat_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_welcom_background"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_chat_photo_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_chat_img_left_cover"
+                android:visibility="visible" />
+        </FrameLayout>
+    </FrameLayout>
+
+</RelativeLayout>

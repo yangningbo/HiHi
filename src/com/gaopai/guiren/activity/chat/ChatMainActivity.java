@@ -447,12 +447,17 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			boxManager.hideAddGrid();
 			break;
 		case R.id.chat_add_change_voice:
-			TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(0);
+			TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(1);
+			ImageView ivVoice =  (ImageView) chatAddChangeVoiceLayout.getChildAt(0);
 			if (!isChangeVoice) {
 				view.setText(getString(R.string.change_voice));
+				ivVoice.setImageResource(R.drawable.icon_chat_voice_weird);
+				showToast(R.string.change_weired_voice_mode);
 				isChangeVoice = true;
 			} else {
+				ivVoice.setImageResource(R.drawable.icon_chat_voice_not_change);
 				view.setText(getString(R.string.not_change_voice));
+				showToast(R.string.change_normal_voice_mode);
 				isChangeVoice = false;
 			}
 			boxManager.hideAddGrid();

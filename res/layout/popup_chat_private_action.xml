@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:background="#878787"
+    android:orientation="horizontal" >
+
+    <Button
+        android:id="@+id/btn_ear_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_btn_dy_action"
+        android:drawableLeft="@drawable/icon_dy_action_spread"
+        android:drawablePadding="5dp"
+        android:padding="5dp"
+        android:text="@string/voice_mode_in_cal"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#656565" />
+
+    <Button
+        android:id="@+id/btn_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_btn_dy_action"
+        android:drawableLeft="@drawable/icon_pop_feedback"
+        android:drawablePadding="5dp"
+        android:padding="5dp"
+        android:text="@string/copy"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+
+</LinearLayout>

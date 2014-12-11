@@ -98,7 +98,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		registerReceiver();
+		addAciton(registerReceiver());
 		speexPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
 			@Override
 			public void onSuccess(MessageInfo messageInfo) {
@@ -477,8 +477,8 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	public final static String ACTION_EXIT_TRIBE = "com.gaopai.guiren.intent.action.ACTION_EXIT_TRIBE";
 	public final static String ACTION_KICK_TRIBE = "com.gaopai.guiren.intent.action.ACTION_KICK_TRIBE";
 
-	private void registerReceiver() {
-		IntentFilter filter = new IntentFilter();
+	
+	private void addAciton(IntentFilter filter) {
 		filter.addAction(SnsService.ACTION_CONNECT_CHANGE);
 		filter.addAction(PushChatMessage.ACTION_SEND_STATE);
 		filter.addAction(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE);
@@ -498,70 +498,62 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		filter.addAction(ACTION_RECORD_AUTH);
 		filter.addAction(ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
 		filter.addAction(ACTION_MESSAGE_DELETE);
-		registerReceiver(chatReceiver, filter);
-		mIsRegisterReceiver = true;
 	}
 
-	private void unregisterReceiver() {
-		unregisterReceiver(chatReceiver);
-		mIsRegisterReceiver = false;
-	}
-
-	private boolean mIsRegisterReceiver = false;
 	private boolean opconnectState = false;
 	/** 聊天广播 */
-	private BroadcastReceiver chatReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (SnsService.ACTION_CONNECT_CHANGE.equals(action)) {
-				Log.d(TAG, "receiver:" + action);
-				String type = intent.getExtras().getString(SnsService.EXTRAS_CHANGE);
-				Log.d(TAG, "receiver:Exper" + type);
-				if (XmppType.XMPP_STATE_AUTHENTICATION.equals(type)) {
-					// 认证成功
-					opconnectState = true;
-				} else if (XmppType.XMPP_STATE_AUTHERR.equals(type)) {
-					// 认证失败
-					opconnectState = false;
-					showToast(mContext.getString(R.string.login_user_auth_error));
-				} else if (XmppType.XMPP_STATE_REAUTH.equals(type)) {
-					// 未认证
-					opconnectState = false;
-				} else if (XmppType.XMPP_STATE_START.equals(type)) {
-					// 开始登录
-					opconnectState = false;
-				} else if (XmppType.XMPP_STATE_STOP.equals(type)) {
-					// 没开启登录
-					opconnectState = false;
-				}
-			} else if (PushChatMessage.ACTION_SEND_STATE.equals(action)) {
-				Log.d(TAG, "receiver:" + PushChatMessage.ACTION_SEND_STATE);
-				MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
-				updateMessage(messageInfo);
-				modifyMessageState(messageInfo);
-			} else if (NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE.equals(action)) {// 接受新的消息广播
-				final MessageInfo msg = (MessageInfo) intent
-						.getSerializableExtra(NotifyChatMessage.EXTRAS_NOTIFY_CHAT_MESSAGE);
-				Log.d("message", "from" + ChatBaseActivity.class.getName());
-				notifyMessage(msg);
-			} else if (action.equals(DESTORY_ACTION)) {
-				ChatBaseActivity.this.finish();
-			} else if (action.equals(ACTION_MEETING_DESTROY_LIST)) {
-				ChatBaseActivity.this.finish();
-			} else if (ACTION_READ_VOICE_STATE.equals(action)) {
-				Log.d(TAG, "receive change voice state");
-				final MessageInfo messageInfo = (MessageInfo) intent
-						.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
-				updateMessage(messageInfo);
-				// changeVoiceState(messageInfo);
-
-			} else if (action.equals(ACTION_RECORD_AUTH)) {
-				Toast.makeText(mContext, mContext.getString(R.string.record_auth_control), Toast.LENGTH_LONG).show();
+	
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		String action = intent.getAction();
+		if (SnsService.ACTION_CONNECT_CHANGE.equals(action)) {
+			Log.d(TAG, "receiver:" + action);
+			String type = intent.getExtras().getString(SnsService.EXTRAS_CHANGE);
+			Log.d(TAG, "receiver:Exper" + type);
+			if (XmppType.XMPP_STATE_AUTHENTICATION.equals(type)) {
+				// 认证成功
+				opconnectState = true;
+			} else if (XmppType.XMPP_STATE_AUTHERR.equals(type)) {
+				// 认证失败
+				opconnectState = false;
+				showToast(mContext.getString(R.string.login_user_auth_error));
+			} else if (XmppType.XMPP_STATE_REAUTH.equals(type)) {
+				// 未认证
+				opconnectState = false;
+			} else if (XmppType.XMPP_STATE_START.equals(type)) {
+				// 开始登录
+				opconnectState = false;
+			} else if (XmppType.XMPP_STATE_STOP.equals(type)) {
+				// 没开启登录
+				opconnectState = false;
 			}
-			onOtherChatBroadCastAction(intent);
+		} else if (PushChatMessage.ACTION_SEND_STATE.equals(action)) {
+			Log.d(TAG, "receiver:" + PushChatMessage.ACTION_SEND_STATE);
+			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
+			updateMessage(messageInfo);
+			modifyMessageState(messageInfo);
+		} else if (NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE.equals(action)) {// 接受新的消息广播
+			final MessageInfo msg = (MessageInfo) intent
+					.getSerializableExtra(NotifyChatMessage.EXTRAS_NOTIFY_CHAT_MESSAGE);
+			Log.d("message", "from" + ChatBaseActivity.class.getName());
+			notifyMessage(msg);
+		} else if (action.equals(DESTORY_ACTION)) {
+			ChatBaseActivity.this.finish();
+		} else if (action.equals(ACTION_MEETING_DESTROY_LIST)) {
+			ChatBaseActivity.this.finish();
+		} else if (ACTION_READ_VOICE_STATE.equals(action)) {
+			Log.d(TAG, "receive change voice state");
+			final MessageInfo messageInfo = (MessageInfo) intent
+					.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
+			updateMessage(messageInfo);
+			// changeVoiceState(messageInfo);
+
+		} else if (action.equals(ACTION_RECORD_AUTH)) {
+			Toast.makeText(mContext, mContext.getString(R.string.record_auth_control), Toast.LENGTH_LONG).show();
 		}
-	};
+		onOtherChatBroadCastAction(intent);
+	}
 
 	protected abstract void onOtherChatBroadCastAction(Intent intent);
 

@@ -2,8 +2,10 @@ package com.gaopai.guiren.activity;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,6 +24,7 @@ import com.gaopai.guiren.adapter.DynamicAdapter;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.fragment.DynamicFragment;
+import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -33,9 +36,8 @@ public class MyDynamicActivity extends BaseActivity {
 	private PullToRefreshListView mListView;
 	private DynamicAdapter mAdapter;
 	private String TAG = DynamicFragment.class.getName();
-	
-	private String fid;
 
+	private String fid;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -69,8 +71,7 @@ public class MyDynamicActivity extends BaseActivity {
 				getDynamicList(false);
 			}
 		});
-		
-		
+
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -82,7 +83,8 @@ public class MyDynamicActivity extends BaseActivity {
 
 		mAdapter = new DynamicAdapter(this);
 		mListView.setAdapter(mAdapter);
-		// mListView.doPullRefreshing(true, 0);
+		mListView.doPullRefreshing(true, 0);
+		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC);
 	}
 
 	public static Intent getIntent(Context context, String fid) {
@@ -90,7 +92,7 @@ public class MyDynamicActivity extends BaseActivity {
 		intent.putExtra("uid", fid);
 		return intent;
 	}
-	
+
 	private int page = 1;
 	private boolean isFull = false;
 
@@ -133,5 +135,17 @@ public class MyDynamicActivity extends BaseActivity {
 				mListView.onPullComplete();
 			}
 		});
+	}
+	
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		if (intent != null) {
+			String action = intent.getAction();
+			if (action.equals(DynamicHelper.ACTION_REFRESH_DYNAMIC)) {
+				String id = intent.getStringExtra("id");
+				mAdapter.deleteItem(id);
+			}
+		}
 	}
 }

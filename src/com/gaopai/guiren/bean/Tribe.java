@@ -80,6 +80,8 @@ public class Tribe implements Serializable {
 	@Expose
 	public String users = "";
 	@Expose
+	public String user = "";//参会人员
+	@Expose
 	public String codeurl = "";
 	@Expose
 	public String hosts = "";

@@ -1,6 +1,7 @@
 package com.gaopai.guiren.support;
 
 import android.content.Context;
+import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
@@ -9,6 +10,8 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 
 public class ChatMsgHelper {
+	public static final int MAX_SECOND = 30;
+	public static final int MIN_SECOND = 2;
 
 	public static MessageInfo creatVoiceMsg(String url, String tag) {
 		MessageInfo messageInfo = new MessageInfo();
@@ -26,9 +29,9 @@ public class ChatMsgHelper {
 		return messageInfo;
 	}
 
-	public static RelativeLayout.LayoutParams getVoiceViewLengthParams(Context mContext, int length) {
-		final int MAX_SECOND = 10;
-		final int MIN_SECOND = 2;
+	public static ViewGroup.LayoutParams getVoiceViewLengthParams(ViewGroup.LayoutParams lp, Context mContext,
+			int length) {
+
 		float max = mContext.getResources().getDimension(R.dimen.voice_max_length_comment);
 		float min = mContext.getResources().getDimension(R.dimen.voice_min_length_comment);
 		int width = (int) min;
@@ -37,8 +40,11 @@ public class ChatMsgHelper {
 		} else if (length > MAX_SECOND) {
 			width = (int) max;
 		}
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, LayoutParams.WRAP_CONTENT);
-		lp.addRule(RelativeLayout.CENTER_VERTICAL);
+		if (lp == null) {
+			lp = new ViewGroup.LayoutParams(width, LayoutParams.WRAP_CONTENT);
+		} else {
+			lp.width = width;
+		}
 		return lp;
 	}
 

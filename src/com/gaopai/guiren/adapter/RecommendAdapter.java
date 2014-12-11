@@ -68,6 +68,9 @@ public class RecommendAdapter<T> extends BaseAdapter {
 	}
 
 	public String getAllIdString() {
+		if (mData.size() == 0) {
+			return "";
+		}
 		StringBuilder builder = new StringBuilder();
 		for (T data : mData) {
 			if (mType == RECOMMEND_FRIEND) {

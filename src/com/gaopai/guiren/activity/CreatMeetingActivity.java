@@ -1,5 +1,7 @@
 package com.gaopai.guiren.activity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,8 +12,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -33,6 +39,7 @@ import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
@@ -81,6 +88,8 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 	public static String KEY_MEETING = "meeting";
 	private boolean isEdit = false;
 
+	private ImageCrop imageCrop;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -95,6 +104,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		}
 		initComponent();
 		bindView();
+		imageCrop = new ImageCrop(mContext);
 	}
 
 	private void bindView() {
@@ -236,13 +246,26 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
 				Drawable drawable = Drawable.createFromPath(pathList.get(0));
 				mFilePath = pathList.get(0);
-				ivHeader.setImageDrawable(drawable);
-				btnUploadPic.setVisibility(View.GONE);
-				ViewUtil.findViewById(this, R.id.tv_add_pic_info).setVisibility(View.GONE);
-				ivHeader.setOnClickListener(this);
+				imageCrop.cropImageUri(ImageCrop.creatUri(mFilePath), ImageCrop.MEETING_WIDTH,
+						ImageCrop.MEETING_HEIGHT, ImageCrop.REQUEST_CROP_IMG);
+				return;
+
+			}
+		} else if (requestCode == ImageCrop.REQUEST_CROP_IMG) {
+			Bitmap photo = imageCrop.decodeWithIntent(data);
+			if (photo != null) {
+				setPic(photo);
 			}
 		}
 	}
+
+	private void setPic(Bitmap bitmap) {
+		ivHeader.setImageBitmap(bitmap);
+		btnUploadPic.setVisibility(View.GONE);
+		ViewUtil.findViewById(this, R.id.tv_add_pic_info).setVisibility(View.GONE);
+		ivHeader.setOnClickListener(this);
+	}
+
 
 	private static final int TYPE_START_TIME = 0;
 	private static final int TYPE_END_TIME = 1;

@@ -90,6 +90,7 @@ public class AddReasonActivity extends BaseActivity {
 			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
 			break;
 		case TYPE_DISMISS_MEETING:
+			title = getString(R.string.cancel_meeting);
 			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
 			break;
 

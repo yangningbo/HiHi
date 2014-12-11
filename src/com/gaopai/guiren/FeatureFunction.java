@@ -578,6 +578,7 @@ public class FeatureFunction {
 	}
 
 	public static String getTime(long currTime) {
+		
 		Calendar calendar = Calendar.getInstance(Locale.CHINA);
 		calendar.setTimeInMillis(currTime);
 		String str = timeDifference(calendar);
@@ -591,7 +592,6 @@ public class FeatureFunction {
 						R.string.long_ago))) {
 			format = new SimpleDateFormat("yyyy-MM-dd");
 		}
-
 		return format.format(date);
 	}
 
@@ -666,6 +666,7 @@ public class FeatureFunction {
 
 	}
 
+	//3小时前
 	public static String getCreateTime(long online) {
 		try {
 			String timeStr = "";

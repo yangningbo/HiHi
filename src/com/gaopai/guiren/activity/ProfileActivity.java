@@ -28,6 +28,7 @@ import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.TagResultBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.User.CommentBean;
+import com.gaopai.guiren.bean.User.CommentContent;
 import com.gaopai.guiren.bean.User.PrivacyConfig;
 import com.gaopai.guiren.bean.User.SpreadBean;
 import com.gaopai.guiren.bean.User.ZanBean;
@@ -494,19 +495,33 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					Picasso.with(mContext).load(bean.s_path).placeholder(R.drawable.default_header)
 							.error(R.drawable.default_header).into(headerView);
 				}
+				TextView tvDelete = (TextView) view.findViewById(R.id.tv_delete);
+				if (isSelf) {
+					tvDelete.setVisibility(View.VISIBLE);
+					tvDelete.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							DamiInfo.delComment(bean.id, new SimpleResponseListener(mContext,
+									R.string.request_internet_now) {
 
-				// if (isSelf) {
-				// TextView tvDelete = (TextView)
-				// view.findViewById(R.id.tv_delete);
-				// tvDelete.setVisibility(View.VISIBLE);
-				// tvDelete.setOnClickListener(new OnClickListener() {
-				// @Override
-				// public void onClick(View v) {
-				// // TODO Auto-generated method stub
-				//
-				// }
-				// });
-				// }
+								@Override
+								public void onSuccess(Object o) {
+									BaseNetBean data = (BaseNetBean) o;
+									if (data.state != null && data.state.code == 0) {
+										tUser.commentlist.remove(bean);
+										bindBottomDynamicView();
+									} else {
+										otherCondition(data.state, ProfileActivity.this);
+									}
+
+								}
+							});
+
+						}
+					});
+				} else {
+					tvDelete.setVisibility(View.GONE);
+				}
 				view.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -530,6 +545,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	public final static int REQUEST_CHANGE_PROFILE = 0;
+	public final static int REQUEST_COMMENT = 1;
 
 	@Override
 	public void onClick(View v) {
@@ -596,7 +612,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			intent.putExtra(CommentProfile.KEY_USER, tUser);
 			intent.putExtra(CommentGeneralActivity.KEY_TYPE, CommentGeneralActivity.TYPE_COMMENT_PROFILE);
 			intent.setClass(mContext, CommentGeneralActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, REQUEST_COMMENT);
 			break;
 		}
 		case R.id.layout_profile_bottom_follow:
@@ -697,7 +713,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent arg2) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CHANGE_PROFILE) {
@@ -706,6 +722,25 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				tvPhone.setText(tUser.phone);
 				tvWeixin.setText(tUser.weixin);
 				tvWeibo.setText(tUser.weibo);
+			}
+
+			if (requestCode == REQUEST_COMMENT) {
+				String comment = intent.getStringExtra(CommentProfile.KEY_CONTENT);
+				if (TextUtils.isEmpty(comment)) {
+					return;
+				}
+				CommentBean bean = new CommentBean();
+				bean.content = new CommentContent();
+				bean.content.content = comment;
+				bean.uid = tUser.uid;
+				bean.uname = tUser.realname;
+				bean.s_path = tUser.headsmall;
+				bean.addtime = System.currentTimeMillis() / 1000;
+				if (tUser.commentlist == null) {
+					tUser.commentlist = new ArrayList<CommentBean>();
+				}
+				tUser.commentlist.add(bean);
+				bindBottomDynamicView();
 			}
 		}
 	}

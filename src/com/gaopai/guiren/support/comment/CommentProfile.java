@@ -1,5 +1,7 @@
 package com.gaopai.guiren.support.comment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +17,7 @@ import com.gaopai.guiren.volley.SimpleResponseListener;
 public class CommentProfile extends IComment {
 
 	public final static String KEY_USER = "user";
+	public final static String KEY_CONTENT = "content";
 
 	private User mUser = null;
 	private User tUser = null;
@@ -46,6 +49,9 @@ public class CommentProfile extends IComment {
 								BaseNetBean data = (BaseNetBean) o;
 								if (data.state != null && data.state.code == 0) {
 									showToast(R.string.comment_success);
+									Intent intent = new Intent();
+									intent.putExtra(KEY_CONTENT, editText.getText().toString());
+									activity.setResult(Activity.RESULT_OK, intent);
 									activity.finish();
 								} else {
 									otherCondition(data.state, activity);

@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	/** 注销 */
 	public static final String ACTION_LOGIN_OUT = "com.guiren.intent.action.ACTION_LOGIN_OUT";
 	public final static String LOGIN_SUCCESS_ACTION = "com.guiren.intent.action.LOGIN_SUCCESS_ACTION";
-	
+
 	private View layoutWelcome;
 
 	@Override
@@ -95,14 +95,14 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		mTabPager = (ViewPager) findViewById(R.id.vPager);
 		main_bottom = (LinearLayout) findViewById(R.id.main_bottom);
 		registerNetWorkMonitor();
-		
+
 		layoutWelcome = ViewUtil.findViewById(this, R.id.layout_welcome);
 		ImageView view = (ImageView) findViewById(R.id.iv_back);
 		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.scale);
 		view.startAnimation(welcomeAnimation);
 		showMainpage();
 	}
-	
+
 	public void showMainpage() {
 		Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
@@ -124,7 +124,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	private void addTitleBar() {
 		addTitleBar((ViewGroup) ViewUtil.findViewById(this, R.id.layout_titlebar));
 	}
-	
 
 	private void initTitleBarLocal() {
 		View view = mTitleBar.setLogo(R.drawable.selector_titlebar_home);
@@ -160,6 +159,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		int screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
 		int screenHeight = mContext.getResources().getDisplayMetrics().heightPixels;
 		findViewById(R.id.slide_left_holder).getLayoutParams().width = (int) (screenWidth * 0.75);
+		findViewById(R.id.tv_user_name).getLayoutParams().width = (int) (screenWidth * 0.75)
+				- MyUtils.dip2px(mContext, 85);
 
 		View view = (View) findViewById(R.id.slide_btn_my_profile);
 		view.setOnClickListener(slideMenuClickListener);
@@ -626,7 +627,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.ab_add:
 			if (dropDownView == null) {
-				dropDownView = (ViewGroup) mInflater.inflate(R.layout.titlebar_add_popup_window, null);
+				dropDownView = (ViewGroup) mInflater.inflate(R.layout.popup_main_titlebar_window, null);
 				initAddMoreViews(dropDownView, mInflater);
 			}
 			mTitleBar.showWindow(v, dropDownView);
@@ -671,8 +672,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		tvCreatTribe.setOnClickListener(this);
 		tvCreatTribe = viewGroup.findViewById(R.id.tv_creat_tribe);
 		tvCreatTribe.setOnClickListener(this);
-		View tvStartChat = viewGroup.findViewById(R.id.tv_start_chat);
-		tvStartChat.setOnClickListener(this);
 	}
 
 }

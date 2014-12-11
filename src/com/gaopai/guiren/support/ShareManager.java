@@ -180,6 +180,10 @@ public class ShareManager implements OnClickListener {
 		setShareContent(R.drawable.logo, title, title + url, url);
 		showShareWindow(mActivity);
 	}
+	public void shareTribeLink(String title,String content, String url) {
+		setShareContent(R.drawable.logo, title, content, url);
+		showShareWindow(mActivity);
+	}
 
 //	public void shareContentRecommend(String title, String url) {
 //		String content = title + " : " + url;
@@ -261,11 +265,11 @@ public class ShareManager implements OnClickListener {
 
 		@Override
 		public void onComplete(SHARE_MEDIA platform, int stCode, SocializeEntity entity) {
-			if (stCode == 200) {
-				Toast.makeText(mActivity, "分享成功", Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(mActivity, "分享失败 : error code : " + stCode, Toast.LENGTH_SHORT).show();
-			}
+//			if (stCode == 200) {
+//				Toast.makeText(mActivity, "分享成功", Toast.LENGTH_SHORT).show();
+//			} else {
+//				Toast.makeText(mActivity, "分享失败 : error code : " + stCode, Toast.LENGTH_SHORT).show();
+//			}
 		}
 	};
 

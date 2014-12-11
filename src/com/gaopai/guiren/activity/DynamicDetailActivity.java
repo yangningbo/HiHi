@@ -1,6 +1,7 @@
 package com.gaopai.guiren.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.DySingleBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
+import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
@@ -120,6 +122,18 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		public void notifyUpdateView() {
 			dynamicHelper.getView(headerView, typeBean);
 		}
+
+		@Override
+		public void onDeleteItem(String dataid) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onDeleteItemSuccess(TypeHolder typeHolder) {
+			mContext.sendBroadcast(DynamicHelper.getDeleteIntent(typeHolder.id));
+			DynamicDetailActivity.this.finish();
+		}
 	};
 
 	private void getDynamicDetail() {
@@ -153,7 +167,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 				super.onFinish();
 				mListView.onPullComplete();
 			}
-			
+
 		});
 	}
 

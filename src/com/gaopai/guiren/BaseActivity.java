@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -406,6 +408,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onDestroy() {
 		MobclickAgent.onPause(this);
+		unregisterReceiver();
 		super.onDestroy();
 	}
 
@@ -483,5 +486,34 @@ public class BaseActivity extends FragmentActivity {
 		this.isModeInCall = isModeInCall;
 		DamiApp.getInstance().getPou().setBoolean(DamiApp.VOOICE_PLAY_MODE, isModeInCall);
 	}
+	
+	private boolean mIsRegisterReceiver = false;
+	
+	protected IntentFilter registerReceiver(String...actions) {
+		IntentFilter filter = new IntentFilter();
+		for (String action:actions) {
+			filter.addAction(action);
+		}
+		registerReceiver(mReceiver, filter);
+		mIsRegisterReceiver = true;
+		return filter;
+	}
+	
+	BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			BaseActivity.this.onReceive(intent);
+		}
+	};
+	
+	protected void onReceive(Intent intent){}; 
+	
+	private void unregisterReceiver() {
+		if (mIsRegisterReceiver) {
+			unregisterReceiver(mReceiver);
+		}
+		mIsRegisterReceiver = false;
+	}
+	
 
 }
