@@ -368,7 +368,6 @@ public class DynamicHelper {
 		View lineZan;
 
 		public View layoutCoverTop;
-		public View layoutCoverBottom;
 		public View layoutCoverTopBottomHolder;
 		public LinearLayout layoutComment;
 		public TextView tvMoreComment;
@@ -384,7 +383,6 @@ public class DynamicHelper {
 				viewHolder.tvMoreComment = (TextView) view.findViewById(R.id.tv_more_comment);
 				viewHolder.layoutComment = (LinearLayout) view.findViewById(R.id.ll_comment);
 			} else {
-				viewHolder.layoutCoverBottom = view.findViewById(R.id.view_cover_bottom);
 				viewHolder.layoutCoverTopBottomHolder = view.findViewById(R.id.layout_dynamic_detail_bottom);
 			}
 

@@ -129,7 +129,7 @@ public class DynamicAdapter extends BaseAdapter {
 		List<CommentBean> commentBeans = typeBean.commentlist;
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		parent.removeAllViews();
-		int textPadding = MyUtils.dip2px(mContext, 3);
+		int textPadding = MyUtils.dip2px(mContext, 5);
 		for (int i = 0, count = commentBeans.size(); i < count; i++) {
 			final CommentBean commentBean = commentBeans.get(i);
 			TextView textView = new TextView(mContext);

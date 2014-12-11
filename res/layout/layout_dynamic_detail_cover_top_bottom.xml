@@ -5,12 +5,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <ImageView
         android:id="@+id/view_cover_top"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/icon_dynamic_detail_cover_top"
-        android:orientation="vertical" />
+        android:layout_marginRight="16.2dp"
+        android:layout_gravity="right"
+        android:src="@drawable/icon_top_angle"/>
 
     <TextView
         android:id="@+id/tv_spread"
@@ -43,11 +44,4 @@
         android:layout_height="1px"
         android:background="@color/dynamic_horizon_divider"
         android:visibility="visible" />
-    <LinearLayout
-        android:id="@+id/view_cover_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/icon_dynamic_bottom"
-        android:orientation="vertical" />
-
-</LinearLayout>
+</LinearLayout>

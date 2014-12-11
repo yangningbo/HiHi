@@ -97,17 +97,10 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 				com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon viewHolder, boolean isShowComment,
 				boolean isShowSpread, boolean isShowZan) {
 			// TODO Auto-generated method stub
-			if (isShowSpread || isShowZan) {
-				viewHolder.layoutCoverBottom.setVisibility(View.VISIBLE);
-			}
-			if (isShowComment) {
-				viewHolder.layoutCoverBottom.setVisibility(View.GONE);
-			}
 			if (isShowComment || isShowSpread || isShowZan) {
 				viewHolder.layoutCoverTop.setVisibility(View.VISIBLE);
 			} else {
 				viewHolder.layoutCoverTop.setVisibility(View.GONE);
-				viewHolder.layoutCoverBottom.setVisibility(View.GONE);
 			}
 		}
 
@@ -223,10 +216,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 
 		@Override
 		public int getCount() {
-			if (typeBean.commentlist == null || typeBean.commentlist.size() == 0) {
-				return 0;
-			}
-			return typeBean.commentlist.size() + 1;
+			return typeBean.commentlist.size();
 		}
 
 		@Override
@@ -259,12 +249,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			} else {
 				viewHolder.tvComment.setCompoundDrawablesWithIntrinsicBounds(
 						R.drawable.icon_dynamic_comment_transparent, 0, 0, 0);
-			}
-			if (position == getCount() - 1) {
-				viewHolder.tvComment.setVisibility(View.GONE);
-				return convertView;
-			} else {
-				viewHolder.tvComment.setVisibility(View.VISIBLE);
 			}
 
 			final CommentBean commentBean = typeBean.commentlist.get(position);

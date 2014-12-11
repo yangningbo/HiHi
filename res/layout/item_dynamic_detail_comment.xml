@@ -4,18 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <View
-        android:id="@+id/tv_comment_item_fake"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/icon_dynamic_bottom"
-        android:descendantFocusability="blocksDescendants" >
-    </View>
-
     <TextView
-        android:id="@+id/tv_comment_item"
+        android:id="@+id/tv_comment_item" 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="70dp"
