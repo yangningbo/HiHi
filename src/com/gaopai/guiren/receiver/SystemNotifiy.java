@@ -42,6 +42,7 @@ import com.gaopai.guiren.fragment.MeetingFragment;
 import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.support.NotifyHelper;
+import com.gaopai.guiren.utils.Logger;
 
 public class SystemNotifiy extends AbstractNotifiy {
 	public static final int NOTION_ID = 1000000023;
@@ -235,42 +236,34 @@ public class SystemNotifiy extends AbstractNotifiy {
 
 			case NotifiyType.COMMENT_MESSAGE:
 				msg = mContext.getString(R.string.new_comment);
-				// NotifiyVo notifyComment =
-				// notifyTable.queryComment(notifiyVo);
-				// if (notifyComment != null) {
-				// notifiyVo.mID = notifyComment.mID;
-				// if (!TextUtils.isEmpty(notifyComment.message.id)) {
-				// notifyMessageTable.delete(notifyComment.mID,
-				// notifyComment.message);
-				// }
-				// if (!TextUtils.isEmpty(notifyComment.room.id)) {
-				// table.delete(notifyComment.mID, notifyComment.room);
-				// }
-				// notifyTable.deleteByID(notifyComment);
-				// if (notifyComment.mIdentity != null) {
-				// Identity identity = identityTable
-				// .query(notifyComment.room.id);
-				// if (identity == null) {
-				// identityTable.insert(notifyComment.room.id,
-				// notifyComment.mIdentity);
-				// } else {
-				// identityTable.update(notifyComment.room.id,
-				// notifyComment.mIdentity);
-				// }
-				// }
-				// } else {
-				// if (notifiyVo.mIdentity != null) {
-				// Identity identity = identityTable
-				// .query(notifiyVo.room.id);
-				// if (identity == null) {
-				// identityTable.insert(notifiyVo.room.id,
-				// notifiyVo.mIdentity);
-				// } else {
-				// identityTable.update(notifiyVo.room.id,
-				// notifiyVo.mIdentity);
-				// }
-				// }
-				// }
+				NotifiyVo notifyComment = notifyTable.queryComment(notifiyVo);
+				if (notifyComment != null) {
+					notifiyVo.mID = notifyComment.mID;
+					if (!TextUtils.isEmpty(notifyComment.message.id)) {
+						notifyMessageTable.delete(notifyComment.mID, notifyComment.message);
+					}
+					if (!TextUtils.isEmpty(notifyComment.room.id)) {
+						table.delete(notifyComment.mID, notifyComment.room);
+					}
+					notifyTable.deleteByID(notifyComment);
+					if (notifyComment.roomuser != null) {
+						Identity identity = identityTable.query(notifyComment.room.id);
+						if (identity == null) {
+							identityTable.insert(notifyComment.room.id, notifyComment.roomuser);
+						} else {
+							identityTable.update(notifyComment.room.id, notifyComment.roomuser);
+						}
+					}
+				} else {
+					if (notifiyVo.roomuser != null) {
+						Identity identity = identityTable.query(notifiyVo.room.id);
+						if (identity == null) {
+							identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
+						} else {
+							identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
+						}
+					}
+				}
 
 				break;
 			case NotifiyType.RECEIVE_REPORT_MSG:
@@ -356,6 +349,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 				return;
 			case NotifiyType.MESSAGE_ZAN_ADD:
 				messageInfo = messageTable.query(notifiyVo.message.tag);
+				Logger.d(this, "zan_message");
 				if (messageInfo != null) {
 					messageInfo.agreeCount++;
 					messageTable.updateAgreeCount(messageInfo);
@@ -473,33 +467,33 @@ public class SystemNotifiy extends AbstractNotifiy {
 				mContext.sendBroadcast(new Intent(MeetingDetailActivity.ACTION_MEETING_CANCEL));
 				break;
 			case NotifiyType.MESSAGE_ZAN_YOURS:
-				msg = notifiyVo.content;
-				NotifiyVo notifyComment = notifyTable.queryComment(notifiyVo);
-				if (notifyComment != null) {
-					notifiyVo.mID = notifyComment.mID;
-					if (!TextUtils.isEmpty(notifyComment.message.id)) {
-						notifyMessageTable.delete(notifyComment.mID, notifyComment.message);
-					}
-					if (!TextUtils.isEmpty(notifyComment.room.id)) {
-						table.delete(notifyComment.mID, notifyComment.room);
-					}
-					notifyTable.deleteByID(notifyComment);
-				}
-				if (notifiyVo.roomuser != null) {
-					Identity identity = identityTable.query(notifiyVo.room.id);
-					if (identity == null) {
-						identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
-					} else {
-						identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
-					}
-				}
+//				msg = notifiyVo.content;
+//				NotifiyVo notifyComment = notifyTable.queryComment(notifiyVo);
+//				if (notifyComment != null) {
+//					notifiyVo.mID = notifyComment.mID;
+//					if (!TextUtils.isEmpty(notifyComment.message.id)) {
+//						notifyMessageTable.delete(notifyComment.mID, notifyComment.message);
+//					}
+//					if (!TextUtils.isEmpty(notifyComment.room.id)) {
+//						table.delete(notifyComment.mID, notifyComment.room);
+//					}
+//					notifyTable.deleteByID(notifyComment);
+//				}
+//				if (notifiyVo.roomuser != null) {
+//					Identity identity = identityTable.query(notifiyVo.room.id);
+//					if (identity == null) {
+//						identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
+//					} else {
+//						identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
+//					}
+//				}
 
 				break;
 			default:
 				msg = notifiyVo.content;
 				break;
 			}
-			mContext.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+
 			// if (!(notifiyVo.user==null) &&
 			// !TextUtils.isEmpty(notifiyVo.user.uid)) {
 			// User user = userTable.query(notifiyVo.mID, notifiyVo.user.uid);
@@ -543,7 +537,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 			// Intent(HomeTab.REFRESH_NOTIFY_ACTION));
 			// mContext.sendBroadcast(new
 			// Intent(MainActivity.ACTION_UPDATE_NOTIFY_SESSION_COUNT));
-			mNotifyHelper.notifySystemMessage(msg);
+			mNotifyHelper.notifySystemMessage(msg, notifiyVo);
 		}
 	}
 

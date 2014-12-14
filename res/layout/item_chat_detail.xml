@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
-
-    <RelativeLayout
-        android:id="@+id/chat_talk_msg_info_fake"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/icon_dynamic_bottom" />
 
     <RelativeLayout
         android:id="@+id/chat_talk_msg_info"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/selector_gray_blue_btn"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/selector_btn_general"
         android:descendantFocusability="blocksDescendants"
-        android:paddingBottom="3dp"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
-        android:paddingTop="3dp" >
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/chat_comment_not_text_name"
@@ -52,14 +41,13 @@
             android:layout_toRightOf="@+id/chat_comment_not_text_name"
             android:background="@drawable/shape_chat_detail_voice_background"
             android:orientation="horizontal"
-            android:padding="2dp" >
+            android:padding="3dp" >
 
             <ImageView
                 android:id="@+id/chat_talk_msg_info_msg_voice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
                 android:maxHeight="45dp"
                 android:maxWidth="@dimen/voice_max_length_comment"
                 android:minWidth="@dimen/voice_min_length_comment"
@@ -71,33 +59,53 @@
                 android:id="@+id/chat_talk_voice_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/chat_talk_msg_info_msg_voice"
+                android:text="1212"
                 android:textColor="@color/content_gray_color"
                 android:textSize="12sp"
                 android:visibility="visible" />
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/chat_talk_msg_info_msg_photo"
+        <FrameLayout
+            android:id="@+id/layout_msg_pic_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/chat_comment_not_text_name"
-            android:adjustViewBounds="true"
-            android:maxHeight="150dp"
-            android:maxWidth="150dp"
-            android:scaleType="fitStart"
-            android:visibility="visible" />
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/iv_chat_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/desc"
+                android:maxHeight="120dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_welcom_background"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/iv_chat_photo_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/desc"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_chat_img_right_cover"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <ProgressBar
             android:id="@+id/chat_talk_msg_progressBar"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_centerHorizontal="true"
+            style="?android:attr/progressBarStyleSmallTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:indeterminate="false"
-            android:indeterminateDrawable="@drawable/progressbar"
-            android:visibility="visible" />
+            android:layout_gravity="center_vertical"
+            android:indeterminate="false" />
     </RelativeLayout>
 
-</RelativeLayout>
+</FrameLayout>

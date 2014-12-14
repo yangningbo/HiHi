@@ -211,8 +211,8 @@
                             android:gravity="center"
                             android:minWidth="@dimen/notification_item_dot_size"
                             android:textColor="@color/white"
-                            android:visibility="gone"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:visibility="gone" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -248,10 +248,21 @@
             android:scaleType="centerCrop"
             android:src="@drawable/icon_welcom_background_2" />
 
-        <ImageView
+        <TextView
+            android:id="@+id/tv_welcome_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:text="@string/welcom_info"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tv_welcome_info"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:src="@drawable/icon_welcom_info" />

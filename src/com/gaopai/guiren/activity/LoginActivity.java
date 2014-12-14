@@ -60,7 +60,6 @@ import com.umeng.socialize.sso.UMSsoHandler;
 public class LoginActivity extends BaseActivity implements OnClickListener, OnTouchListener {
 
 	private Button btnQQLogin;
-	private Button btnWeixinLogin;
 	private Button btnWeiboLogin;
 
 	private EditText etUserName;
@@ -110,11 +109,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 		btnQQLogin = (Button) findViewById(R.id.btn_qq_login);
 		btnWeiboLogin = (Button) findViewById(R.id.btn_weibo_login);
-		btnWeixinLogin = (Button) findViewById(R.id.btn_weixin_login);
 
 		btnQQLogin.setOnClickListener(this);
 		btnWeiboLogin.setOnClickListener(this);
-		btnWeixinLogin.setOnClickListener(this);
 
 		etUserName = (EditText) findViewById(R.id.et_username);
 		etPassword = (EditText) findViewById(R.id.et_password);
@@ -157,8 +154,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 				return;
 			}
 			getQQLogin();
-			break;
-		case R.id.btn_weixin_login:
 			break;
 
 //		case R.id.look:

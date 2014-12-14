@@ -74,7 +74,6 @@ public class ConversationHelper {
 	}
 	
 	public static void creatNewItem() {
-		
 	}
 	
 	public static boolean saveDraft(Context context, MessageInfo messageInfo) {
@@ -108,14 +107,16 @@ public class ConversationHelper {
 	}
 	
 	//for system
-	public static void saveToLastMsgList(NotifiyVo notifiyVo, Context mContext) {
+	public static void saveToLastMsgList(NotifiyVo notifiyVo, Context mContext, boolean isRead) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
 		ConversationInnerBean bean = notifiyVo.conversion;
 		ConverseationTable table = new ConverseationTable(dbDatabase);
 		ConversationBean conversation = table.queryByID(bean.toid);
 		if (conversation != null) {
 			conversation.headurl = bean.headurl;
-			conversation.unreadcount = conversation.unreadcount + 1;
+			if (!isRead) {
+				conversation.unreadcount = conversation.unreadcount + 1;
+			}
 			conversation.name = bean.name;
 			conversation.lastmsgcontent = notifiyVo.content;
 			conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());
@@ -126,7 +127,11 @@ public class ConversationHelper {
 			conversation = new ConversationBean();
 		}
 		conversation.headurl = bean.headurl;
-		conversation.unreadcount = 1;
+		if (isRead) {
+			conversation.unreadcount = 0;
+		} else {
+			conversation.unreadcount = 1;
+		}
 		conversation.name = bean.name;
 		conversation.lastmsgcontent = notifiyVo.content;
 		conversation.lastmsgtime = String.valueOf(System.currentTimeMillis());

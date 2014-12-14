@@ -489,6 +489,7 @@ public class BaseActivity extends FragmentActivity {
 	
 	private boolean mIsRegisterReceiver = false;
 	
+	//for little actions
 	protected IntentFilter registerReceiver(String...actions) {
 		IntentFilter filter = new IntentFilter();
 		for (String action:actions) {
@@ -497,6 +498,12 @@ public class BaseActivity extends FragmentActivity {
 		registerReceiver(mReceiver, filter);
 		mIsRegisterReceiver = true;
 		return filter;
+	}
+	
+	//for many actions
+	protected void registerReceiver(IntentFilter intentFilter) {
+		registerReceiver(mReceiver, intentFilter);
+		mIsRegisterReceiver = true;
 	}
 	
 	BroadcastReceiver mReceiver = new BroadcastReceiver() {

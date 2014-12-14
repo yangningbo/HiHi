@@ -36,8 +36,12 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 	}
 
 	private void bindMessageBottomBarView(ViewHolder viewHolder, final MessageInfo messageInfo) {
-		viewHolder.msgInfoLayout.setTag(messageInfo);
-		viewHolder.msgInfoLayout.setOnLongClickListener(showMoreWindowClickListener);
+		viewHolder.layoutTextVoiceHolder.setTag(messageInfo);
+		viewHolder.layoutTextVoiceHolder.setOnLongClickListener(showMoreWindowClickListener);
+		
+		
+		viewHolder.layoutPicHolder.setTag(messageInfo);
+		viewHolder.layoutPicHolder.setOnLongClickListener(showMoreWindowClickListener);
 		if (messageInfo.agreeCount + messageInfo.commentCount + messageInfo.favoriteCount == 0) {
 			viewHolder.mFavoriteCountView.setVisibility(View.GONE);
 			viewHolder.mCommentCountView.setVisibility(View.GONE);
@@ -60,60 +64,6 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 		}
 	};
 
-	// private void showActionWindow(View anchor) {
-	// MessageInfo messageInfo = (MessageInfo) anchor.getTag();
-	// LayoutInflater mInflater = LayoutInflater.from(mContext);
-	// View v = mInflater.inflate(R.layout.popup_chat_tribe_action, null);
-	//
-	// Button zan = (Button) v.findViewById(R.id.btn_zan);
-	// zan.setTag(messageInfo);
-	// zan.setOnClickListener(this);
-	//
-	// if (messageInfo.isAgree == 1) {
-	// zan.setText(R.string.cancel_zan);
-	// } else {
-	// zan.setText(R.string.zan);
-	// }
-	//
-	// View earPhone = v.findViewById(R.id.btn_ear_phone);
-	// earPhone.setTag(messageInfo);
-	// earPhone.setOnClickListener(this);
-	//
-	// View favorite = v.findViewById(R.id.btn_favorite);
-	// favorite.setTag(messageInfo);
-	// favorite.setOnClickListener(this);
-	//
-	// View more = v.findViewById(R.id.btn_more);
-	// more.setTag(messageInfo);
-	// more.setOnClickListener(this);
-	//
-	//
-	// actionWindow = new PopupWindow(v, LayoutParams.WRAP_CONTENT,
-	// MyUtils.dip2px(mContext, 40));
-	// actionWindow.setBackgroundDrawable(new
-	// ColorDrawable(android.R.color.transparent));
-	//
-	// if (messageInfo.from.equals(DamiCommon.getUid(mContext))) {
-	// actionWindow.setAnimationStyle(R.style.window_slide_right);
-	// } else {
-	// actionWindow.setAnimationStyle(R.style.window_slide_left);
-	// }
-	// actionWindow.setOutsideTouchable(true);
-	// actionWindow.setFocusable(true);
-	// ViewUtil.measure(v);
-	// int windowHeightPadding = (v.getMeasuredHeight() +
-	// anchor.getMeasuredHeight())
-	// + FeatureFunction.dip2px(mContext, 5);
-	// int windowWidthPadding = (anchor.getMeasuredWidth() -
-	// v.getMeasuredWidth()) / 2;
-	//
-	// if (actionWindow.isShowing()) {
-	// actionWindow.dismiss();
-	// return;
-	// }
-	// actionWindow.showAsDropDown(anchor, windowWidthPadding,
-	// -windowHeightPadding);
-	// }
 	private void showActionWindow(View anchor) {
 		MessageInfo messageInfo = (MessageInfo) anchor.getTag();
 		LayoutInflater mInflater = LayoutInflater.from(mContext);

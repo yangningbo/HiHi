@@ -19,6 +19,7 @@
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/iv_chat_talk_img_head" />
+"
 
     <FrameLayout
         android:id="@+id/layout_msg_content"

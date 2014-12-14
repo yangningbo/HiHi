@@ -4,19 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.SyncBasicHttpContext;
-
-import u.aly.be;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -47,7 +35,6 @@ import com.gaopai.guiren.adapter.BaseChatAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
-import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.ConverseationTable;
@@ -55,17 +42,13 @@ import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
-import com.gaopai.guiren.net.Utility;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.receiver.PushChatMessage;
 import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.service.type.XmppType;
 import com.gaopai.guiren.support.ConversationHelper;
-import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
-import com.gaopai.guiren.volley.AjaxCallBack;
 import com.gaopai.guiren.volley.SimpleResponseListener;
-import com.gaopai.guiren.volley.VoiceTask;
 
 //处理聊天界面的逻辑
 public abstract class ChatBaseActivity extends BaseActivity {
@@ -98,7 +81,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		addAciton(registerReceiver());
+		registerReceiver(addAciton());
 		speexPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
 			@Override
 			public void onSuccess(MessageInfo messageInfo) {
@@ -478,7 +461,8 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	public final static String ACTION_KICK_TRIBE = "com.gaopai.guiren.intent.action.ACTION_KICK_TRIBE";
 
 	
-	private void addAciton(IntentFilter filter) {
+	private IntentFilter addAciton() {
+		IntentFilter filter = new IntentFilter();
 		filter.addAction(SnsService.ACTION_CONNECT_CHANGE);
 		filter.addAction(PushChatMessage.ACTION_SEND_STATE);
 		filter.addAction(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE);
@@ -498,6 +482,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		filter.addAction(ACTION_RECORD_AUTH);
 		filter.addAction(ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
 		filter.addAction(ACTION_MESSAGE_DELETE);
+		return filter;
 	}
 
 	private boolean opconnectState = false;

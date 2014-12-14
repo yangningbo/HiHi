@@ -43,8 +43,8 @@ import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
-import com.gaopai.guiren.support.ChatBoxManager;
 import com.gaopai.guiren.support.ConversationHelper;
+import com.gaopai.guiren.support.chat.ChatBoxManager;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -201,9 +201,9 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 	public void updateVoicePlayModeState(boolean isModeInCall) {
 		if (isModeInCall) {
-			mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_ear_phone);
+			mVoiceModeImage.setVisibility(View.VISIBLE);
 		} else {
-			mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_speaker);
+			mVoiceModeImage.setVisibility(View.GONE);
 		}
 	}
 
@@ -265,14 +265,13 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		setTitleText();
 		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
 		ivDisturb = (ImageView) mTitleBar.addLeftImageViewWithDefaultSize(R.drawable.icon_chat_title_avoid_disturb_off);
-
 		int imageId = R.drawable.icon_chat_title_ear_phone;
-		if (!isModeInCall) {
-			imageId = R.drawable.icon_chat_title_speaker;
+		mVoiceModeImage = (ImageView) mTitleBar.addLeftImageViewWithDefaultSize(R.drawable.icon_chat_title_ear_phone);
+		if (isModeInCall) {
+			mVoiceModeImage.setVisibility(View.VISIBLE);
+		} else {
+			mVoiceModeImage.setVisibility(View.GONE);
 		}
-		mVoiceModeImage = (ImageView) mTitleBar.addRightImageView(imageId);
-		mVoiceModeImage.setId(R.id.ab_chat_ear_phone);
-		mVoiceModeImage.setOnClickListener(this);
 
 		imageId = R.drawable.icon_chat_title_voice_mode;
 		View view = mTitleBar.addRightImageView(imageId);

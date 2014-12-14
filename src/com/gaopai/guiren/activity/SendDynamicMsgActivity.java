@@ -131,7 +131,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 			nSelStart = etDynamicMsg.getSelectionStart();
 			nSelEnd = etDynamicMsg.getSelectionEnd();
-			nOverMaxLength = (s.length() > 20) ? true : false;
+			nOverMaxLength = (s.length() > 500) ? true : false;
 			if (nOverMaxLength) {
 				s.delete(nSelStart - 1, nSelEnd);
 				etDynamicMsg.setTextKeepState(s);
@@ -184,10 +184,12 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 	private void sendDynamic() {
 		List<MorePicture> fileList = new ArrayList<MorePicture>();
+		int i=0;
 		for (String pic : picList) {
 			if (!TextUtils.isEmpty(pic)) {
-				fileList.add(new MorePicture("pic", pic));
+				fileList.add(new MorePicture("image["+i+"]", pic));
 			}
+			i++;
 		}
 		String tags = "";
 		List<String> tagList = getTagList();

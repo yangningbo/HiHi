@@ -51,6 +51,7 @@ import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
+import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;

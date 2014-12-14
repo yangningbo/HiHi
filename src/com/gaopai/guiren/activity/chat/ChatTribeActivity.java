@@ -40,13 +40,14 @@ import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
-import com.gaopai.guiren.bean.net.ChatMessageBean;
 import com.gaopai.guiren.bean.net.IdentitityResult;
 import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
+import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
+import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -69,25 +70,30 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	private MessageInfo messageInfo;
 	private boolean isOnLooker = false;
 
+	private ChatMsgDataHelper msgHelper;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mChatType = getIntent().getIntExtra(KEY_CHAT_TYPE, CHAT_TYPE_MEETING);
 		mTribe = (Tribe) getIntent().getSerializableExtra(KEY_TRIBE);// before
 		isOnLooker = getIntent().getBooleanExtra(KEY_IS_ONLOOKER, false);
 		super.onCreate(savedInstanceState);
+		msgHelper = new ChatMsgDataHelper(mContext, callback, mTribe, mChatType);
 		// mTribeId = getIntent().getStringExtra(KEY_TRIBE_ID)
 		updateTribe();
 		getIdentity();
 		initTribeComponent();
 	}
-	
+
 	private void setUpForOnLooker() {
 		hideChatBox();
 		startTimer();
 	}
+
 	private Timer mTimer;
 	private TimerTask mTask;
 	private final int mRefreshTime = 10 * 1000;
+
 	private void startTimer() {
 		mTimer = new Timer();
 		mTask = new TimerTask() {
@@ -106,7 +112,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			mTimer = null;
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -157,6 +163,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		intent.putExtra(KEY_CHAT_TYPE, type);
 		return intent;
 	}
+
 	public static Intent getIntent(Context context, Tribe tribe, int type, boolean isOnLooker) {
 		Intent intent = new Intent(context, ChatTribeActivity.class);
 		intent.putExtra(KEY_TRIBE, tribe);
@@ -183,6 +190,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		checkHasDraft(mTribe.id);
 		resetCount(mTribe.id);
 	}
+
 	// 通知过来的tribe没有role，发送消息时需要用到，所以这里尽快更新呀
 	private void updateTribe() {
 		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
@@ -193,6 +201,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
 						mTribe = data.data;
+						msgHelper.setTribe(mTribe);
 					}
 				} else {
 					otherCondition(data.state, ChatTribeActivity.this);
@@ -237,8 +246,12 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	public void showItemLongClickDialog(final MessageInfo messageInfo) {
 		final List<String> strList = new ArrayList<String>();
-//		strList.add(getString(R.string.comment));
-		strList.add(getString(R.string.favorite));
+		// strList.add(getString(R.string.comment));
+		if (messageInfo.isfavorite == 1) {
+			strList.add(getString(R.string.cancel_favorite));
+		} else {
+			strList.add(getString(R.string.favorite));
+		}
 		strList.add(getString(R.string.report));
 		strList.add(getString(R.string.delete));
 		if (messageInfo.fileType != MessageType.PICTURE) {
@@ -287,16 +300,18 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.cancel_zan))) {
 			zanMessage(msgInfo);
 		} else if (result.equals(getString(R.string.retrweet))) {
-//			 goToRetrweet(msgInfo);
-			spreadToDy(msgInfo);
+			// goToRetrweet(msgInfo);
+			msgHelper.spreadToDy(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {
-			showReportDialog(msgInfo);
+			msgHelper.showReportDialog(msgInfo);
 		} else if (result.equals(getString(R.string.favorite))) {
 			favoriteMessage(msgInfo);
+		} else if (result.equals(getString(R.string.cancel_favorite))) {
+			unFavoriteMessage(msgInfo);
 		} else if (result.equals(getString(R.string.delete))) {
 			removeMessage(msgInfo);
 		} else if (result.equals(getString(R.string.communication))) {
-			communicatePeople(msgInfo);
+			msgHelper.communicatePeople(msgInfo);
 		} else if (result.equals(getString(R.string.copy))) {
 			ClipboardManager cmb = (ClipboardManager) mContext.getSystemService(Activity.CLIPBOARD_SERVICE);
 			cmb.setText(msgInfo.content);
@@ -304,104 +319,44 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 	}
 
-	private void spreadToDy(MessageInfo messageInfo) {
-		DamiInfo.spreadDynamic(2, messageInfo.id, "", "", "", "", new SimpleResponseListener(mContext) {
+	private ChatMsgDataHelper.Callback callback = new Callback() {
 
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.spread_success);
-				} else {
-					otherCondition(data.state, ChatTribeActivity.this);
-				}
-			}
-		});
-	}
+		@Override
+		public void zanMessage(MessageInfo msg) {
+			mAdapter.notifyDataSetChanged();
+		}
 
-	private void goToRetrweet(MessageInfo msgInfo) {
-		Intent intent = new Intent(mContext, ShareActivity.class);
-		intent.putExtra(ShareActivity.KEY_TYPE, ShareActivity.TYPE_SHARE);
-		intent.putExtra(ShareActivity.KEY_MESSAGE, msgInfo);
-		startActivity(intent);
-	}
+		@Override
+		public void unZanMessage(MessageInfo msg) {
+			mAdapter.notifyDataSetChanged();
+		}
 
-	private void communicatePeople(MessageInfo messageInfo) {
-		Intent intent = new Intent(mContext, AddReasonActivity.class);
-		intent.putExtra(AddReasonActivity.KEY_MESSAGEINFO, messageInfo);
-		intent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_WAHT_COMUNICATION);
-		mContext.startActivity(intent);
-	}
+		@Override
+		public void unFavoriteMessage(MessageInfo msg) {
+			mAdapter.notifyDataSetChanged();
+		}
 
-	private void showReportDialog(final MessageInfo msgInfo) {
-		final String[] levelArray = mContext.getResources().getStringArray(R.array.report_message_cause);
-		Dialog dialog = new AlertDialog.Builder(this).setItems(levelArray, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				report(msgInfo, levelArray[which]);
-			}
-		}).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		}).create();
-		dialog.show();
-	}
+		@Override
+		public void favoriteMessage(MessageInfo msg) {
+			mAdapter.notifyDataSetChanged();
+		}
+
+		@Override
+		public void commentMessage(MessageInfo msg) {
+			mAdapter.notifyDataSetChanged();
+		}
+	};
 
 	public void zanMessage(final MessageInfo messageInfo) {
-		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, new SimpleResponseListener(mContext,
-				getString(R.string.request_internet_now)) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					if (data.state.msg.equals("赞成功")) {
-						Toast.makeText(mContext, "赞同成功", Toast.LENGTH_SHORT).show();
-						messageInfo.isAgree = 1;
-						messageInfo.agreeCount++;
-						updateZanForLocal(messageInfo);
-					} else if (data.state.msg.equals("取消赞成功")) {
-						Toast.makeText(mContext, "您已取消赞同", Toast.LENGTH_SHORT).show();
-						messageInfo.isAgree = 0;
-						messageInfo.agreeCount--;
-						updateZanForLocal(messageInfo);
-					}
-				} else {
-					otherCondition(data.state, ChatTribeActivity.this);
-				}
-			}
-		});
+		msgHelper.zanMessage(messageInfo);
 	}
 
 	public void favoriteMessage(final MessageInfo messageInfo) {
-		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
-
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				Toast.makeText(mContext, R.string.favorite_success, Toast.LENGTH_SHORT).show();
-				updateFavoriteCount(messageInfo, false);
-			}
-		};
-		if (mChatType == CHAT_TYPE_TRIBE) {
-			DamiInfo.favoriteMessage(mTribe.id, messageInfo.id, listener);
-		} else if (mChatType == CHAT_TYPE_MEETING) {
-			DamiInfo.favoriteMeetingMessage(mTribe.id, messageInfo.id, listener);
-		}
+		msgHelper.favoriteMessage(messageInfo);
 	}
 
-	private void report(final MessageInfo messageInfo, final String content) {
-		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
-			@Override
-			public void onSuccess(Object o) {
-				Toast.makeText(mContext, R.string.report_success, Toast.LENGTH_SHORT).show();
-			}
-		};
-		if (mChatType == CHAT_TYPE_TRIBE) {
-			DamiInfo.reportMessage(mTribe.id, messageInfo.id, content, listener);
-		} else if (mChatType == CHAT_TYPE_MEETING) {
-			DamiInfo.reportMeetingMessage(mTribe.id, messageInfo.id, content, listener);
-		}
+	public void unFavoriteMessage(final MessageInfo messageInfo) {
+		msgHelper.unFavoriteMessage(messageInfo);
 	}
 
 	@Override
@@ -518,6 +473,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	protected void onOtherChatBroadCastAction(Intent intent) {
 		// TODO Auto-generated method stub
 		String action = intent.getAction();
+		Logger.d(this, "action=" + action);
 		if (action.equals(REFRESH_ADAPTER)) {
 			SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
 			MessageTable messageTable = new MessageTable(db);
@@ -567,27 +523,29 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (ACTION_FAVORITE_MESSAGE.equals(action)) {
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
 			if (messageInfo != null) {
-				updateFavoriteCount(messageInfo, true);
+				updateFavoriteCount(messageInfo);
 			}
 		} else if (ACTION_UNFAVORITE_MESSAGE.equals(action)) {
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
 			if (messageInfo != null) {
-				updateFavoriteCount(messageInfo, true);
+				updateFavoriteCount(messageInfo);
 			}
 		} else if (ACTION_ZAN_MESSAGE.equals(action)) {
 			Log.e("CHEN", "notitySystemMessage4");
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
 			if (messageInfo != null) {
-				updateZanCount(messageInfo, true);
+				updateZanCount(messageInfo);
 			}
 		} else if (ACTION_UNZAN_MESSAGE.equals(action)) {
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
 			if (messageInfo != null) {
-				updateZanCount(messageInfo, true);
+				updateZanCount(messageInfo);
 			}
 		} else if (ACTION_COMMENT_OR_ZAN_OR_FAVOURITE.equals(action)) {
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
-			updateMessgaeItem(messageInfo);
+			if (messageInfo != null) {
+				updateMessgaeItem(messageInfo);
+			}
 		} else if (NotifyChatMessage.ACTION_CHANGE_VOICE_CONTENT.equals(action)) {
 			final MessageInfo messageInfo = (MessageInfo) intent
 					.getSerializableExtra(NotifyChatMessage.EXTRAS_NOTIFY_CHAT_MESSAGE);
@@ -628,81 +586,68 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				}
 			}
 		}
-
 	}
 
-	private void updateFavoriteCount(MessageInfo messageInfo, boolean isFavorite) {
-		if (messageInfo.parentid.equals("0")) {
-			for (int i = 0; i < messageInfos.size(); i++) {
-				if (messageInfo.tag.equals(messageInfos.get(i).tag)) {
-					if (isFavorite) {
-						messageInfos.get(i).favoriteCount = messageInfo.favoriteCount;
-					} else {
-						messageInfos.get(i).favoriteCount++;
-						messageInfos.get(i).isfavorite = 1;
-						updateMessage(messageInfo);
-					}
-					mAdapter.notifyDataSetChanged();
-					break;
-				}
-			}
+	private void updateMessgaeItem(MessageInfo messageInfo2) {
+		// TODO Auto-generated method stub
+		MessageInfo target = getTargetMessageInfo(messageInfo2);
+		if (target != null) {
+			target.favoriteCount = messageInfo2.favoriteCount;
+			target.commentCount = messageInfo2.commentCount;
+			target.agreeCount = messageInfo2.agreeCount;
+			mAdapter.notifyDataSetChanged();
 		}
 	}
 
-	private void updateZanCount(MessageInfo messageInfo, boolean isAgree) {
-		if (messageInfo.parentid.equals("0")) {
-			for (int i = 0; i < messageInfos.size(); i++) {
-				if (messageInfo.tag.equals(messageInfos.get(i).tag)) {
-					if (isAgree) {
-						messageInfos.get(i).agreeCount = messageInfo.agreeCount;
-					} else {
-						messageInfos.get(i).agreeCount++;
-						updateMessage(messageInfo);
-					}
-					mAdapter.notifyDataSetChanged();
-					break;
-				}
-			}
+	private void updateFavoriteCount(MessageInfo messageInfo) {
+		MessageInfo target = getTargetMessageInfo(messageInfo);
+		if (target != null) {
+			target.favoriteCount = messageInfo.favoriteCount;
+			mAdapter.notifyDataSetChanged();
 		}
 	}
 
-	private void updateZanForLocal(MessageInfo messageInfo) {
-		if (messageInfo.parentid.equals("0")) {
-			for (int i = 0; i < messageInfos.size(); i++) {
-				if (messageInfo.tag.equals(messageInfos.get(i).tag)) {
-					messageInfos.get(i).agreeCount = messageInfo.agreeCount;
-					messageInfos.get(i).isAgree = messageInfo.isAgree;
-					updateZanCount(messageInfo);
-					mAdapter.notifyDataSetChanged();
-					break;
-				}
-			}
-		}
-	}
-
+	// count has been add one in SystemNotify, so need not update database
 	private void updateZanCount(MessageInfo messageInfo) {
+		MessageInfo target = getTargetMessageInfo(messageInfo);
+		if (target != null) {
+			target.agreeCount = messageInfo.agreeCount;
+			mAdapter.notifyDataSetChanged();
+		}
+	}
+
+	private void updateCommentCount(MessageInfo messageInfo) {
+		MessageInfo target = getTargetMessageInfo(messageInfo);
+		if (target != null) {
+			target.commentCount = messageInfo.commentCount;
+			mAdapter.notifyDataSetChanged();
+		}
+	}
+
+	private MessageInfo getTargetMessageInfo(MessageInfo messageInfo) {
+		if (messageInfo.parentid.equals("0")) {
+			for (int i = 0; i < messageInfos.size(); i++) {
+				if (messageInfo.tag.equals(messageInfos.get(i).tag)) {
+					return messageInfos.get(i);
+				}
+			}
+		}
+		return null;
+	}
+
+	private void updateZanCountToDb(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
 		table.updateAgreeCount(messageInfo);
 	}
 
-	private void updateMessgaeItem(MessageInfo messageInfo) {
-		if (messageInfo.parentid.equals("0")) {
-			for (int i = 0; i < messageInfos.size(); i++) {
-				if (messageInfo.tag.equals(messageInfos.get(i).tag)) {
-					messageInfos.get(i).agreeCount = messageInfo.agreeCount;
-					messageInfos.get(i).commentCount = messageInfo.commentCount;
-					messageInfos.get(i).isAgree = messageInfo.isAgree;
-					messageInfos.get(i).isfavorite = messageInfo.isfavorite;
-					messageInfos.get(i).favoriteCount = messageInfo.favoriteCount;
-					mAdapter.notifyDataSetChanged();
-					break;
-				}
-			}
-		}
+	private void updateFavoriteCountToDb(MessageInfo messageInfo) {
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
+		MessageTable table = new MessageTable(db);
+		table.updateFavoriteCount(messageInfo);
 	}
 
-	private void updateCommentCount(MessageInfo messageInfo) {
+	private void updateCommentCountToDb(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
 		table.updateCommentCount(messageInfo);
@@ -741,14 +686,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		builder.setCanceledOnTouchOutside(false);
 		builder.show();
 	}
-
-	// public void updateVoicePlayModeState(boolean isModeInCall) {
-	// if (isModeInCall) {
-	// mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_avoid_disturb_on);
-	// } else {
-	// mVoiceModeImage.setImageResource(R.drawable.icon_chat_title_avoid_disturb_off);
-	// }
-	// }
 
 	@Override
 	public void onClick(View v) {

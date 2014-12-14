@@ -38,6 +38,7 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -187,14 +188,18 @@ public class NotifyHelper {
 
 	}
 
-	public void notifySystemMessage(String msg) {
+	public void notifySystemMessage(String msg, NotifiyVo notifiyVo) {
 		init();
 		if (!isNeedNotify()) {
 			return;
 		}
 		if (isActivityTop(mContext, ".activity.NotifySystemActivity")) {
+			ConversationHelper.saveToLastMsgList(notifiyVo, mContext, true);
 			return;
 		}
+		ConversationHelper.saveToLastMsgList(notifiyVo, mContext, false);
+		mContext.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		
 		NotificationCompat.Builder builder = getNotificationBuilder();
 		builder.setContentTitle(mContext.getString(R.string.has_new_notification));
 		builder.setContentText(msg);

@@ -17,14 +17,12 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,12 +31,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -80,7 +75,10 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
-import com.gaopai.guiren.support.ChatBoxManager;
+import com.gaopai.guiren.support.chat.ChatBoxManager;
+import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
+import com.gaopai.guiren.support.chat.ChatMsgHelper;
+import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
@@ -176,7 +174,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private boolean isShowTopCover = false;
 	private View viewCoverTop;
-	private View viewCoverBottom;
+
+	private ChatMsgDataHelper msgHelper;
+	private List<MessageInfo> zanList = new ArrayList<MessageInfo>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +188,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		mTribe = (Tribe) getIntent().getSerializableExtra(INTENT_TRIBE_KEY);
 		mIdentity = (Identity) getIntent().getSerializableExtra(INTENT_IDENTITY_KEY);
 		mChatType = getIntent().getIntExtra(INTENT_CHATTYPE_KEY, 0);
+		msgHelper = new ChatMsgDataHelper(mContext, callback, mTribe, mChatType);
 		initComponent();
 		mListView.getRefreshableView().addHeaderView(creatHeaderView());
 		bindView();
@@ -196,9 +197,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		mListView.setAdapter(mAdapter);
 		getmessageInfos();
 		mLogin = DamiCommon.getLoginResult(mContext);
-		// getZanList();
-		// initVoicePlayMode();
-		// updateVoicePlayModeState(isModeInCall);
+		getZanList();
+		initVoicePlayMode();
+//		updateVoicePlayModeState(isModeInCall);
 	}
 
 	protected void initComponent() {
@@ -249,6 +250,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				// TODO Auto-generated method stub
 			}
 		});
+
 		mEmotionPicker = (EmotionPicker) findViewById(R.id.emotion_picker);
 		mEmotionPicker.setEditText(this, null, mContentEdit);
 		mEmotionBtn = (Button) findViewById(R.id.emotion_btn);
@@ -271,6 +273,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		mAddBtn = (ImageView) findViewById(R.id.chat_box_btn_add);
 		mAddBtn.setOnClickListener(this);
+
+		mSendTextBtn.setVisibility(View.GONE);
+		mAddBtn.setVisibility(View.VISIBLE);
 
 		boxManager = new ChatBoxManager(this, mContentEdit, mSwitchVoiceTextBtn, mEmotionPicker, chatGridLayout,
 				mEmotionBtn, mVoiceSendBtn);
@@ -320,7 +325,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				commenterName = messageInfos.get(pos).displayname;
 			}
 		});
-		getZanList();
 	}
 
 	/**
@@ -346,12 +350,10 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private MediaUIHeper.RecordCallback recordCallback = new MediaUIHeper.RecordCallback() {
 		@Override
 		public void onStart() {
-			Log.d(TAG, "call back start");
 		}
 
 		@Override
 		public void onStop(float recordingTime, String path) {
-			Log.d(TAG, "call back stop " + recordingTime + "  " + path);
 			if (recordingTime < SpeexRecorderWrapper.MIN_TIME) {
 				Toast.makeText(mContext, getString(R.string.record_time_too_short), Toast.LENGTH_SHORT).show();
 				return;
@@ -365,7 +367,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		@Override
 		public void onRecording(int volume, float time) {
-			Log.d(TAG, "call back recording" + volume + "  " + time);
 			if (recordDialog.isShowing()) {
 				recordDialog.setDialogImg(volume);
 			}
@@ -376,6 +377,58 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		mVoiceSendBtn.setText(mContext.getString(R.string.pressed_to_record));
 		mContentEdit.setHint(mContext.getString(R.string.input_message_hint));
 		mContentEdit.setText("");
+	}
+
+	private ChatMsgDataHelper.Callback callback = new Callback() {
+
+		@Override
+		public void zanMessage(MessageInfo msg) {
+			updateZanCount(ChatCommentsActivity.this.messageInfo);
+			zanList.add(buildZanMessage());
+			bindZanView();
+			sendNotify();
+		}
+
+		@Override
+		public void unZanMessage(MessageInfo msg) {
+			updateZanCount(ChatCommentsActivity.this.messageInfo);
+			removeZanMessage();
+			bindZanView();
+			sendNotify();
+		}
+
+		@Override
+		public void unFavoriteMessage(MessageInfo msg) {
+			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_normal);
+			bindFavoriteView();
+			sendNotify();
+		}
+
+		@Override
+		public void favoriteMessage(MessageInfo msg) {
+			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_active);
+			bindFavoriteView();
+			sendNotify();
+		}
+
+		@Override
+		public void commentMessage(MessageInfo msg) {
+		}
+	};
+	
+	private MessageInfo buildZanMessage() {
+		MessageInfo messageInfo = new MessageInfo();
+		messageInfo.displayname = getName();
+		messageInfo.uid = mLogin.uid;
+		return messageInfo;
+	}
+	
+	private void removeZanMessage() {
+		for (MessageInfo messageInfo : zanList) {
+			if (messageInfo.uid.equals(mLogin.uid)) {
+				zanList.remove(messageInfo);
+			}
+		}
 	}
 
 	private RecordDialog recordDialog;
@@ -432,7 +485,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		ivPhoto = (ImageView) view.findViewById(R.id.iv_chat_photo);
 		ivPhotoCover = (ImageView) view.findViewById(R.id.iv_chat_photo_cover);
 		layoutPic = view.findViewById(R.id.layout_msg_pic_holder);
-		
+
 		headImageView = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
 		nameTextView = (TextView) view.findViewById(R.id.tv_user_name);
 		layoutMsgContent = view.findViewById(R.id.layout_msg_text_voice_holder);
@@ -442,7 +495,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		favouriteCountText = (TextView) view.findViewById(R.id.chat_favourite_count);
 		favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
 
-		commentCountText.setText(String.valueOf(messageInfo.commentCount));
+		
 
 		zanCountLayout = (LinearLayout) view.findViewById(R.id.zan_count_layout);
 		zanCountLayout.setOnClickListener(this);
@@ -461,20 +514,14 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
 		viewCoverTop = view.findViewById(R.id.view_cover_top);
-		viewCoverBottom = view.findViewById(R.id.view_cover_bottom);
-
+		
+		bindCommentCount();
 		bindZanCommentBorderView();
 		return view;
-
 	}
-
-	private View creatFooterView() {
-		View view = new View(mContext);
-		view.setBackgroundResource(R.drawable.icon_dynamic_bottom);
-		view.setPadding(MyUtils.dip2px(mContext, 60), 0, MyUtils.dip2px(mContext, 10), 0);
-		AbsListView.LayoutParams lp = new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		view.setLayoutParams(lp);
-		return view;
+	
+	private void bindCommentCount() {
+		commentCountText.setText(String.valueOf(messageInfo.commentCount));
 	}
 
 	private void initialSendIdAndName() {
@@ -483,11 +530,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		mVoiceSendBtn.setText(mContext.getString(R.string.pressed_to_record));
 		mContentEdit.setHint(mContext.getString(R.string.input_message_hint));
 	}
-
-	// @Override
-	// protected void sendFilePath(MessageInfo messageInfo, int isResend) {
-	// // sendMessage(messageInfo, isResend);
-	// }
 
 	public void hideSoftKeyboard() {
 		hideSoftKeyboard(getCurrentFocus());
@@ -505,27 +547,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				Context.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
 	}
-
-//	private void notHideViews(int which) {
-//		ivPhoto.setVisibility(View.GONE);
-//		tvText.setVisibility(View.GONE);
-//		tvVoiceLength.setVisibility(View.GONE);
-//		ivVoice.setVisibility(View.GONE);
-//		switch (which) {
-//		case MessageType.TEXT:
-//			tvText.setVisibility(View.VISIBLE);
-//			break;
-//		case MessageType.PICTURE:
-//			ivPhoto.setVisibility(View.VISIBLE);
-//			break;
-//		case MessageType.VOICE:
-//			ivVoice.setVisibility(View.VISIBLE);
-//			tvVoiceLength.setVisibility(View.VISIBLE);
-//			break;
-//		default:
-//			break;
-//		}
-//	}
 
 	private void notHideViews(int which) {
 		layoutPic.setVisibility(View.GONE);
@@ -607,17 +628,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		} else {
 			zanCountBtn.setImageResource(R.drawable.icon_msg_detail_zan_active);
 		}
-		if (messageInfo.isfavorite == 0) {
-			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_normal);
-		} else {
-			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_active);
-		}
+		bindFavoriteView();
 	}
 
 	private void bindZanCommentBorderView() {
 		if (zanList.size() == 0) {
 			layoutZan.setVisibility(View.GONE);
-			viewCoverBottom.setVisibility(View.GONE);
 			if (messageInfos.size() == 0) {
 				viewCoverTop.setVisibility(View.GONE);
 			} else {
@@ -628,10 +644,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			viewCoverTop.setVisibility(View.VISIBLE);
 			if (messageInfos.size() != 0) {
 				layoutZan.getChildAt(1).setVisibility(View.VISIBLE);
-				viewCoverBottom.setVisibility(View.GONE);
 			} else {
 				layoutZan.getChildAt(1).setVisibility(View.GONE);
-				viewCoverBottom.setVisibility(View.VISIBLE);
 			}
 		}
 	}
@@ -653,26 +667,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private ImageView chatCommentIcon;
 	private boolean onBottom = false;
 
-	private void bindCommentsView() {
-		// chatCommentIcon = (ImageView) findViewById(R.id.chat_comment_icon);
-		mAdapter = new MyAdapter();
-		// mListView = (MyListView) findViewById(R.id.chat_comment_list);
-		mListView.setAdapter(mAdapter);
-		// mListView.setOnItemClickListener(new OnItemClickListener() {
-		// @Override
-		// public void onItemClick(AdapterView<?> parent, View view, int
-		// position, long id) {
-		// mContentEdit.setHint(getString(R.string.comment_reply_info_colon)
-		// + messageInfos.get(position).displayname);
-		// mVoiceSendBtn.setText(getString(R.string.comment_reply_info_colon)
-		// + messageInfos.get(position).displayname);
-		// commenterid = messageInfos.get(position).from;
-		// commenterName = messageInfos.get(position).displayname;
-		// }
-		// });
-
-	}
-
 	private final static int MAX_SECOND = 10;
 	private final static int MIN_SECOND = 2;
 	private int palyedPosition;
@@ -681,27 +675,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
-			// if (messageInfos.size() == 0) {
-			// mListView.setBackgroundColor(Color.TRANSPARENT);
-			// } else {
-			// mListView.setBackgroundColor(Color.parseColor("#f0f0f0"));
-			// }
-			if (messageInfos.size() == 0) {
-				return 0;
-			}
-			return messageInfos.size() + 1;
+			return messageInfos.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return messageInfos.get(position);
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
@@ -715,21 +698,18 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail, null, false);
 				viewHolder.messageNameText = (TextView) convertView.findViewById(R.id.chat_comment_not_text_name);
 				viewHolder.voiceImageView = (ImageView) convertView.findViewById(R.id.chat_talk_msg_info_msg_voice);
-				viewHolder.picImageView = (ImageView) convertView.findViewById(R.id.chat_talk_msg_info_msg_photo);
+				viewHolder.picImageView = (ImageView) convertView.findViewById(R.id.iv_chat_photo);
+				viewHolder.picImageCover = (ImageView) convertView.findViewById(R.id.iv_chat_photo_cover);
 				viewHolder.rootLayout = (RelativeLayout) convertView.findViewById(R.id.chat_talk_msg_info);
-				viewHolder.rootLayoutFake = (RelativeLayout) convertView.findViewById(R.id.chat_talk_msg_info_fake);
 				viewHolder.voiceLayout = (RelativeLayout) convertView.findViewById(R.id.chat_voice_layout);
 				viewHolder.voiceTimeText = (TextView) convertView.findViewById(R.id.chat_talk_voice_num);
 				viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.chat_talk_msg_progressBar);
 				viewHolder.resendImageView = (ImageView) convertView.findViewById(R.id.chat_talk_msg_sendsate);
+				viewHolder.layoutPicHolder = convertView.findViewById(R.id.layout_msg_pic_holder);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-
-			// viewHolder.messageNameText.setMovementMethod(LinkMovementMethod
-			// .getInstance());
-			// viewHolder.messageNameText.setAutoLinkMask(Linkify.ALL);
 
 			viewHolder.messageNameText.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 5));
 			if (position == 0) {
@@ -738,13 +718,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			} else {
 				viewHolder.messageNameText.setCompoundDrawablesWithIntrinsicBounds(
 						R.drawable.icon_dynamic_comment_transparent, 0, 0, 0);
-			}
-			if (position == getCount() - 1) {
-				viewHolder.rootLayout.setVisibility(View.GONE);
-				viewHolder.rootLayoutFake.setBackgroundResource(R.drawable.icon_dynamic_bottom);
-				return convertView;
-			} else {
-				viewHolder.rootLayout.setVisibility(View.VISIBLE);
 			}
 
 			final MessageInfo commentInfo = messageInfos.get(position);
@@ -861,7 +834,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 
 		private void notHideViews(ViewHolder viewHolder, int which) {
-			viewHolder.picImageView.setVisibility(View.GONE);
+			viewHolder.layoutPicHolder.setVisibility(View.GONE);
 			viewHolder.voiceLayout.setVisibility(View.GONE);
 			viewHolder.progressBar.setVisibility(View.GONE);
 			viewHolder.messageNameText.setVisibility(View.VISIBLE);
@@ -870,7 +843,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder.messageNameText.setVisibility(View.VISIBLE);
 				break;
 			case MessageType.PICTURE:
-				viewHolder.picImageView.setVisibility(View.VISIBLE);
+				viewHolder.layoutPicHolder.setVisibility(View.VISIBLE);
 				break;
 			case MessageType.VOICE:
 				viewHolder.voiceLayout.setVisibility(View.VISIBLE);
@@ -901,11 +874,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	static class ViewHolder {
 		TextView messageNameText;
-		ImageView picImageView, voiceImageView, resendImageView;
+		ImageView picImageView, voiceImageView, resendImageView, picImageCover;
 		TextView voiceTimeText;
 		RelativeLayout rootLayout;
-		RelativeLayout rootLayoutFake;
 		RelativeLayout voiceLayout;
+		View layoutPicHolder;
 		ProgressBar progressBar;
 	}
 
@@ -935,187 +908,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	// private Handler mHandler = new Handler() {
-	//
-	// @Override
-	// public void handleMessage(Message msg) {
-	// // TODO Auto-generated method stub
-	// switch (msg.what) {
-	// case MainActivity.LIST_LOAD_REFERSH:
-	// break;
-	// case MainActivity.LIST_LOAD_FIRST:
-	// isLoad = false;
-	// hideProgressDialog();
-	// if (messageInfos.size() == 0) {
-	// chatCommentIcon.setVisibility(View.GONE);
-	// } else {
-	// chatCommentIcon.setVisibility(View.VISIBLE);
-	// }
-	// mAdapter.notifyDataSetChanged();
-	// break;
-	// case MainActivity.LIST_LOAD_MORE:
-	// isLoad = false;
-	// mAdapter.notifyDataSetChanged();
-	// break;
-	// case MainActivity.SHOW_PROGRESS_DIALOG:
-	// showProgressDialog(getString(R.string.xlistview_header_hint_loading));
-	// break;
-	// case MainActivity.HIDE_PROGRESS_DIALOG:
-	// likeCountBtn.setEnabled(true);
-	// hideProgressDialog();
-	// break;
-	// case ChatMainActivity.SEND_SUCCESS:
-	// MessageInfo commentInfo = (MessageInfo) msg.obj;
-	// if (!TextUtils.isEmpty(mNewUrl)) {
-	// shareNews(commentInfo.content + " " + mNewUrl);
-	// mNewUrl = "";
-	// }
-	// updateCommentInfoState(commentInfo);
-	// updateNewMessage(commentInfo);
-	// modifyMessageState();
-	// break;
-	// case ZAN_SUCCESS:
-	// Toast.makeText(mContext, getString(R.string.zan_success),
-	// Toast.LENGTH_SHORT).show();
-	// hideProgressDialog();
-	// getZanList();
-	// break;
-	// case ZAN_CANCEL_SUCCESS:
-	// Toast.makeText(mContext, getString(R.string.zan_cancel_success),
-	// Toast.LENGTH_SHORT).show();
-	// getZanList();
-	// break;
-	// case ZAN_FAILED:
-	// Toast.makeText(mContext, getString(R.string.zan_failed),
-	// Toast.LENGTH_SHORT).show();
-	// break;
-	// case GET_ZAN_LIST_SUCCESS:
-	// updateZanView();
-	// break;
-	//
-	// case ChatMainActivity.SHOW_SENSTIVE_WORD_ERROR: {
-	// String control_detail = (String) msg.obj;
-	// Toast.makeText(mContext, control_detail, Toast.LENGTH_LONG).show();
-	// }
-	// break;
-	// case ChatMainActivity.SHOW_MEETING_TIME_ERROR: {
-	// messageInfos.remove(0);
-	// mAdapter.notifyDataSetChanged();
-	// String control_detail = (String) msg.obj;
-	// Toast.makeText(mContext, control_detail, Toast.LENGTH_LONG).show();
-	// }
-	// break;
-	// case MainActivity.MSG_NETWORK_ERROR:
-	// likeCountBtn.setEnabled(true);
-	// hideProgressDialog();
-	// Toast.makeText(mContext, R.string.network_error,
-	// Toast.LENGTH_LONG).show();
-	// break;
-	//
-	// case ChatAdapter.MSG_SEND_MSG:
-	// MessageInfo msgInfo = (MessageInfo) msg.obj;
-	// msgInfo.sendState = 2;
-	// mAdapter.notifyDataSetChanged();
-	// msgInfo.title = mTribe.name;
-	// if (mChatType == MEETING_CHAT_TYPE && mTribe.role != 0) {
-	// msgInfo.displayname = mLogin.displayname;
-	// msgInfo.headImgUrl = mLogin.mSmallHead;
-	// } else {
-	// msgInfo.displayname = mIdentity.name;
-	// msgInfo.headImgUrl = mIdentity.heading;
-	// msgInfo.heroid = mIdentity.id;
-	// }
-	// btnResendAction(msgInfo);
-	// break;
-	//
-	// // from menu dialog
-	// case ChatAdapter.MSG_DELETE_MSG:
-	//
-	// break;
-	// case ChatAdapter.MSG_FAVORITE_MSG: {// 在adapter点击收藏
-	// MessageInfo msgInfo1 = (MessageInfo) msg.obj;
-	// Message msgF = new Message();
-	// msgF.what = MainActivity.SHOW_PROGRESS_DIALOG;
-	// msgF.obj = mContext.getString(R.string.send_loading);
-	// mHandler.sendMessage(msgF);
-	// favorite(msgInfo1);
-	// }
-	// break;
-	// case ChatAdapter.MSG_REPORT_MSG: {
-	// MessageInfo msgInfo1 = (MessageInfo) msg.obj;
-	// Message msgR = new Message();
-	// msgR.obj = mContext.getString(R.string.send_loading);
-	// msgR.what = MainActivity.SHOW_PROGRESS_DIALOG;
-	// mHandler.sendMessage(msgR);
-	//
-	// final String[] levelArray =
-	// mContext.getResources().getStringArray(R.array.report_message_cause);
-	// report(msgInfo1, levelArray[msg.arg1]);
-	// }
-	// break;
-	// case ChatAdapter.MSG_TYPE: {// 评论
-	// initialSendIdAndName();
-	// }
-	// break;
-	// case ChatAdapter.MSG_ZAN:
-	// zanMessage(messageInfo);
-	// break;
-	// case MSG_VOICE_TEXT_MSG:
-	// if (mCurrentModel == VOICE_MODEL) {
-	// mCurrentModel = TEXT_MODEL;
-	// if (mAdapter != null) {
-	// mAdapter.setCurrentModel(mCurrentModel);
-	// mAdapter.notifyDataSetChanged();
-	// }
-	// } else if (mCurrentModel == TEXT_MODEL) {
-	// mCurrentModel = VOICE_MODEL;
-	// if (mAdapter != null) {
-	// mAdapter.setCurrentModel(mCurrentModel);
-	// mAdapter.notifyDataSetChanged();
-	// }
-	// }
-	// bindView();
-	// break;
-	// case MSG_REMOVE_MSG:
-	// removeMessage(messageInfo);
-	// break;
-	//
-	// // ===result
-	// case FAVORITE_SUCCESS:
-	// hideProgressDialog();
-	// MessageInfo favoriteMessage = (MessageInfo) msg.obj;
-	// Toast.makeText(mContext, R.string.favorite_success,
-	// Toast.LENGTH_SHORT).show();
-	// updateFavoriteCount(favoriteMessage, false);
-	// favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
-	// Intent favoriteIntent = new
-	// Intent(ChatMainActivity.ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
-	// favoriteIntent.putExtra("message",
-	// ChatCommentsActivity.this.messageInfo);
-	// mContext.sendBroadcast(favoriteIntent);
-	// break;
-	//
-	// case REPORT_SUCCESS:
-	// hideProgressDialog();
-	// Toast.makeText(mContext, R.string.report_success,
-	// Toast.LENGTH_SHORT).show();
-	// break;
-	// case MainActivity.MSG_LOAD_ERROR:
-	// hideProgressDialog();
-	// String error_Detail = (String) msg.obj;
-	// if (error_Detail != null && !error_Detail.equals("")) {
-	// Toast.makeText(mContext, error_Detail, Toast.LENGTH_LONG).show();
-	// } else {
-	// Toast.makeText(mContext, R.string.load_error, Toast.LENGTH_LONG).show();
-	// }
-	// break;
-	// default:
-	// break;
-	// }
-	// }
-	//
-	// };
-
 	private void removeMessage(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
@@ -1129,29 +921,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			ChatCommentsActivity.this.finish();
 		}
 	}
-
-	private void updateFavoriteCount(MessageInfo favoriteMessage, boolean isFavorite) {
-		if (isFavorite) {
-			messageInfo.favoriteCount = favoriteMessage.favoriteCount;
-		} else {
-			messageInfo.favoriteCount++;
-			messageInfo.isfavorite = 1;
-			// updateMessage(messageInfo);
-		}
-	}
-
-	// private void shareNews(final String content) {
-	// new Thread() {
-	// @Override
-	// public void run() {
-	// try {
-	// DamiCommon.getDamiInfo().shareContent(content);
-	// } catch (DamiException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// }.start();
-	// }
 
 	private void updateCommentInfoState(MessageInfo messageInfo) {
 		MessageInfo tempInfo = this.messageInfo;
@@ -1196,6 +965,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
 		table.updateAgreeCount(messageInfo);
+	}
+
+	private void updateFavoriteCount(MessageInfo favoriteMessage, boolean isFavorite) {
+		if (isFavorite) {
+			messageInfo.favoriteCount = favoriteMessage.favoriteCount;
+		} else {
+			messageInfo.favoriteCount++;
+			messageInfo.isfavorite = 1;
+		}
 	}
 
 	private List<MessageInfo> messageInfos = new ArrayList<MessageInfo>();
@@ -1245,7 +1023,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		});
 	}
 
-	private boolean emotionShowFlag = false;
 	private AlphaAnimation alphaAnim = null;
 	private ObjectAnimator animator;
 
@@ -1263,47 +1040,20 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		case R.id.zan_count_layout:
 		case R.id.zan_count_btn:
 			animator = ObjectAnimator.ofFloat(zanCountBtn, "rotationY", 0, 360, 0).setDuration(1500);
-			// animator.setRepeatCount(-1);
 			animator.start();
-			zanMessage(messageInfo);
+			msgHelper.zanMessage(messageInfo);
 			break;
 
 		case R.id.favorite_count_btn:
 		case R.id.favourite_count_layout:
 			animator = ObjectAnimator.ofFloat(favoriteCountBtn, "rotationY", 0, 360, 0).setDuration(1500);
 			animator.start();
-			favoriteMessage(messageInfo);
+			if (messageInfo.isfavorite == 0) {
+				msgHelper.favoriteMessage(messageInfo);
+			} else {
+				msgHelper.unFavoriteMessage(messageInfo);
+			}
 			break;
-		// case R.id.send_text_btn:
-		// mEmotionPicker.hide(ChatCommentsActivity.this);
-		// mEmotionBtn.setBackgroundResource(R.drawable.chatting_biaoqing_btn_normal);
-		// emotionShowFlag = false;
-		// hideSoftKeyboard();
-		// sendText();
-
-		// break;
-		// case R.id.emotion_btn:
-		// if (!emotionShowFlag) {
-		// hideSoftKeyboard();
-		// mEmotionPicker.show(ChatCommentsActivity.this);
-		// mEmotionBtn.setBackgroundResource(R.drawable.chatting_biaoqing_btn_enable);
-		// emotionShowFlag = true;
-		// } else {
-		// mEmotionPicker.hide(ChatCommentsActivity.this);
-		// mEmotionBtn.setBackgroundResource(R.drawable.chatting_biaoqing_btn_normal);
-		// emotionShowFlag = false;
-		// }
-		// break;
-		// case R.id.chat_box_btn_text:
-		// switchTextVoice();
-		// break;
-		// case R.id.chat_box_btn_add:
-		// showTypeDialog();
-		// break;
-		// case R.id.left_btn:
-		// hideSoftKeyboard();
-		// this.finish();
-		// break;
 		case R.id.chat_add_camera:
 			btnCameraAction();
 			boxManager.hideAddGrid();
@@ -1509,6 +1259,14 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		return msg;
 	}
+	
+	private String getName() {
+		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
+			return mLogin.displayName;
+		} else {
+			return mIdentity.name;
+		}
+	}
 
 	/**
 	 * 发送并将消息加到消息列表中
@@ -1518,13 +1276,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected void addSaveSendMessage(MessageInfo msg) {
 		msg.sendState = MessageState.STATE_SENDING;
 		addMessageInfo(msg);
-		insertMessage(msg);
+		bindCommentCount();
+		sendNotify();
+//		insertMessage(msg);
 		sendMessage(msg);
 	}
 
 	protected void addMessageInfo(MessageInfo info) {
 		Log.d(TAG, "add message");
 		messageInfos.add(info);
+		messageInfo.commentCount++;
 		notifyDataSetChanged();
 		if (messageInfos != null && messageInfos.size() != 0) {
 			mListView.getRefreshableView().setSelection(messageInfos.size() - 1);
@@ -1558,15 +1319,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 							String voice = FeatureFunction.generator(messageInfo.voiceUrl);
 							FeatureFunction.reNameFile(new File(msg.voiceUrl), voice);
 						}
-						updateNewMessage(messageInfo);
+//						updateNewMessage(messageInfo);
 						modifyMessageState(messageInfo);
+
 						return;
 					} else if (data.state.code == 1) {
 						sendFailed(msg);
 					} else {
 						this.otherCondition(data.state, ChatCommentsActivity.this);
 					}
-					// handleExtralSendSuccessConditon(data, msg);
 				}
 			}
 
@@ -1614,256 +1375,14 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	private void switchTextVoice() {
-		boolean sendVoice = (mContentEdit.getVisibility() == View.VISIBLE);
-		if (sendVoice) {
-			mSwitchVoiceTextBtn.setBackgroundResource(R.drawable.chatting_setmode_keyboard_btn_normal);
-			mEmotionBtn.setVisibility(View.GONE);
-			mContentEdit.setVisibility(View.GONE);
-			mVoiceSendBtn.setVisibility(View.VISIBLE);
-			mEmotionPicker.hide(ChatCommentsActivity.this);
-			mEmotionBtn.setBackgroundResource(R.drawable.chatting_biaoqing_btn_normal);
-			hideSoftKeyboard();
-		} else {
-			mSwitchVoiceTextBtn.setBackgroundResource(R.drawable.chatting_setmode_voice_btn_normal);
-			mEmotionBtn.setVisibility(View.VISIBLE);
-			mVoiceSendBtn.setVisibility(View.GONE);
-			mContentEdit.setVisibility(View.VISIBLE);
-			mContentEdit.setFocusable(true);
-			mContentEdit.setFocusableInTouchMode(true);
-			mContentEdit.requestFocus();
-			// hideSoftKeyboard();
-			showSoftKeyboard();
-		}
-	}
-
-	private void showTypeDialog() {
-		final Dialog dlg = new Dialog(mContext, R.style.MMThem_DataSheet);
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.chat_add_menu_dialog, null);
-		final int cFullFillWidth = 10000;
-		layout.setMinimumWidth(cFullFillWidth);
-
-		final Button tpyeBtn = (Button) layout.findViewById(R.id.sendType);
-		tpyeBtn.setVisibility(View.GONE);
-		final Button cameraBtn = (Button) layout.findViewById(R.id.camera);
-		final Button galleryBtn = (Button) layout.findViewById(R.id.gallery);
-		final Button cancelBtn = (Button) layout.findViewById(R.id.cancelbtn);
-
-		cameraBtn.setText(mContext.getString(R.string.camera));
-		galleryBtn.setText(mContext.getString(R.string.gallery));
-		cancelBtn.setText(mContext.getString(R.string.cancel));
-
-		final boolean sendVoice;
-		if (mContentEdit.getVisibility() == View.VISIBLE) {
-			sendVoice = true;
-		} else {
-			sendVoice = false;
-		}
-
-		cameraBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dlg.dismiss();
-				// btnCameraAction();
-			}
-		});
-
-		galleryBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dlg.dismiss();
-				// btnPhotoAction();
-			}
-		});
-
-		cancelBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dlg.dismiss();
-			}
-		});
-
-		Window w = dlg.getWindow();
-		WindowManager.LayoutParams lp = w.getAttributes();
-		lp.x = 0;
-		final int cMakeBottom = -1000;
-		lp.y = cMakeBottom;
-		lp.gravity = Gravity.BOTTOM;
-		dlg.onWindowAttributesChanged(lp);
-		dlg.setCanceledOnTouchOutside(true);
-		dlg.setCancelable(true);
-
-		dlg.setContentView(layout);
-		dlg.show();
-	}
-
 	public final static int ZAN_SUCCESS = 17454;
 	public final static int ZAN_FAILED = 17455;
 	public final static int ZAN_CANCEL_SUCCESS = 17456;
 
-	private final static int HIDE_PROGRESS_DIALOG = 15453;
 
-	// private void sendText() {
-	// String str = mContentEdit.getText().toString();
-	// Log.e("SEND MESSAGE", str);
-	// if (str != null
-	// && (str.trim().replaceAll("\r", "").replaceAll("\t", "").replaceAll("\n",
-	// "").replaceAll("\f", "")) != "") {
-	// if (str.length() > DamiCommon.MESSAGE_CONTENT_LEN) {
-	// showToast(mContext.getString(R.string.message_limit_count));
-	// return;
-	// }
-	// mContentEdit.setText("");
-	//
-	// MessageInfo msg = new MessageInfo();
-	// msg.from = DamiCommon.getUid(mContext);// 来自自己
-	// msg.tag = UUID.randomUUID().toString() + "-" + msg.from + "-" +
-	// System.currentTimeMillis();
-	// msg.title = mTribe.name;
-	// msg.to = mTribe.id;// 发送给会议
-	// msg.parentid = messageInfo.id;// 给谁发评论，要么是0，要么是其他消息
-	// if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0)
-	// {// 在会议室并且是创建者
-	// msg.displayname = mLogin.displayName;// 发送者的名字
-	// msg.headImgUrl = mLogin.headsmall;// 发送者的小头像
-	// } else {// 临时？
-	// msg.displayname = mIdentity.name;
-	// msg.headImgUrl = mIdentity.head;
-	// msg.heroid = mIdentity.id;
-	// }
-	//
-	// msg.fileType = MessageType.TEXT;
-	// msg.content = str;
-	// msg.type = mChatType;
-	// if (mNewUrl == null || mNewUrl.equals("")) {
-	// Pattern p = Pattern
-	// .compile("(\\bhttps?://[a-zA-Z0-9\\-.]+(?::(\\d+))?(?:(?:/[a-zA-Z0-9\\-._?,'+\\&%$=~*!():@\\\\]*)+)?)");
-	// Matcher m = p.matcher(str);
-	// if (m.find()) {
-	// msg.url = m.group(1);
-	// }
-	// } else {
-	// msg.url = mNewUrl;
-	// }
-	//
-	// msg.time = System.currentTimeMillis();
-	// msg.readState = 1;
-	//
-	// msg.commenterid = commenterid;
-	// msg.commentername = commenterName;
-	// initialSendIdAndName();
-	// msg.sendState = 1;
-	// addMessageInfo(msg);
-	// sendMessage(msg, 0);
-	// }
-	// }
-
-	//
-	// @Override
-	// protected void addMessageInfo(MessageInfo info) {
-	// messageInfos.add(0, info);
-	// messageInfo.commentCount++;
-	// commentCountText.setText(String.valueOf(messageInfo.commentCount));
-	// if (messageInfos.size() > 0) {
-	// chatCommentIcon.setVisibility(View.VISIBLE);
-	// }
-	// Log.d(TAG, "add message messageInfos length is:" + messageInfos.size());
-	// mAdapter.notifyDataSetChanged();
-	// insertMessage(info);
-	// }
-	//
-	// private void sendMessage(final MessageInfo msg, final int isResend) {
-	// new Thread() {
-	// @Override
-	// public void run() {
-	// if (DamiCommon.verifyNetwork(mContext)) {
-	// msg.sendState = 2;
-	// Message stateMessage = new Message();
-	// stateMessage.obj = msg;
-	// stateMessage.what = ChatMainActivity.CHANGE_STATE;
-	// mHandler.sendMessage(stateMessage);
-	// try {
-	// MessageResult result = DamiCommon.getDamiInfo().sendMessage(msg);
-	// if (result != null && result.mState != null && result.mState.code == 0)
-	// {// 发送成功
-	// result.mMessageInfo.sendState = 1;
-	// if (msg.msgType == MessageType.VOICE) {
-	// String voice = FeatureFunction.generator(result.mMessageInfo.voiceUrl);
-	// FeatureFunction.reNameFile(new File(msg.voiceUrl), voice);
-	// }
-	// result.mMessageInfo.readState = 1;
-	// Message message = new Message();
-	// message.what = ChatMainActivity.SEND_SUCCESS;
-	// message.arg1 = isResend;
-	// message.obj = result.mMessageInfo;
-	// mHandler.sendMessage(message);
-	// return;
-	// } else if (result != null && result.mState != null && result.mState.code
-	// == DamiCommon.EXPIRED_CODE) {// 账户过期
-	// DamiCommon.saveLoginResult(mContext, null);
-	// DamiCommon.setUid("");
-	// DamiCommon.setToken("");
-	// Intent intent = new Intent(mContext, LoginActivity.class);
-	// startActivityForResult(intent, MainActivity.LOGIN_REQUEST);
-	// } else if (result != null && result.mState != null && result.mState.code
-	// == DamiCommon.SENSITIVE_WORD_CODE) {// 敏感词过滤
-	// Message message = new Message();
-	// message.what = ChatMainActivity.SHOW_SENSTIVE_WORD_ERROR;
-	// message.obj = result.mState.errorMsg;
-	// mHandler.sendMessage(message);
-	// } else if (result != null
-	// && result.mState != null
-	// && (result.mState.code == DamiCommon.MEETING_NO_START_CODE// 会议结束等问题
-	// || result.mState.code == DamiCommon.MEETING_IS_OVER_CODE ||
-	// result.mState.code == DamiCommon.MEETING_EXPIRED_CODE ||
-	// result.mState.code == DamiCommon.SENSITIVE_WORD_CODE)) {
-	// Message message = new Message();
-	// message.what = ChatMainActivity.SHOW_MEETING_TIME_ERROR;
-	// message.obj = result.mState.errorMsg;
-	// mHandler.sendMessage(message);
-	// } else if (result != null && result.mState != null && result.mState.code
-	// == DamiCommon.IDENTITY_INVALID_CODE) {// 身份失效
-	// mIdentity = result.mIdentity;
-	// SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
-	// IdentityTable table = new IdentityTable(db);
-	// Identity identity = table.query(mTribe.id);
-	// if (identity == null) {
-	// table.insert(mTribe.id, result.mIdentity);
-	// } else {
-	// table.update(mTribe.id, result.mIdentity);
-	// }
-	// msg.displayName = result.mIdentity.name;
-	// msg.heroid = result.mIdentity.id;
-	// msg.headImgUrl = result.mIdentity.heading;
-	// }
-	// } catch (DamiException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// } else {
-	// mHandler.sendEmptyMessage(MainActivity.MSG_NETWORK_ERROR);
-	// }
-	//
-	// msg.displayName = messageInfo.displayName;
-	// msg.sendState = 0;
-	// Message message = new Message();
-	// message.what = ChatMainActivity.SEND_FAILED;
-	// message.arg1 = isResend;
-	// message.obj = msg;
-	// mHandler.sendMessage(message);
-	// }
-	// }.start();
-	// }
-	//
-	private List<MessageInfo> zanList = new ArrayList<MessageInfo>();
 
 	private void getZanList() {
 		DamiInfo.getMessageZanList(messageInfo.id, new SimpleResponseListener(mContext) {
-
 			@Override
 			public void onSuccess(Object o) {
 				final ChatMessageBean data = (ChatMessageBean) o;
@@ -1872,7 +1391,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 					if (data.data != null && data.data.size() > 0) {
 						zanList.addAll(data.data);
 					}
-					updateZanView();
+					bindZanView();
 				} else {
 					otherCondition(data.state, ChatCommentsActivity.this);
 				}
@@ -1881,7 +1400,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		});
 	}
 
-	private void updateZanView() {
+	private void bindZanView() {
 		zanCountBtn.setEnabled(true);
 		messageInfo.agreeCount = zanList.size();
 		likeCountText.setText(String.valueOf(zanList.size()));
@@ -1897,6 +1416,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 		bindZanCommentBorderView();
 	}
+	
+	private void bindFavoriteView() {
+		if (messageInfo.isfavorite == 0) {
+			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_normal);
+		} else {
+			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_active);
+		}
+		favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
+	}
 
 	private List<SpanUser> getZanUserList(List<MessageInfo> messageInfos) {
 		List<SpanUser> spanUsers = new ArrayList<SpanUser>();
@@ -1909,499 +1437,33 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		return spanUsers;
 	}
 
-	//
-	// /** 聊天广播 */
-	// private BroadcastReceiver chatReceiver = new BroadcastReceiver() {
-	// @Override
-	// public void onReceive(Context context, Intent intent) {
-	// String action = intent.getAction();
-	// if (ChatMainActivity.ACTION_ZAN_MESSAGE.equals(action)) {
-	// MessageInfo messageInfo = (MessageInfo)
-	// intent.getSerializableExtra("message");
-	// if (messageInfo != null) {
-	// updateZanCount(messageInfo, true);
-	// }
-	// } else if (ChatMainActivity.ACTION_UNZAN_MESSAGE.equals(action)) {
-	// MessageInfo messageInfo = (MessageInfo)
-	// intent.getSerializableExtra("message");
-	// if (messageInfo != null) {
-	// updateZanCount(messageInfo, true);
-	// }
-	// } else if (NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE.equals(action)) {
-	// final MessageInfo messageInfo = (MessageInfo)
-	// intent.getSerializableExtra(NotifyChatMessage.EXTRAS_NOTIFY_CHAT_MESSAGE);
-	// mHandler.post(new Runnable() {
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	//
-	// modifyMessageState(messageInfo);
-	// }
-	// });
-	//
-	// } else if (ChatMainActivity.ACTION_FAVORITE_MESSAGE.equals(action)) {
-	// updateFavoriteCount(messageInfo, false);
-	// favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
-	// } else if (ChatMainActivity.ACTION_SHIED_MESSAGE.equals(action)) {
-	// String tag = intent.getStringExtra("tag");
-	// if (!TextUtils.isEmpty(tag)) {
-	// if (messageInfo.tag.equals(tag)) {
-	// messageInfo.mIsShide = 1;
-	// bindView();
-	// } else {
-	// for (int i = 0; i < messageInfos.size(); i++) {
-	// if (messageInfos.get(i).tag.equals(tag)) {
-	// messageInfos.get(i).mIsShide = 1;
-	// mAdapter.notifyDataSetChanged();
-	// break;
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
-	// };
-	//
-	// private void registerReceiver() {
-	// IntentFilter filter = new IntentFilter();
-	// filter.addAction(ChatMainActivity.ACTION_ZAN_MESSAGE);
-	// filter.addAction(ChatMainActivity.ACTION_UNZAN_MESSAGE);
-	// filter.addAction(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE);
-	// filter.addAction(ChatMainActivity.ACTION_SHIED_MESSAGE);
-	// registerReceiver(chatReceiver, filter);
-	// }
-	//
-	// private void unregisterReceiver() {
-	// unregisterReceiver(chatReceiver);
-	// }
-	//
-	// private void updateZanCount(MessageInfo msgInfo, boolean isAgree) {
-	// if (msgInfo.parentId.equals("0")) {
-	// if (msgInfo.tag.equals(messageInfo.tag)) {
-	// if (isAgree) {
-	// messageInfo.agreeCount = msgInfo.agreeCount;
-	// } else {
-	// messageInfo.agreeCount++;
-	// updateMessage(msgInfo);
-	// }
-	// }
-	// }
-	// }
-	//
-	// private void modifyMessageState(MessageInfo messageInfo) {
-	// if (messageInfo == null) {
-	// return;
-	// }
-	// updateMessage(messageInfo);
-	// if (messageInfo.parentId.equals("0")) {
-	// return;
-	// } else {
-	// if (mChatType == TRIBE_CHAT_TYPE) {
-	// mContext.sendBroadcast(new Intent(TribeTab.UPDATE_COUNT_ACTION));
-	// mContext.sendBroadcast(new
-	// Intent(MainActivity.ACTION_UPDATE_TRIBE_SESSION_COUNT));
-	// } else if (mChatType == MEETING_CHAT_TYPE) {
-	// mContext.sendBroadcast(new
-	// Intent(MeatingTab.REFRESH_UNREAD_COUNT_ACTION));
-	// mContext.sendBroadcast(new
-	// Intent(MainActivity.ACTION_UPDATE_MEETING_SESSION_COUNT));
-	// }
-	// if
-	// (messageInfo.parentId.equals(ChatCommentsActivity.this.messageInfo.id)) {
-	// ChatCommentsActivity.this.messageInfo.commentCount++;
-	// commentCountText.setText(String.valueOf(ChatCommentsActivity.this.messageInfo.commentCount));
-	// messageInfos.add(0, messageInfo);
-	// mAdapter.notifyDataSetChanged();
-	//
-	// }
-	// }
-	// }
-
-	// private int mSceneType = 0;
-	// public final static int SCENE_ONLOOK = 101;
-	//
-	// public void showMenuDialog(final MessageInfo messageInfo) {
-	//
-	// final Dialog dlg = new Dialog(mContext, R.style.MMThem_DataSheet);
-	// LayoutInflater inflater = (LayoutInflater)
-	// mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	// LinearLayout layout = (LinearLayout)
-	// inflater.inflate(R.layout.chat_comment_add_menu_dialog, null);
-	// final int cFullFillWidth = 10000;
-	// layout.setMinimumWidth(cFullFillWidth);
-	//
-	// final Button tpyeBtn = (Button) layout.findViewById(R.id.sendType);
-	// final Button zanButn = (Button) layout.findViewById(R.id.zanButton);
-	// final Button cameraBtn = (Button) layout.findViewById(R.id.camera);
-	// final Button galleryBtn = (Button) layout.findViewById(R.id.gallery);
-	// final Button cancelBtn = (Button) layout.findViewById(R.id.cancelbtn);
-	// LinearLayout firstline = (LinearLayout)
-	// layout.findViewById(R.id.firstline);
-	// LinearLayout line = (LinearLayout) layout.findViewById(R.id.lastline);
-	// LinearLayout voiceLayout = (LinearLayout)
-	// layout.findViewById(R.id.voiceLayout);
-	// LinearLayout retrweetLayout = (LinearLayout)
-	// layout.findViewById(R.id.forwardLayout);
-	// LinearLayout commnicationLayout = (LinearLayout)
-	// layout.findViewById(R.id.communicationLayout);
-	// LinearLayout zanLayout = (LinearLayout)
-	// layout.findViewById(R.id.zanLayout);
-	// LinearLayout deleteLayout = (LinearLayout)
-	// layout.findViewById(R.id.deleteLayout);
-	// LinearLayout voiceModeLayout = (LinearLayout)
-	// layout.findViewById(R.id.voiceModeLayout);
-	//
-	// final Button voiceModeBtn = (Button)
-	// layout.findViewById(R.id.voice_mode_btn);
-	// final Button deleteBtn = (Button) layout.findViewById(R.id.deleteBtn);
-	// final Button voiceBtn = (Button) layout.findViewById(R.id.voiceBtn);
-	// final Button forwardBtn = (Button) layout.findViewById(R.id.forwardBtn);
-	// final Button commnicationBtn = (Button)
-	// layout.findViewById(R.id.communicationBtn);
-	//
-	// tpyeBtn.setText(mContext.getString(R.string.comment));
-	// cameraBtn.setText(mContext.getString(R.string.favorite));
-	// galleryBtn.setText(mContext.getString(R.string.report));
-	// cancelBtn.setText(mContext.getString(R.string.cancel));
-	//
-	// zanLayout.setVisibility(View.VISIBLE);
-	// deleteLayout.setVisibility(View.VISIBLE);
-	// if (messageInfo.parentId.equals("0")) {
-	// tpyeBtn.setVisibility(View.VISIBLE);
-	// firstline.setVisibility(View.VISIBLE);
-	// retrweetLayout.setVisibility(View.VISIBLE);
-	// voiceLayout.setVisibility(View.VISIBLE);
-	// if (messageInfo.fromId.equals(DamiCommon.getUid(mContext))) {//
-	// 如果来自自己，则不交往，转发等
-	// commnicationLayout.setVisibility(View.GONE);
-	// galleryBtn.setVisibility(View.GONE);
-	// line.setVisibility(View.GONE);
-	// } else {
-	// commnicationLayout.setVisibility(View.VISIBLE);
-	// galleryBtn.setVisibility(View.VISIBLE);
-	// line.setVisibility(View.VISIBLE);
-	// }
-	//
-	// retrweetLayout.setBackgroundResource(R.drawable.bottom_half_transparent_btn);
-	// } else {
-	// commnicationLayout.setVisibility(View.GONE);
-	// tpyeBtn.setVisibility(View.GONE);
-	// firstline.setVisibility(View.GONE);
-	// retrweetLayout.setVisibility(View.GONE);
-	// voiceLayout.setVisibility(View.GONE);
-	// if (messageInfo.fromId.equals(DamiCommon.getUid(mContext))) {
-	// galleryBtn.setVisibility(View.GONE);
-	// line.setVisibility(View.GONE);
-	// cameraBtn.setBackgroundResource(R.drawable.round_half_transparent_btn);
-	// } else {
-	// galleryBtn.setVisibility(View.VISIBLE);
-	// line.setVisibility(View.VISIBLE);
-	// cameraBtn.setBackgroundResource(R.drawable.top_half_transparent_btn);
-	// }
-	// }
-	// if (mCurrentModel == VOICE_MODEL) {
-	// voiceBtn.setText(getString(R.string.view_text_version));
-	// } else {
-	// voiceBtn.setText(getString(R.string.view_voice_version));
-	// }
-	//
-	// if (messageInfo.mIsAgree == 1) {
-	// zanButn.setText(getString(R.string.zan_cancel));
-	// } else {
-	// zanButn.setText(getString(R.string.zan));
-	// }
-	//
-	// if (mSceneType == SCENE_ONLOOK) {
-	// deleteBtn.setVisibility(View.GONE);
-	// commnicationBtn.setVisibility(View.GONE);
-	// forwardBtn.setVisibility(View.GONE);
-	// } else {
-	// deleteBtn.setVisibility(View.VISIBLE);
-	// }
-	//
-	// voiceModeLayout.setVisibility(View.VISIBLE);
-	// if (((BaseActivity) mContext).isModeInCall) {
-	// voiceModeBtn.setText(mContext.getString(R.string.mode_in_speaker));
-	// } else {
-	// voiceModeBtn.setText(mContext.getString(R.string.mode_in_call));
-	// }
-	//
-	// voiceModeBtn.setOnClickListener(new OnClickListener() {
-	// @Override
-	// public void onClick(View v) {
-	// // TODO Auto-generated method stub
-	// dlg.dismiss();
-	// if (((BaseActivity) mContext).isModeInCall) {// 如果是听筒
-	// ((BaseActivity) mContext).setPlayMode(false);// 那么就喇叭
-	// updateVoicePlayModeState(false);
-	// Toast.makeText(mContext,
-	// mContext.getString(R.string.switch_to_mode_in_speaker),
-	// Toast.LENGTH_SHORT).show();
-	// } else {
-	// ((BaseActivity) mContext).setPlayMode(true);// 不然就听筒
-	// updateVoicePlayModeState(true);
-	// Toast.makeText(mContext,
-	// mContext.getString(R.string.switch_to_mode_in_call),
-	// Toast.LENGTH_SHORT).show();
-	// }
-	// if (playListener.isPalying()) {
-	// DamiApp.getInstance().setPlayMode();
-	// }
-	// }
-	// });
-	//
-	// deleteBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// sendMessage(MSG_REMOVE_MSG, messageInfo);
-	// }
-	// });
-	//
-	// tpyeBtn.setOnClickListener(new OnClickListener() {
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// sendMessage(MSG_TYPE, messageInfo);
-	// }
-	// });
-	//
-	// zanButn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// // TODO Auto-generated method stub
-	// dlg.dismiss();
-	// sendMessage(MSG_ZAN, messageInfo);
-	// }
-	// });
-	//
-	// cameraBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// sendMessage(MSG_FAVORITE_MSG, messageInfo);
-	// }
-	// });
-	//
-	// galleryBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// showReportDialog(messageInfo);
-	// }
-	// });
-	//
-	// voiceBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// sendMessage(MSG_VOICE_TEXT_MSG, messageInfo);
-	// }
-	// });
-	//
-	// commnicationBtn.setOnClickListener(new OnClickListener() {
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// Intent intent = new Intent(mContext, ApplyMeetingActivity.class);
-	// intent.putExtra("uid", messageInfo.fromId);
-	// intent.putExtra("msgid", messageInfo.id);
-	// intent.putExtra("refuseType", 2);
-	// mContext.startActivity(intent);
-	// }
-	// });
-	//
-	// forwardBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// Intent intent = new Intent(mContext, InviteUserActivity.class);
-	// intent.putExtra("id", mTribe.id);
-	// intent.putExtra("isforward", 1);
-	// intent.putExtra("message", messageInfo);
-	// mContext.startActivity(intent);
-	// }
-	// });
-	//
-	// cancelBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// }
-	// });
-	//
-	// Window w = dlg.getWindow();
-	// WindowManager.LayoutParams lp = w.getAttributes();
-	// lp.x = 0;
-	// final int cMakeBottom = -1000;
-	// lp.y = cMakeBottom;
-	// lp.gravity = Gravity.BOTTOM;
-	// dlg.onWindowAttributesChanged(lp);
-	// dlg.setCanceledOnTouchOutside(true);
-	// dlg.setCancelable(true);
-	//
-	// dlg.setContentView(layout);
-	// dlg.show();
-	// }
-	//
-	// public void updateVoicePlayModeState(boolean isModeInCall) {
-	// if (isModeInCall) {
-	// mVoiceModeImage.setVisibility(View.VISIBLE);
-	// } else {
-	// mVoiceModeImage.setVisibility(View.GONE);
-	// }
-	// }
-	//
-	// private void showReportDialog(final MessageInfo messageInfo) {
-	// final Dialog dlg = new Dialog(mContext, R.style.MMThem_DataSheet);
-	// LayoutInflater inflater = (LayoutInflater)
-	// mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	// LinearLayout layout = (LinearLayout)
-	// inflater.inflate(R.layout.chat_report_dialog, null);
-	// final int cFullFillWidth = 10000;
-	// layout.setMinimumWidth(cFullFillWidth);
-	//
-	// ListView listView = (ListView) layout.findViewById(R.id.cause_list);
-	// listView.setCacheColorHint(0);
-	// final String[] levelArray =
-	// mContext.getResources().getStringArray(R.array.report_message_cause);
-	// listView.setOnItemClickListener(new OnItemClickListener() {
-	//
-	// @Override
-	// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long
-	// arg3) {
-	// dlg.dismiss();
-	// sendMessage(MSG_REPORT_MSG, messageInfo, arg2);
-	// }
-	// });
-	// ReportCauseAdapter adapter = new ReportCauseAdapter(mContext,
-	// levelArray);
-	// listView.setAdapter(adapter);
-	// final Button cancelBtn = (Button) layout.findViewById(R.id.cancelbtn);
-	// cancelBtn.setText(mContext.getString(R.string.cancel));
-	//
-	// cancelBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// dlg.dismiss();
-	// }
-	// });
-	//
-	// // set a large value put it in bottom
-	// Window w = dlg.getWindow();
-	// WindowManager.LayoutParams lp = w.getAttributes();
-	// lp.x = 0;
-	// final int cMakeBottom = -1000;
-	// lp.y = cMakeBottom;
-	// lp.gravity = Gravity.BOTTOM;
-	// dlg.onWindowAttributesChanged(lp);
-	// dlg.setCanceledOnTouchOutside(true);
-	// dlg.setCancelable(true);
-	//
-	// dlg.setContentView(layout);
-	// dlg.show();
-	// }
-
-	private void sendMessage(int msgID, MessageInfo msg) {
-		sendMessage(msgID, msg, 0);
-	}
-
-	private void sendMessage(int msgID, MessageInfo msg, int arg) {
-		Message msgMessage = new Message();
-		msgMessage.what = msgID;
-		msgMessage.arg1 = arg;
-		msgMessage.obj = msg;
-		// mHandler.sendMessage(msgMessage);
-	}
-
 	private class PlayCallback extends MediaUIHeper.PlayCallback {
 
 		@Override
 		public void onStart() {
-			// TODO Auto-generated method stub
-			// if (((ChatBaseActivity)mContext).isModeInCall) {
-			// ((ChatTribeActivity) mContext).showVoiceModeToastAnimation();
-			// }
 			mAdapter.notifyDataSetChanged();
 		}
 
 		@Override
 		public void onStop(boolean stopAutomatic) {
-			// TODO Auto-generated method stub
 			mAdapter.notifyDataSetChanged();
 		}
 	}
 
-	public void zanMessage(final MessageInfo messageInfo) {
-		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, new SimpleResponseListener(mContext,
-				getString(R.string.request_internet_now)) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					if (data.state.msg.equals("赞成功")) {
-						Toast.makeText(mContext, "赞同成功", Toast.LENGTH_SHORT).show();
-						messageInfo.isAgree = 1;
-						messageInfo.agreeCount++;
-					} else if (data.state.msg.equals("取消赞成功")) {
-						Toast.makeText(mContext, "您已取消赞同", Toast.LENGTH_SHORT).show();
-						messageInfo.isAgree = 0;
-						messageInfo.agreeCount--;
-					}
-					updateZanCount(ChatCommentsActivity.this.messageInfo);
-					getZanList();
-				} else {
-					otherCondition(data.state, ChatCommentsActivity.this);
-				}
-			}
-		});
-	}
-
-	public void favoriteMessage(final MessageInfo messageInfo) {
-		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
-
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				Toast.makeText(mContext, R.string.favorite_success, Toast.LENGTH_SHORT).show();
-				updateFavoriteCount(messageInfo, false);
-				favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_active);
-			}
-		};
-		if (mChatType == ChatTribeActivity.CHAT_TYPE_TRIBE) {
-			DamiInfo.favoriteMessage(mTribe.id, messageInfo.id, listener);
-		} else if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING) {
-			DamiInfo.favoriteMeetingMessage(mTribe.id, messageInfo.id, listener);
-		}
-	}
-
-	private void report(final MessageInfo messageInfo, final String content) {
-		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
-			@Override
-			public void onSuccess(Object o) {
-				Toast.makeText(mContext, R.string.report_success, Toast.LENGTH_SHORT).show();
-			}
-		};
-		if (mChatType == ChatTribeActivity.CHAT_TYPE_TRIBE) {
-			DamiInfo.reportMessage(mTribe.id, messageInfo.id, content, listener);
-		} else if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING) {
-			DamiInfo.reportMeetingMessage(mTribe.id, messageInfo.id, content, listener);
-		}
+	private void sendNotify() {
+		Intent favoriteIntent = new Intent(ChatMainActivity.ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
+		favoriteIntent.putExtra("message", ChatCommentsActivity.this.messageInfo);
+		mContext.sendBroadcast(favoriteIntent);
 	}
 
 	public void showItemLongClickDialog(final MessageInfo messageInfo) {
 		final List<String> strList = new ArrayList<String>();
 		strList.add(getString(R.string.comment));
-		strList.add(getString(R.string.favorite));
+		if (messageInfo.isfavorite == 1) {
+			strList.add(getString(R.string.cancel_favorite));
+		} else {
+			strList.add(getString(R.string.favorite));
+		}
 		strList.add(getString(R.string.report));
 		strList.add(getString(R.string.delete));
 
@@ -2446,55 +1508,28 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				|| result.equals(getString(R.string.mode_in_call))) {
 			changePlayMode();
 		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.cancel_zan))) {
-			zanMessage(msgInfo);
+			msgHelper.zanMessage(msgInfo);
 		} else if (result.equals(getString(R.string.retrweet))) {
-			goToRetrweet(msgInfo);
+			msgHelper.goToRetrweet(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {
-			showReportDialog(msgInfo);
+			msgHelper.showReportDialog(msgInfo);
 		} else if (result.equals(getString(R.string.favorite))) {
-			favoriteMessage(msgInfo);
+			msgHelper.favoriteMessage(msgInfo);
+		} else if (result.equals(getString(R.string.cancel_favorite))) {
+			msgHelper.unFavoriteMessage(msgInfo);
 		} else if (result.equals(getString(R.string.delete))) {
 			removeMessage(msgInfo);
 		} else if (result.equals(getString(R.string.communication))) {
-			communicatePeople(msgInfo);
+			msgHelper.communicatePeople(msgInfo);
 		}
-	}
-
-	private void goToRetrweet(MessageInfo msgInfo) {
-		Intent intent = new Intent(mContext, ShareActivity.class);
-		intent.putExtra(ShareActivity.KEY_TYPE, ShareActivity.TYPE_SHARE);
-		intent.putExtra(ShareActivity.KEY_MESSAGE, msgInfo);
-		startActivity(intent);
-	}
-
-	private void showReportDialog(final MessageInfo msgInfo) {
-		final String[] levelArray = mContext.getResources().getStringArray(R.array.report_message_cause);
-		Dialog dialog = new AlertDialog.Builder(this).setItems(levelArray, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				report(msgInfo, levelArray[which]);
-			}
-		}).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		}).create();
-		dialog.show();
-	}
-
-	private void communicatePeople(MessageInfo messageInfo) {
-		Intent intent = new Intent(mContext, AddReasonActivity.class);
-		intent.putExtra(AddReasonActivity.KEY_MESSAGEINFO, messageInfo);
-		intent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_WAHT_COMUNICATION);
-		mContext.startActivity(intent);
 	}
 
 	public void changePlayMode() {
 		if (isModeInCall) {// 如果是听筒
 			setPlayMode(false);// 那么就喇叭
-			// updateVoicePlayModeState(false);
 			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_speaker), Toast.LENGTH_SHORT).show();
 		} else {
 			setPlayMode(true);// 不然就听筒
-			// updateVoicePlayModeState(true);
 			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_call), Toast.LENGTH_SHORT).show();
 		}
 		if (speexPlayerWrapper.isPlay()) {

@@ -113,12 +113,6 @@
                 android:background="@drawable/selector_login_weibo_btn" />
 
             <Button
-                android:id="@+id/btn_weixin_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_login_weixin_btn" />
-
-            <Button
                 android:id="@+id/btn_qq_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
