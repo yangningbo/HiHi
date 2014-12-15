@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,7 +65,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private ImageView ivHeader;
 	private TextView tvUserName;
 	private TextView tvUserInfo;
-	private TextView tvFancyCount;
 
 	private TextView tvFollowersCount;
 	private TextView tvFansCount;
@@ -184,6 +185,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		});
 	}
 
+
 	private TagWindowManager.TagCallback tagCallback = new TagCallback() {
 
 		@Override
@@ -203,7 +205,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		tvUserInfo = (TextView) findViewById(R.id.tv_user_info);
 		tvUserName = (TextView) findViewById(R.id.tv_user_name);
-		tvFancyCount = (TextView) findViewById(R.id.iv_star_number);
 
 		tvFansCount = (TextView) findViewById(R.id.tv_my_fans_count);
 		tvFansCount.setOnClickListener(this);
@@ -306,9 +307,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					.error(R.drawable.default_header).into(ivHeader);
 		}
 
-		tvFancyCount.setText(String.valueOf(tUser.integral));
-		tvUserName.setText(tUser.realname);
-		tvUserInfo.setText(tUser.company);
+//		tvFancyCount.setText(String.valueOf(tUser.integral));
+//		tvUserName.setText(tUser.realname);
+//		tvUserInfo.setText(tUser.company);
+		bindUserName();
 
 		bindContactView();
 		bindDyView();
@@ -318,6 +320,24 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		bindUserTags();
 		bindBottomDynamicView();
 		bindBottomView();
+	}
+	
+	
+	private void bindUserName() {
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+		SpannableString name = new SpannableString(tUser.realname);
+		MyTextUtils.setTextSize(name, 22);
+		MyTextUtils.setTextColor(name, getResources().getColor(R.color.general_text_black));
+		
+		SpannableString meiliInfo = new SpannableString("    "+getString(R.string.level_count));
+		MyTextUtils.setTextSize(meiliInfo, 16);
+		MyTextUtils.setTextColor(meiliInfo, getResources().getColor(R.color.general_text_black));
+		
+		SpannableString integra = new SpannableString(String.valueOf(tUser.integral));
+		MyTextUtils.setTextSize(integra, 18);
+		MyTextUtils.setTextColor(integra, getResources().getColor(R.color.red_dongtai_bg));
+		
+		tvUserName.setText(builder.append(name).append(meiliInfo).append(integra));
 	}
 
 	private void bindUserTags() {
@@ -353,7 +373,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	};
 
 	private void bindConnectionView() {
-		tvFancyCount.setText(String.valueOf(tUser.integral));
+		bindUserName();
 		tvFollowersCount.setText(String.valueOf(tUser.followers));
 		tvFansCount.setText(String.valueOf(tUser.fansers));
 		tvMeetingsCount.setText(String.valueOf(tUser.meetingCount));
@@ -480,6 +500,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private boolean bindCommentView() {
+		layoutBottomComment.removeAllViews();
 		if (tUser.commentlist != null && tUser.commentlist.size() > 0) {
 			for (final CommentBean bean : tUser.commentlist) {
 				View view = mInflater.inflate(R.layout.item_general_small_head, null);
@@ -656,6 +677,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 							tUser.isfollow = 0;
 						}
 						mUser.followers = mUser.followers - 1;
+						sendBroadcast(ContactActivity.getDeleteBroadcastIntent(tuid));
 					} else {
 						showToast(R.string.follow_success);
 						if (tUser.isfollow == 2) {
@@ -665,8 +687,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 							tUser.isfollow = 1;
 						}
 						mUser.followers = mUser.followers + 1;
+						sendBroadcast(ContactActivity.getAddBroadcastIntent(tUser));
 					}
 					DamiCommon.saveLoginResult(mContext, mUser);
+
 					bindBottomView();
 					bindContactView();
 				} else {

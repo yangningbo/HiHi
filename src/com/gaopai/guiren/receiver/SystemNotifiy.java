@@ -467,26 +467,28 @@ public class SystemNotifiy extends AbstractNotifiy {
 				mContext.sendBroadcast(new Intent(MeetingDetailActivity.ACTION_MEETING_CANCEL));
 				break;
 			case NotifiyType.MESSAGE_ZAN_YOURS:
-//				msg = notifiyVo.content;
-//				NotifiyVo notifyComment = notifyTable.queryComment(notifiyVo);
-//				if (notifyComment != null) {
-//					notifiyVo.mID = notifyComment.mID;
-//					if (!TextUtils.isEmpty(notifyComment.message.id)) {
-//						notifyMessageTable.delete(notifyComment.mID, notifyComment.message);
-//					}
-//					if (!TextUtils.isEmpty(notifyComment.room.id)) {
-//						table.delete(notifyComment.mID, notifyComment.room);
-//					}
-//					notifyTable.deleteByID(notifyComment);
-//				}
-//				if (notifiyVo.roomuser != null) {
-//					Identity identity = identityTable.query(notifiyVo.room.id);
-//					if (identity == null) {
-//						identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
-//					} else {
-//						identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
-//					}
-//				}
+				// msg = notifiyVo.content;
+				// NotifiyVo notifyComment =
+				// notifyTable.queryComment(notifiyVo);
+				// if (notifyComment != null) {
+				// notifiyVo.mID = notifyComment.mID;
+				// if (!TextUtils.isEmpty(notifyComment.message.id)) {
+				// notifyMessageTable.delete(notifyComment.mID,
+				// notifyComment.message);
+				// }
+				// if (!TextUtils.isEmpty(notifyComment.room.id)) {
+				// table.delete(notifyComment.mID, notifyComment.room);
+				// }
+				// notifyTable.deleteByID(notifyComment);
+				// }
+				// if (notifiyVo.roomuser != null) {
+				// Identity identity = identityTable.query(notifiyVo.room.id);
+				// if (identity == null) {
+				// identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
+				// } else {
+				// identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
+				// }
+				// }
 
 				break;
 			default:

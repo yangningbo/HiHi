@@ -28,6 +28,10 @@ public class NotifiyVo extends SNSMessage {
 	public int mReadState = 0;
 	public String mID;
 	
+	public NotifiyVo() {
+		intial();
+	}
+	
 	@Expose
 	public int type;
 	@Expose

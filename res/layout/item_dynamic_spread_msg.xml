@@ -19,26 +19,6 @@
         android:layout_toRightOf="@id/iv_header"
         android:text="马虎疼" />
 
-    <TextView
-        android:id="@+id/tv_user_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_user_name"
-        android:layout_marginLeft="2dp"
-        android:layout_toRightOf="@id/tv_user_name"
-        android:text="疼惜总裁"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/tv_spread_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_user_name"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/tv_user_info"
-        android:text="扩散了一个连接"
-        android:textColor="@color/general_text_gray"
-        android:textSize="14sp" />
 
     <RelativeLayout
         android:id="@+id/rl_spread_holder"

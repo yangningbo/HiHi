@@ -27,8 +27,10 @@ public class SPConst {
 	public final static String KEY_HAS_NOTIFICATION = "has_notification";
 	
 	public final static String SP_ALARM = "sp_alarm";
-	public static String getAlarmId(Context context, String tribeId) {
+	public static String getSingleSpId(Context context, String tribeId) {
 		return DamiCommon.getUid(context)+"&"+tribeId;
 	}
-
+	
+	public final static String SP_ANONY = "sp_anony";
+	//0 实名 1匿名
 }

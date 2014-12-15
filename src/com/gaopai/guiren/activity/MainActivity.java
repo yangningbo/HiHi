@@ -1,6 +1,7 @@
 package com.gaopai.guiren.activity;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -98,9 +99,17 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 		layoutWelcome = ViewUtil.findViewById(this, R.id.layout_welcome);
 		ImageView view = (ImageView) findViewById(R.id.iv_back);
+		view.setImageDrawable(getWelcomeRandomDrawable());
 		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.scale);
 		view.startAnimation(welcomeAnimation);
 		showMainpage();
+	}
+
+	private Drawable getWelcomeRandomDrawable() {
+		int i = (int) (Math.random() * 3);
+		int id = getResources().getIdentifier("icon_welcom_background_" + i, "drawable",
+				MainActivity.this.getPackageName());
+		return getResources().getDrawable(id);
 	}
 
 	public void showMainpage() {

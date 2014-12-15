@@ -320,19 +320,13 @@ public class BaseActivity extends FragmentActivity {
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		Window window = dialog.getWindow();
 		WindowManager.LayoutParams lp = window.getAttributes();
-		// 此处可以设置dialog显示的位�?
 		window.setGravity(gravity);
-		// 设置宽度
 		lp.width = displayWidth - dialogPadding;
 		lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
-		// 背景透明
-		// lp.screenBrightness = 0.2f;
 		lp.alpha = 0.8f;
 		lp.dimAmount = 0f;
 		window.setAttributes(lp);
-		// 添加动画
 		window.setWindowAnimations(android.R.style.Animation_Dialog);
-		// 设置点击屏幕Dialog不消�?
 		dialog.setCanceledOnTouchOutside(false);
 
 	}
@@ -343,8 +337,8 @@ public class BaseActivity extends FragmentActivity {
 			builder.setMessage(msg);
 		}
 		builder.setTitle(title);
-		builder.setPositiveButton("确认", mOkOnClickListener);
-		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.ok, mOkOnClickListener);
+		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -485,6 +479,7 @@ public class BaseActivity extends FragmentActivity {
 	public void setPlayMode(boolean isModeInCall) {// true ear
 		this.isModeInCall = isModeInCall;
 		DamiApp.getInstance().getPou().setBoolean(DamiApp.VOOICE_PLAY_MODE, isModeInCall);
+		DamiApp.getInstance().setPlayMode();
 	}
 	
 	private boolean mIsRegisterReceiver = false;

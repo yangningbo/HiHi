@@ -252,7 +252,7 @@ public class NotifyTable {
 
 					if (!TextUtils.isEmpty(notifiyVo.room.id)) {
 						NotifyRoomTable table = new NotifyRoomTable(mDBStore);
-//						notifiyVo.room = table.query(notifiyVo.mID, notifiyVo.room.id);
+						notifiyVo.room = table.query(notifiyVo.mID, notifiyVo.room.id);
 					}
 
 					if (!TextUtils.isEmpty(notifiyVo.message.id)) {

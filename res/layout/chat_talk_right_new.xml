@@ -119,7 +119,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/desc"
                 android:scaleType="fitXY"
-                android:src="@drawable/icon_welcom_background"
+                android:src="@drawable/icon_welcom_background_0"
                 android:visibility="visible" />
 
             <ImageView

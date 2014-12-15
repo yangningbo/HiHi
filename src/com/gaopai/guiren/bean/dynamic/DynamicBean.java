@@ -51,6 +51,9 @@ public class DynamicBean implements Serializable {
 		public String post;
 
 		public int isZan = 0;
+		
+		public int bigv;//0未加V
+		public String defhead;//默认随机头像
 
 		public CommnetHolder commnetHolder = new CommnetHolder() ;// for transfer
 																	// comment

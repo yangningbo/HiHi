@@ -20,276 +20,281 @@
         android:layout_height="2px"
         android:background="@color/slide_divider_top" />
 
-    <LinearLayout
-        android:id="@+id/slide_left_holder"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="match_parent" >
 
         <LinearLayout
-            android:id="@+id/ll1"
+            android:id="@+id/slide_left_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp" >
+            android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/iv_user_header"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginLeft="@dimen/slide_item_image_padding_left"
-                android:src="@drawable/default_header" />
-
-            <TextView
-                android:id="@+id/tv_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:gravity="left"
-                android:ellipsize="end"
-                android:textColor="@color/slide_text_name"
-                android:textSize="23sp" />
-        </LinearLayout>
-
-        <View style="@style/slide_divider" />
-
-        <RelativeLayout
-            android:id="@+id/slide_btn_my_profile"
-            style="@style/slide_item_layout"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/icon_slide_profile" />
-
-            <TextView
-                style="@style/slide_item_text"
+            <LinearLayout
+                android:id="@+id/ll1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="我的资料" />
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp" >
 
-            <ImageView
-                android:layout_width="@dimen/slide_item_image_size"
-                android:layout_height="@dimen/slide_item_image_size"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="50dp"
-                android:src="@drawable/icon_slide_erweima" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/iv_user_header"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="@dimen/slide_item_image_padding_left"
+                    android:src="@drawable/default_header" />
 
-        <View style="@style/slide_divider" />
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:textColor="@color/slide_text_name"
+                    android:textSize="23sp" />
+            </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/slide_btn_my_followers"
-            style="@style/slide_item_layout"
-            android:gravity="center_vertical" >
+            <View style="@style/slide_divider" />
 
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/icon_slide_follower" />
+            <RelativeLayout
+                android:id="@+id/slide_btn_my_profile"
+                style="@style/slide_item_layout"
+                android:gravity="center_vertical" >
 
-            <TextView
-                style="@style/slide_item_text"
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_slide_profile" />
+
+                <TextView
+                    style="@style/slide_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="我的资料" />
+
+                <ImageView
+                    android:layout_width="@dimen/slide_item_image_size"
+                    android:layout_height="@dimen/slide_item_image_size"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="50dp"
+                    android:src="@drawable/icon_slide_erweima" />
+            </RelativeLayout>
+
+            <View style="@style/slide_divider" />
+
+            <RelativeLayout
+                android:id="@+id/slide_btn_my_followers"
+                style="@style/slide_item_layout"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_slide_follower" />
+
+                <TextView
+                    style="@style/slide_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="我的关注" />
+
+                <TextView
+                    android:id="@+id/tv_slide_count_followers"
+                    style="@style/slide_item_number" />
+            </RelativeLayout>
+
+            <View style="@style/slide_divider" />
+
+            <RelativeLayout
+                android:id="@+id/slide_btn_my_fans"
+                style="@style/slide_item_layout"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_slide_fans" />
+
+                <TextView
+                    style="@style/slide_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="我的粉丝" />
+
+                <TextView
+                    android:id="@+id/tv_slide_count_fans"
+                    style="@style/slide_item_number" />
+            </RelativeLayout>
+
+            <View style="@style/slide_divider" />
+
+            <RelativeLayout
+                android:id="@+id/slide_btn_my_tribe"
+                style="@style/slide_item_layout"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_slide_tribe" />
+
+                <TextView
+                    style="@style/slide_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="我的圈子" />
+
+                <TextView
+                    android:id="@+id/tv_slide_count_tribes"
+                    style="@style/slide_item_number" />
+            </RelativeLayout>
+
+            <View style="@style/slide_divider" />
+
+            <RelativeLayout
+                android:id="@+id/slide_btn_my_meeting"
+                style="@style/slide_item_layout"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_slide_meeting" />
+
+                <TextView
+                    style="@style/slide_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="我的会议" />
+
+                <TextView
+                    android:id="@+id/tv_slide_count_meetings"
+                    style="@style/slide_item_number" />
+            </RelativeLayout>
+
+            <View style="@style/slide_divider" />
+
+            <RelativeLayout
+                android:id="@+id/slide_btn_my_favourite"
+                style="@style/slide_item_layout"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_slide_favourite" />
+
+                <TextView
+                    style="@style/slide_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="我的收藏" />
+
+                <TextView
+                    android:id="@+id/tv_slide_count_favourite"
+                    style="@style/slide_item_number" />
+            </RelativeLayout>
+
+            <View style="@style/slide_divider" />
+
+            <RelativeLayout
+                android:id="@+id/slide_btn_my_dynamics"
+                style="@style/slide_item_layout"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_slide_dynamic" />
+
+                <TextView
+                    style="@style/slide_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="我的动态" />
+
+                <TextView
+                    android:id="@+id/tv_slide_count_dynamics"
+                    style="@style/slide_item_number" />
+            </RelativeLayout>
+
+            <View style="@style/slide_divider" />
+
+            <RelativeLayout
+                android:id="@+id/slide_btn_invite_friend"
+                style="@style/slide_item_layout"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/icon_slide_invite" />
+
+                <TextView
+                    style="@style/slide_item_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="邀请好友" />
+            </RelativeLayout>
+
+            <View style="@style/slide_divider" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="我的关注" />
-
-            <TextView
-                android:id="@+id/tv_slide_count_followers"
-                style="@style/slide_item_number" />
-        </RelativeLayout>
-
-        <View style="@style/slide_divider" />
-
-        <RelativeLayout
-            android:id="@+id/slide_btn_my_fans"
-            style="@style/slide_item_layout"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/icon_slide_fans" />
-
-            <TextView
-                style="@style/slide_item_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="我的粉丝" />
-
-            <TextView
-                android:id="@+id/tv_slide_count_fans"
-                style="@style/slide_item_number" />
-        </RelativeLayout>
-
-        <View style="@style/slide_divider" />
-
-        <RelativeLayout
-            android:id="@+id/slide_btn_my_tribe"
-            style="@style/slide_item_layout"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/icon_slide_tribe" />
-
-            <TextView
-                style="@style/slide_item_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="我的圈子" />
-
-            <TextView
-                android:id="@+id/tv_slide_count_tribes"
-                style="@style/slide_item_number" />
-        </RelativeLayout>
-
-        <View style="@style/slide_divider" />
-
-        <RelativeLayout
-            android:id="@+id/slide_btn_my_meeting"
-            style="@style/slide_item_layout"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/icon_slide_meeting" />
-
-            <TextView
-                style="@style/slide_item_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="我的会议" />
-
-            <TextView
-                android:id="@+id/tv_slide_count_meetings"
-                style="@style/slide_item_number" />
-        </RelativeLayout>
-
-        <View style="@style/slide_divider" />
-
-        <RelativeLayout
-            android:id="@+id/slide_btn_my_favourite"
-            style="@style/slide_item_layout"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/icon_slide_favourite" />
-
-            <TextView
-                style="@style/slide_item_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="我的收藏" />
-
-            <TextView
-                android:id="@+id/tv_slide_count_favourite"
-                style="@style/slide_item_number" />
-        </RelativeLayout>
-
-        <View style="@style/slide_divider" />
-
-        <RelativeLayout
-            android:id="@+id/slide_btn_my_dynamics"
-            style="@style/slide_item_layout"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/icon_slide_dynamic" />
-
-            <TextView
-                style="@style/slide_item_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="我的动态" />
-
-            <TextView
-                android:id="@+id/tv_slide_count_dynamics"
-                style="@style/slide_item_number" />
-        </RelativeLayout>
-
-        <View style="@style/slide_divider" />
-
-        <RelativeLayout
-            android:id="@+id/slide_btn_invite_friend"
-            style="@style/slide_item_layout"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_alignParentLeft="true"
-                android:src="@drawable/icon_slide_invite" />
-
-            <TextView
-                style="@style/slide_item_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="邀请好友" />
-        </RelativeLayout>
-
-        <View style="@style/slide_divider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_marginLeft="@dimen/slide_item_image_padding_left"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_slide_jiav_active" />
-
-            <Button
-                android:id="@+id/slide_btn_plus_v"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:drawablePadding="5dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:text="申请加v"
-                android:textColor="@color/white" />
+                android:orientation="horizontal" >
 
-            <View
-                android:layout_width="2px"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="3dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="3dp"
-                android:background="@color/slide_item_divider" />
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_marginLeft="@dimen/slide_item_image_padding_left"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_slide_jiav_active" />
 
-            <ImageView
-                style="@style/slide_item_image"
-                android:layout_marginLeft="@dimen/slide_item_image_padding_left"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_slide_setting" />
+                <Button
+                    android:id="@+id/slide_btn_plus_v"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:text="申请加v"
+                    android:textColor="@color/white" />
 
-            <Button
-                android:id="@+id/slide_btn_setting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:drawablePadding="5dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:text="设置"
-                android:textColor="@color/white" />
+                <View
+                    android:layout_width="2px"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/slide_item_divider" />
+
+                <ImageView
+                    style="@style/slide_item_image"
+                    android:layout_marginLeft="@dimen/slide_item_image_padding_left"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_slide_setting" />
+
+                <Button
+                    android:id="@+id/slide_btn_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:text="设置"
+                    android:textColor="@color/white" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

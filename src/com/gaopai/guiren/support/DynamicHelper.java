@@ -6,11 +6,14 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,6 +30,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
@@ -47,11 +51,11 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
-import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
@@ -163,7 +167,6 @@ public class DynamicHelper {
 
 		}
 
-
 		@Override
 		public void onDeleteItem(String dataid) {
 			// TODO Auto-generated method stub
@@ -173,7 +176,7 @@ public class DynamicHelper {
 		@Override
 		public void onDeleteItemSuccess(TypeHolder typeHolder) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
 
@@ -362,8 +365,8 @@ public class DynamicHelper {
 
 		ImageView ivHeader;
 		TextView tvUserName;
-		TextView tvUserInfo;
-		TextView tvAction;
+		// TextView tvUserInfo;
+		// TextView tvAction;
 
 		View lineSpread;
 		View lineZan;
@@ -390,8 +393,11 @@ public class DynamicHelper {
 			viewHolder.layoutCoverTop = view.findViewById(R.id.view_cover_top);
 			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
 			viewHolder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
-			viewHolder.tvUserInfo = (TextView) view.findViewById(R.id.tv_user_info);
-			viewHolder.tvAction = (TextView) view.findViewById(R.id.tv_spread_action);
+			viewHolder.tvUserName.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+			// viewHolder.tvUserInfo = (TextView)
+			// view.findViewById(R.id.tv_user_info);
+			// viewHolder.tvAction = (TextView)
+			// view.findViewById(R.id.tv_spread_action);
 
 			viewHolder.lineSpread = view.findViewById(R.id.line_spread_bottom);
 			viewHolder.lineZan = view.findViewById(R.id.line_zan_bottom);
@@ -623,7 +629,7 @@ public class DynamicHelper {
 				ImageLoaderUtil.displayImage(path, viewHolder.ivPic);
 			}
 			viewHolder.ivPic.setTag(messageInfo);
-			viewHolder.ivPic.setOnClickListener(photoClickListener);
+			viewHolder.ivPic.setOnClickListener(singlePhotoClickListener);
 			break;
 		case MessageType.VOICE:
 			viewHolder.tvVoiceLength.setText(content.voiceTime + "''");
@@ -650,8 +656,50 @@ public class DynamicHelper {
 		}
 	}
 
+	// full
+	private Spannable parseHeaderText(String name, String uid, String userInfo, String actionInfo) {
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+		int grayColor = mContext.getResources().getColor(R.color.general_text_gray);
+		if (!TextUtils.isEmpty(name)) {
+			Spannable nameSpannable = MyTextUtils.setTextSize(MyTextUtils.addSingleUserSpan(name, uid), 18);
+			builder.append(nameSpannable);
+		}
+		if (!TextUtils.isEmpty(userInfo)) {
+			Spannable userInfoSpannable = MyTextUtils.setTextSize(MyTextUtils.setTextColor(" "+userInfo, Color.BLACK), 12);
+			builder.append(userInfoSpannable);
+		}
+		if (!TextUtils.isEmpty(actionInfo)) {
+			Spannable actionInfoSpannable = MyTextUtils
+					.setTextSize(MyTextUtils.setTextColor("   "+actionInfo, grayColor), 14);
+			builder.append(actionInfoSpannable);
+		}
+		return builder;
+	}
+
+	private String getString(int resId) {
+		return mContext.getString(resId);
+	}
+
 	private OnClickListener photoClickListener = new OnClickListener() {
 
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			List<MessageInfo> messageInfos = new ArrayList<MessageInfo>();
+//			messageInfos.add((MessageInfo) v.getTag());
+			List<PicBean> list = (List<PicBean>) v.getTag();
+			int pos = (int) v.getTag(R.id.dy_photo_position);
+			for (PicBean picBean : list) {
+				messageInfos.add(ChatMsgHelper.creatPicMsg(picBean.imgUrlS, picBean.imgUrlL, ""));
+			}
+			Intent intent = new Intent(mContext, ShowImagesActivity.class);
+			intent.putExtra("msgList", (Serializable) messageInfos);
+			intent.putExtra("position", pos);
+			mContext.startActivity(intent);
+		}
+	};
+	
+	private OnClickListener singlePhotoClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
@@ -780,18 +828,22 @@ public class DynamicHelper {
 
 	public void buildCommonView(ViewHolderCommon viewHolder, TypeHolder typeBean) {
 		int type = typeBean.type;
+		String userName = "", userInfo = "", spreadAction, uid;
 
 		if (mDyKind == DY_PROFILE) {
-			viewHolder.tvAction.setVisibility(View.VISIBLE);
+			// viewHolder.tvAction.setVisibility(View.VISIBLE);
 			if (type == TYPE_SEND_DYNAMIC) {
-				viewHolder.tvAction.setText("发布了一条新动态");
+				// viewHolder.tvAction.setText("发布了一条新动态");
+				spreadAction = "发布了一条新动态";
 			} else {
-				viewHolder.tvAction.setText(typeBean.title);
+				// viewHolder.tvAction.setText(typeBean.title);
+				spreadAction = typeBean.title;
 			}
+			viewHolder.tvUserName.setText(parseHeaderText("", "-1", "", spreadAction));
 			viewHolder.btnDynamicAction.setVisibility(View.GONE);
 			viewHolder.tvDateInfo.setVisibility(View.GONE);
-			viewHolder.tvUserName.setVisibility(View.GONE);
-			viewHolder.tvUserInfo.setVisibility(View.GONE);
+			// viewHolder.tvUserName.setVisibility(View.GONE);
+			// viewHolder.tvUserInfo.setVisibility(View.GONE);
 			viewHolder.ivHeader.setVisibility(View.GONE);
 			viewHolder.layoutCoverTopBottomHolder.setVisibility(View.GONE);
 			return;
@@ -807,26 +859,36 @@ public class DynamicHelper {
 			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
 		}
 
-		viewHolder.tvUserName.setText(typeBean.realname);
-		viewHolder.tvUserInfo.setText(typeBean.post);
-
+		// viewHolder.tvUserName.setText(typeBean.realname);
+		// viewHolder.tvUserInfo.setText(typeBean.post);
+		userName = typeBean.realname;
+		uid = typeBean.uid;
+		userInfo = typeBean.post;
 		if (typeBean.isanonymous == 1) {
 			viewHolder.ivHeader.setImageResource(R.drawable.icon_dynamic_anynoms);
-			viewHolder.tvUserName.setText(R.string.no_name);
-			viewHolder.tvUserInfo.setText("");
+			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader);
+			// viewHolder.tvUserName.setText(R.string.no_name);
+			// viewHolder.tvUserInfo.setText("");
+			userInfo = "";
+			uid = "-1";
+			userName = getString(R.string.no_name);
+		}
+ 
+		if (type == TYPE_SEND_DYNAMIC) {
+			// viewHolder.tvAction.setVisibility(View.GONE);
+			spreadAction = "";
+		} else {
+			// viewHolder.tvAction.setVisibility(View.VISIBLE);
+			// viewHolder.tvAction.setText(typeBean.title);
+			spreadAction = typeBean.title;
 		}
 
-		if (type == TYPE_SEND_DYNAMIC) {
-			viewHolder.tvAction.setVisibility(View.GONE);
-		} else {
-			viewHolder.tvAction.setVisibility(View.VISIBLE);
-			viewHolder.tvAction.setText(typeBean.title);
-		}
+		viewHolder.tvUserName.setText(parseHeaderText(userName, uid, userInfo, spreadAction));
 
 		if (typeBean.uid.equals(user.uid)) {
 			setDateDeleteSpan(viewHolder.tvDateInfo, typeBean);
 		} else {
-			viewHolder.tvDateInfo.setText(FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)));
+			viewHolder.tvDateInfo.setText(DateUtil.getCreateTime(Long.valueOf(typeBean.time)));
 		}
 
 		if (mDyKind == DY_MY_LIST) {
@@ -869,7 +931,7 @@ public class DynamicHelper {
 	private void setDateDeleteSpan(TextView tView, TypeHolder typeBean) {
 		tView.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		tView.setTag(typeBean);
-		String date = FeatureFunction.getCreateTime(Long.valueOf(typeBean.time)) + "   ";
+		String date = DateUtil.getCreateTime(Long.valueOf(typeBean.time)) + "   ";
 		SpannableString spannableString = new SpannableString(date + "删除");
 		spannableString.setSpan(new DeleteSpanClick(typeBean.id, WeiboTextUrlSpan.TYPE_CONNECTION), date.length(),
 				spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -884,11 +946,16 @@ public class DynamicHelper {
 		@Override
 		public void onClick(View widget) {
 			// TODO Auto-generated method stub
-			TypeHolder typeHolder = (TypeHolder) widget.getTag();
+			final TypeHolder typeHolder = (TypeHolder) widget.getTag();
 			Logger.d(this, getUrl());
-			deleteDynamicItem(typeHolder);
-			// callback.onDeleteItem(getUrl());
-			// super.onClick(widget);
+			((BaseActivity) mContext).showDialog(mContext.getString(R.string.confirm_delete), null,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							deleteDynamicItem(typeHolder);
+						}
+					});
 		}
 	}
 
@@ -960,14 +1027,19 @@ public class DynamicHelper {
 		return v;
 	}
 
+	public final static int KEY_PHOTO_CLICK_POSITION = 96;
 	private void buidImageViews(MyGridLayout gridLayout, List<PicBean> pics) {
 		// TODO Auto-generated method stub
 		gridLayout.removeAllViews();
+		int i =0;
 		for (PicBean bean : pics) {
 			ImageView imageView = getImageView(bean.imgUrlS);
-			imageView.setTag(ChatMsgHelper.creatPicMsg(bean.imgUrlS, bean.imgUrlL, ""));
+//			imageView.setTag(ChatMsgHelper.creatPicMsg(bean.imgUrlS, bean.imgUrlL, ""));
+			imageView.setTag(pics);
+			imageView.setTag(R.id.dy_photo_position, i);
 			imageView.setOnClickListener(photoClickListener);
 			gridLayout.addView(imageView);
+			i++;
 		}
 	}
 
@@ -977,7 +1049,7 @@ public class DynamicHelper {
 		android.view.ViewGroup.LayoutParams lp = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		imageView.setLayoutParams(lp);
-		imageView.setScaleType(ScaleType.CENTER_INSIDE);
+		imageView.setScaleType(ScaleType.FIT_XY);
 		int padding = MyUtils.dip2px(mContext, 5);
 		imageView.setPadding(padding, padding, padding, padding);
 		return imageView;
@@ -1037,8 +1109,9 @@ public class DynamicHelper {
 			commentBean.content.content = "";
 		}
 	}
-	
+
 	public final static String ACTION_REFRESH_DYNAMIC = "com.gaopai.guiren.intent.action.REFRESH_DYNAMIC";
+
 	public static Intent getDeleteIntent(String id) {
 		Intent intent = new Intent(ACTION_REFRESH_DYNAMIC);
 		intent.putExtra("id", id);

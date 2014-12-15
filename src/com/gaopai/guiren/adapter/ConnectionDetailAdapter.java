@@ -8,19 +8,18 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ProfileActivity;
-import com.gaopai.guiren.activity.UserInfoActivity;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
 
@@ -88,7 +87,7 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 		}
 		viewHolder.tvUserName.setText(user.realname);
 		viewHolder.tvUserInfo.setText(user.company);
-		viewHolder.tvDateInfo.setText(FeatureFunction.getHumanReadTime(Long.valueOf(typeBean.addtime)));
+		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));
 
 		viewHolder.rlInfoLayout.setTag(user.uid);
 		viewHolder.rlInfoLayout.setOnClickListener(infoClickListener);

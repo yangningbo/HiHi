@@ -37,6 +37,7 @@ import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
 import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.support.ShareManager.CallDyback;
 import com.gaopai.guiren.support.alarm.AlarmReceiver;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -82,6 +83,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	public static final String ACTION_MEETING_CANCEL = "com.gaopai.guiren.ACTION_MEETING_CANCEL";
 
 	private PreferenceOperateUtils spo;
+	private PreferenceOperateUtils spoAnony;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		initTitleBar();
 		setAbContentView(R.layout.activity_meeting_detail);
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
+		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 
 		mMeetingID = getIntent().getStringExtra(KEY_MEETING_ID);
 		mMeeting = (Tribe) getIntent().getSerializableExtra(KEY_MEETING);
@@ -228,12 +231,11 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private void bindBasicView() {
 		tvMeetingTitle.setText(mMeeting.name);
 		tvMeetingInfo.setText(mMeeting.content);
-		tvMeetingTime.setText(FeatureFunction.getTime(mMeeting.start * 1000) + "~"
-				+ FeatureFunction.getTime(mMeeting.end * 1000));
-		tvMeetingTimeDiff.setText("离会议开始还剩" + FeatureFunction.timeDifference(mMeeting.start * 1000));
+		tvMeetingTime.setText(DateUtil.getCreatTimeFromSeconds(mMeeting.start, mMeeting.end));
+		tvMeetingTimeDiff.setText( DateUtil.getMeetingDiffStrFromSeconds(mMeeting.start, mMeeting.end));
 		if (!isPreview) {
-			if (!TextUtils.isEmpty(mMeeting.logosmall)) {
-				ImageLoaderUtil.displayImage(mMeeting.logosmall, ivMeetingHeader);
+			if (!TextUtils.isEmpty(mMeeting.logolarge)) {
+				ImageLoaderUtil.displayImage(mMeeting.logolarge, ivMeetingHeader);
 			} else {
 				ivMeetingHeader.setImageResource(R.drawable.icon_default_meeting);
 			}
@@ -308,8 +310,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 		case R.id.grid_user_real_name: {
-			int level = ((ImageView) ((ViewGroup) v).getChildAt(0)).getDrawable().getLevel();
-			((ImageView) ((ViewGroup) v).getChildAt(0)).setImageLevel(1 - level);
+			setAnonyState(v);
 			break;
 		}
 
@@ -377,6 +378,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		hideMoreWindow();
 	}
 
+	private void setAnonyState(View v) {
+		int level = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeetingID), 0);
+		spoAnony.setInt(SPConst.getTribeUserId(mContext, mMeetingID), 1 - level);
+		changeUserRealName(v);
+	}
+
 	private void showExitDialog() {
 		showDialog(getString(R.string.confirm_exit_meeting), null, new DialogInterface.OnClickListener() {
 			@Override
@@ -440,12 +447,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 	private boolean isAlarm() {
 		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM);
-		return po.getBoolean(SPConst.getAlarmId(mContext, mMeetingID), false);
+		return po.getBoolean(SPConst.getSingleSpId(mContext, mMeetingID), false);
 	}
 
 	private void setAlarm(boolean isAlarm) {
 		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM);
-		po.setBoolean(SPConst.getAlarmId(mContext, mMeetingID), isAlarm);
+		po.setBoolean(SPConst.getSingleSpId(mContext, mMeetingID), isAlarm);
 	}
 
 	private DeleteCallback deleteCallback = new DeleteCallback() {
@@ -561,8 +568,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		if (moreWindow == null) {
 			moreWindow = new PopupWindow(chatGridLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		}
-		// moreWindow.setBackgroundDrawable(new
-		// ColorDrawable(android.R.color.transparent));
 		moreWindow.setBackgroundDrawable(new BitmapDrawable());
 		moreWindow.setOutsideTouchable(true);
 		moreWindow.setFocusable(true);
@@ -576,6 +581,15 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 	}
 
+	private void changeUserRealName(View v) {
+		int anony = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeetingID), 0);
+		setSwitchState(v, anony);
+		if (anony == 0) {
+			((TextView) ((ViewGroup) v).getChildAt(1)).setText(R.string.user_anony_name);
+		} else {
+			((TextView) ((ViewGroup) v).getChildAt(1)).setText(R.string.user_real_name);
+		}
+	}
 	private ViewGroup getGridView(int type) {
 		ViewGroup viewGroup = null;
 		View view;
@@ -586,6 +600,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
 			setSwitchState(view, isAlarm() ? 1 : 0);
+			
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_enter_meeting);
 			view.setOnClickListener(this);
@@ -595,12 +610,16 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
 			setSwitchState(view, spo.getInt(SPConst.getTribeUserId(mContext, mMeetingID), 0));
+			
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_clear_local_msg);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_login_out);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_user_real_name);
+			changeUserRealName(view);
+			
+			
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_invite_to_meeting);
 			view.setOnClickListener(this);
@@ -703,4 +722,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 		return viewGroup;
 	}
+	
+	
 }

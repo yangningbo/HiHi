@@ -40,6 +40,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.ImageCrop;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
@@ -61,8 +62,6 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 	private TextView tvEndTime;
 	private TextView tvNumLimit;
 
-	private ArrayAdapter spAdapter;
-	private Spinner spPrivacy;
 	private Button btnUploadPic;
 	private Button btnCreat;
 	private Button btnPreview;
@@ -135,7 +134,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		mDay = calendar.get(Calendar.DAY_OF_MONTH);
 		mHour = calendar.get(Calendar.HOUR_OF_DAY);
 		mMinute = calendar.get(Calendar.MINUTE);
-		String time = FeatureFunction.showTimedate(mYear, mMonth, mDay, mHour, mMinute);
+		String time = DateUtil.showTimedate(mYear, mMonth, mDay, mHour, mMinute);
 		tvStartTime.setText(time);
 		tvEndTime.setText(time);
 	}
@@ -266,7 +265,6 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		ivHeader.setOnClickListener(this);
 	}
 
-
 	private static final int TYPE_START_TIME = 0;
 	private static final int TYPE_END_TIME = 1;
 
@@ -305,7 +303,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 						mDay = datePicker.getDayOfMonth();
 						mHour = timePicker.getCurrentHour();
 						mMinute = timePicker.getCurrentMinute();
-						String time = FeatureFunction.showTimedate(mYear, mMonth, mDay, mHour, mMinute);
+						String time = DateUtil.showTimedate(mYear, mMonth, mDay, mHour, mMinute);
 						if (TextUtils.isEmpty(time)) {
 							showToast(mContext.getString(R.string.choose_pass_time));
 							return;
@@ -349,8 +347,8 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		final String end = tvEndTime.getText().toString();
 		Tribe tempTribe = new Tribe();
 		tempTribe.content = info;
-		tempTribe.start = FeatureFunction.getTimeStamp(start);
-		tempTribe.end = FeatureFunction.getTimeStamp(end);
+		tempTribe.start = DateUtil.getTimeStamp(start);
+		tempTribe.end = DateUtil.getTimeStamp(end);
 		tempTribe.name = title;
 		tempTribe.logosmall = mFilePath;
 		Intent intent = new Intent(mContext, MeetingDetailActivity.class);
@@ -396,8 +394,8 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			return;
 		}
 
-		long startl = FeatureFunction.getTimeStamp(start);
-		long endl = FeatureFunction.getTimeStamp(end);
+		long startl = DateUtil.convertStringToSeconds(start);
+		long endl = DateUtil.convertStringToSeconds(end);
 		if (startl >= endl) {
 			showToast(mContext.getString(R.string.choose_time_error));
 			return;
@@ -437,12 +435,12 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		};
+		// php can only decode second, so let it be
 		if (isEdit) {
-			DamiInfo.editMeeting(mMeeting.id, title, mFilePath, String.valueOf(mPrivacy), info,
-					FeatureFunction.getTimeStamp(start), FeatureFunction.getTimeStamp(end), password, listener);
+			DamiInfo.editMeeting(mMeeting.id, title, mFilePath, String.valueOf(mPrivacy), info, startl, endl, password,
+					listener);
 		} else {
-			DamiInfo.addMeeting(title, mFilePath, String.valueOf(mPrivacy), info, FeatureFunction.getTimeStamp(start),
-					FeatureFunction.getTimeStamp(end), password, listener);
+			DamiInfo.addMeeting(title, mFilePath, String.valueOf(mPrivacy), info, startl, endl, password, listener);
 		}
 	}
 

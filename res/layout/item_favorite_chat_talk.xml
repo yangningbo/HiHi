@@ -2,34 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="#EBEAF1"
     android:descendantFocusability="blocksDescendants"
-    android:paddingBottom="5dp" >
+    android:padding="5dp" >
 
     <TextView
         android:id="@+id/tv_room"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
-        android:padding="4dp"
-        android:text="asdf "
         android:textColor="@color/one_word_prompt_color"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:visibility="visible" />
 
     <TextView
         android:id="@+id/tv_chat_talk_time"
         style="@style/chat_talk_style_txt_time"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/tv_user_name"
-        android:layout_marginRight="@dimen/general_paading"
         android:layout_below="@id/tv_room"
-        android:text="2012:12:20"
+        android:layout_alignParentTop="false"
         android:visibility="visible" />
 
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/tv_chat_talk_time"
+        android:layout_below="@id/tv_room"
         android:layout_toLeftOf="@id/tv_chat_talk_time"
         layout="@layout/chat_item_general" />
 

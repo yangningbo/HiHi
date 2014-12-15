@@ -11,6 +11,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Button;
 import android.widget.PopupWindow;
 
+import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
@@ -38,8 +39,7 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 	private void bindMessageBottomBarView(ViewHolder viewHolder, final MessageInfo messageInfo) {
 		viewHolder.layoutTextVoiceHolder.setTag(messageInfo);
 		viewHolder.layoutTextVoiceHolder.setOnLongClickListener(showMoreWindowClickListener);
-		
-		
+
 		viewHolder.layoutPicHolder.setTag(messageInfo);
 		viewHolder.layoutPicHolder.setOnLongClickListener(showMoreWindowClickListener);
 		if (messageInfo.agreeCount + messageInfo.commentCount + messageInfo.favoriteCount == 0) {
@@ -79,9 +79,15 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 			zan.setText(R.string.zan);
 		}
 
-		View earPhone = v.findViewById(R.id.btn_ear_phone);
+		Button earPhone = (Button) v.findViewById(R.id.btn_ear_phone);
 		earPhone.setTag(messageInfo);
 		earPhone.setOnClickListener(this);
+		
+		if (((BaseActivity) mContext).isModeInCall) {
+			earPhone.setText(R.string.mode_in_speaker);
+		} else {
+			earPhone.setText(R.string.mode_in_call);
+		}
 
 		View favorite = v.findViewById(R.id.btn_favorite);
 		favorite.setTag(messageInfo);

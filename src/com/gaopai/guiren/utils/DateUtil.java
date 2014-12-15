@@ -9,8 +9,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+
+import com.gaopai.guiren.DamiApp;
+import com.gaopai.guiren.R;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.text.format.Time;
 
 // TODO: Auto-generated Javadoc
@@ -102,8 +107,7 @@ public class DateUtil {
 	 *            偏移(值大于0,表示+,值小于0,表示－)
 	 * @return String String类型的日期时间
 	 */
-	public static String getStringByOffset(String strDate, String format,
-			int calendarField, int offset) {
+	public static String getStringByOffset(String strDate, String format, int calendarField, int offset) {
 		String mDateTime = null;
 		try {
 			Calendar c = new GregorianCalendar();
@@ -130,8 +134,7 @@ public class DateUtil {
 	 *            the offset
 	 * @return String String类型日期时间
 	 */
-	public static String getStringByOffset(Date date, String format,
-			int calendarField, int offset) {
+	public static String getStringByOffset(Date date, String format, int calendarField, int offset) {
 		String strDate = null;
 		try {
 			Calendar c = new GregorianCalendar();
@@ -178,8 +181,7 @@ public class DateUtil {
 		String mDateTime = null;
 		try {
 			Calendar c = new GregorianCalendar();
-			SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-					dateFormatYMDHMS);
+			SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(dateFormatYMDHMS);
 			c.setTime(mSimpleDateFormat.parse(strDate));
 			SimpleDateFormat mSimpleDateFormat2 = new SimpleDateFormat(format);
 			mDateTime = mSimpleDateFormat2.format(c.getTime());
@@ -189,8 +191,7 @@ public class DateUtil {
 		return mDateTime;
 	}
 
-	public static String getStringByFormat(String strDate, String format1,
-			String format2) {
+	public static String getStringByFormat(String strDate, String format1, String format2) {
 		String mDateTime = null;
 		try {
 			Calendar c = new GregorianCalendar();
@@ -237,8 +238,7 @@ public class DateUtil {
 		String thisDateTime = null;
 		try {
 			SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(format);
-			thisDateTime = mSimpleDateFormat.format(new Date(
-					milliseconds * 1000L));
+			thisDateTime = mSimpleDateFormat.format(new Date(milliseconds * 1000L));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -277,8 +277,7 @@ public class DateUtil {
 	 *            偏移(值大于0,表示+,值小于0,表示－)
 	 * @return String String类型的日期时间
 	 */
-	public static String getCurrentDateByOffset(String format,
-			int calendarField, int offset) {
+	public static String getCurrentDateByOffset(String format, int calendarField, int offset) {
 		String mDateTime = null;
 		try {
 			SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(format);
@@ -534,16 +533,14 @@ public class DateUtil {
 			c1.setTime(new Date());
 			int d = getOffectDay(c1.getTimeInMillis(), c2.getTimeInMillis());
 			if (d == 0) {
-				int h = getOffectHour(c1.getTimeInMillis(),
-						c2.getTimeInMillis());
+				int h = getOffectHour(c1.getTimeInMillis(), c2.getTimeInMillis());
 				if (h > 0) {
 					return "今天" + getStringByFormat(strDate, dateFormatHM);
 					// return h + "小时前";
 				} else if (h < 0) {
 					// return Math.abs(h) + "小时后";
 				} else if (h == 0) {
-					int m = getOffectMinutes(c1.getTimeInMillis(),
-							c2.getTimeInMillis());
+					int m = getOffectMinutes(c1.getTimeInMillis(), c2.getTimeInMillis());
 					if (m > 0) {
 						return m + "分钟前";
 					} else if (m < 0) {
@@ -657,8 +654,7 @@ public class DateUtil {
 	 *            the arguments
 	 */
 	public static void main(String[] args) {
-		System.out.println(formatDateStr2Desc("2012-3-2 12:2:20",
-				"MM月dd日  HH:mm"));
+		System.out.println(formatDateStr2Desc("2012-3-2 12:2:20", "MM月dd日  HH:mm"));
 	}
 
 	/**
@@ -780,8 +776,8 @@ public class DateUtil {
 	// Oct 十月
 	// Nov 十一月
 	// Dec 十二月
-	private static final String[] engMonths = { "1月", "2月", "3月", "4月",
-			"5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月" };
+	private static final String[] engMonths = { "1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月",
+			"12月" };
 
 	public static String getNowMonthOnEng() {
 		Time time = new Time("GMT+8");
@@ -789,7 +785,7 @@ public class DateUtil {
 		int month = time.month;
 		return engMonths[month];
 	}
-	
+
 	/**
 	 * 以友好的方式显示时间
 	 * 
@@ -819,9 +815,7 @@ public class DateUtil {
 		if (curDate.equals(paramDate)) {
 			int hour = (int) ((cal.getTimeInMillis() - time.getTime()) / 3600000);
 			if (hour == 0)
-				ftime = Math.max(
-						(cal.getTimeInMillis() - time.getTime()) / 60000, 1)
-						+ "分钟前";
+				ftime = Math.max((cal.getTimeInMillis() - time.getTime()) / 60000, 1) + "分钟前";
 			else
 				ftime = hour + "小时前";
 			return ftime;
@@ -833,9 +827,7 @@ public class DateUtil {
 		if (days == 0) {
 			int hour = (int) ((cal.getTimeInMillis() - time.getTime()) / 3600000);
 			if (hour == 0)
-				ftime = Math.max(
-						(cal.getTimeInMillis() - time.getTime()) / 60000, 1)
-						+ "分钟前";
+				ftime = Math.max((cal.getTimeInMillis() - time.getTime()) / 60000, 1) + "分钟前";
 			else
 				ftime = hour + "小时前";
 		} else if (days == 1) {
@@ -866,21 +858,461 @@ public class DateUtil {
 		sb.append(minutes + "分" + seconds + "秒");
 		return sb.toString();
 	}
-	
-	
-	//上午11:09
+
+	// 上午11:09
 	public static String getReadableTime(int hour, int minute) {
 		if (hour <= 12) {
-			return "上午"+formatToTwoDigits(hour)+":"+formatToTwoDigits(minute);
+			return "上午" + formatToTwoDigits(hour) + ":" + formatToTwoDigits(minute);
 		} else {
-			return "下午"+formatToTwoDigits(hour%12)+":"+formatToTwoDigits(minute);
+			return "下午" + formatToTwoDigits(hour % 12) + ":" + formatToTwoDigits(minute);
 		}
 	}
-	
+
 	public static String formatToTwoDigits(int time) {
-		if (time<10) {
-			return "0"+time;
+		if (time < 10) {
+			return "0" + time;
 		}
 		return String.valueOf(time);
+	}
+
+	public static long convertStringToSeconds(String birthDate) {
+		return convertStringToMilliSeconds(birthDate) / 1000;
+	}
+
+	// get millisecond of 2012-12-12 12:12
+	public static long convertStringToMilliSeconds(String birthDate) {
+		long time = 0;
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Date date = formatter.parse(birthDate);
+			time = date.getTime();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return time;
+	}
+
+	// 11月12日12:12~14:24
+	public static String getCreatTimeFromSeconds(long start, long end) {
+		String strDate = "";
+		SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日HH:mm");
+		Date startDate = new Date(start * 1000);
+		strDate = formatter.format(startDate);
+
+		formatter = new SimpleDateFormat("HH:mm");
+		Date endDate = new Date(end * 1000);
+		return strDate + "~" + formatter.format(endDate);
+	}
+
+	// 距离会议开始
+	// 会议已开始
+	// 会议已结束
+	public static String getMeetingDiffStrFromSeconds(long start, long end) {
+		Calendar currCalendar = Calendar.getInstance();
+		long startDiff = (currCalendar.getTimeInMillis() / 1000 - start);
+		long endDiff = (currCalendar.getTimeInMillis() / 1000 - end);
+		if (startDiff > 0 && endDiff < 0) {
+			return "会议正在进行中";
+		}
+		if (endDiff > 0) {
+			return "会议已结束";
+		}
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.setTimeInMillis(start * 1000);
+		return "离会议开始还剩" +timeDifference(startCalendar);
+	}
+
+	/**
+	 * 判断时间与当前时间的差距， 给予字符提示.
+	 * 
+	 * @param calendar
+	 * @return 作者:fighter <br />
+	 *         创建时间:2013-4-9<br />
+	 *         修改时间:<br />
+	 */
+	public static String timeDifference(Calendar calendar) {
+		String info = "";
+		Calendar currCalendar = Calendar.getInstance();
+		long second = (currCalendar.getTimeInMillis() - calendar.getTimeInMillis()) / 1000;
+		int index = 0;
+		if (second < (60 * 60)) {
+			index = 60;
+		} else if (second < (24 * 60 * 60)) {
+			index = 60 * 60;
+		} else if (second < (30 * (24 * 60 * 60))) {
+			index = (24 * 60 * 60);
+		}
+		info = second(second, index);
+
+		return info;
+	}
+
+	private static String second(long second, int index) {
+		String info = "";
+		if (index == 60) {
+			info = DamiApp.getInstance().getString(R.string.minutes);
+		} else if (index == (60 * 60)) {
+			info = DamiApp.getInstance().getString(R.string.hour);
+		} else if (index == (24 * 60 * 60)) {
+			info = DamiApp.getInstance().getString(R.string.day);
+		} else {
+			return DamiApp.getInstance().getString(R.string.long_ago);
+		}
+		int num = (int) (second / index);
+		return Math.abs(num) + info;
+	}
+
+	// private static String second(long second, int index, int num) {
+	// String info = "";
+	// if (index == 60) {
+	// info = DamiApp.getInstance().getString(R.string.minutes);
+	// } else if (index == (60 * 60)) {
+	// info = DamiApp.getInstance().getString(R.string.hour);
+	// } else if (index == (24 * 60 * 60)) {
+	// info = DamiApp.getInstance().getString(R.string.day);
+	// } else {
+	// return DamiApp.getInstance().getString(R.string.long_ago);
+	// }
+	//
+	//
+	// if (second < index * num) {
+	// return num + info;
+	// } else {
+	// return second(second, index, ++num);
+	// }
+	// }
+
+	public static String getTime(long currTime) {
+
+		Calendar calendar = Calendar.getInstance(Locale.CHINA);
+		calendar.setTimeInMillis(currTime);
+		String str = timeDifference(calendar);
+		Date date = calendar.getTime();
+		SimpleDateFormat format = null;
+		if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
+				|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
+			format = new SimpleDateFormat("HH:mm:ss");
+		} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
+				|| str.endsWith(DamiApp.getInstance().getString(R.string.long_ago))) {
+			format = new SimpleDateFormat("yyyy-MM-dd");
+		}
+		return format.format(date);
+	}
+
+	public static String getBirthday(long birth) {
+		String strDate = "";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date curDate = new Date(birth);// 获取当前时间
+		strDate = formatter.format(curDate);
+
+		return strDate;
+	}
+
+	/**
+	 * 出生日期转换为年龄
+	 * 
+	 * @param brithDate
+	 * @return 作者:fighter <br />
+	 *         创建时间:2013-3-26<br />
+	 *         修改时间:<br />
+	 */
+	public static int dateToAge(String brithDate) {
+		if (TextUtils.isEmpty(brithDate)) {
+			return 0;
+		}
+		int age = 0;
+		try {
+			Calendar cal = Calendar.getInstance();
+			String birth = brithDate;
+			String now = (cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DATE));
+			Date d1 = new Date(birth); // 出生日期d1
+			Date d2 = new Date(now); // 当前日期d2
+			long i = (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24);
+			int g = (int) i;
+			age = g / 365;
+		} catch (IllegalArgumentException e) {
+		}
+
+		return age;
+	}
+
+	public static String timeDifference(long time) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(time);
+
+		return timeDifference(calendar);
+	}
+
+	public static String timeOnlie(String online) {
+		try {
+			long mtime = Long.parseLong(online) * 1000;
+			Calendar calendar = Calendar.getInstance(Locale.CHINA);
+			calendar.setTimeInMillis(mtime);
+			String str = timeOnlie(calendar);
+			Date date = calendar.getTime();
+			SimpleDateFormat format = null;
+			if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
+				format = new SimpleDateFormat("HH:mm:ss");
+			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.long_ago))) {
+				format = new SimpleDateFormat("MM-dd HH:mm:ss");
+			}
+
+			return format.format(date);
+		} catch (Exception e) {
+			return "";
+		}
+
+	}
+
+	// 3小时前
+	public static String getCreateTime(long online) {
+		try {
+			String timeStr = "";
+			long mtime = online;
+			if ((online + "").length() <= 10) {
+				mtime = online * 1000;
+			}
+			Calendar calendar = Calendar.getInstance(Locale.CHINA);
+			calendar.setTimeInMillis(mtime);
+			String str = timeOnlie(calendar);
+			if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
+				timeStr = str + DamiApp.getInstance().getString(R.string.before);
+			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.long_ago))) {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = calendar.getTime();
+				timeStr = format.format(date);
+			}
+
+			return timeStr;
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	public static String getHumanReadTime(long online) {
+		try {
+			String timeStr = "";
+			long mtime = online;
+			if ((online + "").length() <= 10) {
+				mtime = online * 1000;
+			}
+			Calendar calendar = Calendar.getInstance(Locale.CHINA);
+			calendar.setTimeInMillis(mtime);
+			String str = timeOnlie(calendar);
+			if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
+				timeStr = str + DamiApp.getInstance().getString(R.string.before);
+			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.long_ago))) {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = calendar.getTime();
+				timeStr = format.format(date);
+			}
+
+			return timeStr;
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	public static String getSecondTime(long online) {
+		try {
+			String timeStr = "";
+			Calendar calendar = Calendar.getInstance(Locale.CHINA);
+			calendar.setTimeInMillis(online);
+			String str = timeOnlie(calendar);
+			if (str.endsWith(DamiApp.getInstance().getString(R.string.second))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
+				timeStr = str + DamiApp.getInstance().getString(R.string.before);
+			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.long_ago))) {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = calendar.getTime();
+				timeStr = format.format(date);
+			}
+
+			return timeStr;
+		} catch (Exception e) {
+			return "";
+		}
+
+	}
+
+	public static String timeOnlie(Calendar calendar) {
+		long cTime = calendar.getTimeInMillis();
+		calendar.setTimeInMillis(cTime/* + TIME */);
+		String info = "";
+		Calendar currCalendar = Calendar.getInstance();
+		long second = (currCalendar.getTimeInMillis() - calendar.getTimeInMillis()) / 1000;
+		int index = 0;
+		if (second < 0) {
+			second = 0;
+		}
+
+		if (second < 60) {
+			index = 1;
+		} else if (second < (60 * 60)) {
+			index = 60;
+		} else if (second < (24 * 60 * 60)) {
+			index = 60 * 60;
+		} else if (second < (30 * (24 * 60 * 60))) {
+			index = (24 * 60 * 60);
+		}
+		info = secondOnlie(second, index, 1);
+
+		return info;
+	}
+
+	private static String secondOnlie(long second, int index, int num) {
+		String info = "";
+		if (index == 1) {
+			info = DamiApp.getInstance().getString(R.string.second);
+		} else if (index == 60) {
+			info = DamiApp.getInstance().getString(R.string.minutes);
+		} else if (index == (60 * 60)) {
+			info = DamiApp.getInstance().getString(R.string.hour);
+			;
+		} else if (index == (24 * 60 * 60)) {
+			info = DamiApp.getInstance().getString(R.string.day);
+		} else {
+			return DamiApp.getInstance().getString(R.string.long_ago);
+		}
+		if (second < 60) {
+			return second + info;
+		}
+		if (second < index * num) {
+			return num + info;
+		} else {
+			return secondOnlie(second, index, ++num);
+		}
+	}
+
+	public static String timeDifference(String currTime) {
+		Calendar calendar = Calendar.getInstance();
+		try {
+			long curr = Long.parseLong(currTime);
+			calendar.setTimeInMillis(curr);
+		} catch (Exception e) {
+		}
+
+		return timeDifference(calendar);
+	}
+
+	/**
+	 * 获取几天以前的秒数
+	 * 
+	 * @param day
+	 * @return 作者:fighter <br />
+	 *         创建时间:2013-6-7<br />
+	 *         修改时间:<br />
+	 */
+	public static String dayBefore(float day) {
+		// Calendar calendar = Calendar.getInstance();
+		// calendar.add(Calendar.DAY_OF_WEEK, 0 - day);
+		// return (calendar.getTimeInMillis() / 1000) + "";
+		long time = (long) (60 * 60 * 24 * day);
+
+		return time + "";
+
+	}
+
+	public static Calendar getCalendar(String brithDate) {
+		Calendar calendar = Calendar.getInstance();
+		if (TextUtils.isEmpty(brithDate)) {
+			return calendar;
+		}
+
+		String birth = brithDate;
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date date = formatter.parse(birth);
+			; // 出生日期d1
+			calendar.setTime(date);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return calendar;
+	}
+
+	public static String showTimedate(int year, int month, int day, int hour, int minute) {
+		Calendar calendar = Calendar.getInstance();
+		int cYear = calendar.get(Calendar.YEAR);
+		int cMonth = calendar.get(Calendar.MONTH);
+		int cDay = calendar.get(Calendar.DAY_OF_MONTH);
+		int cHour = calendar.get(Calendar.HOUR_OF_DAY);
+		int cMinute = calendar.get(Calendar.MINUTE);
+
+		if (year < cYear) {
+			return "";
+		}
+
+		if (year == cYear && month < cMonth) {
+			return "";
+		}
+
+		if (year == cYear && month == cMonth && day < cDay) {
+			return "";
+		}
+
+		if (year == cYear && month == cMonth && day == cDay && hour < cHour) {
+			return "";
+		}
+
+		if (year == cYear && month == cMonth && day == cDay && hour == cHour && minute < cMinute) {
+			return "";
+		}
+
+		int trueMonth = (month + 1);
+		String sMonth = trueMonth > 9 ? (trueMonth + "") : ("0" + trueMonth);
+		String sDay = day > 9 ? (day + "") : ("0" + day);
+		String sHour = hour > 9 ? (hour + "") : ("0" + hour);
+		String sMinute = minute > 9 ? (minute + "") : ("0" + minute);
+		String date = year + "-" + sMonth + "-" + sDay + " " + sHour + ":" + sMinute;
+		return date;
+	}
+
+	public static String showPromptdate(int year, int month, int day, int hour, int minute) {
+
+		int trueMonth = (month + 1);
+		String sMonth = trueMonth > 9 ? (trueMonth + "") : ("0" + trueMonth);
+		String sDay = day > 9 ? (day + "") : ("0" + day);
+		String sHour = hour > 9 ? (hour + "") : ("0" + hour);
+		String sMinute = minute > 9 ? (minute + "") : ("0" + minute);
+		String date = year + "-" + sMonth + "-" + sDay + " " + sHour + ":" + sMinute;
+		return date;
+	}
+
+	public static String getTime(String currTime) {
+		long time = 0;
+		try {
+			time = Long.parseLong(currTime);
+		} catch (Exception e) {
+			time = System.currentTimeMillis();
+		}
+
+		return getTime(time);
+	}
+
+	public static long getTimeStamp(String brithDate) {
+		long time = 0;
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Date date = formatter.parse(brithDate);
+			time = date.getTime();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return time;
 	}
 }

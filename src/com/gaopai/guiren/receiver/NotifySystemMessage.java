@@ -13,6 +13,7 @@ import com.gaopai.guiren.bean.NotifyMessageBean.NotifyChatBean;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.service.XmppManager;
+import com.gaopai.guiren.utils.Logger;
 
 public class NotifySystemMessage implements NotifyMessage {
 	private static final String TAG = NotifySystemMessage.class

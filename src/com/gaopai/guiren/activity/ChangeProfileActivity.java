@@ -57,6 +57,7 @@ public class ChangeProfileActivity extends BaseActivity {
 				case TYPE_EMAIL:
 					email = etText.getText().toString();
 					if (!email.contains("@")) {
+						showToast(R.string.please_input_correct_email);
 						return;
 					}
 					mUser.email = email;

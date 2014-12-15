@@ -21,7 +21,7 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.widget.indexlist.CharacterParser;
 
-public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndexer, Filterable  {
+public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndexer, Filterable {
 
 	private String mSections = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -30,6 +30,7 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 
 	public static final class Section extends Row {
 		public final String text;
+
 		public Section(String text) {
 			this.text = text;
 		}
@@ -43,10 +44,7 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 
 		public Item(User user) {
 			this.user = user;
-			if (TextUtils.isEmpty(user.realname)) {
-				user.realname = "0";
-			}
-			this.pingYinText = parser.getSelling(user.realname).toUpperCase();
+			this.pingYinText = parser.getSelling(User.getUserName(user)).toUpperCase();
 		}
 
 		@Override
@@ -113,8 +111,8 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 			viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tv_user_name);
 			viewHolder.tvUserInfo = (TextView) convertView.findViewById(R.id.tv_user_info);
 			viewHolder.ivHeader = (ImageView) convertView.findViewById(R.id.iv_header);
-			viewHolder.tvFancyCount  =(TextView) convertView.findViewById(R.id.tv_user_fancy_count);
-			viewHolder.tvUserName.setText(user.realname);
+			viewHolder.tvFancyCount = (TextView) convertView.findViewById(R.id.tv_user_fancy_count);
+			viewHolder.tvUserName.setText(User.getUserName(user));
 			viewHolder.tvUserInfo.setText(user.post);
 			if (!TextUtils.isEmpty(user.headsmall)) {
 				ImageLoaderUtil.displayImage(user.headsmall, viewHolder.ivHeader);
@@ -186,13 +184,28 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 			sections[i] = String.valueOf(mSections.charAt(i));
 		return sections;
 	}
-	
+
 	private ArrayList<Item> mItems;
 	private ArrayList<Row> mRows;
 	public List<User> mUserList = new ArrayList<User>();
-	
-	public void addAndSort(List<User> userList){
+
+	public void addAndSort(List<User> userList) {
 		mUserList.addAll(userList);
+		sortData(mUserList);
+	}
+
+	public void removeUser(String uid) {
+		for(User user:mUserList) {
+			if (uid.equals(user.uid)) {
+				mUserList.remove(user);
+				sortData(mUserList);
+				return;
+			}
+		}
+	}
+	
+	public void addUser(User user) {
+		mUserList.add(user);
 		sortData(mUserList);
 	}
 

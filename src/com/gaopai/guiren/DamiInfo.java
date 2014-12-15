@@ -23,7 +23,6 @@ import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult;
 import com.gaopai.guiren.activity.ApplyActivity.InviteUrlResult;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
-import com.gaopai.guiren.bean.BaseBean;
 import com.gaopai.guiren.bean.CheckUpdateResult;
 import com.gaopai.guiren.bean.FavoriteList;
 import com.gaopai.guiren.bean.InviteNumResult;
@@ -443,6 +442,7 @@ public class DamiInfo implements Serializable {
 		}
 		params.put("maxID", maxID);
 		params.put("sinceID", sinceID);
+		Logger.d("sss", "sinceId=" + sinceID + "  maxId=" + maxID);
 		params.put("pageSize", String.valueOf(LOAD_SIZE));
 		request(Method.GET, ChatMessageBean.class, params, type, listener, 2);
 	}
@@ -2326,6 +2326,13 @@ public class DamiInfo implements Serializable {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/UserAuthItem";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, GetVerifyResult.class, listener);
+	}
+	
+	//申请加v
+	public static void setUserAuthV(IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		String url = SERVER + "user/UserAuthV";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
 	public static void joinMeetingByPassword(String meetingid, String password, IResponseListener listener) {

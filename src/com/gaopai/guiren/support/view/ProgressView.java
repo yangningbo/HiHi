@@ -22,18 +22,17 @@ public class ProgressView extends View {
 	private int percent = 20;
 
 	public ProgressView(Context context) {
-		this(context, null);
-		// TODO Auto-generated constructor stub
+		super(context);
+		init();
 	}
 
 	public ProgressView(Context context, AttributeSet attrs) {
-		this(context, null, 0);
-		// TODO Auto-generated constructor stub
+		super(context, attrs);
+		init();
 	}
 
 	public ProgressView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		// TODO Auto-generated constructor stub
 		init();
 	}
 
@@ -87,7 +86,7 @@ public class ProgressView extends View {
 	}
 
 	public void setProgress(int progress) {
-		if (progress > 100 ) {
+		if (progress > 100) {
 			progress = 100;
 		}
 		if (progress < 0) {
@@ -97,20 +96,20 @@ public class ProgressView extends View {
 		invalidate();
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_MOVE:
-			float x = event.getX();
-			int pro = (int) (100 * x / getWidth());
-			setProgress(pro);
-			break;
-
-		default:
-			break;
-		}
-		return true;
-	}
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//		// TODO Auto-generated method stub
+//
+//		switch (event.getAction()) {
+//		case MotionEvent.ACTION_MOVE:
+//			float x = event.getX();
+//			int pro = (int) (100 * x / getWidth());
+//			setProgress(pro);
+//			break;
+//
+//		default:
+//			break;
+//		}
+//		return true;
+//	}
 }

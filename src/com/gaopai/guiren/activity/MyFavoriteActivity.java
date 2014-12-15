@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -36,8 +38,11 @@ import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
+import com.gaopai.guiren.support.chat.ChatMsgUIHelper.BaseViewHolder;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -56,12 +61,14 @@ public class MyFavoriteActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.general_pulltorefresh_listview);
+		
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText("我的搜藏");
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false); // 下拉刷新
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
 		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
+		mListView.setBackgroundColor(getResources().getColor(R.color.chat_background));
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -250,29 +257,14 @@ public class MyFavoriteActivity extends BaseActivity {
 		}
 	}
 
-	static class ViewHolder {
+	static class ViewHolder extends BaseViewHolder {
 		int flag = 0; // 1 好友 0 自己
-		TextView tvChatTime, tvText, tvVoiceLength, tvUserName;
-		ImageView ivHead, ivPhoto, ivVoice, ivZan;
-		ProgressBar wiatProgressBar;
-		RelativeLayout msgInfoLayout, msgLayout;
-		TextView tvRoom;
+		public TextView tvChatTime;
+		public TextView tvRoom;
 
 		public static Object getInstance(View view, ViewHolder holder) {
-			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_text_voice_holder);
-			holder.msgLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_holder);
+			getBaseInstance(view, holder);
 			holder.tvChatTime = (TextView) view.findViewById(R.id.tv_chat_talk_time);
-			holder.tvText = (TextView) view.findViewById(R.id.iv_chat_text);
-
-			holder.ivHead = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
-			holder.ivPhoto = (ImageView) view.findViewById(R.id.iv_chat_photo);
-			holder.ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
-
-			holder.wiatProgressBar = (ProgressBar) view.findViewById(R.id.pb_chat_progress);
-			holder.tvVoiceLength = (TextView) view.findViewById(R.id.tv_chat_voice_time_length);
-
-			holder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
-
 			holder.tvRoom = (TextView) view.findViewById(R.id.tv_room);
 			return holder;
 		}
@@ -285,14 +277,15 @@ public class MyFavoriteActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		final MessageInfo messageInfo = favorite.message;
 		viewHolder.tvRoom.setText(messageInfo.title);
-		viewHolder.tvChatTime.setText(FeatureFunction.getCreateTime(favorite.createtime));
+		viewHolder.tvChatTime.setText(DateUtil.getCreateTime(favorite.createtime));
+		
 		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
-			viewHolder.ivHead.setTag(messageInfo.headImgUrl);
 			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead);
-		}
+		} 
 		viewHolder.tvUserName.setText(messageInfo.displayname);
 		notHideViews(viewHolder, messageInfo.fileType);
-		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(messageInfo));
+		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
+				(android.widget.LinearLayout.LayoutParams) viewHolder.ivVoice.getLayoutParams(), messageInfo));
 		viewHolder.msgInfoLayout.setOnClickListener(null);
 		switch (messageInfo.fileType) {
 		case MessageType.TEXT:
@@ -301,6 +294,12 @@ public class MyFavoriteActivity extends BaseActivity {
 			break;
 		case MessageType.PICTURE:
 			final String path = messageInfo.imgUrlS.trim();
+			int width = (int) (MyUtils.dip2px(mContext, messageInfo.imgWidth) * 0.7);
+			int height = (int) (MyUtils.dip2px(mContext, messageInfo.imgHeight) * 0.7);
+			viewHolder.ivPhoto.getLayoutParams().height = height;
+			viewHolder.ivPhoto.getLayoutParams().width = width;
+			viewHolder.ivPhotoCover.getLayoutParams().height = height;
+			viewHolder.ivPhotoCover.getLayoutParams().width = width;
 
 			ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto);
 			if (path.startsWith("http://")) {
@@ -347,18 +346,23 @@ public class MyFavoriteActivity extends BaseActivity {
 	};
 
 	private void notHideViews(ViewHolder viewHolder, int which) {
-		viewHolder.ivPhoto.setVisibility(View.GONE);
+		viewHolder.layoutPicHolder.setVisibility(View.GONE);
+
+		viewHolder.layoutTextVoiceHolder.setVisibility(View.GONE);
 		viewHolder.tvText.setVisibility(View.GONE);
 		viewHolder.tvVoiceLength.setVisibility(View.GONE);
 		viewHolder.ivVoice.setVisibility(View.GONE);
+		viewHolder.wiatProgressBar.setVisibility(View.GONE);
 		switch (which) {
 		case MessageType.TEXT:
+			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
 			viewHolder.tvText.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.PICTURE:
-			viewHolder.ivPhoto.setVisibility(View.VISIBLE);
+			viewHolder.layoutPicHolder.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.VOICE:
+			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
 			viewHolder.ivVoice.setVisibility(View.VISIBLE);
 			viewHolder.tvVoiceLength.setVisibility(View.VISIBLE);
 			break;
@@ -367,10 +371,10 @@ public class MyFavoriteActivity extends BaseActivity {
 		}
 	}
 
-	private RelativeLayout.LayoutParams getVoiceViewLengthParams(MessageInfo messageInfo) {
+	private LinearLayout.LayoutParams getVoiceViewLengthParams(LinearLayout.LayoutParams lp, MessageInfo commentInfo) {
 		final int MAX_SECOND = 10;
 		final int MIN_SECOND = 2;
-		int length = messageInfo.voiceTime;
+		int length = commentInfo.voiceTime;
 		float max = mContext.getResources().getDimension(R.dimen.voice_max_length_comment);
 		float min = mContext.getResources().getDimension(R.dimen.voice_min_length_comment);
 		int width = (int) min;
@@ -379,8 +383,11 @@ public class MyFavoriteActivity extends BaseActivity {
 		} else if (length > MAX_SECOND) {
 			width = (int) max;
 		}
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, LayoutParams.WRAP_CONTENT);
-		lp.addRule(RelativeLayout.CENTER_VERTICAL);
+		if (lp == null) {
+			lp = new LinearLayout.LayoutParams(width, LayoutParams.WRAP_CONTENT);
+		} else {
+			lp.width = width;
+		}
 		return lp;
 	}
 

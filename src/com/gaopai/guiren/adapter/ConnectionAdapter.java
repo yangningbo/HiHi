@@ -1,14 +1,11 @@
 package com.gaopai.guiren.adapter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.Spannable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +18,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ConnectionDetailActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
@@ -29,9 +25,9 @@ import com.gaopai.guiren.bean.dynamic.ConnectionBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
 import com.gaopai.guiren.fragment.ConnectionFragment;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
-import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.MyGridLayout;
 
@@ -164,7 +160,7 @@ public class ConnectionAdapter extends BaseAdapter {
 				}
 			}
 		}
-		viewHolder.tvDateInfo.setText(FeatureFunction.getHumanReadTime(Long.valueOf(typeBean.addtime)));
+		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));
 		viewHolder.tvViewDetail.setTag(typeBean);
 		viewHolder.tvViewDetail.setOnClickListener(viewDetialClickListener);
 
@@ -222,7 +218,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		}
 		viewHolder.tvUserName.setText(user.realname);
 		viewHolder.tvUserInfo.setText(user.company);
-		viewHolder.tvDateInfo.setText(FeatureFunction.getHumanReadTime(Long.valueOf(typeBean.addtime)));
+		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));
 
 		viewHolder.rlInfoLayout.setTag(user.uid);
 		viewHolder.rlInfoLayout.setOnClickListener(infoClickListener);

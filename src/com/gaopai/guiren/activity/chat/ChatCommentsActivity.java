@@ -83,6 +83,7 @@ import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.ChatGridLayout;
 import com.gaopai.guiren.view.RecordDialog;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
@@ -109,6 +110,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected Identity mIdentity;
 	protected int mChatType = 0;
 	protected String mNewUrl = "";
+	
 
 	private ImageView ivVoice, ivPhoto, ivPhotoCover, headImageView;
 	private View layoutPic;
@@ -166,6 +168,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	public final static int MSG_ZAN = 11011;
 	private final static int FAVORITE_SUCCESS = 15454;
 	private final static int REPORT_SUCCESS = 15455;
+	
+	private boolean isOnLooker = false;
 
 	protected SpeexPlayerWrapper speexPlayerWrapper;
 
@@ -188,6 +192,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		mTribe = (Tribe) getIntent().getSerializableExtra(INTENT_TRIBE_KEY);
 		mIdentity = (Identity) getIntent().getSerializableExtra(INTENT_IDENTITY_KEY);
 		mChatType = getIntent().getIntExtra(INTENT_CHATTYPE_KEY, 0);
+		isOnLooker = getIntent().getBooleanExtra(INTENT_SENCE_ONLOOK_KEY, false);
 		msgHelper = new ChatMsgDataHelper(mContext, callback, mTribe, mChatType);
 		initComponent();
 		mListView.getRefreshableView().addHeaderView(creatHeaderView());
@@ -205,10 +210,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected void initComponent() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.message_detail);
-		View view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
-		view.setId(R.id.ab_chat_more);
-		view.setOnClickListener(this);
+		
 
+		if (isOnLooker) {
+			ViewUtil.findViewById(this, R.id.chat_box).setVisibility(View.GONE);
+		} else {
+			View view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
+			view.setId(R.id.ab_chat_more);
+			view.setOnClickListener(this);
+		}
 		mSwitchVoiceTextBtn = (Button) findViewById(R.id.chat_box_btn_switch_voice_text);
 		mSwitchVoiceTextBtn.setOnClickListener(this);
 
@@ -498,19 +508,22 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		
 
 		zanCountLayout = (LinearLayout) view.findViewById(R.id.zan_count_layout);
-		zanCountLayout.setOnClickListener(this);
 		zanCountBtn = (ImageView) view.findViewById(R.id.zan_count_btn);
-		zanCountBtn.setOnClickListener(this);
 
 		commentCountLayout = (LinearLayout) view.findViewById(R.id.comment_count_layout);
-		commentCountLayout.setOnClickListener(this);
 		commentCountBtn = (ImageView) view.findViewById(R.id.comment_count_btn);
-		commentCountBtn.setOnClickListener(this);
 
 		favoriteCountLayout = (LinearLayout) view.findViewById(R.id.favourite_count_layout);
-		favoriteCountLayout.setOnClickListener(this);
 		favoriteCountBtn = (ImageView) view.findViewById(R.id.favorite_count_btn);
-		favoriteCountBtn.setOnClickListener(this);
+		
+		if (!isOnLooker) {
+			zanCountLayout.setOnClickListener(this);
+			zanCountBtn.setOnClickListener(this);
+			commentCountLayout.setOnClickListener(this);
+			commentCountBtn.setOnClickListener(this);
+			favoriteCountLayout.setOnClickListener(this);
+			favoriteCountBtn.setOnClickListener(this);
+		}
 
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
 		viewCoverTop = view.findViewById(R.id.view_cover_top);

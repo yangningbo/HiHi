@@ -15,9 +15,11 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.DynamicDrawableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
@@ -178,6 +180,18 @@ public class MyTextUtils {
 
 	public static SpannableString addSingleUserSpan(String text, String uid) {
 		return addSingleSpanGeneral(text, uid, USER_SCHEME);
+	}
+	
+	public static SpannableString setTextSize(SpannableString str, int size) {
+		str.setSpan(new AbsoluteSizeSpan(size, true), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return str;
+	}
+	public static SpannableString setTextColor(SpannableString str, int color) {
+		str.setSpan(new ForegroundColorSpan(color), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return str;
+	}
+	public static SpannableString setTextColor(String str, int color) {
+		return setTextColor(new SpannableString(str), color);
 	}
 
 	public static SpannableString addSingleSpanGeneral(String text, String uid, String scheme) {

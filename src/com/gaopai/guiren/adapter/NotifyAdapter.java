@@ -5,9 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +13,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.db.DBHelper;
@@ -24,11 +20,12 @@ import com.gaopai.guiren.db.NotifyMessageTable;
 import com.gaopai.guiren.db.NotifyRoomTable;
 import com.gaopai.guiren.db.NotifyTable;
 import com.gaopai.guiren.db.NotifyUserTable;
+import com.gaopai.guiren.utils.DateUtil;
 
 public class NotifyAdapter extends BaseAdapter {
 
 	private final LayoutInflater mInflater;
-	private List<NotifiyVo> mData = new ArrayList<NotifiyVo>();
+	public List<NotifiyVo> mData = new ArrayList<NotifiyVo>();
 	private Context mContext;
 	public boolean mIsCancel = false;
 
@@ -100,7 +97,7 @@ public class NotifyAdapter extends BaseAdapter {
 			holder.mProcessedView.setVisibility(View.VISIBLE);
 		}
 
-		holder.mTimeView.setText(FeatureFunction.getSecondTime(notify.time));
+		holder.mTimeView.setText(DateUtil.getSecondTime(notify.time));
 		holder.mDeleteBtn.setVisibility(mIsCancel ? View.VISIBLE : View.GONE);
 		holder.mDeleteBtn.setOnClickListener(new OnClickListener() {
 

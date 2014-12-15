@@ -83,7 +83,7 @@
                 android:contentDescription="@string/desc"
                 android:maxHeight="120dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/icon_welcom_background"
+                android:src="@drawable/icon_welcom_background_0"
                 android:visibility="visible" />
 
             <ImageView

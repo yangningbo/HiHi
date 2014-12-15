@@ -15,13 +15,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.DamiCommon;
@@ -30,14 +27,15 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatMainActivity;
-import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -49,7 +47,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;
 	private DisplayImageOptions options;
 
-	private List<MessageInfo> mData;
+	protected List<MessageInfo> mData;
 
 	private static final int TYPE_COUNT = 2;
 	private static final int TYPE_RIGHT = 0;
@@ -82,6 +80,11 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 
 	public void addAll(List<MessageInfo> o) {
 		mData.addAll(0, o);
+		notifyDataSetChanged();
+	}
+
+	public void addAllAppend(List<MessageInfo> o) {
+		mData.addAll(o);
 		notifyDataSetChanged();
 	}
 
@@ -161,17 +164,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			}
 			resendView.setTag(messageInfo);
 			resendView.setOnClickListener(resendClickListener);
-		} else {
-			// if (messageInfo.fileType == MessageType.VOICE &&
-			// messageInfo.isReadVoice == MessageState.VOICE_NOT_READED) {
-			// ((ViewHolderLeft)
-			// viewHolder).ivVoiceUnread.setVisibility(View.VISIBLE);
-			// } else {
-			// ((ViewHolderLeft)
-			// viewHolder).ivVoiceUnread.setVisibility(View.GONE);
-			// }
 		}
-
 		onBindView(viewHolder, messageInfo);
 		displayTime(viewHolder.tvChatTime, position);
 
@@ -183,7 +176,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		notHideViews(viewHolder, messageInfo.fileType);
 		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
 				(android.widget.LinearLayout.LayoutParams) viewHolder.ivVoice.getLayoutParams(), messageInfo));
-		viewHolder.msgInfoLayout.setOnClickListener(null);
+		viewHolder.layoutTextVoiceHolder.setOnClickListener(null);
 		switch (messageInfo.fileType) {
 		case MessageType.TEXT:
 			if (messageInfo.mIsShide == MessageState.MESSAGE_NOT_SHIDE) {
@@ -211,14 +204,14 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				if (messageInfo.sendState == MessageState.STATE_SEND_FAILED) {
 				}
 			}
-			viewHolder.ivPhoto.setTag(position);
-			viewHolder.ivPhoto.setOnClickListener(photoClickListener);
+			viewHolder.layoutPicHolder.setTag(R.id.dy_photo_position, position);
+			viewHolder.layoutPicHolder.setOnClickListener(photoClickListener);
 			break;
 		case MessageType.VOICE:
 			if (mCurrentMode == MODEL_VOICE) {
 				viewHolder.tvVoiceLength.setText(messageInfo.voiceTime + "''");
 				showWaitProgressBar(messageInfo, viewHolder);
-				viewHolder.msgInfoLayout.setOnClickListener(new OnClickListener() {
+				viewHolder.layoutTextVoiceHolder.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -262,13 +255,13 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			// TODO Auto-generated method stub
 			Intent intent = new Intent(mContext, ShowImagesActivity.class);
 			intent.putExtra("msgList", (Serializable) mData);
-			intent.putExtra("position", (int) v.getTag());
+			intent.putExtra("position", (int) v.getTag(R.id.dy_photo_position));
 			mContext.startActivity(intent);
 		}
 	};
 
 	private void displayTime(TextView textView, int position) {
-		long beforeTime = 0;
+		long beforeTime = System.currentTimeMillis();
 		MessageInfo messageInfo = (MessageInfo) getItem(position);
 		if (position != 0) {
 			MessageInfo messageInfoBefore = (MessageInfo) getItem(position - 1);
@@ -278,7 +271,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			textView.setVisibility(View.GONE);
 		} else {
 			textView.setVisibility(View.VISIBLE);
-			textView.setText(FeatureFunction.getCreateTime(messageInfo.time));
+			textView.setText(DateUtil.getCreateTime(messageInfo.time));
 		}
 	}
 

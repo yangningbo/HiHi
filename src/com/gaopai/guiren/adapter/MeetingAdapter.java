@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.Tribe;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.view.RoundImageView;
 
@@ -73,16 +74,14 @@ public class MeetingAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		if (!TextUtils.isEmpty(mData.get(position).logosmall)) {
-			ImageLoaderUtil.displayImage(mData.get(position).logosmall, holder.mMeetingIcon);
+		if (!TextUtils.isEmpty(mData.get(position).logolarge)) {
+			ImageLoaderUtil.displayImage(mData.get(position).logolarge, holder.mMeetingIcon);
 		} else {
 			holder.mMeetingIcon.setImageResource(R.drawable.icon_default_meeting);
 		}
 
-
 		holder.mTitleTextView.setText(mData.get(position).name);
-		String time = FeatureFunction.getNoYearTime(mData.get(position).start * 1000) + "~"
-				+ FeatureFunction.getNoYearTime(mData.get(position).end * 1000);
+		String time = DateUtil.getCreatTimeFromSeconds(mData.get(position).start, mData.get(position).end);
 		holder.mTimeTextView.setText(time);
 		String content = mContext.getString(R.string.has_join_start) + mData.get(position).count
 				+ mContext.getString(R.string.has_join_end);
@@ -105,7 +104,7 @@ public class MeetingAdapter extends BaseAdapter {
 		@Override
 		public int hashCode() {
 			return this.mTitleTextView.hashCode() + mMeetingIcon.hashCode() + mTimeTextView.hashCode()
-					+ mCountTextView.hashCode() ;
+					+ mCountTextView.hashCode();
 		}
 	}
 

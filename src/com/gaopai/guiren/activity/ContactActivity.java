@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import u.aly.A;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +47,8 @@ public class ContactActivity extends BaseActivity {
 
 	private int type;
 	private String uid;
-	private boolean isNewChat = false;//if true, clicking item lead to chat interface
+	private boolean isNewChat = false;// if true, clicking item lead to chat
+										// interface
 
 	private PullToRefreshIndexableListView mListView;
 	private CopyOfConnectionAdapter mAdapter;
@@ -57,6 +60,9 @@ public class ContactActivity extends BaseActivity {
 
 	private boolean isSearchMode = false;
 	public List<User> mSearchUserList = new ArrayList<User>();
+
+	public final static String ACTION_UPDATE_LIST_ADD = "com.gaopai.guiren.ACTION_UPDATE_LIST_ADD";
+	public final static String ACTION_UPDATE_LIST_DELETE = "com.gaopai.guiren.ACTION_UPDATE_LIST_DELETE";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +139,7 @@ public class ContactActivity extends BaseActivity {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<IndexableListView> refreshView) {
 				// TODO Auto-generated method stub
-		
+
 			}
 
 			@Override
@@ -159,13 +165,16 @@ public class ContactActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
+				if (!(mAdapter.getItem(pos) instanceof Item)) {
+					return;
+				}
 				User user = ((Item) mAdapter.getItem(pos)).user;
 				if (isNewChat) {
 					startActivity(ChatMessageActivity.getIntent(mContext, user));
 				} else {
 					startActivity(ProfileActivity.getIntent(mContext, user.uid));
 				}
-				
+
 			}
 		});
 
@@ -174,8 +183,36 @@ public class ContactActivity extends BaseActivity {
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 		getUserList();
+		registerReceiver(ACTION_UPDATE_LIST_ADD, ACTION_UPDATE_LIST_DELETE);
 	}
-	
+
+	@Override
+	protected void onReceive(Intent intent) {
+		if (intent.getAction().equals(ACTION_UPDATE_LIST_ADD)) {
+			User user = (User) intent.getSerializableExtra("user");
+			if (user != null) {
+				mAdapter.addUser(user);
+			}
+		} else if (intent.getAction().equals(ACTION_UPDATE_LIST_DELETE)) {
+			String uid = intent.getStringExtra("uid");
+			if (uid != null) {
+				mAdapter.removeUser(uid);
+			}
+		}
+	}
+
+	public static Intent getDeleteBroadcastIntent(String uid) {
+		Intent intent = new Intent(ACTION_UPDATE_LIST_DELETE);
+		intent.putExtra("uid", uid);
+		return intent;
+	}
+
+	public static Intent getAddBroadcastIntent(User user) {
+		Intent intent = new Intent(ACTION_UPDATE_LIST_ADD);
+		intent.putExtra("user", user);
+		return intent;
+	}
+
 	public static Intent getIntent(Context context, int type, String uid, boolean isNewChat) {
 		Intent intent = new Intent(context, ContactActivity.class);
 		intent.putExtra(KEY_TYPE, type);
@@ -183,6 +220,7 @@ public class ContactActivity extends BaseActivity {
 		intent.putExtra(KEY_NEWCHAT, isNewChat);
 		return intent;
 	}
+
 	public static Intent getIntent(Context context, int type, String uid) {
 		Intent intent = new Intent(context, ContactActivity.class);
 		intent.putExtra(KEY_TYPE, type);

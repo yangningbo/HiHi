@@ -70,7 +70,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		setAbContentView(R.layout.activity_send_dynamic);
 		mTitleBar.setTitleText(R.string.send_dynamic);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back).setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -87,6 +87,11 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		});
 		initViews();
 		getTags();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		showExitDialog();
 	}
 
 	private void initViews() {
@@ -105,7 +110,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		btnPhoto = (ImageButton) findViewById(R.id.btn_camera);
 		btnPhoto.setOnClickListener(this);
 		picGrid = (MyGridLayout) findViewById(R.id.gl_pic);
-		
+
 		tvUseRealName = ViewUtil.findViewById(this, R.id.tv_send_dy_realname);
 		tvUseRealName.setOnClickListener(this);
 	}
@@ -184,10 +189,10 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 	private void sendDynamic() {
 		List<MorePicture> fileList = new ArrayList<MorePicture>();
-		int i=0;
+		int i = 0;
 		for (String pic : picList) {
 			if (!TextUtils.isEmpty(pic)) {
-				fileList.add(new MorePicture("image["+i+"]", pic));
+				fileList.add(new MorePicture("image[" + i + "]", pic));
 			}
 			i++;
 		}
@@ -201,9 +206,13 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			builder.substring(0, builder.length() - 1);
 			tags = builder.toString();
 		}
+		if (fileList.size() == 0 && TextUtils.isEmpty(etDynamicMsg.getText().toString())) {
+			showToast(R.string.input_can_not_be_empty);
+			return;
+		}
 
-		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, isHideName, tags, new SimpleResponseListener(mContext,
-				R.string.send_now) {
+		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, isHideName, tags, new SimpleResponseListener(
+				mContext, R.string.send_now) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -239,11 +248,11 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				return;
 			}
 			etTags.setText("");
-			flowLayout.addView(TagWindowManager.creatTagWithDelete(str, tagDeleteClickListener, mInflater),
+			flowLayout.addView(TagWindowManager.creatTagWithoutStrech(str, tagDeleteClickListener, mInflater),
 					flowLayout.getTextLayoutParams());
 			break;
 		case R.id.btn_camera:
-//			showMoreWindow();
+			// showMoreWindow();
 			showChosePicDialog();
 			break;
 		case R.id.tv_send_dy_realname:
@@ -255,6 +264,9 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 	}
 	
+	
+	
+
 	private void changeIsHideName(int isHide) {
 		int drawbale = (isHide == 0) ? R.drawable.icon_send_dy_real_name : R.drawable.icon_send_dy_nick_name;
 		tvUseRealName.setCompoundDrawablesWithIntrinsicBounds(drawbale, 0, 0, 0);
@@ -272,9 +284,12 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			flowLayout.removeView((View) v.getParent());
 		}
 	};
-
 	
-	public void showChosePicDialog () {
+	
+
+
+
+	public void showChosePicDialog() {
 		String[] array = new String[2];
 		array[0] = getString(R.string.camera);
 		array[1] = getString(R.string.gallery);
@@ -282,7 +297,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				if (which==0) {
+				if (which == 0) {
 					btnCameraAction();
 				} else {
 					btnPhotoAction();
@@ -347,7 +362,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		int padding = MyUtils.dip2px(mContext, 5);
 		imageView.setPadding(padding, padding, padding, padding);
 		imageView.setOnLongClickListener(new OnLongClickListener() {
-			
+
 			@Override
 			public boolean onLongClick(View v) {
 				// TODO Auto-generated method stub
@@ -419,7 +434,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	private void showExitDialog() {
 		showDialog(getString(R.string.confirm_cancel_send_dynamic), null, new DialogInterface.OnClickListener() {
 			@Override

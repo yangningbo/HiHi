@@ -105,12 +105,14 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			if (data.state != null && data.state.code == 0) {
 				if (data.data != null && data.data.size() > 0) {
 					isFull = data.data.size() < 20;
-					if (isPullUp) {//上拉加载的加到列表后面
-						mAdapter.addAll(parseMessageList(data.data, 0));
-					} else {//下拉刷新的加到列表前面
+					if (isPullUp) {// 上拉加载的加到列表后面
+						mAdapter.addAllAppend(parseMessageList(data.data, 1));
+						mListView.getRefreshableView().setSelection(messageInfos.size() - 1);
+					} else {// 下拉刷新的加到列表前面
 						mAdapter.addAll(parseMessageList(data.data, 1));
+						mListView.getRefreshableView().setSelection(data.data.size() - 1);
 					}
-					mListView.getRefreshableView().setSelection(data.data.size());
+
 				} else {
 					isFull = true;
 				}
@@ -176,6 +178,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 				}
 			}
 			mAdapter.addAll(tempMessageInfos);
+			scrollToBottom();
 		}
 	}
 
@@ -190,8 +193,8 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			}
 			Logger.d(this, "haslocaldata=" + tempList.size());
 			if (tempList != null && tempList.size() != 0) {
-				mAdapter.addAll(tempList);
 				mListView.getRefreshableView().setSelection(tempList.size());
+				mAdapter.addAll(tempList);
 			}
 			mListView.onPullComplete();
 		} else {
@@ -255,9 +258,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			updateVoicePlayModeState(true);
 			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_call), Toast.LENGTH_SHORT).show();
 		}
-		if (speexPlayerWrapper.isPlay()) {
-			DamiApp.getInstance().setPlayMode();
-		}
 	}
 
 	private void initTitleBarLocal() {
@@ -267,6 +267,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		ivDisturb = (ImageView) mTitleBar.addLeftImageViewWithDefaultSize(R.drawable.icon_chat_title_avoid_disturb_off);
 		int imageId = R.drawable.icon_chat_title_ear_phone;
 		mVoiceModeImage = (ImageView) mTitleBar.addLeftImageViewWithDefaultSize(R.drawable.icon_chat_title_ear_phone);
+		initVoicePlayMode();
 		if (isModeInCall) {
 			mVoiceModeImage.setVisibility(View.VISIBLE);
 		} else {
@@ -391,6 +392,10 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 	}
 
+	private void scrollToBottom() {
+		mListView.getRefreshableView().setSelection(mAdapter.getCount());
+	}
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -447,7 +452,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			break;
 		case R.id.chat_add_change_voice:
 			TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(1);
-			ImageView ivVoice =  (ImageView) chatAddChangeVoiceLayout.getChildAt(0);
+			ImageView ivVoice = (ImageView) chatAddChangeVoiceLayout.getChildAt(0);
 			if (!isChangeVoice) {
 				view.setText(getString(R.string.change_voice));
 				ivVoice.setImageResource(R.drawable.icon_chat_voice_weird);
@@ -500,7 +505,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	private boolean isFull = false;
 
 	protected void getMessageList(final boolean isPullUp) {
-		if (isFull) {
+		if (isFull && (!isPullUp)) {
 			mListView.setHasMoreData(!isFull);
 			mListView.onPullComplete();
 			return;
@@ -596,14 +601,14 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		saveDraft(mContentEdit.getText().toString());
-		
+
 	}
 
 	public void saveDraft(String draft) {
 		MessageInfo msg = buildMessage();
 		msg.fileType = MessageType.TEXT;
 		msg.content = draft;
-		if (ConversationHelper.saveDraft(mContext, msg)){
+		if (ConversationHelper.saveDraft(mContext, msg)) {
 			sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 		}
 	}

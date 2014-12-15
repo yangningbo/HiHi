@@ -136,25 +136,6 @@
                     android:contentDescription="@string/desc"
                     android:src="@drawable/default_header" />
 
-                <TextView
-                    android:id="@+id/tv_meilizhi_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/tv_user_name"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@id/tv_user_name"
-                    android:text="@string/level_count"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/iv_star_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/tv_user_name"
-                    android:layout_marginLeft="2dp"
-                    android:layout_toRightOf="@id/tv_meilizhi_text"
-                    android:textColor="@color/red_dongtai_bg"
-                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tv_user_name"
@@ -162,10 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/iv_header"
                     android:layout_toRightOf="@id/iv_header"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="@color/one_word_prompt_color"
-                    android:textSize="22sp" />
+                    android:textColor="@color/general_text_black"/>
 
                 <TextView
                     android:id="@+id/tv_user_info"
@@ -176,7 +154,7 @@
                     android:layout_toRightOf="@id/iv_header"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:textColor="@color/content_gray_color"
+                    android:textColor="@color/general_text_gray"
                     android:textSize="14sp" />
             </RelativeLayout>
 

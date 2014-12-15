@@ -3,13 +3,9 @@
 
     <item android:state_pressed="true"><shape>
             <solid android:color="@color/general_blue" />
-
-            <corners android:radius="@dimen/tribe_detail_btn_radius" />
         </shape></item>
     <item android:state_pressed="false"><shape>
             <solid android:color="@color/general_background_gray" />
-
-            <corners android:radius="@dimen/tribe_detail_btn_radius" />
         </shape></item>
 
 </selector>

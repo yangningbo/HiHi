@@ -19,7 +19,6 @@
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/iv_chat_talk_img_head" />
-"
 
     <FrameLayout
         android:id="@+id/layout_msg_content"
@@ -41,6 +40,7 @@
             android:id="@+id/layout_msg_text_voice_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:layout_gravity="center_vertical"
             android:background="@drawable/selector_chat_left"
             android:gravity="left"
@@ -91,7 +91,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/desc"
                 android:scaleType="fitXY"
-                android:src="@drawable/icon_welcom_background"
+                android:src="@drawable/icon_welcom_background_0"
                 android:visibility="visible" />
 
             <ImageView

@@ -152,5 +152,7 @@
     
     <color name="general_divider_in_white">#CFCDCD</color>
     
+    <color name="chat_background">#EBEAF1</color>
+    
     
 </resources>

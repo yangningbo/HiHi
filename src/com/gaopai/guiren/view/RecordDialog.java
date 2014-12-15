@@ -2,19 +2,21 @@ package com.gaopai.guiren.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.gaopai.guiren.R;
 
 public class RecordDialog {
 	
-	private View recordView;
-	private View cancelView;
+	private ImageView recordView;
 	private Dialog dialog = null;
 	private ImageView mDialogBackground;
+	private TextView tvInfo;
 	
 	private Context context;
 	public RecordDialog(Context context) {
@@ -25,8 +27,8 @@ public class RecordDialog {
 	private void intDialog(){
 		dialog = new Dialog(context, R.style.DialogPrompt);
 		dialog.setContentView(R.layout.chat_voice_dialog);
-		recordView = dialog.findViewById(R.id.dialog_record_view);
-		cancelView = dialog.findViewById(R.id.dialog_cancel_view);
+		recordView = (ImageView) dialog.findViewById(R.id.iv_dialog_record);
+		tvInfo = (TextView) dialog.findViewById(R.id.tv_record_info);
 		mDialogBackground = (ImageView) dialog.findViewById(R.id.chat_voice);
 	}
 	
@@ -96,13 +98,17 @@ public class RecordDialog {
 //	}
 	
 	public void showCancalView() {
-		recordView.setVisibility(View.GONE);
-		cancelView.setVisibility(View.VISIBLE);
+		mDialogBackground.setVisibility(View.GONE);
+		recordView.setImageResource(R.drawable.icon_rec_dialog_recylebin);
+		tvInfo.setText(R.string.remove_cancel_voice);
+		tvInfo.setBackgroundResource(R.drawable.icon_dialog_rec_text_background);
 	}
 	
 	public void showRecordView() {
-		recordView.setVisibility(View.VISIBLE);
-		cancelView.setVisibility(View.GONE);
+		mDialogBackground.setVisibility(View.VISIBLE);
+		tvInfo.setText(R.string.move_up_cancel_voice);
+		tvInfo.setBackgroundColor(Color.TRANSPARENT);
+		recordView.setImageResource(R.drawable.icon_rec_dialog_record);
 	}
 	
 	public boolean isShowing() {

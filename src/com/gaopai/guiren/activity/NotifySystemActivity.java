@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import u.aly.ad;
+
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.app.AlertDialog;
@@ -20,6 +22,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -33,8 +36,12 @@ import com.gaopai.guiren.bean.NotifiyType;
 import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.db.NotifyMessageTable;
+import com.gaopai.guiren.db.NotifyRoomTable;
 import com.gaopai.guiren.db.NotifyTable;
+import com.gaopai.guiren.db.NotifyUserTable;
 import com.gaopai.guiren.receiver.NotifySystemMessage;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -165,6 +172,7 @@ public class NotifySystemActivity extends BaseActivity {
 					} else {
 						reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_TRIBE);
 					}
+					Logger.d(this, "result=" + mNotifyList.get(position).message.type);
 					startActivity(reportIntent);
 					break;
 
@@ -175,7 +183,7 @@ public class NotifySystemActivity extends BaseActivity {
 						Intent pictureIntent = new Intent(mContext, ShowImagesActivity.class);
 						pictureIntent.putExtra("msgList", (Serializable) messageList);
 						startActivity(pictureIntent);
-					} 
+					}
 					break;
 
 				case NotifiyType.REFUSE_REPORT_MSG:
@@ -185,7 +193,7 @@ public class NotifySystemActivity extends BaseActivity {
 						Intent pictureIntent = new Intent(mContext, ShowImagesActivity.class);
 						pictureIntent.putExtra("msgList", (Serializable) messageList);
 						startActivity(pictureIntent);
-					} 
+					}
 					break;
 
 				case NotifiyType.TRIBE_KICK_OUT:
@@ -206,8 +214,7 @@ public class NotifySystemActivity extends BaseActivity {
 					commentIntent.putExtra(ChatCommentsActivity.INTENT_CHATTYPE_KEY,
 							mNotifyList.get(position).message.type);
 					commentIntent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mNotifyList.get(position).room);
-					commentIntent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY,
-							mNotifyList.get(position).roomuser);
+					commentIntent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY, mNotifyList.get(position).roomuser);
 					commentIntent.putExtra(ChatCommentsActivity.INTENT_MESSAGE_KEY, mNotifyList.get(position).message);
 					startActivity(commentIntent);
 					break;
@@ -301,6 +308,42 @@ public class NotifySystemActivity extends BaseActivity {
 				default:
 					break;
 				}
+			}
+		});
+
+		listView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				showMutiDialog("", new String[] { getString(R.string.delete) }, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						NotifiyVo notify = adapter.mData.get(which);
+						SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
+						NotifyTable table = new NotifyTable(dbDatabase);
+						NotifyUserTable userTable = new NotifyUserTable(dbDatabase);
+						NotifyRoomTable roomTable = new NotifyRoomTable(dbDatabase);
+						NotifyMessageTable messageTable = new NotifyMessageTable(dbDatabase);
+						if (notify.user != null) {
+							userTable.delete(notify.mID, notify.user);
+						}
+
+						if (notify.room != null) {
+							roomTable.delete(notify.mID, notify.room);
+						}
+
+						if (notify.message != null) {
+							messageTable.delete(notify.mID, notify.message);
+						}
+
+						table.deleteByID(notify);
+						adapter.mData.remove(which);
+						adapter.notifyDataSetChanged();
+					}
+				});
+				return true;
 			}
 		});
 		adapter = new NotifyAdapter(mContext);

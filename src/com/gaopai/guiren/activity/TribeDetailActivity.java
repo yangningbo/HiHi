@@ -80,6 +80,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	private View layoutAdmin;
 	private View layoutSetting;
 
+	private PreferenceOperateUtils spoAnony;
+
 	public final static int REQUEST_JOIN_TRIBE = 0;
 	public final static int REQUEST_ALL_TRIBE_USERS = 1;
 
@@ -95,6 +97,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		initTitleBar();
 		setAbContentView(R.layout.activity_tribe_detail);
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
+		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.tribe_detail);
 
@@ -181,6 +184,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				TribeInfoBean data = (TribeInfoBean) o;
 				if (data.state != null && data.state.code == 0) {
 					mTribe = data.data;
+					if (mTribe == null) {
+						return;
+					}
 					isCreator = mTribe.uid.equals(DamiCommon.getUid(mContext));
 					bindView();
 				} else {
@@ -198,6 +204,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		tvTribeHost.setText(mTribe.realname);
 
 		changeSwitch(tvAvoidDisturb, isAvoidDisturb());
+		changeSwitch(tvUseRealIdentity, isUserRealIdentity());
 
 		ImageLoaderUtil.displayImage(mTribe.logosmall, ivTribeLogo);
 		bindBottomButtons();
@@ -208,6 +215,10 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 	protected boolean isAvoidDisturb() {
 		return spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0) == 1;
+	}
+	
+	protected boolean isUserRealIdentity() {
+		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0;
 	}
 
 	private void bindBottomButtons() {
@@ -375,7 +386,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			MessageHelper.clearChatCache(mContext, mTribeID, 200, deleteCallback);
 			break;
 		case R.id.tv_user_real_identity:
-			changeSwitch(tvUseRealIdentity, true);
+			int sp = spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribeID), 0);
+			changeSwitch(tvUseRealIdentity, sp == 1);
+			spoAnony.setInt(SPConst.getSingleSpId(mContext, mTribeID), 1 - sp);
 			break;
 		case R.id.tv_deal_apply: {
 			Intent dealapplyIntent = new Intent(mContext, ApplyListActivity.class);

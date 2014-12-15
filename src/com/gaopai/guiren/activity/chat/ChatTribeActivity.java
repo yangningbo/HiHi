@@ -49,6 +49,7 @@ import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
 import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -72,6 +73,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	private ChatMsgDataHelper msgHelper;
 
+	private PreferenceOperateUtils spoAnony;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mChatType = getIntent().getIntExtra(KEY_CHAT_TYPE, CHAT_TYPE_MEETING);
@@ -80,8 +83,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		msgHelper = new ChatMsgDataHelper(mContext, callback, mTribe, mChatType);
 		// mTribeId = getIntent().getStringExtra(KEY_TRIBE_ID)
+		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 		updateTribe();
-		getIdentity();
+		if (!isOnLooker) {
+			getIdentity();
+		}
 		initTribeComponent();
 	}
 
@@ -99,10 +105,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		mTask = new TimerTask() {
 			@Override
 			public void run() {
+				// want to get message with id larger than current sinceId
 				getMessageList(true);
 			}
 		};
-		mTimer.schedule(mTask, mRefreshTime, mRefreshTime);
+		mTimer.schedule(mTask, 0, mRefreshTime);
 	}
 
 	private void stopTimer() {
@@ -127,15 +134,19 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		mAdapter = new TribeChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
 		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0));
-		mListView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-				showItemLongClickDialog(messageInfos.get(position));
-				return false;
-			}
-		});
+		if (!isOnLooker) {
+			mListView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+					// TODO Auto-generated method stub
+					showItemLongClickDialog(messageInfos.get(position));
+					return false;
+				}
+			});
+		}
+
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -146,6 +157,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				intent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mTribe);
 				intent.putExtra(ChatCommentsActivity.INTENT_MESSAGE_KEY, messageInfos.get(position));
 				intent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY, mIdentity);
+				intent.putExtra(ChatCommentsActivity.INTENT_SENCE_ONLOOK_KEY, isOnLooker);
 				startActivity(intent);
 			}
 		});
@@ -366,15 +378,22 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		msg.to = mTribe.id;
 		msg.parentid = "0";
 		if (mChatType == CHAT_TYPE_MEETING && mTribe.role != 0) {
-			msg.displayname = mLogin.displayName;
+			msg.displayname = mLogin.realname;
 			msg.headImgUrl = mLogin.headsmall;
 		} else {
-			msg.displayname = mIdentity.name;
-			msg.headImgUrl = mIdentity.head;
-			msg.heroid = mIdentity.id;
+			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0 || (!hasIdentity)) {
+				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
+				msg.displayname = mLogin.realname;
+				msg.headImgUrl = mLogin.headsmall;
+			} else {
+				msg.displayname = mIdentity.name;
+				msg.headImgUrl = mIdentity.head;
+				msg.heroid = mIdentity.id;
+			}
 		}
 		msg.type = mChatType;
 		buildConversation(msg);
+		Logger.d(this, "name=" + msg.displayname);
 		return msg;
 	}
 
@@ -400,7 +419,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	protected void getIdentity() {
-		if (!(mChatType == CHAT_TYPE_MEETING && mTribe.role != 0)) {
+		if ((mChatType == CHAT_TYPE_MEETING && (mTribe.role != 1)) || mChatType == CHAT_TYPE_TRIBE) {
 			SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
 			IdentityTable table = new IdentityTable(db);
 			Identity identity = table.query(mTribe.id);
@@ -412,15 +431,20 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 	}
 
+	/**
+	 * pull up indicate to get messages with larger id, so we should pass
+	 * sinceId to fetch data.
+	 */
 	@Override
 	protected void getMessageList(boolean isPullUp) {
 		super.getMessageList(isPullUp);
 		String minID = getMessageMinId();
 		String maxID = getMessageMaxId();
+		Logger.d(this, "minId=" + minID + "  maxId=" + maxID);
 		if (isPullUp) {
-			DamiInfo.getMessageList(mChatType, mTribe.id, maxID, "", new GetMessageListener(mContext, true));
+			DamiInfo.getMessageList(mChatType, mTribe.id, "", minID, new GetMessageListener(mContext, true));
 		} else {
-			DamiInfo.getMessageList(mChatType, mTribe.id, "", minID, new GetMessageListener(mContext, false));
+			DamiInfo.getMessageList(mChatType, mTribe.id, maxID, "", new GetMessageListener(mContext, false));
 		}
 	}
 
@@ -435,6 +459,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 	}
 
+	private boolean hasIdentity = true;
+
 	/**
 	 * @update
 	 */
@@ -445,11 +471,33 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				IdentitityResult data = (IdentitityResult) o;
 				if (data.state != null && data.state.code == 0) {
 					mIdentity = data.data;
+					insertIdentity();
+					hasIdentity = true;
 				} else {
-					mIdentity = new Identity();
+					hasIdentity = false;
+					showDialog(getString(R.string.identity_name), getString(R.string.refetch_nickname),
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									getIndetityByNet();
+								}
+							});
 				}
 			}
 		});
+	}
+
+	public void insertIdentity() {
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
+		IdentityTable table = new IdentityTable(db);
+		Identity identity = table.query(mTribe.id);
+		if (identity == null) {
+			table.insert(mTribe.id, mIdentity);
+		} else {
+			table.update(mTribe.id, mIdentity);
+		}
 	}
 
 	@Override

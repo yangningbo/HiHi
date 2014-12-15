@@ -71,7 +71,7 @@
 
     
     <dimen name="tribe_detail_thick_divider">2px</dimen>
-    <dimen name="tribe_detail_btn_radius">5dp</dimen>
+    <dimen name="tribe_detail_btn_radius">0dp</dimen>
 
     <dimen name="general_small_gap">5dp</dimen>
     <dimen name="general_large_gap">15dp</dimen>
@@ -87,7 +87,7 @@
     <dimen name="general_font_3">16sp</dimen>
     <dimen name="general_font_4">14sp</dimen>
     
-    <!-- setTextSize will convert 20 to sp, so just let it be px -->
+    <!-- setTextSize will convert px to sp, so just let it be px -->
 	<dimen name="title_text_size">20px</dimen>
     
     <!-- register -->

@@ -98,7 +98,6 @@ public class SlideUp extends ViewGroup {
 			return false;
 		}
 		boolean should = mDragHelper.shouldInterceptTouchEvent(ev);
-		Log.d("tah111", "===="+should);
 
 		return should;
 	}
@@ -107,7 +106,6 @@ public class SlideUp extends ViewGroup {
 	public boolean onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
 		mDragHelper.processTouchEvent(event);
-		Log.d("tah", "====");
 		return true;
 	}
 

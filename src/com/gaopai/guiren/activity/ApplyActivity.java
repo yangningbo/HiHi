@@ -7,14 +7,16 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.bean.InviteNumResult;
-import com.gaopai.guiren.bean.InviteNumResult.InviteNumberBean;
+import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult.Case;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.support.view.ProgressView;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -23,6 +25,9 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 
 	private TextView tvInviteNum;
 	private TextView tvRedPercent;
+	private ProgressView pvJiaV;
+
+	private Button btnJiav;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,40 +42,45 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 
 		ViewUtil.findViewById(this, R.id.btn_fill_profile).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.btn_invite_to_guiren).setOnClickListener(this);
-		ViewUtil.findViewById(this, R.id.btn_confirm).setOnClickListener(this);
-//		getInviteUserNum();
-		getVerifyDetail(); 
-	}
 
-	private void getInviteUserNum() {
-		// TODO Auto-generated method stub
-		DamiInfo.getUserInvitationNum(new SimpleResponseListener(mContext) {
+		btnJiav = ViewUtil.findViewById(this, R.id.btn_confirm);
+		btnJiav.setOnClickListener(this);
+		btnJiav.setEnabled(false);
 
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				InviteNumResult data = (InviteNumResult) o;
-				if (data.state != null && data.state.code == 0) {
-					InviteNumberBean bean = data.data;
-					setInviteNumText(bean.complete);
-				}
-			}
-		});
+		pvJiaV = (ProgressView) findViewById(R.id.tv_invite_num_1);
+		// getInviteUserNum();
+		getVerifyDetail();
 	}
 
 	private void getVerifyDetail() {
 		DamiInfo.getVerifyResult(new SimpleResponseListener(mContext) {
-
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
 				GetVerifyResult data = (GetVerifyResult) o;
 				if (data.state != null && data.state.code == 0) {
-
+					bindView(data.data);
 				} else {
 					otherCondition(data.state, ApplyActivity.this);
 				}
 			}
 		});
+	}
+
+	private void bindView(GetVerifyResult.Data data) {
+		setInviteNumText(data.invite.num);
+		Case case1 = data.base.item;
+		int total = 0;
+		total += case1.company;
+		total += case1.depa;
+		total += case1.post;
+		total += case1.realname;
+		int percent = total * 5 + data.invite.num * 4;
+		pvJiaV.setProgress(percent);
+		tvRedPercent.setText(percent + "%");
+		if (percent == 100) {
+			btnJiav.setEnabled(true);
+		}
 	}
 
 	private void setInviteNumText(int num) {
@@ -100,6 +110,17 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 			invite();
 			break;
 		case R.id.btn_confirm:
+			DamiInfo.setUserAuthV(new SimpleResponseListener(mContext, R.string.request_internet_now) {
+				@Override
+				public void onSuccess(Object o) {
+					BaseNetBean data = (BaseNetBean) o;
+					if (data.state != null && data.state.code == 0) {
+//						showToast(R.string.)
+					} else {
+						otherCondition(data.state, ApplyActivity.this);
+					}
+				}
+			});
 			break;
 
 		default:
@@ -140,6 +161,22 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 	// }
 	// },
 
+	// "data": {
+	// "base": {
+	// "iscomplete": 0,
+	// "item": {
+	// "result": "等待审核",
+	// "realname": 1,
+	// "company": 1,
+	// "depa": 0,
+	// "post": 1
+	// }
+	// },
+	// "invite": {
+	// "num": "0",
+	// "totalnum": 20
+	// }
+	// },
 	public static class GetVerifyResult extends BaseNetBean {
 		public Data data;
 
@@ -150,7 +187,7 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 
 		public static class Base {
 			public int iscomplete;
-			// public Case case;
+			public Case item;
 		}
 
 		public static class Case {
@@ -158,6 +195,7 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 			public int company;
 			public int depa;
 			public int post;
+			public String result;
 		}
 
 		public static class Invite {

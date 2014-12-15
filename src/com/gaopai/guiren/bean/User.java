@@ -3,6 +3,8 @@ package com.gaopai.guiren.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import android.text.TextUtils;
+
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.PicBean;
@@ -101,6 +103,8 @@ public class User implements Serializable {
 	public int relation;// 和我有没有关系，有关系为1，没关系为0
 	@Expose
 	public int totalcomfriend;// 和我有多少共同好友
+	
+
 
 	public String reason;
 
@@ -192,4 +196,12 @@ public class User implements Serializable {
 	// }
 	// },
 
+	public static String getUserName(User user) {
+		if (!TextUtils.isEmpty(user.realname)) {
+			return user.realname;
+		} else if (!TextUtils.isEmpty(user.nickname)) {
+			return user.nickname;
+		} 
+		return "";
+	}
 }

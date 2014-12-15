@@ -7,28 +7,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.TypeHolder;
+import com.gaopai.guiren.support.DynamicHelper;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
-import com.gaopai.guiren.utils.MyUtils;
-import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
-import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -128,7 +123,7 @@ public class NewDynamicActivity extends BaseActivity {
 				holder.ivHeader.setImageResource(R.drawable.default_header);
 			}
 			holder.tvName.setText(bean.realname);
-			holder.tvDate.setText(FeatureFunction.getCreateTime(bean.addtime));
+			holder.tvDate.setText(DateUtil.getCreateTime(bean.addtime));
 			JsonContent jsonContent = bean.jsoncontent;
 			holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			holder.tvInfo.setText("");
@@ -139,40 +134,62 @@ public class NewDynamicActivity extends BaseActivity {
 			} else {
 				holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_favourite, 0, 0, 0);
 			}
-			bindImage(jsonContent, holder.ivPic);
-			if (!TextUtils.isEmpty(jsonContent.content)) {
+
+			if (bindImage(jsonContent, holder.ivPic)) {
+				holder.tvContent.setVisibility(View.GONE);
+			} else {
 				holder.tvContent.setVisibility(View.VISIBLE);
 				holder.tvContent.setText(jsonContent.content);
-			} else {
-				holder.tvContent.setVisibility(View.GONE);
 			}
+
 			return convertView;
 		}
 
-		private void bindImage(JsonContent jsonContent, ImageView ivPic) {
+		private boolean bindImage(JsonContent jsonContent, ImageView ivPic) {
+			ivPic.setVisibility(View.VISIBLE);
 			switch (jsonContent.type) {
-			case 2:// chat msg
-				if (!TextUtils.isEmpty(jsonContent.image)) {
-					ImageLoaderUtil.displayImage(jsonContent.image, ivPic);
-				} else {
-					ivPic.setVisibility(View.GONE);
+			case DynamicHelper.TYPE_SPREAD_MSG:// chat msg
+				if (!TextUtils.isEmpty(jsonContent.imgUrlS)) {
+					ImageLoaderUtil.displayImage(jsonContent.imgUrlS, ivPic);
+					return true;
 				}
 				break;
-			case 7:// dynamic
+			case DynamicHelper.TYPE_SPREAD_LINK:
+				if (!TextUtils.isEmpty(jsonContent.image)) {
+					ImageLoaderUtil.displayImage(jsonContent.image, ivPic);
+					return true;
+				}
+				break;
+			case DynamicHelper.TYPE_SEND_DYNAMIC:
+			case DynamicHelper.TYPE_SPREAD_OTHER_DYNAMIC:// dynamic
 				if (jsonContent.pic != null && jsonContent.pic.size() > 0) {
 					String imgaurlString = jsonContent.pic.get(0).imgUrlS;
 					if (!TextUtils.isEmpty(imgaurlString)) {
 						ivPic.setVisibility(View.VISIBLE);
 						ImageLoaderUtil.displayImage(imgaurlString, ivPic);
+						return true;
 					}
-				} else {
-					ivPic.setVisibility(View.GONE);
+				}
+				break;
+			case DynamicHelper.TYPE_SPREAD_TRIBE:
+			case DynamicHelper.TYPE_SPREAD_MEETING:
+				if (!TextUtils.isEmpty(jsonContent.logo)) {
+					ImageLoaderUtil.displayImage(jsonContent.logo, ivPic);
+					return true;
+				}
+				break;
+			case DynamicHelper.TYPE_SPREAD_USER:
+				if (!TextUtils.isEmpty(jsonContent.head)) {
+					ImageLoaderUtil.displayImage(jsonContent.head, ivPic);
+					return true;
 				}
 				break;
 
 			default:
 				break;
 			}
+			ivPic.setVisibility(View.GONE);
+			return false;
 		}
 
 		private class ViewHolder {

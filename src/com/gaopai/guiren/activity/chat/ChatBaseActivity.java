@@ -47,6 +47,7 @@ import com.gaopai.guiren.receiver.PushChatMessage;
 import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.service.type.XmppType;
 import com.gaopai.guiren.support.ConversationHelper;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -100,8 +101,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		mAdapter.setResendClickListener(resendClickListener);
 	}
 
-
-
 	/**
 	 * 下载成功后修改消息状态，更新数据库并播放声音
 	 * 
@@ -153,6 +152,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		MessageTable table = new MessageTable(db);
 		table.insert(messageInfo);
 	}
+
 	protected void insertMessages(List<MessageInfo> messageInfos) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
@@ -183,7 +183,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		saveMsgToLastConversation(msg);
 		sendMessage(msg);
 	}
-	
+
 	private void saveMsgToLastConversation(MessageInfo msg) {
 		ConversationHelper.saveToLastMsgList(msg, mContext, true);
 	}
@@ -203,6 +203,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			msg.fileType = MessageType.TEXT;
 			msg.content = str;
 
+			Logger.d(this, "name=" + msg.displayname);
 			addSaveSendMessage(msg);
 		}
 	}
@@ -460,7 +461,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	public final static String ACTION_EXIT_TRIBE = "com.gaopai.guiren.intent.action.ACTION_EXIT_TRIBE";
 	public final static String ACTION_KICK_TRIBE = "com.gaopai.guiren.intent.action.ACTION_KICK_TRIBE";
 
-	
 	private IntentFilter addAciton() {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(SnsService.ACTION_CONNECT_CHANGE);
@@ -486,8 +486,9 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	}
 
 	private boolean opconnectState = false;
+
 	/** 聊天广播 */
-	
+
 	@Override
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
@@ -529,8 +530,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			ChatBaseActivity.this.finish();
 		} else if (ACTION_READ_VOICE_STATE.equals(action)) {
 			Log.d(TAG, "receive change voice state");
-			final MessageInfo messageInfo = (MessageInfo) intent
-					.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
+			final MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
 			updateMessage(messageInfo);
 			// changeVoiceState(messageInfo);
 
@@ -552,7 +552,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			mListView.getRefreshableView().setSelection(messageInfos.size());// 定位到最后一行
 		}
 	}
-	
+
 	protected void resetCount(String id) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(this).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);

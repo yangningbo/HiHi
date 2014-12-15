@@ -1,49 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="240dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialog_view"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:gravity="center_horizontal"
-    android:background="@color/white"
-    >
-    
-    <TextView 
-        android:id="@+id/dialog_text" 
+    android:layout_width="200dp"
+    android:layout_height="200dp"
+    android:background="@drawable/icon_dialog_rec_voice_background"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/iv_dialog_record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textColor="@color/black"
-        android:text="滑动至此取消"
-        />
-    
-   <LinearLayout 
-       android:id="@+id/dialog_record_view"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/chat_voice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-       >
-        <ImageView 
-        android:layout_width="48dp"
-        android:layout_height="120dp"
-        android:background="@drawable/voice_rcd_hint"
-        />
-        <ImageView 
-	        android:id="@+id/chat_voice"
-	        android:layout_width="50dp"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="bottom"
-	        android:src="@drawable/amp1"
-        />
-   </LinearLayout>
-   <ImageView 
-       android:visibility="gone"
-       android:layout_marginTop="10dp"
-       android:id="@+id/dialog_cancel_view"
-       android:layout_width="110dp"
-       android:layout_height="110dp"
-       android:scaleType="fitXY"
-       android:src="@drawable/dialog_cancel"/>
-    
-</LinearLayout>
+        android:layout_alignBottom="@id/iv_dialog_record"
+        android:layout_alignLeft="@id/iv_dialog_record"
+        android:layout_marginLeft="56.66666dp"
+        android:layout_marginBottom="50.7dp"
+        android:src="@drawable/amp1" />
+
+    <TextView
+        android:id="@+id/tv_record_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_dialog_record"
+        android:layout_centerHorizontal="true"
+        android:text="@string/move_up_cancel_voice"
+        android:layout_marginTop="@dimen/general_paading"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+</RelativeLayout>
