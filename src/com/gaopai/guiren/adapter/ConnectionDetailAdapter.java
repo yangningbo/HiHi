@@ -19,6 +19,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
+import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
@@ -63,11 +64,12 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 
 	private void buildJoinView(ViewHolderGeneral viewHolder, TypeHolder typeBean, int position) {
 		// TODO Auto-generated method stub
-//		if (!TextUtils.isEmpty(typeBean.headsmall)) {
-//			ImageLoaderUtil.displayImage(typeBean.headsmall, viewHolder.ivHeader);
-//		} else {
-//			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-//		}
+		// if (!TextUtils.isEmpty(typeBean.headsmall)) {
+		// ImageLoaderUtil.displayImage(typeBean.headsmall,
+		// viewHolder.ivHeader);
+		// } else {
+		// viewHolder.ivHeader.setImageResource(R.drawable.default_header);
+		// }
 		viewHolder.ivHeader.setImageResource(R.drawable.icon_connection_default);
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		User user = mData.get(position);
@@ -76,15 +78,13 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "关注了你"));
 		} else if (typeBean.type == ConnectionAdapter.TYPE_SOMEONE_I_FOLLOW_FOLLOW) {
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
-					MyTextUtils.addSingleUserSpan(typeBean.jsoncontent.realname, typeBean.jsoncontent.uid), "关注了",
+					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 		}
 
-		if (!TextUtils.isEmpty(user.headsmall)) {
-			ImageLoaderUtil.displayImage(user.headsmall, viewHolder.ivUserHeader);
-		} else {
-			viewHolder.ivUserHeader.setImageResource(R.drawable.default_header);
-		}
+		viewHolder.layoutHeader.setImage(user.headsmall);
+		viewHolder.layoutHeader.setMVP(user.bigV == 1);
+		
 		viewHolder.tvUserName.setText(user.realname);
 		viewHolder.tvUserInfo.setText(user.company);
 		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));
@@ -110,6 +110,7 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 		TextView tvUserInfo;
 		TextView tvDateInfo;
 		RelativeLayout rlInfoLayout;
+		HeadView layoutHeader;
 
 		public static ViewHolderGeneral getInstance(View view) {
 			// TODO Auto-generated method stub
@@ -121,6 +122,7 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 			viewHolder.tvUserInfo = (TextView) view.findViewById(R.id.tv_user_info);
 			viewHolder.tvDateInfo = (TextView) view.findViewById(R.id.tv_date_info);
 			viewHolder.rlInfoLayout = (RelativeLayout) view.findViewById(R.id.rl_info_holder);
+			viewHolder.layoutHeader = (HeadView) view.findViewById(R.id.layout_header_mvp);
 			return viewHolder;
 		}
 	}

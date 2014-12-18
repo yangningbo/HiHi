@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.utils.Logger;
 
 /**
  * 旋转图片界面
@@ -42,7 +43,6 @@ public class RotateImageActivity extends BaseActivity implements OnClickListener
 	private Bitmap mBitmap;
 	private String mImageFilePath;
 	private RelativeLayout mRelativeLayout;
-	final GetterHandler mAnimHandler = new GetterHandler();
 	private File mFile;
 
 	@Override
@@ -56,6 +56,7 @@ public class RotateImageActivity extends BaseActivity implements OnClickListener
 
 	private void initComponent() {
 		mImageFilePath = getIntent().getStringExtra(KEY_IMAGE_PATH);
+		Logger.d(this, "path=" + mImageFilePath);
 		mImageView = (ImageView) findViewById(R.id.imageview);
 		mImageView.setOnClickListener(this);
 		if (mImageFilePath != null && !mImageFilePath.equals("")) {
@@ -95,7 +96,7 @@ public class RotateImageActivity extends BaseActivity implements OnClickListener
 		});
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.rotate_image);
-		View ivComplete = mTitleBar.addRightImageView(R.drawable.icon_profile_favourite);
+		View ivComplete = mTitleBar.addRightImageView(R.drawable.icon_titlebar_confirm);
 		ivComplete.setId(R.id.ab_complete);
 		ivComplete.setOnClickListener(this);
 
@@ -139,6 +140,8 @@ public class RotateImageActivity extends BaseActivity implements OnClickListener
 		return bmp;
 	}
 
+	private static final int SHOW_PROGRESSBAR = 0;
+	private static final int HIDE_PROGRESSBAR = 1;
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -151,6 +154,12 @@ public class RotateImageActivity extends BaseActivity implements OnClickListener
 				}
 				removeProgressDialog();
 				break;
+			case SHOW_PROGRESSBAR:
+				showProgressDialog("正在处理");
+				break;
+			case HIDE_PROGRESSBAR:
+				removeProgressDialog();
+				break;
 
 			default:
 				break;
@@ -159,36 +168,6 @@ public class RotateImageActivity extends BaseActivity implements OnClickListener
 		}
 	};
 
-	class GetterHandler extends Handler {
-		private static final int IMAGE_GETTER_CALLBACK = 1;
-
-		@Override
-		public void handleMessage(Message message) {
-			switch (message.what) {
-			case IMAGE_GETTER_CALLBACK:
-				((Runnable) message.obj).run();
-				break;
-			}
-		}
-
-		public void postGetterCallback(Runnable callback) {
-			postDelayedGetterCallback(callback, 0);
-		}
-
-		public void postDelayedGetterCallback(Runnable callback, long delay) {
-			if (callback == null) {
-				throw new NullPointerException();
-			}
-			Message message = Message.obtain();
-			message.what = IMAGE_GETTER_CALLBACK;
-			message.obj = callback;
-			sendMessageDelayed(message, delay);
-		}
-
-		public void removeAllGetterCallbacks() {
-			removeMessages(IMAGE_GETTER_CALLBACK);
-		}
-	}
 
 	private final Runnable mDismissOnScreenControlRunner = new Runnable() {
 		@Override
@@ -293,19 +272,29 @@ public class RotateImageActivity extends BaseActivity implements OnClickListener
 		mHandler.removeCallbacks(mDismissOnScreenControlRunner);
 		mHandler.postDelayed(mDismissOnScreenControlRunner, 2000);
 	}
+	private void sendMessage(int what) {
+		Message message = mHandler.obtainMessage(what);
+		message.sendToTarget();
+	}
 
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ab_complete:
-			showProgressDialog(R.string.add_more_loading);
-			mImageFilePath = FeatureFunction.saveTempBitmap(mBitmap, mFile.getName());
-			removeProgressDialog();
-			Intent intent = new Intent();
-			intent.putExtra(KEY_IMAGE_PATH, mImageFilePath);
-			setResult(RESULT_OK, intent);
-			RotateImageActivity.this.finish();
+			sendMessage(SHOW_PROGRESSBAR);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					mImageFilePath = FeatureFunction.saveTempBitmap(mBitmap, mFile.getName());
+					sendMessage(HIDE_PROGRESSBAR);
+					Intent intent = new Intent();
+					intent.putExtra(KEY_IMAGE_PATH, mImageFilePath);
+					setResult(RESULT_OK, intent);
+					RotateImageActivity.this.finish();
+				}
+			}).start();
+			
 			break;
 
 		case R.id.imageview:

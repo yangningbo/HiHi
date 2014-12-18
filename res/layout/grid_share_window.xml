@@ -14,7 +14,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/icon_meeting_detail_popup_close_btn" />
 
-    <com.gaopai.guiren.view.ChatGridLayout
+    <com.gaopai.guiren.view.MyGridLayout
         android:id="@+id/cgl_meeting_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                 style="@style/share_window_text"
                 android:text="@string/share_qq_zone" />
         </LinearLayout>
-    </com.gaopai.guiren.view.ChatGridLayout>
+    </com.gaopai.guiren.view.MyGridLayout>
 
     <Button
         android:id="@+id/btn_hide_grid_2"

@@ -33,7 +33,7 @@ public class AddReasonActivity extends BaseActivity {
 
 	public static final int TYPE_TO_BE_HOST = 0;
 	public static final int TYPE_TO_BE_GUEST = 1;
-	public static final int TYPE_TO_BE_CUSTOM = 2;
+	public static final int TYPE_TO_BE_NORMAL = 2;
 	public static final int TYPE_DISMISS_MEETING = 3;
 	public static final int TYPE_TO_JOIN_MEETING = 4;
 
@@ -73,7 +73,7 @@ public class AddReasonActivity extends BaseActivity {
 			title = getString(R.string.add);
 			break;
 
-		case TYPE_TO_BE_CUSTOM:
+		case TYPE_TO_BE_NORMAL:
 			title = getString(R.string.back_to_normal);
 			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
 			break;
@@ -197,7 +197,7 @@ public class AddReasonActivity extends BaseActivity {
 		case TYPE_TO_BE_GUEST:
 			DamiInfo.applyguest(meetingId, etAddReason.getText().toString(), resultListener);
 			break;
-		case TYPE_TO_BE_CUSTOM:
+		case TYPE_TO_BE_NORMAL:
 			DamiInfo.resumeToMeetingJoiner(meetingId, etAddReason.getText().toString(), resultListener);
 			break;
 		case TYPE_DISMISS_MEETING:

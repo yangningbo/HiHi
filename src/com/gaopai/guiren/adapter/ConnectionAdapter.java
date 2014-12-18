@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +26,7 @@ import com.gaopai.guiren.bean.dynamic.ConnectionBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
 import com.gaopai.guiren.fragment.ConnectionFragment;
+import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyTextUtils;
@@ -89,30 +91,67 @@ public class ConnectionAdapter extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		int type = getItemViewType(position);
+		// TypeHolder typeBean = mData.get(position);
+		// switch (type + 1) {
+		// case TYPE_SOMEONE_JOIN_MY_MEETING:
+		// case TYPE_SOMEONE_JOIN_MY_TRIBE:
+		// case TYPE_WEIBO_USER_JOIN:
+		// case TYPE_PHONE_USER_JOIN:
+		// case TYPE_SYS_REC_USER: {
+		// if (convertView == null) {
+		// convertView = inflateItemView(TYPE_GENERAL);
+		// }
+		// buildJoinView((ViewHolderGeneral) convertView.getTag(), typeBean,
+		// position, type + 1);
+		// break;
+		// }
+		//
+		// case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
+		// case TYPE_SOMEONE_FOLLOW_ME: {
+		// if (convertView == null) {
+		// convertView = inflateItemView(TYPE_PIC_GENERAL);
+		// }
+		// buildPicGridView((ViewHolderPicGridGeneral) convertView.getTag(),
+		// typeBean, position, type + 1);
+		// break;
+		// }
+		// }
 		TypeHolder typeBean = mData.get(position);
-		switch (type + 1) {
-		case TYPE_SOMEONE_JOIN_MY_MEETING:
-		case TYPE_SOMEONE_JOIN_MY_TRIBE:
-		case TYPE_WEIBO_USER_JOIN:
-		case TYPE_PHONE_USER_JOIN:
-		case TYPE_SYS_REC_USER: {
+		switch (type) {
+
+		case 0: {
 			if (convertView == null) {
 				convertView = inflateItemView(TYPE_GENERAL);
 			}
-			buildJoinView((ViewHolderGeneral) convertView.getTag(), typeBean, position, type + 1);
+			buildJoinView((ViewHolderGeneral) convertView.getTag(), typeBean, position, typeBean.type);
 			break;
 		}
 
-		case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
-		case TYPE_SOMEONE_FOLLOW_ME: {
+		case 1: {
 			if (convertView == null) {
 				convertView = inflateItemView(TYPE_PIC_GENERAL);
 			}
-			buildPicGridView((ViewHolderPicGridGeneral) convertView.getTag(), typeBean, position, type + 1);
+			buildPicGridView((ViewHolderPicGridGeneral) convertView.getTag(), typeBean, position, typeBean.type);
 			break;
+		}
+		case 2: {
+			if (convertView == null) {
+				convertView = buildErrorView();
+			}
+			return convertView;
 		}
 		}
 		return convertView;
+	}
+
+	public TextView buildErrorView() {
+		TextView tvDyCount = new TextView(mContext);
+		tvDyCount.setTextColor(mContext.getResources().getColor(R.color.general_text_gray));
+		int padding = MyUtils.dip2px(mContext, 5);
+		tvDyCount.setPadding(3 * padding, padding, 3 * padding, padding);
+		tvDyCount.setGravity(Gravity.CENTER);
+		tvDyCount.setText("数据出现错误...");
+		return tvDyCount;
 	}
 
 	private void goToUserActivity(String uid) {
@@ -181,41 +220,55 @@ public class ConnectionAdapter extends BaseAdapter {
 
 	private void buildJoinView(ViewHolderGeneral viewHolder, TypeHolder typeBean, int position, int type) {
 		// TODO Auto-generated method stub
-//		if (!TextUtils.isEmpty(typeBean.headsmall)) {
-//			ImageLoaderUtil.displayImage(typeBean.headsmall, viewHolder.ivHeader);
-//		} else {
-//			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-//		}
+		// if (!TextUtils.isEmpty(typeBean.headsmall)) {
+		// ImageLoaderUtil.displayImage(typeBean.headsmall,
+		// viewHolder.ivHeader);
+		// } else {
+		// viewHolder.ivHeader.setImageResource(R.drawable.default_header);
+		// }
 		viewHolder.ivHeader.setImageResource(R.drawable.icon_connection_default);
 		JsonContent content = typeBean.jsoncontent;
 		User user = getSingleUser(content);
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-		if (type == TYPE_WEIBO_USER_JOIN) {
+		switch (type) {
+		case TYPE_WEIBO_USER_JOIN:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您关注的微博用户",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了贵人"));
-		} else if (type == TYPE_PHONE_USER_JOIN) {
+			break;
+		case TYPE_PHONE_USER_JOIN:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的通讯录好友",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了贵人"));
-		} else if (type == TYPE_SYS_REC_USER) {
+			break;
+		case TYPE_SYS_REC_USER:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("系统根据您的标签给您推荐了一条人脉信息",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
-		} else if (type == TYPE_SOMEONE_JOIN_MY_MEETING) {
+			break;
+		case TYPE_SOMEONE_JOIN_MY_MEETING:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了您的会议",
 					MyTextUtils.addSingleMeetingSpan("「" + content.roomname + "」", content.roomid)));
-		} else if (type == TYPE_SOMEONE_JOIN_MY_TRIBE) {
+			break;
+		case TYPE_SOMEONE_JOIN_MY_TRIBE:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了您的部落",
 					MyTextUtils.addSingleTribeSpan("「" + content.roomname + "」", content.roomid)));
-		} else {
-			viewHolder.tvTitle.setText(typeBean.tips);
+			break;
+		case TYPE_SOMEONE_FOLLOW_ME:
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "关注了你"));
+			break;
+		case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
+			break;
+		default:
+			break;
 		}
 
-		if (!TextUtils.isEmpty(user.headsmall)) {
-			ImageLoaderUtil.displayImage(user.headsmall, viewHolder.ivUserHeader);
-		} else {
-			viewHolder.ivUserHeader.setImageResource(R.drawable.default_header);
-		}
+		viewHolder.layoutHeader.setImage(user.headsmall);
+		viewHolder.layoutHeader.setMVP(user.bigV == 1);
+		
 		viewHolder.tvUserName.setText(user.realname);
 		viewHolder.tvUserInfo.setText(user.company);
 		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));
@@ -260,12 +313,31 @@ public class ConnectionAdapter extends BaseAdapter {
 
 	@Override
 	public int getViewTypeCount() {
-		return 7;
+		return 3;
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		return mData.get(position).type - 1;
+		// return mData.get(position).type - 1;
+		TypeHolder typeHolder = mData.get(position);
+		switch (typeHolder.type) {
+		case TYPE_SOMEONE_JOIN_MY_MEETING:
+		case TYPE_SOMEONE_JOIN_MY_TRIBE:
+		case TYPE_WEIBO_USER_JOIN:
+		case TYPE_PHONE_USER_JOIN:
+		case TYPE_SYS_REC_USER: {
+			return 0;
+		}
+
+		case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
+		case TYPE_SOMEONE_FOLLOW_ME: {
+			if (typeHolder.jsoncontent.user != null && typeHolder.jsoncontent.user.size() == 1) {
+				return 0;
+			}
+			return 1;
+		}
+		}
+		return 2;
 	}
 
 	private View inflateItemView(int type) {
@@ -293,6 +365,8 @@ public class ConnectionAdapter extends BaseAdapter {
 		TextView tvDateInfo;
 		RelativeLayout rlInfoLayout;
 
+		HeadView layoutHeader;
+
 		public static ViewHolderGeneral getInstance(View view) {
 			// TODO Auto-generated method stub
 			ViewHolderGeneral viewHolder = new ViewHolderGeneral();
@@ -303,6 +377,7 @@ public class ConnectionAdapter extends BaseAdapter {
 			viewHolder.tvUserInfo = (TextView) view.findViewById(R.id.tv_user_info);
 			viewHolder.tvDateInfo = (TextView) view.findViewById(R.id.tv_date_info);
 			viewHolder.rlInfoLayout = (RelativeLayout) view.findViewById(R.id.rl_info_holder);
+			viewHolder.layoutHeader = (HeadView) view.findViewById(R.id.layout_header_mvp);
 			return viewHolder;
 		}
 	}

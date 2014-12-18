@@ -140,8 +140,15 @@ public class ShareManager implements OnClickListener {
 		});
 	}
 
+	public void setShareContent(String img, String title, String content, String url) {
+		setShareContent(new UMImage(mActivity, img), title, content, url);
+	}
+
 	public void setShareContent(int img, String title, String content, String url) {
-		UMImage iconImage = new UMImage(mActivity, img);
+		setShareContent(new UMImage(mActivity, img), title, content, url);
+	}
+
+	public void setShareContent(UMImage iconImage, String title, String content, String url) {
 
 		QZoneShareContent qzoneContent = new QZoneShareContent();
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
@@ -180,62 +187,70 @@ public class ShareManager implements OnClickListener {
 		setShareContent(R.drawable.logo, title, title + url, url);
 		showShareWindow(mActivity);
 	}
-	public void shareTribeLink(String title,String content, String url) {
+
+	public void shareTribeLink(String title, String content, String url) {
 		setShareContent(R.drawable.logo, title, content, url);
 		showShareWindow(mActivity);
 	}
 
-//	public void shareContentRecommend(String title, String url) {
-//		String content = title + " : " + url;
-//		mController.setShareContent(content);
-//
-//		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mActivity, APPID_QQ, APPKEY_QQ);
-//		qZoneSsoHandler.addToSocialSDK();
-//		UMImage iconImage = new UMImage(mActivity, R.drawable.logo);
-//		QZoneShareContent qzoneContent = new QZoneShareContent();
-//		qzoneContent.setTitle(title);
-//		qzoneContent.setShareMedia(iconImage);
-//		qzoneContent.setTargetUrl(url);
-//		qzoneContent.setShareContent(content);
-//		mController.setShareMedia(qzoneContent);
-//
-//		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(mActivity, APPID_QQ, APPKEY_QQ);
-//		// qqSsoHandler.setTargetUrl(url);
-//		// qqSsoHandler.setTitle(title);
-//		qqSsoHandler.addToSocialSDK();
-//		mController.setShareMedia(iconImage);
-//		//
-//
-//		WeiXinShareContent weixinContent = new WeiXinShareContent();
-//		weixinContent.setTargetUrl(url);
-//		weixinContent.setTitle(title);
-//		weixinContent.setShareMedia(iconImage);
-//		if (!TextUtils.isEmpty(content)) {
-//			weixinContent.setShareContent(content);
-//		}
-//		mController.setShareMedia(weixinContent);
-//
-//		// 设置朋友圈分享的内容
-//		CircleShareContent circleMedia = new CircleShareContent();
-//		circleMedia.setTargetUrl(url);
-//		circleMedia.setTitle(title);
-//		circleMedia.setShareMedia(iconImage);
-//		if (!TextUtils.isEmpty(content)) {
-//			circleMedia.setShareContent(content);
-//		}
-//		mController.setShareMedia(circleMedia);
-//
-//		// wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
-//		String appId = APPID_WECHAT;
-//		UMWXHandler wxHandler = new UMWXHandler(mActivity, appId);
-//		wxHandler.addToSocialSDK();
-//
-//		UMWXHandler wxCircleHandler = new UMWXHandler(mActivity, appId);
-//		wxCircleHandler.setToCircle(true);
-//		wxCircleHandler.addToSocialSDK();
-//
-//		showShareWindow(mActivity);
-//	}
+	public void shareWebLink(String title, String image, String content, String url) {
+		setShareContent(image, title, content, url);
+		showShareWindow(mActivity);
+	}
+
+	// public void shareContentRecommend(String title, String url) {
+	// String content = title + " : " + url;
+	// mController.setShareContent(content);
+	//
+	// QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mActivity,
+	// APPID_QQ, APPKEY_QQ);
+	// qZoneSsoHandler.addToSocialSDK();
+	// UMImage iconImage = new UMImage(mActivity, R.drawable.logo);
+	// QZoneShareContent qzoneContent = new QZoneShareContent();
+	// qzoneContent.setTitle(title);
+	// qzoneContent.setShareMedia(iconImage);
+	// qzoneContent.setTargetUrl(url);
+	// qzoneContent.setShareContent(content);
+	// mController.setShareMedia(qzoneContent);
+	//
+	// UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(mActivity, APPID_QQ,
+	// APPKEY_QQ);
+	// // qqSsoHandler.setTargetUrl(url);
+	// // qqSsoHandler.setTitle(title);
+	// qqSsoHandler.addToSocialSDK();
+	// mController.setShareMedia(iconImage);
+	// //
+	//
+	// WeiXinShareContent weixinContent = new WeiXinShareContent();
+	// weixinContent.setTargetUrl(url);
+	// weixinContent.setTitle(title);
+	// weixinContent.setShareMedia(iconImage);
+	// if (!TextUtils.isEmpty(content)) {
+	// weixinContent.setShareContent(content);
+	// }
+	// mController.setShareMedia(weixinContent);
+	//
+	// // 设置朋友圈分享的内容
+	// CircleShareContent circleMedia = new CircleShareContent();
+	// circleMedia.setTargetUrl(url);
+	// circleMedia.setTitle(title);
+	// circleMedia.setShareMedia(iconImage);
+	// if (!TextUtils.isEmpty(content)) {
+	// circleMedia.setShareContent(content);
+	// }
+	// mController.setShareMedia(circleMedia);
+	//
+	// // wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
+	// String appId = APPID_WECHAT;
+	// UMWXHandler wxHandler = new UMWXHandler(mActivity, appId);
+	// wxHandler.addToSocialSDK();
+	//
+	// UMWXHandler wxCircleHandler = new UMWXHandler(mActivity, appId);
+	// wxCircleHandler.setToCircle(true);
+	// wxCircleHandler.addToSocialSDK();
+	//
+	// showShareWindow(mActivity);
+	// }
 
 	public final static String APPID_QQ = "100424468";
 	public final static String APPKEY_QQ = "c7394704798a158208a74ab60104f0ba";
@@ -265,11 +280,12 @@ public class ShareManager implements OnClickListener {
 
 		@Override
 		public void onComplete(SHARE_MEDIA platform, int stCode, SocializeEntity entity) {
-//			if (stCode == 200) {
-//				Toast.makeText(mActivity, "分享成功", Toast.LENGTH_SHORT).show();
-//			} else {
-//				Toast.makeText(mActivity, "分享失败 : error code : " + stCode, Toast.LENGTH_SHORT).show();
-//			}
+			// if (stCode == 200) {
+			// Toast.makeText(mActivity, "分享成功", Toast.LENGTH_SHORT).show();
+			// } else {
+			// Toast.makeText(mActivity, "分享失败 : error code : " + stCode,
+			// Toast.LENGTH_SHORT).show();
+			// }
 		}
 	};
 

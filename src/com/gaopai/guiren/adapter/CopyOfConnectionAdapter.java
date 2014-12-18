@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.widget.indexlist.CharacterParser;
 
@@ -112,13 +113,13 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 			viewHolder.tvUserInfo = (TextView) convertView.findViewById(R.id.tv_user_info);
 			viewHolder.ivHeader = (ImageView) convertView.findViewById(R.id.iv_header);
 			viewHolder.tvFancyCount = (TextView) convertView.findViewById(R.id.tv_user_fancy_count);
+			viewHolder.layoutHeader = (HeadView) convertView.findViewById(R.id.layout_header_mvp);
 			viewHolder.tvUserName.setText(User.getUserName(user));
 			viewHolder.tvUserInfo.setText(user.post);
-			if (!TextUtils.isEmpty(user.headsmall)) {
-				ImageLoaderUtil.displayImage(user.headsmall, viewHolder.ivHeader);
-			} else {
-				viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-			}
+			
+			viewHolder.layoutHeader.setImage(user.headsmall);
+			viewHolder.layoutHeader.setMVP(user.bigv == 1);
+			
 			viewHolder.tvFancyCount.setText(String.valueOf(user.integral));
 		} else { // Section
 			if (convertView == null) {
@@ -141,6 +142,7 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 		ImageView ivHeader;
 		ImageView ivCheck;
 		TextView tvFancyCount;
+		HeadView layoutHeader;
 	}
 
 	@Override

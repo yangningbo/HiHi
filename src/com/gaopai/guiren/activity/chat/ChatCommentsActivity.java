@@ -17,6 +17,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.text.Editable;
@@ -80,7 +81,10 @@ import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -110,7 +114,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected Identity mIdentity;
 	protected int mChatType = 0;
 	protected String mNewUrl = "";
-	
 
 	private ImageView ivVoice, ivPhoto, ivPhotoCover, headImageView;
 	private View layoutPic;
@@ -122,17 +125,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private LinearLayout commentCountLayout, zanCountLayout, favoriteCountLayout;
 
-	private RelativeLayout titleRightBtn;
-	private RelativeLayout chatVoiceLayout;
-	private RelativeLayout rootLayout;
-	private LinearLayout chatCommentsLayout;
-
 	private ViewGroup layoutZan;
 
-	private boolean isRcording = false;
-	private List<String> downVoiceList = new ArrayList<String>();
-
-	private LinearLayout voiceModeToast;
 	private Button mSendTextBtn;
 	private Button mEmotionBtn;
 	private EmotionPicker mEmotionPicker;
@@ -146,12 +140,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private Button mSwitchVoiceTextBtn;
 	private ChatBoxManager boxManager;
 
-	private boolean isLoad;
-
 	private String commenterid;
 	private String commenterName;
 
-	private int commentCount = 0;
 	public final static int VOICE_MODEL = 0;
 	public final static int TEXT_MODEL = 1;
 	private int mCurrentModel = VOICE_MODEL;
@@ -164,23 +155,17 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	public final static int MSG_REMOVE_MSG = 11006;
 	public final static int MSG_VOICE_TEXT_MSG = 11007;
 
-	public final static int MSG_TYPE = 11010;
-	public final static int MSG_ZAN = 11011;
-	private final static int FAVORITE_SUCCESS = 15454;
-	private final static int REPORT_SUCCESS = 15455;
-	
 	private boolean isOnLooker = false;
 
 	protected SpeexPlayerWrapper speexPlayerWrapper;
 
 	protected MyAdapter mAdapter;
 	protected PullToRefreshListView mListView;
-
-	private boolean isShowTopCover = false;
 	private View viewCoverTop;
-
 	private ChatMsgDataHelper msgHelper;
 	private List<MessageInfo> zanList = new ArrayList<MessageInfo>();
+
+	private PreferenceOperateUtils spoAnony;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -204,13 +189,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		mLogin = DamiCommon.getLoginResult(mContext);
 		getZanList();
 		initVoicePlayMode();
-//		updateVoicePlayModeState(isModeInCall);
+		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
+		// updateVoicePlayModeState(isModeInCall);
 	}
 
 	protected void initComponent() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.message_detail);
-		
 
 		if (isOnLooker) {
 			ViewUtil.findViewById(this, R.id.chat_box).setVisibility(View.GONE);
@@ -329,6 +314,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
+				if (pos < 0) {
+					return;
+				}
 				mContentEdit.setHint(getString(R.string.comment_reply_info_colon) + messageInfos.get(pos).displayname);
 				mVoiceSendBtn.setText(getString(R.string.comment_reply_info_colon) + messageInfos.get(pos).displayname);
 				commenterid = messageInfos.get(pos).from;
@@ -425,19 +413,21 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		public void commentMessage(MessageInfo msg) {
 		}
 	};
-	
+
 	private MessageInfo buildZanMessage() {
 		MessageInfo messageInfo = new MessageInfo();
 		messageInfo.displayname = getName();
 		messageInfo.uid = mLogin.uid;
 		return messageInfo;
 	}
-	
+
 	private void removeZanMessage() {
-		for (MessageInfo messageInfo : zanList) {
-			if (messageInfo.uid.equals(mLogin.uid)) {
-				zanList.remove(messageInfo);
+		for (int i = 0; i < zanList.size(); i++) {
+			if (zanList.get(i).uid.equals(mLogin.uid)) {
+				zanList.remove(i);
+				return;
 			}
+
 		}
 	}
 
@@ -505,8 +495,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		favouriteCountText = (TextView) view.findViewById(R.id.chat_favourite_count);
 		favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
 
-		
-
 		zanCountLayout = (LinearLayout) view.findViewById(R.id.zan_count_layout);
 		zanCountBtn = (ImageView) view.findViewById(R.id.zan_count_btn);
 
@@ -515,7 +503,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		favoriteCountLayout = (LinearLayout) view.findViewById(R.id.favourite_count_layout);
 		favoriteCountBtn = (ImageView) view.findViewById(R.id.favorite_count_btn);
-		
+
 		if (!isOnLooker) {
 			zanCountLayout.setOnClickListener(this);
 			zanCountBtn.setOnClickListener(this);
@@ -527,12 +515,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
 		viewCoverTop = view.findViewById(R.id.view_cover_top);
-		
+
 		bindCommentCount();
 		bindZanCommentBorderView();
 		return view;
 	}
-	
+
 	private void bindCommentCount() {
 		commentCountText.setText(String.valueOf(messageInfo.commentCount));
 	}
@@ -677,8 +665,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	};
 
-	private ImageView chatCommentIcon;
-	private boolean onBottom = false;
 
 	private final static int MAX_SECOND = 10;
 	private final static int MIN_SECOND = 2;
@@ -1076,7 +1062,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			boxManager.hideAddGrid();
 			break;
 		case R.id.chat_add_change_voice:
-			TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(0);
+			TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(1);
 			if (!isChangeVoice) {
 				view.setText(getString(R.string.change_voice));
 				isChangeVoice = true;
@@ -1258,12 +1244,18 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		msg.to = mTribe.id;
 		msg.parentid = messageInfo.id;
 		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
-			msg.displayname = mLogin.displayName;
+			msg.displayname = mLogin.realname;
 			msg.headImgUrl = mLogin.headsmall;
 		} else {
-			msg.displayname = mIdentity.name;
-			msg.headImgUrl = mIdentity.head;
-			msg.heroid = mIdentity.id;
+			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0) {
+				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
+				msg.displayname = mLogin.realname;
+				msg.headImgUrl = mLogin.headsmall;
+			} else {
+				msg.displayname = mIdentity.name;
+				msg.headImgUrl = mIdentity.head;
+				msg.heroid = mIdentity.id;
+			}
 		}
 		msg.type = mChatType;
 
@@ -1272,12 +1264,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		return msg;
 	}
-	
+
 	private String getName() {
 		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
-			return mLogin.displayName;
+			return User.getUserName(mLogin);
 		} else {
-			return mIdentity.name;
+			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0) {
+				return User.getUserName(mLogin);
+			} else {
+				return mIdentity.name;
+			}
 		}
 	}
 
@@ -1291,13 +1287,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		addMessageInfo(msg);
 		bindCommentCount();
 		sendNotify();
-//		insertMessage(msg);
+		// insertMessage(msg);
 		sendMessage(msg);
 	}
 
 	protected void addMessageInfo(MessageInfo info) {
 		Log.d(TAG, "add message");
-		messageInfos.add(info);
+		messageInfos.add(0, info);
 		messageInfo.commentCount++;
 		notifyDataSetChanged();
 		if (messageInfos != null && messageInfos.size() != 0) {
@@ -1332,7 +1328,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 							String voice = FeatureFunction.generator(messageInfo.voiceUrl);
 							FeatureFunction.reNameFile(new File(msg.voiceUrl), voice);
 						}
-//						updateNewMessage(messageInfo);
+						// updateNewMessage(messageInfo);
 						modifyMessageState(messageInfo);
 
 						return;
@@ -1392,8 +1388,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	public final static int ZAN_FAILED = 17455;
 	public final static int ZAN_CANCEL_SUCCESS = 17456;
 
-
-
 	private void getZanList() {
 		DamiInfo.getMessageZanList(messageInfo.id, new SimpleResponseListener(mContext) {
 			@Override
@@ -1429,7 +1423,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 		bindZanCommentBorderView();
 	}
-	
+
 	private void bindFavoriteView() {
 		if (messageInfo.isfavorite == 0) {
 			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_normal);
@@ -1553,5 +1547,25 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private void notifyDataSetChanged() {
 		bindZanCommentBorderView();
 		mAdapter.notifyDataSetChanged();
+	}
+
+	private boolean isLight = true;
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		isLight = false;
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		if (pm.isScreenOn()) {
+			if (speexPlayerWrapper != null) {
+				speexPlayerWrapper.stop();
+			}
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		isLight = true;
 	}
 }

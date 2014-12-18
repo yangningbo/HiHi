@@ -32,6 +32,8 @@ import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.SimpleStateBean;
+import com.gaopai.guiren.fragment.NotificationFragment;
+import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.MessageHelper;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
 import com.gaopai.guiren.support.ShareManager;
@@ -39,6 +41,7 @@ import com.gaopai.guiren.support.ShareManager.CallDyback;
 import com.gaopai.guiren.support.alarm.AlarmReceiver;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -232,7 +235,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		tvMeetingTitle.setText(mMeeting.name);
 		tvMeetingInfo.setText(mMeeting.content);
 		tvMeetingTime.setText(DateUtil.getCreatTimeFromSeconds(mMeeting.start, mMeeting.end));
-		tvMeetingTimeDiff.setText( DateUtil.getMeetingDiffStrFromSeconds(mMeeting.start, mMeeting.end));
+		tvMeetingTimeDiff.setText(DateUtil.getMeetingDiffStrFromSeconds(mMeeting.start, mMeeting.end));
 		if (!isPreview) {
 			if (!TextUtils.isEmpty(mMeeting.logolarge)) {
 				ImageLoaderUtil.displayImage(mMeeting.logolarge, ivMeetingHeader);
@@ -339,6 +342,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			MessageHelper.clearChatCache(mContext, mMeetingID, 300, deleteCallback);
 			break;
 		case R.id.grid_restore_to_normal:
+			applyWithReason(AddReasonActivity.TYPE_TO_BE_NORMAL, REQUEST_BACK_TO_NORMAL);
 			break;
 		case R.id.grid_deal_apply_guest:
 			dealApply(3);
@@ -426,11 +430,13 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 	private void setAlarmForMeeting() {
 		Intent intent = new Intent(MeetingDetailActivity.this, AlarmReceiver.class); // 创建Intent对象
-		intent.putExtra("id", mMeetingID);
-		intent.setAction(this.getPackageName() + ".meeting." + mMeetingID);
+		intent.putExtra("id", mMeeting.id);
+		intent.setAction(this.getPackageName() + ".meeting." + mMeeting.id);
 		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 199823, intent, 0); // 创建PendingIntent
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, pi); // 设置闹钟，当前时间就唤醒
+		Logger.d(this, "current=" + System.currentTimeMillis() + "   diff="
+				+ (System.currentTimeMillis() - mMeeting.start * 1000) / 1000);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10*1000, pi); // 设置闹钟，当前时间就唤醒
 		setAlarm(true);
 		showToast(R.string.set_alarm_success);
 	}
@@ -517,8 +523,14 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
 				dealWithSimpleResult(this, o);
+				deleteConverstion();
 			}
 		});
+	}
+
+	private void deleteConverstion() {
+		ConversationHelper.deleteItem(mContext, mMeetingID);
+		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 	}
 
 	private void dealWithSimpleResult(SimpleResponseListener listener, Object o) {
@@ -549,6 +561,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		case REQUEST_CANCEL_MEETING:
 			if (resultCode == RESULT_OK) {
 				MeetingDetailActivity.this.finish();
+				deleteConverstion();
 			}
 			break;
 		default:
@@ -562,12 +575,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	PopupWindow moreWindow;
 
 	private void showMoreWindow(int role) {
-		if (chatGridLayout == null) {
-			chatGridLayout = (ViewGroup) getGridView(role);
-		}
-		if (moreWindow == null) {
-			moreWindow = new PopupWindow(chatGridLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		}
+		// if (chatGridLayout == null) {
+		chatGridLayout = (ViewGroup) getGridView(role);
+		// }
+		// if (moreWindow == null) {
+		moreWindow = new PopupWindow(chatGridLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		// }
 		moreWindow.setBackgroundDrawable(new BitmapDrawable());
 		moreWindow.setOutsideTouchable(true);
 		moreWindow.setFocusable(true);
@@ -590,6 +603,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			((TextView) ((ViewGroup) v).getChildAt(1)).setText(R.string.user_real_name);
 		}
 	}
+
 	private ViewGroup getGridView(int type) {
 		ViewGroup viewGroup = null;
 		View view;
@@ -600,7 +614,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
 			setSwitchState(view, isAlarm() ? 1 : 0);
-			
+
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_enter_meeting);
 			view.setOnClickListener(this);
@@ -610,7 +624,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
 			setSwitchState(view, spo.getInt(SPConst.getTribeUserId(mContext, mMeetingID), 0));
-			
+
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_clear_local_msg);
 			view.setOnClickListener(this);
@@ -618,8 +632,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_user_real_name);
 			changeUserRealName(view);
-			
-			
+
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_invite_to_meeting);
 			view.setOnClickListener(this);
@@ -722,6 +735,5 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 		return viewGroup;
 	}
-	
-	
+
 }

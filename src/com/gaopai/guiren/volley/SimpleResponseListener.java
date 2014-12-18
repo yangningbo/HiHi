@@ -12,6 +12,7 @@ import com.gaopai.guiren.activity.LoginActivity;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.bean.AppState;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.StringUtils;
 
 public abstract class SimpleResponseListener implements IResponseListener {
@@ -42,6 +43,7 @@ public abstract class SimpleResponseListener implements IResponseListener {
 		// TODO Auto-generated method stub
 		if (mIsShowProgressbar) {
 			((BaseActivity) mContext).showProgressDialog(mProgressString);
+			Logger.d(this, "showDialog===================.===");
 		}
 	}
 

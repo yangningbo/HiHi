@@ -34,6 +34,8 @@ public class NewDynamicBean extends BaseNetBean{
 		public String imgUrlS;
 		public String logo;
 		public String head;
+		public int fileType;
+		public String title;
 	}
 	public static class PicBean implements Serializable {
 		public String imgUrlS;

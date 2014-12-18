@@ -110,6 +110,8 @@ public class User implements Serializable {
 
 	public String weibo;
 	public String weixin;
+	
+	public int bigv;
 
 	public List<SpreadBean> kuosanlist;
 	public List<ZanBean> zantaglist;

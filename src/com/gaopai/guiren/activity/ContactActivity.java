@@ -186,17 +186,22 @@ public class ContactActivity extends BaseActivity {
 		registerReceiver(ACTION_UPDATE_LIST_ADD, ACTION_UPDATE_LIST_DELETE);
 	}
 
+	//send broadcast in ProfileActivity
 	@Override
 	protected void onReceive(Intent intent) {
 		if (intent.getAction().equals(ACTION_UPDATE_LIST_ADD)) {
 			User user = (User) intent.getSerializableExtra("user");
 			if (user != null) {
-				mAdapter.addUser(user);
+				if (type == TYPE_FOLLOWERS) {
+					mAdapter.addUser(user);
+				}
 			}
 		} else if (intent.getAction().equals(ACTION_UPDATE_LIST_DELETE)) {
 			String uid = intent.getStringExtra("uid");
 			if (uid != null) {
-				mAdapter.removeUser(uid);
+				if (type == TYPE_FOLLOWERS) {
+					mAdapter.removeUser(uid);
+				}
 			}
 		}
 	}
@@ -291,7 +296,6 @@ public class ContactActivity extends BaseActivity {
 			} else {
 				otherCondition(data.state, ContactActivity.this);
 			}
-			mListView.setHasMoreData(false);
 		}
 
 		@Override

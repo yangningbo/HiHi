@@ -20,7 +20,7 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.android.volley.Request.Method;
 import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult;
-import com.gaopai.guiren.activity.ApplyActivity.InviteUrlResult;
+import com.gaopai.guiren.activity.InviteFriendActivity.InviteUrlResult;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.CheckUpdateResult;
@@ -743,6 +743,7 @@ public class DamiInfo implements Serializable {
 			@Override
 			public void run() {
 				try {
+					uhu.sendStartMessage();
 					rlt = Utility.openUrl(url, httpMethod, params, loginType);
 					uhu.sendSuccessMessage(JSONObject.parseObject(rlt, clazz));
 				} catch (DamiException e) {

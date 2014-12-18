@@ -39,6 +39,7 @@ import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
+import com.gaopai.guiren.activity.WebActivity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
@@ -55,6 +56,7 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
+import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
@@ -665,12 +667,13 @@ public class DynamicHelper {
 			builder.append(nameSpannable);
 		}
 		if (!TextUtils.isEmpty(userInfo)) {
-			Spannable userInfoSpannable = MyTextUtils.setTextSize(MyTextUtils.setTextColor(" "+userInfo, Color.BLACK), 12);
+			Spannable userInfoSpannable = MyTextUtils.setTextSize(
+					MyTextUtils.setTextColor(" " + userInfo, Color.BLACK), 12);
 			builder.append(userInfoSpannable);
 		}
 		if (!TextUtils.isEmpty(actionInfo)) {
-			Spannable actionInfoSpannable = MyTextUtils
-					.setTextSize(MyTextUtils.setTextColor("   "+actionInfo, grayColor), 14);
+			Spannable actionInfoSpannable = MyTextUtils.setTextSize(
+					MyTextUtils.setTextColor("   " + actionInfo, grayColor), 14);
 			builder.append(actionInfoSpannable);
 		}
 		return builder;
@@ -686,7 +689,7 @@ public class DynamicHelper {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			List<MessageInfo> messageInfos = new ArrayList<MessageInfo>();
-//			messageInfos.add((MessageInfo) v.getTag());
+			// messageInfos.add((MessageInfo) v.getTag());
 			List<PicBean> list = (List<PicBean>) v.getTag();
 			int pos = (int) v.getTag(R.id.dy_photo_position);
 			for (PicBean picBean : list) {
@@ -698,7 +701,7 @@ public class DynamicHelper {
 			mContext.startActivity(intent);
 		}
 	};
-	
+
 	private OnClickListener singlePhotoClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -771,7 +774,12 @@ public class DynamicHelper {
 			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1);
 			viewHolder.tvTitle1.setText(jsonContent.title);
 			viewHolder.tvInfo1.setText(jsonContent.desc);
-			viewHolder.layoutHolder.setOnClickListener(null);
+			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mContext.startActivity(WebActivity.getIntent(mContext, jsonContent.url, jsonContent.title));
+				}
+			});
 
 			break;
 		case TYPE_SPREAD_TRIBE:
@@ -873,7 +881,7 @@ public class DynamicHelper {
 			uid = "-1";
 			userName = getString(R.string.no_name);
 		}
- 
+
 		if (type == TYPE_SEND_DYNAMIC) {
 			// viewHolder.tvAction.setVisibility(View.GONE);
 			spreadAction = "";
@@ -883,7 +891,12 @@ public class DynamicHelper {
 			spreadAction = typeBean.title;
 		}
 
-		viewHolder.tvUserName.setText(parseHeaderText(userName, uid, userInfo, spreadAction));
+		if (typeBean.bigv == 1) {
+			viewHolder.tvUserName.setText(HeadView.getMvpName(mContext,
+					parseHeaderText(userName + HeadView.MVP_NAME_STR, uid, userInfo, spreadAction)));
+		} else {
+			viewHolder.tvUserName.setText(parseHeaderText(userName, uid, userInfo, spreadAction));
+		}
 
 		if (typeBean.uid.equals(user.uid)) {
 			setDateDeleteSpan(viewHolder.tvDateInfo, typeBean);
@@ -1028,13 +1041,15 @@ public class DynamicHelper {
 	}
 
 	public final static int KEY_PHOTO_CLICK_POSITION = 96;
+
 	private void buidImageViews(MyGridLayout gridLayout, List<PicBean> pics) {
 		// TODO Auto-generated method stub
 		gridLayout.removeAllViews();
-		int i =0;
+		int i = 0;
 		for (PicBean bean : pics) {
 			ImageView imageView = getImageView(bean.imgUrlS);
-//			imageView.setTag(ChatMsgHelper.creatPicMsg(bean.imgUrlS, bean.imgUrlL, ""));
+			// imageView.setTag(ChatMsgHelper.creatPicMsg(bean.imgUrlS,
+			// bean.imgUrlL, ""));
 			imageView.setTag(pics);
 			imageView.setTag(R.id.dy_photo_position, i);
 			imageView.setOnClickListener(photoClickListener);

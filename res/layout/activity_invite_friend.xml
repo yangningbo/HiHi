@@ -46,7 +46,7 @@
         android:id="@+id/tv_invite_qq"
         style="@style/tribe_detail_item_text_with_drawable"
         android:background="@drawable/selector_btn_general"
-        android:drawableLeft="@drawable/icon_invite_pone"
+        android:drawableLeft="@drawable/icon_invite_qq"
         android:drawablePadding="10dp"
         android:padding="10dp"
         android:text="@string/invite_QQ" />

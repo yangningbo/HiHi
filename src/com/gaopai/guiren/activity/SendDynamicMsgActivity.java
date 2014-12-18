@@ -77,7 +77,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				showExitDialog();
 			}
 		});
-		View v = mTitleBar.addRightTextView(R.string.send);
+		View v = mTitleBar.addRightButtonView(R.drawable.icon_titlebar_send_dy);
 		v.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -88,7 +88,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		initViews();
 		getTags();
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		showExitDialog();
@@ -263,9 +263,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			break;
 		}
 	}
-	
-	
-	
 
 	private void changeIsHideName(int isHide) {
 		int drawbale = (isHide == 0) ? R.drawable.icon_send_dy_real_name : R.drawable.icon_send_dy_nick_name;
@@ -284,10 +281,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			flowLayout.removeView((View) v.getParent());
 		}
 	};
-	
-	
-
-
 
 	public void showChosePicDialog() {
 		String[] array = new String[2];
@@ -326,11 +319,11 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private void getImageFromCamera() {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-		TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
+		// TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
 
 		if (FeatureFunction.newFolder(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY)) {
 			File out = new File(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY,
-					FeatureFunction.getPhotoFileName());
+					TEMP_FILE_NAME);
 			Uri uri = Uri.fromFile(out);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 			startActivityForResult(intent, REQUEST_GET_IMAGE_BY_CAMERA);

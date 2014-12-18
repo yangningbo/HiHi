@@ -7,7 +7,7 @@ public class ConversationBean {
 	public String lastmsgtime;
 	public int unreadcount;
 	public int type;//100私聊，200会议，300圈子
-	public int localtype;//0普通 1语音
+	public int localtype;//0普通 1语音2图片
 	public String toid;
 	
 	//是否匿名 1——匿名 0——实名

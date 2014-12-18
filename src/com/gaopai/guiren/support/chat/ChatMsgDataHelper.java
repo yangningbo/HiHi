@@ -70,6 +70,9 @@ public class ChatMsgDataHelper {
 	}
 
 	public void favoriteMessage(final MessageInfo messageInfo) {
+		if (mTribe == null || messageInfo == null) {
+			return;
+		}
 		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
 
 			@Override
@@ -95,6 +98,9 @@ public class ChatMsgDataHelper {
 	}
 
 	public void unFavoriteMessage(final MessageInfo messageInfo) {
+		if (mTribe == null || messageInfo == null) {
+			return;
+		}
 		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
 
 			@Override
@@ -120,6 +126,9 @@ public class ChatMsgDataHelper {
 	}
 
 	public void report(final MessageInfo messageInfo, final String content) {
+		if (mTribe == null || messageInfo == null) {
+			return;
+		}
 		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
 			@Override
 			public void onSuccess(Object o) {
@@ -139,6 +148,9 @@ public class ChatMsgDataHelper {
 	}
 
 	public void zanMessage(final MessageInfo messageInfo) {
+		if (mTribe == null || messageInfo == null) {
+			return;
+		}
 		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, new SimpleResponseListener(mContext,
 				getString(R.string.request_internet_now)) {
 			@Override
@@ -210,5 +222,5 @@ public class ChatMsgDataHelper {
 	private String getString(int sid) {
 		return mContext.getString(sid);
 	}
-	
+
 }

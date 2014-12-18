@@ -3,7 +3,9 @@ package com.gaopai.guiren.activity.share;
 import android.view.View;
 import android.widget.ListView;
 
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.share.BaseShareFragment.MyListener;
 
 public class ShareFansFragment extends BaseShareFragment {
 
@@ -19,4 +21,12 @@ public class ShareFansFragment extends BaseShareFragment {
 		getShareActivity().setTitleText(R.string.fans);
 		getShareActivity().setBackListener(backToShareFollower);
 	}
+	
+	@Override
+	protected void getUserList(boolean isRefresh) {
+		// TODO Auto-generated method stub
+		super.getUserList(isRefresh);
+		DamiInfo.getFollowerList(mLogin.uid, page, "", new MyListener(getActivity(), isRefresh));
+	}
+
 }

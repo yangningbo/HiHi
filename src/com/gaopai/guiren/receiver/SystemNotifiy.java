@@ -2,34 +2,24 @@ package com.gaopai.guiren.receiver;
 
 import java.util.UUID;
 
-import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.TribeActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.chat.ChatBaseActivity;
-import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.NotifiyType;
 import com.gaopai.guiren.bean.NotifiyVo;
-import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.SNSMessage;
+import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
@@ -39,7 +29,6 @@ import com.gaopai.guiren.db.NotifyTable;
 import com.gaopai.guiren.db.NotifyUserTable;
 import com.gaopai.guiren.db.TribeTable;
 import com.gaopai.guiren.fragment.MeetingFragment;
-import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.utils.Logger;
@@ -85,8 +74,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 				user.company = notifiyVo.user.company;
 				user.auth = 1;
 				DamiCommon.saveLoginResult(mContext, user);
-				// mContext.sendBroadcast(new Intent(
-				// ProfileTab.UPDATE_PROFILE_ACTION));
+//				mContext.sendBroadcast(new Intent(ProfileTab.UPDATE_PROFILE_ACTION));
 				msg = mContext.getString(R.string.pass_real_verify);
 				break;
 
@@ -467,71 +455,64 @@ public class SystemNotifiy extends AbstractNotifiy {
 				mContext.sendBroadcast(new Intent(MeetingDetailActivity.ACTION_MEETING_CANCEL));
 				break;
 			case NotifiyType.MESSAGE_ZAN_YOURS:
-				// msg = notifiyVo.content;
-				// NotifiyVo notifyComment =
-				// notifyTable.queryComment(notifiyVo);
-				// if (notifyComment != null) {
-				// notifiyVo.mID = notifyComment.mID;
-				// if (!TextUtils.isEmpty(notifyComment.message.id)) {
-				// notifyMessageTable.delete(notifyComment.mID,
-				// notifyComment.message);
-				// }
-				// if (!TextUtils.isEmpty(notifyComment.room.id)) {
-				// table.delete(notifyComment.mID, notifyComment.room);
-				// }
-				// notifyTable.deleteByID(notifyComment);
-				// }
-				// if (notifiyVo.roomuser != null) {
-				// Identity identity = identityTable.query(notifiyVo.room.id);
-				// if (identity == null) {
-				// identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
-				// } else {
-				// identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
-				// }
-				// }
-
+				msg = notifiyVo.content;
+				NotifiyVo notifyComment1 = notifyTable.queryComment(notifiyVo);
+				if (notifyComment1 != null) {
+					notifiyVo.mID = notifyComment1.mID;
+					if (!TextUtils.isEmpty(notifyComment1.message.id)) {
+						notifyMessageTable.delete(notifyComment1.mID, notifyComment1.message);
+					}
+					if (!TextUtils.isEmpty(notifyComment1.room.id)) {
+						table.delete(notifyComment1.mID, notifyComment1.room);
+					}
+					notifyTable.deleteByID(notifyComment1);
+				}
+				if (notifiyVo.roomuser != null) {
+					Identity identity = identityTable.query(notifiyVo.room.id);
+					if (identity == null) {
+						identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
+					} else {
+						identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
+					}
+				}
 				break;
 			default:
 				msg = notifiyVo.content;
 				break;
 			}
 
-			// if (!(notifiyVo.user==null) &&
-			// !TextUtils.isEmpty(notifiyVo.user.uid)) {
-			// User user = userTable.query(notifiyVo.mID, notifiyVo.user.uid);
-			// if (user == null) {
-			// user = notifiyVo.user;
-			// userTable.insert(notifiyVo.mID, user);
-			// } else {
-			// user = notifiyVo.user;
-			// userTable.update(notifiyVo.mID, user);
-			// }
-			// }
-			//
-			// if (!(notifiyVo.room==null) &&
-			// !TextUtils.isEmpty(notifiyVo.room.id)) {
-			// Tribe tribe = table.query(notifiyVo.mID, notifiyVo.room.id);
-			// if (tribe == null) {
-			// tribe = notifiyVo.room;
-			// table.insert(notifiyVo.mID, notifiyVo.room);
-			// } else {
-			// tribe = notifiyVo.room;
-			// table.update(notifiyVo.mID, tribe);
-			// }
-			// }
+			if (!(notifiyVo.user == null) && !TextUtils.isEmpty(notifiyVo.user.uid)) {
+				User user = userTable.query(notifiyVo.mID, notifiyVo.user.uid);
+				if (user == null) {
+					user = notifiyVo.user;
+					userTable.insert(notifiyVo.mID, user);
+				} else {
+					user = notifiyVo.user;
+					userTable.update(notifiyVo.mID, user);
+				}
+			}
 
-			// if (!(notifiyVo.message==null) &&
-			// !TextUtils.isEmpty(notifiyVo.message.id)) {
-			// MessageInfo messageInfo = notifyMessageTable.query(notifiyVo.mID,
-			// notifiyVo.message.id);
-			// if (messageInfo == null) {
-			// messageInfo = notifiyVo.message;
-			// notifyMessageTable.insert(notifiyVo.mID, notifiyVo.message);
-			// } else {
-			// messageInfo = notifiyVo.message;
-			// notifyMessageTable.update(notifiyVo.mID, notifiyVo.message);
-			// }
-			// }
+			if (!(notifiyVo.room == null) && !TextUtils.isEmpty(notifiyVo.room.id)) {
+				Tribe tribe = table.query(notifiyVo.mID, notifiyVo.room.id);
+				if (tribe == null) {
+					tribe = notifiyVo.room;
+					table.insert(notifiyVo.mID, notifiyVo.room);
+				} else {
+					tribe = notifiyVo.room;
+					table.update(notifiyVo.mID, tribe);
+				}
+			}
+
+			if (!(notifiyVo.message == null) && !TextUtils.isEmpty(notifiyVo.message.id)) {
+				MessageInfo messageInfo = notifyMessageTable.query(notifiyVo.mID, notifiyVo.message.id);
+				if (messageInfo == null) {
+					messageInfo = notifiyVo.message;
+					notifyMessageTable.insert(notifiyVo.mID, notifiyVo.message);
+				} else {
+					messageInfo = notifiyVo.message;
+					notifyMessageTable.update(notifiyVo.mID, notifiyVo.message);
+				}
+			}
 
 			notifyTable.insert(notifiyVo);
 

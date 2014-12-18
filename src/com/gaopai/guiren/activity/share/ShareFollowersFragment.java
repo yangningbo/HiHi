@@ -5,6 +5,7 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.utils.MyUtils;
@@ -40,6 +41,15 @@ public class ShareFollowersFragment extends BaseShareFragment {
 			listView.addHeaderView(view);
 		}
 	}
+	
+	@Override
+	protected void getUserList(boolean isRefresh) {
+		// TODO Auto-generated method stub
+		super.getUserList(isRefresh);
+		DamiInfo.getFansList(mLogin.uid, page, "", new MyListener(getActivity(), isRefresh));
+	}
+
+
 
 	@Override
 	public void onResume() {

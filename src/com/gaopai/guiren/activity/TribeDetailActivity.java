@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -25,17 +26,20 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.TwoDimensionActivity.QrHolder;
+import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
-import com.gaopai.guiren.bean.MessageInfo;
+import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.Tribe.Member;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.fragment.NotificationFragment;
+import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.MessageHelper;
-import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
+import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.support.ShareManager.CallDyback;
+import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -75,7 +79,6 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	private TextView tvCancelTribe;
 
 	private FlowLayout layoutTags;
-	private TextView tvMoreTags;
 
 	private View layoutAdmin;
 	private View layoutSetting;
@@ -84,6 +87,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 	public final static int REQUEST_JOIN_TRIBE = 0;
 	public final static int REQUEST_ALL_TRIBE_USERS = 1;
+
+	private TagWindowManager tagWindowManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		setAbContentView(R.layout.activity_tribe_detail);
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
+		tagWindowManager = new TagWindowManager(this, true, null);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.tribe_detail);
 
@@ -134,8 +140,6 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		tvCancelTribe.setOnClickListener(this);
 
 		layoutTags = (FlowLayout) findViewById(R.id.tribe_tags);
-		tvMoreTags = (TextView) findViewById(R.id.tv_more_tags);
-		tvMoreTags.setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_erweima).setOnClickListener(this);
 
 		layoutAdmin = findViewById(R.id.layout_tribe_detail_admin);
@@ -209,6 +213,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		ImageLoaderUtil.displayImage(mTribe.logosmall, ivTribeLogo);
 		bindBottomButtons();
 		bindMemberView();
+		bindTags();
 	}
 
 	private PreferenceOperateUtils spo;
@@ -216,7 +221,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	protected boolean isAvoidDisturb() {
 		return spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0) == 1;
 	}
-	
+
 	protected boolean isUserRealIdentity() {
 		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0;
 	}
@@ -371,6 +376,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		case R.id.btn_on_look:
 			if (mTribe.isjoin == 1) {
 				invite();
+			} else {
+				startActivity(ChatTribeActivity.getIntent(mContext, mTribe, ChatTribeActivity.CHAT_TYPE_TRIBE, true));
 			}
 			break;
 		case R.id.btn_want_in_tribe:
@@ -409,8 +416,6 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			startActivity(intent);
 			break;
 		}
-		case R.id.tv_more_tags:
-			break;
 		case R.id.tv_cancel_tribe:
 			showDialog(getString(R.string.cancel_tribe), 2, null);
 			break;
@@ -420,6 +425,25 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		default:
 			break;
 		}
+	}
+
+	private void bindTags() {
+		if (TextUtils.isEmpty(mTribe.tag)) {
+			return;
+		}
+		List<TagBean> tags = new ArrayList<TagBean>();
+		String[] strings = mTribe.tag.split(",");
+		for (String string : strings) {
+			TagBean tagBean = new TagBean();
+			tagBean.tag = string;
+			tags.add(tagBean);
+		}
+		tagWindowManager.bindTags(layoutTags, false, tags, null);
+	}
+
+	private void deleteConverstion() {
+		ConversationHelper.deleteItem(mContext, mTribeID);
+		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 	}
 
 	private DeleteCallback deleteCallback = new DeleteCallback() {
@@ -476,6 +500,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.tribe_has_been_cancel);
+					deleteConverstion();
 				} else {
 					otherCondition(data.state, TribeDetailActivity.this);
 				}
@@ -491,6 +516,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.operate_success);
+					deleteConverstion();
 					bindBottomButtons();
 				} else {
 					otherCondition(data.state, TribeDetailActivity.this);

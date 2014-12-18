@@ -105,11 +105,12 @@ public class NotificationAdapter extends BaseAdapter {
 		holder.tvName.setText(bean.name);
 		if (TextUtils.isEmpty(bean.unfinishinput)) {
 			holder.tvInfo.setText(bean.lastmsgcontent);
+			holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			if (bean.localtype == 1) {
 				holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_notification_voice, 0, 0, 0);
 				holder.tvInfo.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 3));
-			} else {
-				holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+			} else if (bean.localtype == 2) {
+				holder.tvInfo.setText(R.string.picture_scheme);
 			}
 		} else {
 			holder.tvInfo.setText(buildDraft(bean.unfinishinput));
@@ -125,7 +126,7 @@ public class NotificationAdapter extends BaseAdapter {
 	}
 	
 	private SpannableString buildDraft(String draft) {
-		String draftInfo = "[草稿]";
+		String draftInfo = mContext.getString(R.string.draft_scheme);
 		SpannableString spannableString = new SpannableString(draftInfo + draft);
 		spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.red_dongtai_bg)), 0,
 				draftInfo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

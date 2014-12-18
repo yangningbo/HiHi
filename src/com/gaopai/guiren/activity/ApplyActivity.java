@@ -107,7 +107,7 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 			startActivity(ReverificationActivity.class);
 			break;
 		case R.id.btn_invite_to_guiren:
-			invite();
+			startActivity(InviteFriendActivity.class);
 			break;
 		case R.id.btn_confirm:
 			DamiInfo.setUserAuthV(new SimpleResponseListener(mContext, R.string.request_internet_now) {
@@ -128,22 +128,8 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-	private void invite() {
-		DamiInfo.getUserInvitation(new SimpleResponseListener(mContext) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				InviteUrlResult data = (InviteUrlResult) o;
-				if (data.state != null && data.state.code == 0) {
-					startActivity(InviteFriendActivity.getIntent(mContext, data.data));
-				}
-			}
-		});
-	}
 
-	public static class InviteUrlResult extends BaseNetBean {
-		public String data;
-	}
+
 
 	// "data": {
 	// "base": { //认证资料

@@ -286,7 +286,7 @@ public class MyFavoriteActivity extends BaseActivity {
 		notHideViews(viewHolder, messageInfo.fileType);
 		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
 				(android.widget.LinearLayout.LayoutParams) viewHolder.ivVoice.getLayoutParams(), messageInfo));
-		viewHolder.msgInfoLayout.setOnClickListener(null);
+		viewHolder.layoutTextVoiceHolder.setOnClickListener(null);
 		switch (messageInfo.fileType) {
 		case MessageType.TEXT:
 			viewHolder.tvText.setText(MyTextUtils.addHttpLinks(messageInfo.content));
@@ -310,7 +310,7 @@ public class MyFavoriteActivity extends BaseActivity {
 			break;
 		case MessageType.VOICE:
 			viewHolder.tvVoiceLength.setText(messageInfo.voiceTime + "''");
-			viewHolder.msgInfoLayout.setOnClickListener(new OnClickListener() {
+			viewHolder.layoutTextVoiceHolder.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {

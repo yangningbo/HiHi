@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.View.MeasureSpec;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -42,15 +44,13 @@ public class ChatGridLayout extends ViewGroup {
 	}
 
 	public void hideSoftInput(View paramEditText) {
-		((InputMethodManager) DamiApp.getInstance().getSystemService(
-				"input_method")).hideSoftInputFromWindow(
+		((InputMethodManager) DamiApp.getInstance().getSystemService("input_method")).hideSoftInputFromWindow(
 				paramEditText.getWindowToken(), 0);
 	}
 
 	public void hide(Activity paramActivity) {
 		setVisibility(View.GONE);
-		paramActivity.getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		paramActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 	}
 
@@ -60,20 +60,20 @@ public class ChatGridLayout extends ViewGroup {
 		int childCount = getChildCount();
 		int width = MeasureSpec.getSize(widthMeasureSpec);
 		int height = MeasureSpec.getSize(heightMeasureSpec);
-//		Log.d("onMeasure", "l="+height + "  w="+width);
-		int childWidthSpec = MeasureSpec.makeMeasureSpec(width / 3,
+
+		int childWidthSpec = MeasureSpec.makeMeasureSpec((width - getPaddingLeft() - getPaddingRight()) / 3,
 				MeasureSpec.EXACTLY);
-		int childHeightSpec = MeasureSpec.makeMeasureSpec(MyUtils.dip2px(getContext(), 80),
-				MeasureSpec.EXACTLY);
-		
+
+		int childHeightSpec;
+		childHeightSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingBottom() + getPaddingTop(),
+				LayoutParams.WRAP_CONTENT);
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
 			child.measure(childWidthSpec, childHeightSpec);
 		}
-//		Log.d("onMeasure", "cl = " + getChildAt(0).getMeasuredHeight() + "   " 
-//				+ " cw =" + getChildAt(0).getMeasuredWidth());
-		height = ((childCount-1)/3 + 1) * getChildAt(0).getMeasuredHeight();
-		heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+		height = getChildAt(0).getMeasuredHeight();
+		heightMeasureSpec = MeasureSpec.makeMeasureSpec(height + getPaddingBottom() + getPaddingTop(),
+				MeasureSpec.EXACTLY);
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 
@@ -84,17 +84,16 @@ public class ChatGridLayout extends ViewGroup {
 		int row = 0;
 		int childWidth;
 		int childHeight;
-//		Log.d("onLayout", "l="+l + "  t="+t+"   r="+r  + "   b="+b);
+		// Log.d("onLayout", "l="+l + "  t="+t+"   r="+r + "   b="+b);
 
 		int column = 0;
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
 			childHeight = child.getMeasuredHeight();
 			childWidth = child.getMeasuredWidth();
-			row = i/3;
+			row = i / 3;
 			column = i % 3;
-			child.layout(column * childWidth, row * childHeight, (column + 1)
-					* childWidth, (row + 1) * childHeight);
+			child.layout(column * childWidth, row * childHeight, (column + 1) * childWidth, (row + 1) * childHeight);
 		}
 
 	}

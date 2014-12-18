@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
@@ -81,7 +83,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 	@Override
 	protected void setTitleText() {
 		// TODO Auto-generated method stub
-		mTitleBar.addLeftTextView(user.realname);
+		TextView textView = mTitleBar.addLeftTextView(user.realname);
 	}
 
 	@Override

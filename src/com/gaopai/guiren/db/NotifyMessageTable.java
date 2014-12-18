@@ -148,7 +148,7 @@ public class NotifyMessageTable {
 		allPromotionInfoValues.put(COLUMN_IMAGE_URLL, message.imgUrlL);
 		allPromotionInfoValues.put(COLUMN_VOICE_URL, message.voiceUrl);
 		allPromotionInfoValues.put(COLUMN_TYPE, message.type);
-		allPromotionInfoValues.put(COLUMN_MESSAGE_TYPE, message.type);
+		allPromotionInfoValues.put(COLUMN_MESSAGE_TYPE, message.fileType);
 		allPromotionInfoValues.put(COLUMN_IMAGE_WIDTH, message.imgWidth);
 		allPromotionInfoValues.put(COLUMN_IMAGE_HEIGHT, message.imgHeight);
 		allPromotionInfoValues.put(COLUMN_DISPLAYNAME, message.displayname);
@@ -227,7 +227,7 @@ public class NotifyMessageTable {
 				message.imgUrlL = cursor.getString(indexImgUrlL);
 				message.voiceUrl = cursor.getString(indexVoiceUrl);
 				message.type = cursor.getInt(indexType);
-				message.type = cursor.getInt(indexMessageType);
+				message.fileType = cursor.getInt(indexMessageType);
 				message.imgWidth = cursor.getInt(indexImgWidth);
 				message.imgHeight = cursor.getInt(indexImgHeight);
 				message.displayname = cursor.getString(indexDisplayName);

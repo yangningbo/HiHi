@@ -13,20 +13,21 @@ import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 
 public class ConversationHelper {
-	
+
 	public static void saveToLastMsgListReaded(MessageInfo messageInfo, Context context) {
 		saveToLastMsgList(messageInfo, context, true);
 	}
-	
+
 	public static void saveToLastMsgList(MessageInfo messageInfo, Context context) {
 		saveToLastMsgList(messageInfo, context, false);
 	}
-	
+
 	/**
 	 * 
 	 * @param messageInfo
 	 * @param context
-	 * @param isRead whether add 1 to unread count
+	 * @param isRead
+	 *            whether add 1 to unread count
 	 */
 	public static void saveToLastMsgList(MessageInfo messageInfo, Context context, boolean isRead) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
@@ -36,11 +37,15 @@ public class ConversationHelper {
 		if (conversation != null) {
 			if (messageInfo.fileType == MessageType.VOICE) {
 				conversation.localtype = 1;
+			} else if (messageInfo.fileType == MessageType.PICTURE) {
+				conversation.localtype = 2;
 			} else {
 				conversation.localtype = 0;
 			}
+			if (!TextUtils.isEmpty(bean.headurl)) {
+				conversation.headurl = bean.headurl;
+			}
 			conversation.type = bean.type;
-			conversation.headurl = bean.headurl;
 			if (!isRead) {
 				conversation.unreadcount = conversation.unreadcount + 1;
 			}
@@ -53,7 +58,9 @@ public class ConversationHelper {
 		if (conversation == null) {
 			conversation = new ConversationBean();
 		}
-		conversation.headurl = bean.headurl;
+		if (!TextUtils.isEmpty(bean.headurl)) {
+			conversation.headurl = bean.headurl;
+		}
 		if (isRead) {
 			conversation.unreadcount = 0;
 		} else {
@@ -65,6 +72,8 @@ public class ConversationHelper {
 		conversation.toid = bean.toid;
 		if (messageInfo.fileType == MessageType.VOICE) {
 			conversation.localtype = 1;
+		} else if (messageInfo.fileType == MessageType.PICTURE) {
+			conversation.localtype = 2;
 		} else {
 			conversation.localtype = 0;
 		}
@@ -72,10 +81,10 @@ public class ConversationHelper {
 		conversation.anonymous = 0;
 		table.insert(conversation);
 	}
-	
+
 	public static void creatNewItem() {
 	}
-	
+
 	public static boolean saveDraft(Context context, MessageInfo messageInfo) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
@@ -92,6 +101,8 @@ public class ConversationHelper {
 			conversation.unfinishinput = messageInfo.content;
 			if (messageInfo.fileType == MessageType.VOICE) {
 				conversation.localtype = 1;
+			} else if (messageInfo.fileType == MessageType.PICTURE) {
+				conversation.localtype = 2;
 			} else {
 				conversation.localtype = 0;
 			}
@@ -105,8 +116,8 @@ public class ConversationHelper {
 		}
 		return true;
 	}
-	
-	//for system
+
+	// for system
 	public static void saveToLastMsgList(NotifiyVo notifiyVo, Context mContext, boolean isRead) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
 		ConversationInnerBean bean = notifiyVo.conversion;
@@ -139,6 +150,12 @@ public class ConversationHelper {
 		conversation.type = bean.type;
 		conversation.anonymous = 0;
 		table.insert(conversation);
+	}
+
+	public static void deleteItem(Context context, String id) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
+		ConverseationTable table = new ConverseationTable(dbDatabase);
+		table.delete(id);
 	}
 
 }

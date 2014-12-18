@@ -204,6 +204,9 @@ public class TitleBar extends ViewGroup {
 	public TextView addLeftTextView(String text) {
 		TextView btn = new TextView(mContext);
 		btn.setText(text);
+		btn.setMaxEms(8);
+		btn.setEllipsize(TruncateAt.END);
+		btn.setSingleLine(true);
 		btn.setGravity(Gravity.CENTER);
 		btn.setTextSize(getResources().getDimension(R.dimen.title_text_size));
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT);

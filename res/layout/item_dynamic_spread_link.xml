@@ -16,8 +16,7 @@
     <TextView
         android:id="@+id/tv_user_name"
         style="@style/dynamic_item_title_name"
-        android:layout_toRightOf="@id/iv_header"/>
-
+        android:layout_toRightOf="@id/iv_header" />
 
     <RelativeLayout
         android:id="@+id/rl_spread_holder"
@@ -35,6 +34,7 @@
             android:layout_height="50dp"
             android:layout_marginRight="@dimen/general_header_padding"
             android:contentDescription="@string/desc"
+            android:scaleType="centerCrop"
             android:src="@drawable/default_header" />
 
         <TextView

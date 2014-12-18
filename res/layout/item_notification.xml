@@ -8,13 +8,16 @@
         android:layout_width="match_parent"
         android:id="@+id/layout_notification_item"
         android:background="@drawable/selector_btn_general"
+        android:paddingBottom="@dimen/general_paading"
         android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/iv_header"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="@dimen/notification_item_base_padding"
+            android:layout_marginTop="@dimen/general_paading"
+            android:layout_marginLeft="@dimen/general_paading"
+            android:layout_marginRight="@dimen/general_paading"
             android:contentDescription="@string/desc"
             android:src="@drawable/logo" />
 

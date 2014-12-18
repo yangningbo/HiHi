@@ -46,6 +46,7 @@ import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.fragment.DynamicFragment.BackPressedListener;
 import com.gaopai.guiren.fragment.MeetingFragment;
 import com.gaopai.guiren.fragment.NotificationFragment;
+import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
@@ -168,8 +169,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		int screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
 		int screenHeight = mContext.getResources().getDisplayMetrics().heightPixels;
 		findViewById(R.id.slide_left_holder).getLayoutParams().width = (int) (screenWidth * 0.75);
-		findViewById(R.id.tv_user_name).getLayoutParams().width = (int) (screenWidth * 0.75)
-				- MyUtils.dip2px(mContext, 85);
+		((TextView) findViewById(R.id.tv_user_name)).setMaxWidth((int) (screenWidth * 0.75)
+				- MyUtils.dip2px(mContext, 85));
 
 		View view = (View) findViewById(R.id.slide_btn_my_profile);
 		view.setOnClickListener(slideMenuClickListener);
@@ -199,14 +200,16 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		if (mUser == null) {
 			return;
 		}
-		ImageView ivHeader = (ImageView) findViewById(R.id.iv_user_header);
-		if (!TextUtils.isEmpty(mUser.headsmall)) {
-			Picasso.with(mContext).load(mUser.headsmall).placeholder(R.drawable.default_header)
-					.error(R.drawable.default_header).into(ivHeader);
-		}
-
+		HeadView layoutHeader = (HeadView) findViewById(R.id.layout_header_mvp);
+		layoutHeader.setImage(mUser.headsmall);
 		TextView textView = (TextView) findViewById(R.id.tv_user_name);
-		textView.setText(mUser.realname);
+		if (mUser.bigv == 1) {
+			layoutHeader.setMVP(true);
+			textView.setText(HeadView.getMvpName(mContext, mUser.realname + HeadView.MVP_NAME_STR));
+		} else {
+			textView.setText(mUser.realname);
+			layoutHeader.setMVP(false);
+		}
 
 		textView = (TextView) findViewById(R.id.tv_slide_count_followers);
 		textView.setText(String.valueOf(mUser.followers));

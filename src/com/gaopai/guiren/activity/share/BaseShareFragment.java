@@ -2,11 +2,11 @@ package com.gaopai.guiren.activity.share;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
@@ -26,7 +27,6 @@ import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.support.FragmentHelper;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView;
@@ -41,6 +41,10 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 
 	private SimpleResponseListener listener;
 
+	private SimpleResponseListener getListListener;
+	
+	protected User mLogin;
+
 	public interface OnBackListener {
 		public boolean onBack();
 	}
@@ -54,6 +58,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 	};
 
 	View view;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -61,6 +66,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 			view = inflater.inflate(R.layout.fragment_connection, null);
 			initView(view);
 			mListView.doPullRefreshing(true, 0);
+			mLogin = DamiCommon.getLoginResult(getActivity());
 		} else {
 			((ViewGroup) view.getParent()).removeView(view);
 		}
@@ -88,17 +94,18 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		creatHeaderView(mListView.getRefreshableView());
 		mListView.getRefreshableView().setVerticalScrollBarEnabled(false);
 		mListView.getRefreshableView().setHeaderDividersEnabled(true);
-		mListView.setPullRefreshEnabled(false);
+		mListView.setPullRefreshEnabled(true);
 		mListView.setPullLoadEnabled(false);
-		mListView.setScrollLoadEnabled(false);
+		mListView.setScrollLoadEnabled(true);
 		mListView.setOnRefreshListener(new OnRefreshListener<IndexableListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<IndexableListView> refreshView) {
-				getUserList(false);
+				getUserList(true);
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<IndexableListView> refreshView) {
+				getUserList(false);
 			}
 		});
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
@@ -126,30 +133,58 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 
 	protected void creatHeaderView(ListView listView) {
 	}
+	protected int page = 1;
+	protected boolean isFull = false;
+	protected class MyListener extends SimpleResponseListener {
+
+		private boolean isRefresh;
+
+		public MyListener(Context context,boolean isRefresh) {
+			super(context);
+			this.isRefresh = isRefresh;
+		}
+
+		@Override
+		public void onSuccess(Object o) {
+			// TODO Auto-generated method stub
+			final UserList data = (UserList) o;
+			if (data.state != null && data.state.code == 0) {
+				if (data.data != null && data.data.size() > 0) {
+					if (isRefresh) {
+						mAdapter.clear();
+					}
+					mAdapter.addAndSort(data.data);
+					if (data.pageInfo != null) {
+						isFull = (data.pageInfo.hasMore == 0);
+						if (!isFull) {
+							page++;
+						}
+					}
+					mListView.setHasMoreData(!isFull);
+				}
+			} else {
+				otherCondition(data.state, getActivity());
+			}
+		}
+
+		@Override
+		public void onFinish() {
+			mListView.onPullComplete();
+			mListView.setHasMoreData(!isFull);
+		}
+
+	}
 
 	protected void getUserList(final boolean isRefresh) {
-		DamiInfo.getFriendsList(new SimpleResponseListener(getActivity()) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				final UserList data = (UserList) o;
-				if (data.state != null && data.state.code == 0) {
-					if (data.data != null && data.data.size() > 0) {
-						if (isRefresh) {
-							mAdapter.clear();
-						}
-						mAdapter.addAndSort(data.data);
-					}
-				} else {
-					otherCondition(data.state, getActivity());
-				}
-			}
-
-			@Override
-			public void onFinish() {
-				mListView.onPullComplete();
-			}
-		});
+		if (isRefresh) {
+			page = 1;
+			mAdapter.clear();
+			isFull = false;
+		}
+		if (isFull) {
+			mListView.setHasMoreData(!isFull);
+			return;
+		}
 	}
 
 	void showDialog(final User user) {

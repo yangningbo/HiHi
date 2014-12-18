@@ -347,22 +347,6 @@ public class BaseActivity extends FragmentActivity {
 		builder.create().show();
 	}
 
-//	public AlertDialog showDialog(String title, View view, DialogInterface.OnClickListener mOkOnClickListener) {
-//		AlertDialog.Builder builder = new Builder(this);
-//		builder.setTitle(title);
-//		builder.setView(view);
-//		builder.setPositiveButton("确认", mOkOnClickListener);
-//		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				dialog.dismiss();
-//			}
-//		});
-//		AlertDialog mAlertDialog = builder.create();
-//		mAlertDialog.show();
-//		return mAlertDialog;
-//	}
-
 	public AlertDialog showDialog(String title, String msg) {
 		AlertDialog.Builder builder = new Builder(this);
 		builder.setMessage(msg);

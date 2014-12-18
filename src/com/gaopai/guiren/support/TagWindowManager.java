@@ -119,7 +119,9 @@ public class TagWindowManager implements OnClickListener {
 					tagList.add(tagBean);
 					tagStringBuilder.append(str).append(",");
 				}
-				tagStringBuilder.substring(0, tagStringBuilder.length() - 1);
+				if (tagStringBuilder.length() > 0) {
+					tagStringBuilder.substring(0, tagStringBuilder.length() - 1);
+				}
 				tagCallback.onSave(tagStringBuilder.toString());
 				dialog.cancel();
 			}

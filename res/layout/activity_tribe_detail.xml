@@ -253,15 +253,6 @@
             android:layout_height="wrap_content" >
         </com.gaopai.guiren.view.FlowLayout>
 
-        <TextView
-            android:id="@+id/tv_more_tags"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/profile_renmai_topbar"
-            android:gravity="right|center_vertical"
-            android:paddingRight="10dp"
-            android:text="显示全部"
-            android:textColor="@color/profile_name" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -276,7 +267,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_tribe_detail_btn_yellow"
-                android:text="扩散"
+                android:text="@string/spread"
                 android:textColor="@color/white" />
 
             <Button
@@ -286,7 +277,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_tribe_detail_btn_green"
-                android:text="围观"
+                android:text="@string/onlooker"
                 android:textColor="@color/white" />
         </LinearLayout>
 

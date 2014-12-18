@@ -24,16 +24,36 @@
         <attr name="fadeDegree" format="float" />
         <attr name="selectorEnabled" format="boolean" />
         <attr name="selectorDrawable" format="reference" />
-        
     </declare-styleable>
-    
     <declare-styleable name="MyGridLayout">
-        <attr format="integer" name="columns"></attr>
-        <attr format="boolean" name="is_square"></attr>
+        <attr name="columns" format="integer"></attr>
+        <attr name="is_square" format="boolean"></attr>
     </declare-styleable>
-    
     <declare-styleable name="TasFlowLayout">
-        <attr format="integer" name="tag_columns"></attr>
+        <attr name="tag_columns" format="integer"></attr>
+    </declare-styleable>
+    <declare-styleable name="RoundedImageView">
+        <attr name="riv_corner_radius" format="dimension" />
+        <attr name="riv_border_width" format="dimension" />
+        <attr name="riv_border_color" format="color" />
+        <attr name="riv_mutate_background" format="boolean" />
+        <attr name="riv_oval" format="boolean" />
+        <attr name="android:scaleType" />
+        <attr name="riv_tile_mode">
+            <enum name="clamp" value="0" />
+            <enum name="repeat" value="1" />
+            <enum name="mirror" value="2" />
+        </attr>
+        <attr name="riv_tile_mode_x">
+            <enum name="clamp" value="0" />
+            <enum name="repeat" value="1" />
+            <enum name="mirror" value="2" />
+        </attr>
+        <attr name="riv_tile_mode_y">
+            <enum name="clamp" value="0" />
+            <enum name="repeat" value="1" />
+            <enum name="mirror" value="2" />
+        </attr>
     </declare-styleable>
 
 </resources>

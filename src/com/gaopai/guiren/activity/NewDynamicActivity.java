@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.TypeHolder;
@@ -139,10 +141,32 @@ public class NewDynamicActivity extends BaseActivity {
 				holder.tvContent.setVisibility(View.GONE);
 			} else {
 				holder.tvContent.setVisibility(View.VISIBLE);
-				holder.tvContent.setText(jsonContent.content);
+				if (!TextUtils.isEmpty(jsonContent.content)) {
+					holder.tvContent.setText(jsonContent.content);
+				} else {
+					bindText(jsonContent, holder.tvContent);
+				}
 			}
 
 			return convertView;
+		}
+
+		private void bindText(JsonContent jsonContent, TextView textView) {
+			switch (jsonContent.type) {
+			case DynamicHelper.TYPE_SPREAD_MSG:// chat msg
+				if (jsonContent.fileType == MessageType.VOICE) {
+					textView.setText(R.string.voice_scheme);
+				}
+				break;
+			case DynamicHelper.TYPE_SPREAD_LINK:
+				textView.setText(jsonContent.title);
+				break;
+			case DynamicHelper.TYPE_SPREAD_MEETING:
+				textView.setText(jsonContent.name);
+				break;
+			default:
+				break;
+			}
 		}
 
 		private boolean bindImage(JsonContent jsonContent, ImageView ivPic) {

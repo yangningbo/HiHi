@@ -949,21 +949,6 @@ public class DateUtil {
 		return info;
 	}
 
-	private static String second(long second, int index) {
-		String info = "";
-		if (index == 60) {
-			info = DamiApp.getInstance().getString(R.string.minutes);
-		} else if (index == (60 * 60)) {
-			info = DamiApp.getInstance().getString(R.string.hour);
-		} else if (index == (24 * 60 * 60)) {
-			info = DamiApp.getInstance().getString(R.string.day);
-		} else {
-			return DamiApp.getInstance().getString(R.string.long_ago);
-		}
-		int num = (int) (second / index);
-		return Math.abs(num) + info;
-	}
-
 	// private static String second(long second, int index, int num) {
 	// String info = "";
 	// if (index == 60) {
@@ -1079,7 +1064,8 @@ public class DateUtil {
 			Calendar calendar = Calendar.getInstance(Locale.CHINA);
 			calendar.setTimeInMillis(mtime);
 			String str = timeOnlie(calendar);
-			if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
+			if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))||
+					str.endsWith(DamiApp.getInstance().getString(R.string.second))
 					|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
 				timeStr = str + DamiApp.getInstance().getString(R.string.before);
 			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
@@ -1165,34 +1151,28 @@ public class DateUtil {
 		} else if (second < (30 * (24 * 60 * 60))) {
 			index = (24 * 60 * 60);
 		}
-		info = secondOnlie(second, index, 1);
+		info = second(second, index);
 
 		return info;
 	}
 
-	private static String secondOnlie(long second, int index, int num) {
+	private static String second(long second, int index) {
 		String info = "";
 		if (index == 1) {
 			info = DamiApp.getInstance().getString(R.string.second);
-		} else if (index == 60) {
+		}else if (index == 60) {
 			info = DamiApp.getInstance().getString(R.string.minutes);
 		} else if (index == (60 * 60)) {
 			info = DamiApp.getInstance().getString(R.string.hour);
-			;
 		} else if (index == (24 * 60 * 60)) {
 			info = DamiApp.getInstance().getString(R.string.day);
 		} else {
 			return DamiApp.getInstance().getString(R.string.long_ago);
 		}
-		if (second < 60) {
-			return second + info;
-		}
-		if (second < index * num) {
-			return num + info;
-		} else {
-			return secondOnlie(second, index, ++num);
-		}
+		int num = (int) (second / index);
+		return Math.abs(num) + info;
 	}
+	
 
 	public static String timeDifference(String currTime) {
 		Calendar calendar = Calendar.getInstance();

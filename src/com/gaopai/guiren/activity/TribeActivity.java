@@ -58,8 +58,7 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
-
+				getTribeList();
 			}
 		});
 
@@ -86,7 +85,8 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		filter.addAction(MainActivity.LOGIN_SUCCESS_ACTION);
 		registerReceiver(mReceiver, filter);
 
-		getTribeList();
+		mListView.doPullRefreshing(true, 0);
+
 	}
 
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {

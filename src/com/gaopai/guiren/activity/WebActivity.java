@@ -1,11 +1,19 @@
 package com.gaopai.guiren.activity;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
@@ -15,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.webkit.DownloadListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,8 +31,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.support.ShareManager;
+import com.gaopai.guiren.support.ShareManager.CallDyback;
+import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 /**
  * 内置浏览器界面
@@ -38,7 +53,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 	private ImageView mBackWardBtn, mForwardBtn, mRefreshBtn;
 	private LinearLayout mBottomLayout;
 	private int mType = 0;
-	
+
 	public final static String KEY_URL = "url";
 	public final static String KEY_TITLE = "title";
 
@@ -51,23 +66,36 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		initComponent();
 	}
 
+	private String mUrl;
+
+	public static Intent getIntent(Context context, String url, String title) {
+		Intent intent = new Intent(context, WebActivity.class);
+		intent.putExtra(KEY_URL, url);
+		intent.putExtra(KEY_TITLE, title);
+		return intent;
+	}
+
+	@SuppressLint("JavascriptInterface")
 	private void initComponent() {
 
 		mTitle = getIntent().getStringExtra(KEY_TITLE);
 		mReportUrl = getIntent().getStringExtra(KEY_URL);
 		mType = getIntent().getIntExtra("type", 0);
-		
+
 		if (TextUtils.isEmpty(mReportUrl)) {
 			Uri data = getIntent().getData();
-			mReportUrl = data.toString().substring(
-					data.toString().indexOf("//") + 2);
+			mReportUrl = data.toString().substring(data.toString().indexOf("//") + 2);
 			mTitle = mReportUrl;
 		}
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(mTitle);
+		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
+		view.setId(R.id.ab_share);
+		view.setOnClickListener(this);
 
 		mWebView = (WebView) findViewById(R.id.webview);
 		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
 
 		mBottomLayout = (LinearLayout) findViewById(R.id.bottomlayout);
 
@@ -135,6 +163,8 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 				if (mProgressDialog == null || !mProgressDialog.isShowing()) {
 					showProgressDialog(mContext.getString(R.string.add_more_loading));
 				}
+				Logger.d(this, "=========");
+				mUrl = url;
 				return super.shouldOverrideUrlLoading(view, url);
 			}
 
@@ -162,6 +192,9 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 					mForwardBtn.setEnabled(false);
 					mForwardBtn.setImageResource(R.drawable.forwardward_gray);
 				}
+				stringBuilder = new StringBuilder();
+				view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
+						+ "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
 				super.onPageFinished(view, url);
 			}
 
@@ -207,6 +240,16 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		showProgressDialog();
 	}
 
+	StringBuilder stringBuilder = new StringBuilder();
+
+	final class InJavaScriptLocalObj {
+		@JavascriptInterface  
+		public void showSource(String html) {
+			stringBuilder.append(html);
+			Log.d("HTML", html);
+		}
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -224,6 +267,34 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 				mWebView.goForward();
 			}
 			break;
+		case R.id.ab_share:
+			parseHtml(stringBuilder.toString());
+			ShareManager shareManager = new ShareManager(this);
+			shareManager.shareWebLink(mWebTitle, mWebImage, mWebContent, mUrl);
+			shareManager.setDyCallback(new CallDyback() {
+				@Override
+				public void spreadDy() {
+					// TODO Auto-generated method stub
+					if (TextUtils.isEmpty(mUrl)) {
+						return;
+					}
+					DamiInfo.spreadDynamic(6, null, mWebTitle, mWebImage, mUrl, mWebContent,
+							new SimpleResponseListener(mContext) {
+
+								@Override
+								public void onSuccess(Object o) {
+									// TODO Auto-generated method stub
+									BaseNetBean data = (BaseNetBean) o;
+									if (data.state != null && data.state.code == 0) {
+										showToast(R.string.spread_success);
+									} else {
+										otherCondition(data.state, WebActivity.this);
+									}
+								}
+							});
+				}
+			});
+			break;
 
 		case R.id.refresh:
 			mWebView.reload();
@@ -232,6 +303,23 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		default:
 			break;
 		}
+	}
+
+	private String mWebTitle;
+	private String mWebImage;
+	private String mWebContent;
+
+	private void parseHtml(String html) {
+		Document document = Jsoup.parse(html);
+		Element element = document.getElementsByClass("info-ifr").first();
+		if (element != null) {
+			mWebTitle = element.select("h1").html();
+			mWebImage = element.select("img").attr("src");
+			mWebContent = document.select("title").html();
+		}
+		Logger.d(this, "===============" + mWebTitle);
+		Logger.d(this, "===============" + mWebImage);
+		Logger.d(this, "===============" + mWebContent);
 	}
 
 }

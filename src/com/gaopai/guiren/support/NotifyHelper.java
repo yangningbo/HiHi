@@ -57,12 +57,11 @@ public class NotifyHelper {
 	private NotificationManager notificationManager;
 	private SharedPreferences po;
 	private SharedPreferences poChat;
-	
 
 	public NotifyHelper(Context context) {
 		mContext = context;
 		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-	
+
 	}
 
 	public boolean isNeedNotify() {
@@ -111,7 +110,7 @@ public class NotifyHelper {
 		SharedPreferences preferences = context.getSharedPreferences(NOTIFICATION_TIME_SHARED, 0);
 		return preferences.getLong(NOTIFICATION_TIME, 0);
 	}
-	
+
 	private void init() {
 		po = mContext.getSharedPreferences(SPConst.SP_SETTING, Context.MODE_MULTI_PROCESS);
 		poChat = mContext.getSharedPreferences(SPConst.SP_AVOID_DISTURB, Context.MODE_MULTI_PROCESS);
@@ -199,17 +198,18 @@ public class NotifyHelper {
 		}
 		ConversationHelper.saveToLastMsgList(notifiyVo, mContext, false);
 		mContext.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
-		
+
 		NotificationCompat.Builder builder = getNotificationBuilder();
 		builder.setContentTitle(mContext.getString(R.string.has_new_notification));
 		builder.setContentText(msg);
 		Intent intent = new Intent(mContext, NotifySystemActivity.class);
 		intent.putExtra("notify", true);
-		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		PendingIntent contentIntent = PendingIntent.getActivity(mContext, NOTIFYD_SYSTEM, intent,
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 121212, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(contentIntent);
-		notificationManager.notify(NOTIFYD_SYSTEM, builder.build());
+		notificationManager.notify(121212, builder.build());
 	}
 
 	private PendingIntent getChatIntent(MessageInfo messageInfo) {
@@ -229,7 +229,7 @@ public class NotifyHelper {
 			tribe.name = messageInfo.title;
 			intent.putExtra(ChatTribeActivity.KEY_TRIBE, tribe);
 		}
-		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra("type", messageInfo.type);
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, messageInfo.to.hashCode(), intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
@@ -245,17 +245,18 @@ public class NotifyHelper {
 
 		int notifyDefault = 0;
 		notifyDefault |= Notification.DEFAULT_LIGHTS;
-		Logger.d(this, "isVibrate=" + isVibrate());
-		if (isVibrate()) {
-			if (System.currentTimeMillis() - NotifyHelper.getNotificationTime(mContext) > NotifyHelper.NOTIFICATION_INTERVAL) {
+		if (System.currentTimeMillis() - NotifyHelper.getNotificationTime(mContext) > NotifyHelper.NOTIFICATION_INTERVAL) {
+			Logger.d(this, "isVibrate=" + isVibrate());
+			if (isVibrate()) {
 				NotifyHelper.saveNotificationTime(mContext, System.currentTimeMillis());
 				notifyDefault |= Notification.DEFAULT_VIBRATE;
 			}
+			Logger.d(this, "isPlayRingtone=" + isPlayRingtone());
+			if (isPlayRingtone()) {
+				notifyDefault |= Notification.DEFAULT_SOUND;
+			}
 		}
-		Logger.d(this, "isPlayRingtone=" + isPlayRingtone());
-		if (isPlayRingtone()) {
-			notifyDefault |= Notification.DEFAULT_SOUND;
-		}
+	
 		builder.setAutoCancel(true);
 		builder.setDefaults(notifyDefault);
 		return builder;
@@ -277,7 +278,5 @@ public class NotifyHelper {
 		}
 		return false;
 	}
-	
-	
 
 }

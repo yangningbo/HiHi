@@ -455,11 +455,11 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			ImageView ivVoice = (ImageView) chatAddChangeVoiceLayout.getChildAt(0);
 			if (!isChangeVoice) {
 				view.setText(getString(R.string.change_voice));
-				ivVoice.setImageResource(R.drawable.icon_chat_voice_weird);
+				ivVoice.setImageResource(R.drawable.icon_chat_grid_unnoraml_voice);
 				showToast(R.string.change_weired_voice_mode);
 				isChangeVoice = true;
 			} else {
-				ivVoice.setImageResource(R.drawable.icon_chat_voice_not_change);
+				ivVoice.setImageResource(R.drawable.icon_chat_grid_noraml_voice);
 				view.setText(getString(R.string.not_change_voice));
 				showToast(R.string.change_normal_voice_mode);
 				isChangeVoice = false;

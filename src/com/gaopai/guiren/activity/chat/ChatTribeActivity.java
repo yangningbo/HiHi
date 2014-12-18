@@ -16,10 +16,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
+import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
@@ -393,7 +395,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 		msg.type = mChatType;
 		buildConversation(msg);
-		Logger.d(this, "name=" + msg.displayname);
 		return msg;
 	}
 

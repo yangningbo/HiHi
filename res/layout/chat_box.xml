@@ -3,15 +3,14 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/message_toolbar_bg"
-    android:minHeight="54dp"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp" >
+    android:background="@drawable/message_toolbar_bg" >
 
     <RelativeLayout
         android:id="@+id/wrap_chatbox"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp" >
 
         <ImageView
             android:id="@+id/chat_box_btn_add"
@@ -109,14 +108,15 @@
     <com.gaopai.guiren.view.ChatGridLayout
         android:id="@+id/chat_grid_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/wrap_chatbox"
         android:visibility="gone" >
 
         <LinearLayout
             android:id="@+id/chat_add_camera"
+            style="@style/chat_box_grid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/chat_add_item_background"
             android:descendantFocusability="blocksDescendants"
             android:gravity="center"
@@ -124,21 +124,24 @@
 
             <ImageView
                 android:id="@+id/image1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:focusable="false"
-                android:src="@drawable/chat_add_camera" />
+                android:src="@drawable/icon_chat_grid_camera" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/camera" />
+                android:layout_marginTop="10dp"
+                android:text="@string/camera"
+                android:textColor="@color/general_text_gray" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/chat_add_gallary"
+            style="@style/chat_box_grid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/chat_add_item_background"
             android:descendantFocusability="blocksDescendants"
             android:gravity="center"
@@ -146,20 +149,23 @@
 
             <ImageView
                 android:id="@+id/image1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/chat_add_gallary" />
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_chat_grid_photo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/gallery" />
+                android:layout_marginTop="10dp"
+                android:text="@string/gallery"
+                android:textColor="@color/general_text_gray" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/chat_add_change_voice"
+            style="@style/chat_box_grid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/chat_add_item_background"
             android:descendantFocusability="blocksDescendants"
             android:gravity="center"
@@ -167,15 +173,21 @@
 
             <ImageView
                 android:id="@+id/iv_chat_box_voice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_chat_voice_weird" />
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_chat_grid_unnoraml_voice" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/change_voice" />
+                android:layout_marginTop="10dp"
+                android:text="@string/change_voice"
+                android:textColor="@color/general_text_gray" />
         </LinearLayout>
     </com.gaopai.guiren.view.ChatGridLayout>
+
+    <View
+        style="@style/general_thin_divider_in_white"
+        android:layout_below="@id/wrap_chatbox" />
 
 </RelativeLayout>

@@ -122,7 +122,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 		meetingType = TYPE_ONGOING_MEETING;
 
-		mListView.setPullRefreshEnabled(false); // 下拉刷新
+		mListView.setPullRefreshEnabled(true); // 下拉刷新
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
 		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
 		mListView.getRefreshableView().setDivider(null);

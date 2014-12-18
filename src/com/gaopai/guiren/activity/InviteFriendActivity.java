@@ -13,9 +13,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.utils.ViewUtil;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class InviteFriendActivity extends BaseActivity implements OnClickListener {
 
@@ -32,15 +35,9 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 		setAbContentView(R.layout.activity_invite_friend);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.invite_friend);
-		url = getIntent().getStringExtra("url");
 		initComponent();
+		invite();
 		sm = new ShareManager(this);
-	}
-
-	public static Intent getIntent(Context context, String url) {
-		Intent intent = new Intent(context, InviteFriendActivity.class);
-		intent.putExtra("url", url);
-		return intent;
 	}
 
 	private void initComponent() {
@@ -54,9 +51,10 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		String shareStr = getString(R.string.invite_str_2);
-		if (!TextUtils.isEmpty(url)) {
-			shareStr = url;
+		String shareStr = url;
+		if (TextUtils.isEmpty(url)) {
+			invite();
+			return;
 		}
 		switch (v.getId()) {
 		case R.id.tv_invite_contact:
@@ -64,18 +62,36 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 					REQUEST_CONTACT);
 			break;
 		case R.id.tv_invite_qq:
-
-			sm.shareQQ(shareStr, getString(R.string.invite_link));
+			sm.shareQQ(shareStr, shareStr);
 			break;
 		case R.id.tv_invite_wechat:
-			sm.shareWechat(shareStr, getString(R.string.invite_link));
+			sm.shareWechat(shareStr, shareStr);
 			break;
 		case R.id.tv_invite_weibo:
-			sm.shareWeibo(shareStr, getString(R.string.invite_link));
+			sm.shareWeibo(shareStr, shareStr);
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private void invite() {
+		DamiInfo.getUserInvitation(new SimpleResponseListener(mContext, R.string.request_share_url) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				InviteUrlResult data = (InviteUrlResult) o;
+				if (data.state != null && data.state.code == 0) {
+					url = data.data;
+				} else {
+					otherCondition(data.state, InviteFriendActivity.this);
+				}
+			}
+		});
+	}
+	
+	public static class InviteUrlResult extends BaseNetBean {
+		public String data;
 	}
 
 	@Override

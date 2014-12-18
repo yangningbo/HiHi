@@ -334,11 +334,11 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	private void getImageFromCamera() {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-		TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
+//		 TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
 
 		if (FeatureFunction.newFolder(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY)) {
 			File out = new File(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY,
-					FeatureFunction.getPhotoFileName());
+					TEMP_FILE_NAME);
 			Uri uri = Uri.fromFile(out);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 			startActivityForResult(intent, REQUEST_GET_IMAGE_BY_CAMERA);
@@ -377,8 +377,13 @@ public abstract class ChatBaseActivity extends BaseActivity {
 					// Here if we give the uri, we need to read it
 					String path = Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY
 							+ TEMP_FILE_NAME;
+					Logger.d(this, "path=" + path);
 					String extension = path.substring(path.indexOf("."), path.length());
 					if (FeatureFunction.isPic(extension)) {
+
+						// if (!TextUtils.isEmpty(path)) {
+						// sendPicFile(MessageType.PICTURE, path);
+						// }
 						Intent intent = new Intent();
 						intent.putExtra(RotateImageActivity.KEY_IMAGE_PATH, path);
 						intent.setClass(ChatBaseActivity.this, RotateImageActivity.class);

@@ -83,6 +83,7 @@ public class Tribe implements Serializable {
 	public String user = "";//参会人员
 	@Expose
 	public String codeurl = "";
+	
 	@Expose
 	public String hosts = "";
 	@Expose
@@ -99,6 +100,8 @@ public class Tribe implements Serializable {
 	public boolean isTribeOrMeeting = true;
 	
 	public int  ispwd;
+	
+	public String tag;
 
 	public static class Member implements Serializable{
 		@Expose

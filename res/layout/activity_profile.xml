@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <LinearLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/profile_bottom_bar"
         android:orientation="horizontal" >
 
         <RelativeLayout
             android:id="@+id/layout_profile_bottom_follow"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@drawable/selector_btn_profile_bottom"
+            android:padding="5dp" >
 
             <ImageView
                 android:id="@+id/iv_profile_follow"
@@ -24,6 +26,7 @@
                 android:layout_above="@+id/tv_profile_bottom_follow"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="3dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/icon_profile_follow_normal" />
 
             <TextView
@@ -32,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="4dp"
                 android:textColor="@color/white" />
         </RelativeLayout>
 
@@ -40,14 +42,18 @@
             android:id="@+id/layout_profile_bottom_msg"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@drawable/selector_btn_profile_bottom"
+            android:gravity="center"
+            android:padding="5dp" >
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
+                android:layout_height="18dp"
                 android:layout_above="@+id/tv_profile_bottom_msg"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="3dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/icon_profile_msg_normal" />
 
             <TextView
@@ -56,7 +62,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="4dp"
                 android:text="@string/send_message"
                 android:textColor="@color/white" />
         </RelativeLayout>
@@ -65,7 +70,9 @@
             android:id="@+id/layout_profile_bottom_comment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@drawable/selector_btn_profile_bottom"
+            android:padding="5dp" >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -81,7 +88,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="4dp"
                 android:text="@string/comment"
                 android:textColor="@color/white" />
         </RelativeLayout>
@@ -90,7 +96,9 @@
             android:id="@+id/layout_profile_bottom_spread"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@drawable/selector_btn_profile_bottom"
+            android:padding="5dp" >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -106,7 +114,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="4dp"
                 android:text="@string/spread"
                 android:textColor="@color/white" />
         </RelativeLayout>
@@ -128,22 +135,34 @@
                 android:background="@color/white"
                 android:padding="10dp" >
 
-                <ImageView
-                    android:id="@+id/iv_header"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="@string/desc"
-                    android:src="@drawable/default_header" />
+                <com.gaopai.guiren.support.view.HeadView
+                    android:id="@+id/layout_header_mvp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
 
+                    <ImageView
+                        android:id="@+id/iv_header"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/default_header" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/iv_header"
+                        android:layout_alignRight="@id/iv_header"
+                        android:layout_marginBottom="-9dp"
+                        android:layout_marginRight="-8dp"
+                        android:src="@drawable/icon_mvp_head" />
+                </com.gaopai.guiren.support.view.HeadView>
 
                 <TextView
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/iv_header"
-                    android:layout_toRightOf="@id/iv_header"
-                    android:textColor="@color/general_text_black"/>
+                    android:layout_alignTop="@id/layout_header_mvp"
+                    android:layout_toRightOf="@id/layout_header_mvp"
+                    android:textColor="@color/general_text_black" />
 
                 <TextView
                     android:id="@+id/tv_user_info"
@@ -151,7 +170,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_user_name"
                     android:layout_marginTop="10dp"
-                    android:layout_toRightOf="@id/iv_header"
+                    android:layout_toRightOf="@id/layout_header_mvp"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/general_text_gray"

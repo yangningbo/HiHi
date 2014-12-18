@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:padding="@dimen/general_paading"
+    android:layout_height="wrap_content"
     android:background="@drawable/selector_btn_transparent_general"
-    android:layout_height="wrap_content" >
+    android:padding="@dimen/general_paading" >
 
     <ImageView
         android:id="@+id/iv_header"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginRight="10dp"
-        android:contentDescription="@string/desc"
-        android:src="@drawable/logo" />
+        android:contentDescription="@string/desc" />
 
     <TextView
         android:id="@+id/tv_message_count"
@@ -24,31 +23,8 @@
         android:background="@drawable/message_count_bg"
         android:gravity="center"
         android:textColor="@color/white"
-        android:visibility="gone"
-        android:textSize="11sp" />
-
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/iv_header"
-        android:layout_toRightOf="@id/iv_header"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="@color/one_word_prompt_color"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/tv_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_title"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@id/iv_header"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="@color/content_gray_color"
-        android:textSize="14sp" />
+        android:textSize="11sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_date"
@@ -60,20 +36,48 @@
         android:singleLine="true"
         android:textColor="@color/content_gray_color"
         android:textSize="14sp" />
+
     <TextView
-        android:id="@+id/tv_delete" 
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_header"
+        android:layout_toLeftOf="@id/tv_date"
+        android:layout_toRightOf="@id/iv_header"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/one_word_prompt_color"
+        android:textSize="16sp" />
+
+  
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
         android:layout_marginTop="5dp"
-        android:layout_below="@id/tv_date"
+        android:layout_marginRight="50dp"
+        android:layout_toRightOf="@id/iv_header"
+        android:ellipsize="end"
+        android:textColor="@color/content_gray_color"
+        android:textSize="14sp" />
+    
+      <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:textColor="@color/white"
+        android:layout_alignBottom="@id/tv_info"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
         android:background="@drawable/selector_tribe_detail_btn_green"
+        android:paddingBottom="2dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:textSize="13sp"
         android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:text="@string/delete"/>
+        android:text="@string/delete"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
+    
 
 </RelativeLayout>

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.R.string;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatMainActivity;
@@ -261,7 +262,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	};
 
 	private void displayTime(TextView textView, int position) {
-		long beforeTime = System.currentTimeMillis();
+		long beforeTime = 0;
 		MessageInfo messageInfo = (MessageInfo) getItem(position);
 		if (position != 0) {
 			MessageInfo messageInfoBefore = (MessageInfo) getItem(position - 1);
@@ -270,8 +271,13 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		if (messageInfo.time - beforeTime < 5 * 60 * 1000) {
 			textView.setVisibility(View.GONE);
 		} else {
-			textView.setVisibility(View.VISIBLE);
-			textView.setText(DateUtil.getCreateTime(messageInfo.time));
+			String time1 = DateUtil.getCreateTime(messageInfo.time);
+			if (!TextUtils.isEmpty(time1)) {
+				textView.setVisibility(View.VISIBLE);
+				textView.setText(time1);
+			} else {
+				textView.setVisibility(View.GONE);
+			}
 		}
 	}
 

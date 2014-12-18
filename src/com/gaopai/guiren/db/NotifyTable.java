@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.bean.NotifiyVo;
+import com.gaopai.guiren.utils.Logger;
 
 public class NotifyTable {
 
@@ -92,6 +93,7 @@ public class NotifyTable {
 				allPromotionInfoValues.put(COLUMN_TYPE, notify.type);
 				allPromotionInfoValues.put(COLUMN_CONTENT, notify.content);
 				allPromotionInfoValues.put(COLUMN_USERID, notify.user.uid);
+				allPromotionInfoValues.put(COLUMN_ROOMID, notify.room.id);
 				allPromotionInfoValues.put(COLUMN_TIME, notify.time);
 				allPromotionInfoValues.put(COLUMN_PROCESSED, notify.processed);
 				allPromotionInfoValues.put(COLUMN_LOGINID, DamiCommon.getUid(DamiApp.getInstance()));
@@ -117,7 +119,7 @@ public class NotifyTable {
 		allPromotionInfoValues.put(COLUMN_ID, notify.mID);
 		allPromotionInfoValues.put(COLUMN_TYPE, notify.type);
 		allPromotionInfoValues.put(COLUMN_CONTENT, notify.content);
-		
+
 		if (notify.user != null) {
 			allPromotionInfoValues.put(COLUMN_USERID, notify.user.uid);
 		}
@@ -128,7 +130,7 @@ public class NotifyTable {
 			allPromotionInfoValues.put(COLUMN_ROOMID, notify.room.id);
 		}
 		if (notify.roomuser != null) {
-			allPromotionInfoValues.put(COLUMN_ROOMID, notify.roomuser.id);
+			allPromotionInfoValues.put(COLUMN_IDENTITYID, notify.roomuser.id);
 		}
 		allPromotionInfoValues.put(COLUMN_CODE, notify.code);
 		allPromotionInfoValues.put(COLUMN_PHONE, notify.phone);
@@ -331,7 +333,8 @@ public class NotifyTable {
 
 					if (!TextUtils.isEmpty(notifiyVo.room.id)) {
 						NotifyRoomTable table = new NotifyRoomTable(mDBStore);
-//						notifiyVo.room = table.query(notifiyVo.mID, notifiyVo.room.id);
+						// notifiyVo.room = table.query(notifiyVo.mID,
+						// notifiyVo.room.id);
 					}
 
 					if (!TextUtils.isEmpty(notifiyVo.message.id)) {
@@ -390,7 +393,6 @@ public class NotifyTable {
 
 				do {
 					NotifiyVo notifiyVo = new NotifiyVo();
-					notifiyVo.intial();
 					notifiyVo.type = (cursor.getInt(indexType));
 					notifiyVo.content = (cursor.getString(indexContent));
 					notifiyVo.user.uid = (cursor.getString(indexUid));
@@ -403,24 +405,24 @@ public class NotifyTable {
 					notifiyVo.mReadState = cursor.getInt(indexReadState);
 					notifiyVo.code = cursor.getString(indexCode);
 					notifiyVo.phone = cursor.getString(indexPhone);
-//					if (!TextUtils.isEmpty(notifiyVo.user.uid)) {
-//						NotifyUserTable userTable = new NotifyUserTable(mDBStore);
-//						notifiyVo.user = (userTable.query(notifiyVo.mID, notifiyVo.user.uid));
-//					}
+					if (!TextUtils.isEmpty(notifiyVo.user.uid)) {
+						NotifyUserTable userTable = new NotifyUserTable(mDBStore);
+						notifiyVo.user = (userTable.query(notifiyVo.mID, notifiyVo.user.uid));
+					}
 
-//					if (!TextUtils.isEmpty(notifiyVo.room.id)) {
-//						NotifyRoomTable table = new NotifyRoomTable(mDBStore);
-//						notifiyVo.room = table.query(notifiyVo.mID, notifiyVo.room.id);
-//					}
+					if (!TextUtils.isEmpty(notifiyVo.room.id)) {
+						NotifyRoomTable table = new NotifyRoomTable(mDBStore);
+						notifiyVo.room = table.query(notifiyVo.mID, notifiyVo.room.id);
+					}
 
-//					if (!TextUtils.isEmpty(notifiyVo.message.id)) {
-//						NotifyMessageTable table = new NotifyMessageTable(mDBStore);
-//						notifiyVo.message = table.query(notifiyVo.mID, notifiyVo.message.id);
-//					}
-//					if (!TextUtils.isEmpty(notifiyVo.roomuser.id)) {
-//						IdentityTable table = new IdentityTable(mDBStore);
-//						notifiyVo.roomuser = table.query(notifiyVo.roomuser.id);
-//					}
+					if (!TextUtils.isEmpty(notifiyVo.message.id)) {
+						NotifyMessageTable table = new NotifyMessageTable(mDBStore);
+						notifiyVo.message = table.query(notifiyVo.mID, notifiyVo.message.id);
+					}
+					if (!TextUtils.isEmpty(notifiyVo.roomuser.id)) {
+						IdentityTable table = new IdentityTable(mDBStore);
+						notifiyVo.roomuser = table.query(notifiyVo.roomuser.id);
+					}
 
 					allInfo.add(notifiyVo);
 				} while (cursor.moveToNext());
