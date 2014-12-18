@@ -101,6 +101,7 @@ public class AddReasonActivity extends BaseActivity {
 			break;
 			
 		case TYPE_REFUSE_COMUNICATION:
+			user = (User) getIntent().getSerializableExtra(KEY_USER);
 			messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGEINFO);
 			title = getString(R.string.refuse_seeking_contacts);
 			hint = getString(R.string.refuse_seeking_contacts_reason);
@@ -210,7 +211,7 @@ public class AddReasonActivity extends BaseActivity {
 			DamiInfo.seekingContacts(messageInfo.from, messageInfo.id, etAddReason.getText().toString(), resultListener);
 			break;
 		case TYPE_REFUSE_COMUNICATION:
-			DamiInfo.refuseSeekingContacts(messageInfo.from, messageInfo.id, etAddReason.getText().toString(),
+			DamiInfo.refuseSeekingContacts(user.uid, messageInfo.id, etAddReason.getText().toString(),
 					resultListener);
 			break;
 

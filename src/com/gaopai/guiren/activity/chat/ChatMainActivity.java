@@ -185,13 +185,16 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	protected void loadMessage(String id, int chatType) {
 		Logger.d(this, "haslocaldata=" + mHasLocalData);
 		if (mHasLocalData) {
+			if (mAdapter.getMessageInfos().size() == 0) {
+				mHasLocalData = false;
+				return;
+			}
 			SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
 			MessageTable messageTable = new MessageTable(db);
 			List<MessageInfo> tempList = messageTable.query(id, mAdapter.getMessageInfos().get(0).auto_id, chatType);
 			if (tempList == null || tempList.size() < DamiCommon.LOAD_SIZE) {
 				mHasLocalData = false;
 			}
-			Logger.d(this, "haslocaldata=" + tempList.size());
 			if (tempList != null && tempList.size() != 0) {
 				mListView.getRefreshableView().setSelection(tempList.size());
 				mAdapter.addAll(tempList);
@@ -391,7 +394,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		});
 
 	}
-
+	
 	private void scrollToBottom() {
 		mListView.getRefreshableView().setSelection(mAdapter.getCount());
 	}
@@ -436,7 +439,19 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
 	}
 
-	private boolean isChangeVoice = true;
+	protected boolean isChangeVoice = true;
+
+	protected void setChangeVoiceView(boolean isChangeVoice) {
+		TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(1);
+		ImageView ivVoice = (ImageView) chatAddChangeVoiceLayout.getChildAt(0);
+		if (isChangeVoice) {
+			ivVoice.setImageResource(R.drawable.icon_chat_grid_noraml_voice);
+			view.setText(getString(R.string.not_change_voice));
+		} else {
+			view.setText(getString(R.string.change_voice));
+			ivVoice.setImageResource(R.drawable.icon_chat_grid_unnoraml_voice);
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -451,19 +466,13 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			boxManager.hideAddGrid();
 			break;
 		case R.id.chat_add_change_voice:
-			TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(1);
-			ImageView ivVoice = (ImageView) chatAddChangeVoiceLayout.getChildAt(0);
-			if (!isChangeVoice) {
-				view.setText(getString(R.string.change_voice));
-				ivVoice.setImageResource(R.drawable.icon_chat_grid_unnoraml_voice);
-				showToast(R.string.change_weired_voice_mode);
-				isChangeVoice = true;
-			} else {
-				ivVoice.setImageResource(R.drawable.icon_chat_grid_noraml_voice);
-				view.setText(getString(R.string.not_change_voice));
+			if (isChangeVoice) {
 				showToast(R.string.change_normal_voice_mode);
-				isChangeVoice = false;
+			} else {
+				showToast(R.string.change_weired_voice_mode);
 			}
+			isChangeVoice = !isChangeVoice;
+			setChangeVoiceView(isChangeVoice);
 			boxManager.hideAddGrid();
 			break;
 		case R.id.send_text_btn:
@@ -552,6 +561,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			}
 		}
 	};
+	
 
 	private RecordDialog recordDialog;
 

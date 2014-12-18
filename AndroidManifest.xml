@@ -260,6 +260,7 @@
         <activity
             android:name="com.gaopai.guiren.activity.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity

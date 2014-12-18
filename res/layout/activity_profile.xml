@@ -49,7 +49,7 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="18dp"
+                android:layout_height="22dp"
                 android:layout_above="@+id/tv_profile_bottom_msg"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="3dp"

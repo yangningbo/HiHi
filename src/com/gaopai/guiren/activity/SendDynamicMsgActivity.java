@@ -61,6 +61,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private List<TagBean> recTagList = new ArrayList<TagBean>();
 	private TextView tvUseRealName;
 	private int isHideName = 0;
+	private boolean isSending = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,9 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+//				if (isSending) {
+//					return;
+//				}
 				sendDynamic();
 			}
 		});
@@ -210,6 +214,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			showToast(R.string.input_can_not_be_empty);
 			return;
 		}
+		isSending = true;
 
 		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, isHideName, tags, new SimpleResponseListener(
 				mContext, R.string.send_now) {
@@ -224,6 +229,13 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				} else {
 					otherCondition(data.state, SendDynamicMsgActivity.this);
 				}
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				super.onFinish();
+				isSending = false;
 			}
 		});
 	}

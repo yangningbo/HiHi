@@ -428,6 +428,7 @@ public class NotifySystemActivity extends BaseActivity {
 						Intent intent = new Intent(mContext, AddReasonActivity.class);
 						intent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_REFUSE_COMUNICATION);
 						intent.putExtra(AddReasonActivity.KEY_MESSAGEINFO, mNotifyList.get(pos).message);
+						intent.putExtra(AddReasonActivity.KEY_USER, mNotifyList.get(pos).user);
 						startActivityForResult(intent, REFUSE_SEEKING_CONTACTS_REQUEST);
 					}
 					break;
@@ -479,7 +480,6 @@ public class NotifySystemActivity extends BaseActivity {
 
 		public MyListener(Context context) {
 			super(context);
-			// TODO Auto-generated constructor stub
 		}
 
 		public MyListener(Context context, String progressString) {

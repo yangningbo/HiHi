@@ -169,6 +169,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			buildRetweetMessageInfo(messageInfo);
 			addSaveSendMessage(messageInfo);
 		}
+		isChangeVoice = isAnony();
+		setChangeVoiceView(isChangeVoice);
 	}
 
 	public static Intent getIntent(Context context, Tribe tribe, int type) {
@@ -383,7 +385,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			msg.displayname = mLogin.realname;
 			msg.headImgUrl = mLogin.headsmall;
 		} else {
-			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0 || (!hasIdentity)) {
+			if ((!isAnony()) || (!hasIdentity)) {
 				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
 				msg.displayname = mLogin.realname;
 				msg.headImgUrl = mLogin.headsmall;
@@ -396,6 +398,10 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		msg.type = mChatType;
 		buildConversation(msg);
 		return msg;
+	}
+
+	private boolean isAnony() {
+		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
 	}
 
 	private void buildConversation(MessageInfo msg) {
@@ -514,6 +520,12 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			updateMessage(msg);// 先存入数据库, 在downVoiceSuccess修改播放信息
 			if (msg.parentid.equals("0")) {
 				addNewMessage(msg);
+			} else {
+				MessageInfo messageInfo = getTargetMessageInfoById(msg.parentid);
+				if (messageInfo != null) {
+					messageInfo.commentCount++;
+					mAdapter.notifyDataSetChanged();
+				}
 			}
 		}
 	}
@@ -634,6 +646,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 					break;
 				}
 			}
+		} else if (action.equals(ACTION_CHANGE_VOICE)) {
+			isChangeVoice = isAnony();
+			setChangeVoiceView(isChangeVoice);
 		}
 	}
 
@@ -679,6 +694,15 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				if (messageInfo.tag.equals(messageInfos.get(i).tag)) {
 					return messageInfos.get(i);
 				}
+			}
+		}
+		return null;
+	}
+
+	private MessageInfo getTargetMessageInfoById(String id) {
+		for (int i = 0; i < messageInfos.size(); i++) {
+			if (id.equals(messageInfos.get(i).id)) {
+				return messageInfos.get(i);
 			}
 		}
 		return null;
@@ -757,5 +781,4 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 		super.onClick(v);
 	}
-
 }

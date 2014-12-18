@@ -11,6 +11,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.AnimationDrawable;
@@ -54,20 +55,17 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.AddReasonActivity;
 import com.gaopai.guiren.activity.LocalPicActivity;
 import com.gaopai.guiren.activity.LocalPicPathActivity;
 import com.gaopai.guiren.activity.RotateImageActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.TribeActivity;
-import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
 import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.DBHelper;
@@ -76,17 +74,17 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
+import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.support.chat.ChatBoxManager;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
-import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
-import com.gaopai.guiren.utils.PreferenceOperateUtils;
-import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.ChatGridLayout;
 import com.gaopai.guiren.view.RecordDialog;
@@ -191,6 +189,25 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		initVoicePlayMode();
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 		// updateVoicePlayModeState(isModeInCall);
+		registerReceiver(getIntentFilter());
+	}
+
+	private IntentFilter getIntentFilter() {
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE);
+		return intentFilter;
+	}
+
+	@Override
+	protected void onReceive(Intent intent) {
+		super.onReceive(intent);
+		if (intent.getAction().equals(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE)) {
+			final MessageInfo msg = (MessageInfo) intent
+					.getSerializableExtra(NotifyChatMessage.EXTRAS_NOTIFY_CHAT_MESSAGE);
+			if (msg != null && msg.parentid.equals(messageInfo.id)) {
+				addNotifyMessage(msg);
+			}
+		}
 	}
 
 	protected void initComponent() {
@@ -237,12 +254,10 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
 			}
 		});
 
@@ -298,7 +313,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		speexPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
 			@Override
 			public void onSuccess(MessageInfo messageInfo) {
-				// TODO Auto-generated method stub
 				downVoiceSuccess(messageInfo);
 			}
 		});
@@ -664,7 +678,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			mContext.startActivity(intent);
 		}
 	};
-
 
 	private final static int MAX_SECOND = 10;
 	private final static int MIN_SECOND = 2;
@@ -1277,29 +1290,32 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	/**
-	 * 发送并将消息加到消息列表中
-	 * 
-	 * @param msg
-	 */
+	// do not save comment to database
 	protected void addSaveSendMessage(MessageInfo msg) {
 		msg.sendState = MessageState.STATE_SENDING;
+		addSaveMessageInfo(msg);
+		bindCommentCount();
+		sendMessage(msg);
+		sendNotify();
+	}
+	
+	//comment count has been updated in db before notify, so ignore it
+	protected void addNotifyMessage(MessageInfo msg) {
 		addMessageInfo(msg);
 		bindCommentCount();
-		sendNotify();
-		// insertMessage(msg);
-		sendMessage(msg);
 	}
 
 	protected void addMessageInfo(MessageInfo info) {
-		Log.d(TAG, "add message");
 		messageInfos.add(0, info);
 		messageInfo.commentCount++;
 		notifyDataSetChanged();
-		if (messageInfos != null && messageInfos.size() != 0) {
-			mListView.getRefreshableView().setSelection(messageInfos.size() - 1);
-		}
 	}
+	
+	protected void addSaveMessageInfo(MessageInfo info) {
+		addMessageInfo(info);
+		msgHelper.updateCommentCountToDb(messageInfo);
+	}
+	
 
 	protected void insertMessage(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();

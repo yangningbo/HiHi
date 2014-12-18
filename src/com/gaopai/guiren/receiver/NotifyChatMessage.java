@@ -19,6 +19,7 @@ import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.service.XmppManager;
 import com.gaopai.guiren.support.ConversationHelper;
+import com.gaopai.guiren.utils.Logger;
 
 /**
  * 
@@ -86,8 +87,8 @@ public class NotifyChatMessage implements NotifyMessage {
 			// MessageInfo info = chatBean.messageInfo;
 
 			Log.d(TAG, "save()");
-//			ConversationHelper.saveToLastMsgList(info, xmppManager.getSnsService());
-		
+			// ConversationHelper.saveToLastMsgList(info,
+			// xmppManager.getSnsService());
 
 			if (info.istranslate == 1) {
 				SQLiteDatabase dbDatabase = DBHelper.getInstance(xmppManager.getSnsService()).getWritableDatabase();

@@ -26,6 +26,7 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.bean.TagBean;
@@ -396,6 +397,12 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			int sp = spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribeID), 0);
 			changeSwitch(tvUseRealIdentity, sp == 1);
 			spoAnony.setInt(SPConst.getSingleSpId(mContext, mTribeID), 1 - sp);
+			if (sp == 0) {
+				showToast(R.string.switch_use_anony_name_mode);
+			} else {
+				showToast(R.string.switch_use_real_name_mode);
+			}
+			sendBroadcast(new Intent(ChatBaseActivity.ACTION_CHANGE_VOICE));
 			break;
 		case R.id.tv_deal_apply: {
 			Intent dealapplyIntent = new Intent(mContext, ApplyListActivity.class);

@@ -581,10 +581,10 @@
     <string name="new_friends_recommend">系统推荐好友</string>
     <string name="send_request_success">申请已发送!</string>
     <string name="add">添加</string>
-    <string name="change_voice">变音</string>
-    <string name="change_weired_voice_mode">已切换变音模式</string>
-    <string name="change_normal_voice_mode">已切换正常模式</string>
-    <string name="not_change_voice">不变音</string>
+    <string name="change_voice">变声</string>
+    <string name="change_weired_voice_mode">已切换变声模式</string>
+    <string name="change_normal_voice_mode">已切换原声模式</string>
+    <string name="not_change_voice">原声</string>
     <string name="create_failed">创建失败</string>
     <string name="create_success">创建成功</string>
     <string name="meeting_detail_title">会议详情</string>
@@ -599,8 +599,7 @@
     <string name="exit_meeting">退出会议</string>
     <string name="clear_local_msg">清除本地消息</string>
     <string name="avoid_disturb">消息免打扰</string>
-    <string name="user_real_name">使用实名</string>
-    <string name="user_anony_name">使用匿名</string>
+
     <string name="notify_meeting_start">会议开始提醒</string>
     <string name="apply_to_jiabin">申请成为嘉宾</string>
     <string name="apply_to_host">申请成为主持人</string>
@@ -830,6 +829,12 @@
     <string name="you_are_not_allowed_to_see_profile">对方已设置隐私保护</string>
     
     <string name="no_tags">暂无标签</string>
+    <string name="alarm_meeting_is_on_going">大人会议已开始，请速速就座！</string>
+    
+    <string name="user_real_name">使用实名</string>
+    <string name="user_anony_name">使用匿名</string>
+    <string name="switch_use_real_name_mode">已切换至实名模式</string>
+    <string name="switch_use_anony_name_mode">已切换至匿名</string>
     
     
 </resources>

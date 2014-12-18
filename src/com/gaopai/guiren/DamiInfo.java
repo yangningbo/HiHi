@@ -746,6 +746,7 @@ public class DamiInfo implements Serializable {
 					uhu.sendStartMessage();
 					rlt = Utility.openUrl(url, httpMethod, params, loginType);
 					uhu.sendSuccessMessage(JSONObject.parseObject(rlt, clazz));
+					uhu.sendFinishMessage();
 				} catch (DamiException e) {
 					e.printStackTrace();
 					uhu.sendTimeOutMessage();

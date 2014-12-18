@@ -1,7 +1,6 @@
 package com.gaopai.guiren.activity;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,15 +49,12 @@ import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
-import com.gaopai.guiren.utils.PreferenceOperateUtils;
-import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.slide.DragLayout;
 import com.gaopai.guiren.view.slide.DragLayout.DragListener;
 import com.gaopai.guiren.volley.IResponseListener;
 import com.gaopai.guiren.volley.MyVolley;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
 	private ViewPager mTabPager;
@@ -642,6 +639,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				dropDownView = (ViewGroup) mInflater.inflate(R.layout.popup_main_titlebar_window, null);
 				initAddMoreViews(dropDownView, mInflater);
 			}
+			if (dropDownView != null) {
+				ViewGroup parent = ((ViewGroup) dropDownView.getParent());
+				if (parent != null) {
+					parent.removeView(dropDownView);
+				}
+			}
 			mTitleBar.showWindow(v, dropDownView);
 			break;
 
@@ -684,6 +687,15 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		tvCreatTribe.setOnClickListener(this);
 		tvCreatTribe = viewGroup.findViewById(R.id.tv_creat_tribe);
 		tvCreatTribe.setOnClickListener(this);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			moveTaskToBack(false);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

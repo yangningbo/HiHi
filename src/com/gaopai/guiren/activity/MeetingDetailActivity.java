@@ -26,6 +26,7 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.bean.Tribe;
@@ -88,6 +89,9 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private PreferenceOperateUtils spo;
 	private PreferenceOperateUtils spoAnony;
 
+	private boolean isFromAlarm = false;// if alarm service start this activity,
+										// true show some toasts
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -98,6 +102,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 
 		mMeetingID = getIntent().getStringExtra(KEY_MEETING_ID);
+		isFromAlarm = getIntent().getBooleanExtra("isalarm", false);
 		mMeeting = (Tribe) getIntent().getSerializableExtra(KEY_MEETING);
 		if (mMeeting != null) {
 			isPreview = true;
@@ -126,10 +131,21 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		filter.addAction(ACTION_AGREE_ADD_MEETING);
 		filter.addAction(ACTION_MEETING_CANCEL);
 		registerReceiver(mReceiver, filter);
+
+		if (isFromAlarm) {
+			showToast(R.string.alarm_meeting_is_on_going);
+		}
 	}
 
 	public static Intent getIntent(Context context, String tid) {
 		Intent intent = new Intent(context, MeetingDetailActivity.class);
+		intent.putExtra(KEY_MEETING_ID, tid);
+		return intent;
+	}
+
+	public static Intent getAlarmIntent(Context context, String tid) {
+		Intent intent = new Intent(context, MeetingDetailActivity.class);
+		intent.putExtra("isalarm", true);
 		intent.putExtra(KEY_MEETING_ID, tid);
 		return intent;
 	}
@@ -219,7 +235,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				}
 			}
 		});
-
 	}
 
 	private void bindView() {
@@ -385,6 +400,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private void setAnonyState(View v) {
 		int level = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeetingID), 0);
 		spoAnony.setInt(SPConst.getTribeUserId(mContext, mMeetingID), 1 - level);
+		if (level == 0) {
+			showToast(R.string.switch_use_anony_name_mode);
+		} else {
+			showToast(R.string.switch_use_real_name_mode);
+		}
+		sendBroadcast(new Intent(ChatBaseActivity.ACTION_CHANGE_VOICE));
 		changeUserRealName(v);
 	}
 
@@ -436,7 +457,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Logger.d(this, "current=" + System.currentTimeMillis() + "   diff="
 				+ (System.currentTimeMillis() - mMeeting.start * 1000) / 1000);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10*1000, pi); // 设置闹钟，当前时间就唤醒
+		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10 * 1000, pi); // 设置闹钟，当前时间就唤醒
 		setAlarm(true);
 		showToast(R.string.set_alarm_success);
 	}
@@ -444,7 +465,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private void cancelMeetingAlarm() {
 		Intent intent = new Intent(MeetingDetailActivity.this, AlarmReceiver.class); // 创建Intent对象
 		intent.setAction(this.getPackageName() + ".meeting." + mMeetingID);
-		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 199823, intent, 0); // 创建PendingIntent
+		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 199823, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT); // 创建PendingIntent
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(pi);
 		showToast(R.string.cancel_alarm_success);

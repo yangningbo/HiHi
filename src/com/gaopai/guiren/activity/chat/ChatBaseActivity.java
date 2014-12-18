@@ -232,7 +232,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			msg.voiceUrl = filePath;
 			msg.voiceTime = (int) recordTime;
 			msg.content = "[" + mContext.getString(R.string.voice) + "]";
-			if (isChangeVoice) {
+			if (isChangeVoice ) {
 				msg.samplerate = DamiCommon.getRandomSampleRate();
 			} else {
 				msg.samplerate = 8000;
@@ -465,6 +465,8 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	public final static String UPDATE_COUNT_ACTION = "com.gaopai.guiren.intent.action.UPDATE_COUNT_ACTION";
 	public final static String ACTION_EXIT_TRIBE = "com.gaopai.guiren.intent.action.ACTION_EXIT_TRIBE";
 	public final static String ACTION_KICK_TRIBE = "com.gaopai.guiren.intent.action.ACTION_KICK_TRIBE";
+	
+	public final static String ACTION_CHANGE_VOICE = "com.gaopai.guiren.intent.action.ACTION_CHANGE_VOICE";
 
 	private IntentFilter addAciton() {
 		IntentFilter filter = new IntentFilter();
@@ -487,6 +489,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		filter.addAction(ACTION_RECORD_AUTH);
 		filter.addAction(ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
 		filter.addAction(ACTION_MESSAGE_DELETE);
+		filter.addAction(ACTION_CHANGE_VOICE);
 		return filter;
 	}
 
