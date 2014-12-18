@@ -89,7 +89,7 @@ public class ShareTribeFragment extends BaseShareFragment {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		DamiInfo.getTribeList(new SimpleResponseListener(getActivity()) {
+		DamiInfo.getTribeList(page, new SimpleResponseListener(getActivity()) {
 			@Override
 			public void onSuccess(Object o) {
 				final TribeList data = (TribeList) o;
@@ -98,6 +98,13 @@ public class ShareTribeFragment extends BaseShareFragment {
 						List<Tribe> tribeList = data.data;
 						mAdapter.addAll(tribeList);
 					}
+					if (data.pageInfo != null) {
+						isFull = (data.pageInfo.hasMore == 0);
+						if (!isFull) {
+							page++;
+						}
+					}
+					mListView.setHasMoreData(!isFull);
 				} else {
 					otherCondition(data.state, getActivity());
 				}
@@ -106,6 +113,7 @@ public class ShareTribeFragment extends BaseShareFragment {
 			@Override
 			public void onFinish() {
 				mListView.onPullComplete();
+				mListView.setHasMoreData(!isFull);
 			}
 
 		});

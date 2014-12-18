@@ -50,6 +50,7 @@ import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
+import com.tencent.a.b.i;
 
 //处理聊天界面的逻辑
 public abstract class ChatBaseActivity extends BaseActivity {
@@ -424,9 +425,13 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		isLight = false;
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if (pm.isScreenOn()) {
-			if (speexPlayerWrapper != null) {
-				speexPlayerWrapper.stop();
-			}
+			stopPlayVoice();
+		}
+	}
+	
+	private void stopPlayVoice() {
+		if (speexPlayerWrapper != null) {
+			speexPlayerWrapper.stop();
 		}
 	}
 
@@ -490,6 +495,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		filter.addAction(ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
 		filter.addAction(ACTION_MESSAGE_DELETE);
 		filter.addAction(ACTION_CHANGE_VOICE);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);   
 		return filter;
 	}
 
@@ -544,6 +550,8 @@ public abstract class ChatBaseActivity extends BaseActivity {
 
 		} else if (action.equals(ACTION_RECORD_AUTH)) {
 			Toast.makeText(mContext, mContext.getString(R.string.record_auth_control), Toast.LENGTH_LONG).show();
+		} else if(action.equals(Intent.ACTION_SCREEN_OFF)) {
+			stopPlayVoice();
 		}
 		onOtherChatBroadCastAction(intent);
 	}

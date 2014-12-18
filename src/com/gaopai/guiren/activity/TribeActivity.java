@@ -45,20 +45,20 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		view.setId(R.id.ab_add);
 		view.setOnClickListener(this);
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
-		mListView.setPullRefreshEnabled(false);
+		mListView.setPullRefreshEnabled(true);
 		mListView.setPullLoadEnabled(false);
-		mListView.setScrollLoadEnabled(false);
+		mListView.setScrollLoadEnabled(true);
 
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				getTribeList();
+				getTribeList(false);
 			}
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				getTribeList();
+				getTribeList(true);
 			}
 		});
 
@@ -70,11 +70,13 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Tribe tribe = (Tribe) mAdapter.getItem(position);
-//				if (tribe.ispwd == 1) {
-//					startActivity(TribeVierifyActivity.getIntent(mContext, tribe, 0));
-//				} else {
-					startActivity(ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE));
-//				}
+				// if (tribe.ispwd == 1) {
+				// startActivity(TribeVierifyActivity.getIntent(mContext, tribe,
+				// 0));
+				// } else {
+				startActivityForResult(ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE),
+						0);
+				// }
 			}
 		});
 
@@ -88,6 +90,11 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		mListView.doPullRefreshing(true, 0);
 
 	}
+	
+	
+	
+
+
 
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
@@ -135,12 +142,17 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 	private int page = 1;
 	private boolean isFull = false;
 
-	private void getTribeList() {
+	private void getTribeList(boolean isRefresh) {
+		if (isRefresh) {
+			page = 1;
+			mAdapter.clear();
+			isFull = false;
+		}
 		if (isFull) {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		DamiInfo.getTribeList(new SimpleResponseListener(mContext) {
+		DamiInfo.getTribeList(page, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				final TribeList data = (TribeList) o;
@@ -149,6 +161,13 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 						List<Tribe> tribeList = data.data;
 						mAdapter.addAll(tribeList);
 					}
+					if (data.pageInfo != null) {
+						isFull = (data.pageInfo.hasMore == 0);
+						if (!isFull) {
+							page++;
+						}
+					}
+					mListView.setHasMoreData(!isFull);
 				} else {
 					otherCondition(data.state, TribeActivity.this);
 				}
@@ -157,6 +176,7 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onFinish() {
 				mListView.onPullComplete();
+				mListView.setHasMoreData(!isFull);
 			}
 
 		});

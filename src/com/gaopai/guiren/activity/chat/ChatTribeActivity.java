@@ -773,12 +773,20 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			} else {
 				Intent intent = new Intent(this, TribeDetailActivity.class);
 				intent.putExtra(TribeDetailActivity.KEY_TRIBE_ID, mTribe.id);
-				startActivity(intent);
+				startActivityForResult(intent, 12);
 			}
 			break;
 
 		}
 
 		super.onClick(v);
+	}
+
+	@Override
+	protected void onActivityResult(int request, int result, Intent arg2) {
+		Logger.d(this, "=============" + result + "   " + request);
+		if (result == TribeDetailActivity.RESULT_CANCEL_TRIBE) {
+			ChatTribeActivity.this.finish();
+		}
 	}
 }

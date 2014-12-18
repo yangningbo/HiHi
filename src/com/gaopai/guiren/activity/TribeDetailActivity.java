@@ -362,6 +362,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_spread:
+			if (mTribe == null) {
+				return;
+			}
 			ShareManager shareManager = new ShareManager(this);
 			shareManager.shareTribeLink(getString(R.string.share_tribe_title), mTribe.content, DamiInfo.HOST
 					+ DamiInfo.SHARE_TRIBE + mTribeID);
@@ -498,6 +501,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		});
 	}
 
+	public final static int RESULT_CANCEL_TRIBE = 1211;
 	private void cancelTribe() {
 		DamiInfo.cancelTribe(mTribeID, new SimpleResponseListener(mContext, R.string.request_internet_now) {
 
@@ -508,6 +512,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.tribe_has_been_cancel);
 					deleteConverstion();
+					setResult(RESULT_CANCEL_TRIBE);
+					TribeDetailActivity.this.finish();
 				} else {
 					otherCondition(data.state, TribeDetailActivity.this);
 				}

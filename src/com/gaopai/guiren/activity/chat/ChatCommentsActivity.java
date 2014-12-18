@@ -190,11 +190,30 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 		// updateVoicePlayModeState(isModeInCall);
 		registerReceiver(getIntentFilter());
+		isChangeVoice = isAnony();
+		setChangeVoiceView(isChangeVoice);
+	}
+
+	private boolean isAnony() {
+		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
+	}
+
+	protected void setChangeVoiceView(boolean isChangeVoice) {
+		TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(1);
+		ImageView ivVoice = (ImageView) chatAddChangeVoiceLayout.getChildAt(0);
+		if (isChangeVoice) {
+			ivVoice.setImageResource(R.drawable.icon_chat_grid_noraml_voice);
+			view.setText(getString(R.string.not_change_voice));
+		} else {
+			view.setText(getString(R.string.change_voice));
+			ivVoice.setImageResource(R.drawable.icon_chat_grid_unnoraml_voice);
+		}
 	}
 
 	private IntentFilter getIntentFilter() {
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE);
+		intentFilter.addAction(ChatBaseActivity.ACTION_CHANGE_VOICE);
 		return intentFilter;
 	}
 
@@ -207,6 +226,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			if (msg != null && msg.parentid.equals(messageInfo.id)) {
 				addNotifyMessage(msg);
 			}
+		} else if (intent.getAction().equals(ChatBaseActivity.ACTION_CHANGE_VOICE)) {
+			isChangeVoice = isAnony();
+			setChangeVoiceView(isChangeVoice);
 		}
 	}
 
@@ -1075,14 +1097,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			boxManager.hideAddGrid();
 			break;
 		case R.id.chat_add_change_voice:
-			TextView view = (TextView) chatAddChangeVoiceLayout.getChildAt(1);
-			if (!isChangeVoice) {
-				view.setText(getString(R.string.change_voice));
-				isChangeVoice = true;
+			if (isChangeVoice) {
+				showToast(R.string.change_normal_voice_mode);
 			} else {
-				view.setText(getString(R.string.not_change_voice));
-				isChangeVoice = false;
+				showToast(R.string.change_weired_voice_mode);
 			}
+			isChangeVoice = !isChangeVoice;
+			setChangeVoiceView(isChangeVoice);
 			boxManager.hideAddGrid();
 			break;
 		case R.id.send_text_btn:
@@ -1298,8 +1319,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		sendMessage(msg);
 		sendNotify();
 	}
-	
-	//comment count has been updated in db before notify, so ignore it
+
+	// comment count has been updated in db before notify, so ignore it
 	protected void addNotifyMessage(MessageInfo msg) {
 		addMessageInfo(msg);
 		bindCommentCount();
@@ -1310,12 +1331,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		messageInfo.commentCount++;
 		notifyDataSetChanged();
 	}
-	
+
 	protected void addSaveMessageInfo(MessageInfo info) {
 		addMessageInfo(info);
 		msgHelper.updateCommentCountToDb(messageInfo);
 	}
-	
 
 	protected void insertMessage(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();

@@ -281,8 +281,9 @@ public class DamiInfo implements Serializable {
 	 * 
 	 * @param listener
 	 */
-	public static void getTribeList(IResponseListener listener) {
+	public static void getTribeList(int page, IResponseListener listener) {
 		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("page", String.valueOf(page));
 		request(Method.GET, TribeList.class, params, TribeList.TRIBE_LIST, listener, LOGIN_TYPE_NEED_LOGIN);
 	}
 

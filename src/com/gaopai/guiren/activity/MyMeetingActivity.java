@@ -105,6 +105,7 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener{
 			@Override
 			public void onFinish() {
 				mListView.onPullComplete();
+				mListView.setHasMoreData(!isFull);
 			}
 		});
 	}
