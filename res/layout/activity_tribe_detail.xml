@@ -24,7 +24,7 @@
             android:id="@+id/ml_tribe_users"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@drawable/selector_btn_general"
             android:padding="10dp"
             custom:is_square="true"
             custom:columns="4" >

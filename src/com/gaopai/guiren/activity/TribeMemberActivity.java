@@ -40,16 +40,16 @@ public class TribeMemberActivity extends BaseActivity {
 
 	private String mTribeID = "";
 	public static final String KEY_TRIBE_ID = "tribe_id";
-	
+
 	public static final int TYPE_MEETING_HOST = 1;
 	public static final int TYPE_MEETING_GUEST = 2;
 	public static final int TYPE_MEETING_USER = 3;
-	
+
 	public static final int TYPE_TRIBE_USER = 0;
-	
+
 	private int type;
 	public final static String KEY_TYPE = "type";
-	
+
 	private SimpleResponseListener listener;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class TribeMemberActivity extends BaseActivity {
 		initTitleBar();
 		setAbContentView(R.layout.general_pulltorefresh_listview);
 		type = getIntent().getIntExtra(KEY_TYPE, 0);
-		
+
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTribeID = getIntent().getStringExtra(KEY_TRIBE_ID);
 		switch (type) {
@@ -86,13 +86,12 @@ public class TribeMemberActivity extends BaseActivity {
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-//				getTribeList();
+				 getTribeList();
 			}
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
-
+				 getTribeList();
 			}
 		});
 
@@ -109,7 +108,7 @@ public class TribeMemberActivity extends BaseActivity {
 			}
 		});
 		listener = new SimpleResponseListener(mContext) {
-			
+
 			@Override
 			public void onSuccess(Object o) {
 				final UserList data = (UserList) o;
@@ -127,7 +126,13 @@ public class TribeMemberActivity extends BaseActivity {
 				mListView.onPullComplete();
 			}
 		};
-		getTribeList();
+		mListView.doPullRefreshing(true, 0);
+	}
+
+	public static Intent getIntent(Context context, String tid) {
+		Intent intent = new Intent(context, TribeMemberActivity.class);
+		intent.putExtra(TribeMemberActivity.KEY_TRIBE_ID, tid);
+		return intent;
 	}
 
 	private int page = 1;
@@ -138,7 +143,7 @@ public class TribeMemberActivity extends BaseActivity {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		
+
 		switch (type) {
 		case TYPE_TRIBE_USER:
 			DamiInfo.getTribeUserList(mTribeID, listener);
@@ -155,7 +160,7 @@ public class TribeMemberActivity extends BaseActivity {
 		default:
 			break;
 		}
-		
+
 	}
 
 	public class MyAdapter extends BaseAdapter {
@@ -190,6 +195,17 @@ public class TribeMemberActivity extends BaseActivity {
 		@Override
 		public long getItemId(int position) {
 			return position;
+		}
+
+		public void removeUser(String id) {
+			for (int i = 0; i < getCount(); i++) {
+				if (((User) getItem(i)).uid.equals(id)) {
+					list.remove(getItem(i));
+					notifyDataSetChanged();
+
+					return;
+				}
+			}
 		}
 
 		@Override
@@ -272,17 +288,28 @@ public class TribeMemberActivity extends BaseActivity {
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.operate_success);
+					isListChanged = true;
+					mAdapter.removeUser(user.uid);
 				} else {
 					otherCondition(data.state, TribeMemberActivity.this);
 				}
 			}
-			
+
 			@Override
 			public void onFinish() {
 				mListView.onPullComplete();
 			}
-
 		});
 	}
 
+	private boolean isListChanged = false;
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		if (isListChanged) {
+			setResult(RESULT_OK);
+		}
+		super.onBackPressed();
+	}
 }

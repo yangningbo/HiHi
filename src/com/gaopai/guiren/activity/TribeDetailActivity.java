@@ -42,6 +42,7 @@ import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.support.ShareManager.CallDyback;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -114,6 +115,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 		ivTribeLogo = (ImageView) findViewById(R.id.iv_tribe_logo);
 		mlUserLayout = (MyGridLayout) findViewById(R.id.ml_tribe_users);
+		mlUserLayout.setOnClickListener(this);
 
 		btnSpread = (Button) findViewById(R.id.btn_spread);
 		btnSpread.setOnClickListener(this);
@@ -257,7 +259,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	private void bindMemberView() {
 		List<Member> members = mTribe.member;
 		LayoutInflater inflater = LayoutInflater.from(mContext);
-
+		mlUserLayout.removeAllViews();
 		if (members != null && members.size() > 0) {
 			int size = members.size();
 			for (int i = 0; i < size; i++) {
@@ -272,10 +274,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 					gridView.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							Intent intent = new Intent(TribeDetailActivity.this, TribeMemberActivity.class);
-							intent.putExtra(TribeMemberActivity.KEY_TRIBE_ID, mTribeID);
-							startActivityForResult(intent, REQUEST_ALL_TRIBE_USERS);
+							startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID),
+									REQUEST_ALL_TRIBE_USERS);
 						}
 					});
 					mlUserLayout.addView(gridView);
@@ -283,7 +283,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				}
 
 				gridView.setOnClickListener(gridClickListener);
-				gridView.setOnLongClickListener(gridLongClickListener);
+//				gridView.setOnLongClickListener(gridLongClickListener);
 				Member member = members.get(i);
 				holder.tvUserName.setText(member.realname);
 				ImageLoaderUtil.displayImage(member.headsmall, holder.ivHeader);
@@ -437,6 +437,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		case R.id.tv_erweima:
 			startActivity(TwoDimensionActivity.getIntent(mContext, mTribe));
 			break;
+		case R.id.ml_tribe_users:
+			startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID), REQUEST_ALL_TRIBE_USERS);
+			break;
 		default:
 			break;
 		}
@@ -507,6 +510,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	public final static int RESULT_CANCEL_TRIBE = 1211;
+
 	private void cancelTribe() {
 		DamiInfo.cancelTribe(mTribeID, new SimpleResponseListener(mContext, R.string.request_internet_now) {
 
@@ -575,7 +579,6 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	protected void onActivityResult(int request, int result, Intent intent) {
-		// TODO Auto-generated method stub
 		if (result == RESULT_OK) {
 			if (request == REQUEST_ALL_TRIBE_USERS) {
 				getTribeDetail();

@@ -21,7 +21,7 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcome);
 		ImageView view = (ImageView) findViewById(R.id.iv_back);
-		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.scale);
+		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.welcome_scale);
 		view.startAnimation(welcomeAnimation);
 		showMainpage();
 	}

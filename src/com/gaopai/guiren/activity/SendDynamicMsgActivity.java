@@ -352,6 +352,10 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private List<String> picList = new ArrayList<String>();
 
 	private void addPicture(String file) {
+		if (picList.size() >= 9) {
+			showToast(R.string.nine_picture_at_most);
+			return;
+		}
 		picList.add(file);
 		picGrid.addView(getImageView(file), picGrid.getChildCount() - 1);
 	}
@@ -366,14 +370,16 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		imageView.setScaleType(ScaleType.FIT_XY);
 		int padding = MyUtils.dip2px(mContext, 5);
 		imageView.setPadding(padding, padding, padding, padding);
-		imageView.setOnLongClickListener(new OnLongClickListener() {
-
+		imageView.setOnClickListener(new OnClickListener() {
 			@Override
-			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
-				picGrid.removeView(v);
-				picList.remove(url);
-				return true;
+			public void onClick(final View v) {
+				showMutiDialog(null, new String[]{getString(R.string.delete)}, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						picGrid.removeView(v);
+						picList.remove(url);
+					}
+				});
 			}
 		});
 		return imageView;

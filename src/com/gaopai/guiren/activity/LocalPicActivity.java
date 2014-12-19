@@ -79,7 +79,7 @@ public class LocalPicActivity extends BaseActivity implements OnClickListener {
 	private void initView() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText("—°‘Ò’’∆¨");
-		View ivComplete = mTitleBar.addRightImageView(R.drawable.icon_report_selected);
+		View ivComplete = mTitleBar.addRightImageView(R.drawable.icon_titlebar_confirm);
 		ivComplete.setId(R.id.ab_complete);
 		ivComplete.setOnClickListener(this);
 
@@ -105,7 +105,6 @@ public class LocalPicActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return listPath.size();
 		}
 

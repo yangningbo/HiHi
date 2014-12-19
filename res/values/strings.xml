@@ -836,6 +836,7 @@
     <string name="user_anony_name">使用匿名</string>
     <string name="switch_use_real_name_mode">已切换至实名模式</string>
     <string name="switch_use_anony_name_mode">已切换至匿名</string>
+    <string name="nine_picture_at_most">最多可以添加9张</string>
     
     
 </resources>

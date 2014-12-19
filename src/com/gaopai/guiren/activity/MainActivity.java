@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		layoutWelcome = ViewUtil.findViewById(this, R.id.layout_welcome);
 		ImageView view = (ImageView) findViewById(R.id.iv_back);
 		view.setImageDrawable(getWelcomeRandomDrawable());
-		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.scale);
+		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.welcome_scale);
 		view.startAnimation(welcomeAnimation);
 		showMainpage();
 	}
