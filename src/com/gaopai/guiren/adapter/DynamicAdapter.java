@@ -234,4 +234,8 @@ public class DynamicAdapter extends BaseAdapter {
 			}
 		}
 	}
+	
+	public void stopPlayVoice() {
+		dynamicHelper.stopPlayVoice();
+	}
 }

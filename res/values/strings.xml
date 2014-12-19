@@ -814,7 +814,7 @@
     <string name="set_alarm_success">提醒已设置</string>
     <string name="cancel_alarm_success">提醒已取消</string>
     
-    <string name="welcom_info">贵人  让我们做的更好</string>
+    <string name="welcom_info">贵人让我们做的更好</string>
     
     <string name="confirm_delete">确定删除?</string>
     <string name="move_up_cancel_voice">手指上滑，取消发送</string>

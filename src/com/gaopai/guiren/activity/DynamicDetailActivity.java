@@ -75,6 +75,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			initComponent();
 		}
 		getDynamicDetail();
+		registerReceiver(Intent.ACTION_SCREEN_OFF);
 	}
 
 	private DynamicHelper.DyCallback callback = new DyCallback() {
@@ -330,5 +331,16 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 
+	}
+	
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		if (intent != null) {
+			String action = intent.getAction();
+			if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+				dynamicHelper.stopPlayVoice();
+			}
+		}
 	}
 }

@@ -155,6 +155,18 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
 		getUserInfo();
 		getRecTags();
+		registerReceiver(Intent.ACTION_SCREEN_OFF);
+	}
+
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		if (intent != null) {
+			String action = intent.getAction();
+			if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+				dynamicHelper.stopPlayVoice();
+			}
+		}
 	}
 
 	private DyCallback dynamicCallback = new DySoftCallback() {
@@ -738,6 +750,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private boolean isFollow() {
 		return (tUser.isfollow == 1 || tUser.isfollow == 3);
 	}
+
 	private boolean isBeenFollowed() {
 		return (tUser.isfollow == 2 || tUser.isfollow == 3);
 	}

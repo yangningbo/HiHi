@@ -1,5 +1,6 @@
 package com.gaopai.guiren.fragment;
 
+import u.aly.ac;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.content.BroadcastReceiver;
@@ -120,7 +121,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				}
 			}
 		});
-		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC);
+		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC, Intent.ACTION_SCREEN_OFF);
 	}
 
 	private boolean isInitialed = false;
@@ -290,6 +291,8 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				String id = intent.getStringExtra("id");
 				Logger.d(this, "get Intent " + id);
 				mAdapter.deleteItem(id);
+			} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+				mAdapter.stopPlayVoice();
 			}
 		}
 	}

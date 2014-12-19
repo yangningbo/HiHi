@@ -119,6 +119,12 @@ public class DynamicHelper {
 			// callback.notifyUpdateView();
 		}
 	}
+	
+	public void stopPlayVoice() {
+		if (mPlayerWrapper != null && mPlayerWrapper.isPlay()) {
+			mPlayerWrapper.stop();
+		}
+	}
 
 	private DyCallback callback;
 

@@ -63,7 +63,7 @@ public class MyFavoriteActivity extends BaseActivity {
 		setAbContentView(R.layout.general_pulltorefresh_listview);
 		
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText("我的搜藏");
+		mTitleBar.setTitleText("我的收藏");
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false); // 下拉刷新
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
@@ -101,6 +101,24 @@ public class MyFavoriteActivity extends BaseActivity {
 				return false;
 			}
 		});
+		registerReceiver(Intent.ACTION_SCREEN_OFF);
+	}
+	
+	public void stopPlayVoice() {
+		if (mPlayerWrapper != null && mPlayerWrapper.isPlay()) {
+			mPlayerWrapper.stop();
+		}
+	}
+	
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		if (intent != null) {
+			String action = intent.getAction();
+			if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+				stopPlayVoice();
+			}
+		}
 	}
 
 	class MyCancelListener extends SimpleResponseListener {
