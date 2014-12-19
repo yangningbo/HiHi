@@ -1,29 +1,20 @@
 package com.gaopai.guiren.activity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -33,12 +24,13 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.net.SendDynamicResult;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.net.MorePicture;
+import com.gaopai.guiren.support.CameralHelper;
+import com.gaopai.guiren.support.CameralHelper.GetImageCallback;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -62,6 +54,8 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private TextView tvUseRealName;
 	private int isHideName = 0;
 	private boolean isSending = false;
+	
+	private CameralHelper cameralHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +84,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			}
 		});
 		initViews();
+		cameralHelper = new CameralHelper(this);
 		getTags();
 	}
 
@@ -265,7 +260,9 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			break;
 		case R.id.btn_camera:
 			// showMoreWindow();
-			showChosePicDialog();
+			cameralHelper.setCallback(callback);
+			cameralHelper.showDefaultSelectDialog(null);
+			
 			break;
 		case R.id.tv_send_dy_realname:
 			isHideName = 1 - isHideName;
@@ -294,60 +291,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 	};
 
-	public void showChosePicDialog() {
-		String[] array = new String[2];
-		array[0] = getString(R.string.camera);
-		array[1] = getString(R.string.gallery);
-		AlertDialog dialog = new AlertDialog.Builder(mContext).setItems(array, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				if (which == 0) {
-					btnCameraAction();
-				} else {
-					btnPhotoAction();
-				}
-			}
-		}).create();
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.show();
-	}
-
-	protected void btnCameraAction() {
-		getImageFromCamera();
-	}
-
-	protected void btnPhotoAction() {
-		getImageFromGallery();
-	}
-
-	static final int REQUEST_GET_IMAGE_BY_CAMERA = 1002;
-	static final int REQUEST_ROTATE_IMAGE = 1003;
-	static final int REQUEST_GET_URI = 101;
-	public static final int REQUEST_GET_BITMAP = 124;
-	public static final int REQUEST_GET_BITMAP_LIST = 125;
-	private String TEMP_FILE_NAME = "header.jpg";
-
-	private void getImageFromCamera() {
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-		// TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
-
-		if (FeatureFunction.newFolder(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY)) {
-			File out = new File(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY,
-					TEMP_FILE_NAME);
-			Uri uri = Uri.fromFile(out);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-			startActivityForResult(intent, REQUEST_GET_IMAGE_BY_CAMERA);
-		}
-	}
-
-	private void getImageFromGallery() {
-		Intent intent = new Intent();
-		intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_MUTI);
-		intent.setClass(mContext, LocalPicPathActivity.class);
-		startActivityForResult(intent, REQUEST_GET_BITMAP_LIST);
-	}
 
 	private List<String> picList = new ArrayList<String>();
 
@@ -385,63 +328,25 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		return imageView;
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case REQUEST_GET_IMAGE_BY_CAMERA:
-			if (resultCode == RESULT_OK) {
-				if (data != null) {
-					Uri uri = data.getData();
-					if (!TextUtils.isEmpty(uri.getAuthority())) {
-						Cursor cursor = getContentResolver().query(uri, new String[] { MediaColumns.DATA }, null, null,
-								null);
-						if (null == cursor) {
-							return;
-						}
-						cursor.moveToFirst();
-						String path = cursor.getString(cursor.getColumnIndex(MediaColumns.DATA));
-						String extension = path.substring(path.lastIndexOf("."), path.length());
-						if (FeatureFunction.isPic(extension)) {
-							// sendPicFile(MessageType.PICTURE, path);
-						}
-					}
-					return;
-				} else {
-					// Here if we give the uri, we need to read it
-					String path = Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY
-							+ TEMP_FILE_NAME;
-					String extension = path.substring(path.indexOf("."), path.length());
-					if (FeatureFunction.isPic(extension)) {
-						Intent intent = new Intent();
-						intent.putExtra(RotateImageActivity.KEY_IMAGE_PATH, path);
-						intent.setClass(SendDynamicMsgActivity.this, RotateImageActivity.class);
-						startActivityForResult(intent, REQUEST_ROTATE_IMAGE);
-					}
-				}
-
-			}
-			break;
-		case REQUEST_ROTATE_IMAGE:
-			if (resultCode == RESULT_OK) {
-				String path = data.getStringExtra(RotateImageActivity.KEY_IMAGE_PATH);
+	private CameralHelper.GetImageCallback callback = new GetImageCallback() {
+		@Override
+		public void receivePicList(List<String> pathList) {
+			for (String path : pathList) {
 				if (!TextUtils.isEmpty(path)) {
-					// sendPicFile(MessageType.PICTURE, path);
 					addPicture(path);
 				}
 			}
-			break;
+		}
 
-		case REQUEST_GET_BITMAP_LIST:
-			if (resultCode == RESULT_OK) {
-				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
-				for (String path : pathList) {
-					if (!TextUtils.isEmpty(path)) {
-						// sendPicFile(MessageType.PICTURE, path);
-						addPicture(path);
-					}
-				}
-			}
-			break;
+		@Override
+		public void receivePic(String path) {
+			addPicture(path);
+		}
+	};
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			cameralHelper.onActivityResult(requestCode, resultCode, data);
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

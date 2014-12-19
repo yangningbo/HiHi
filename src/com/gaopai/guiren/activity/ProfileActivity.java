@@ -43,6 +43,8 @@ import com.gaopai.guiren.bean.dynamic.ConnectionBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
+import com.gaopai.guiren.support.CameralHelper;
+import com.gaopai.guiren.support.CameralHelper.GetImageCallback;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.support.DynamicHelper.DySoftCallback;
@@ -130,6 +132,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private boolean isShowAllTags = false;
 
 	private DynamicHelper dynamicHelper;
+	private CameralHelper cameralHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +155,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
 		dynamicHelper.setCallback(dynamicCallback);
+		cameralHelper = new CameralHelper(this);
 		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
 		getUserInfo();
 		getRecTags();
@@ -217,6 +221,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
 		layoutHeader = ViewUtil.findViewById(this, R.id.layout_header_mvp);
+		layoutHeader.setOnClickListener(this);
 
 		ViewUtil.findViewById(this, R.id.iv_profile_erweima).setOnClickListener(this);
 
@@ -703,6 +708,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_profile_dy_more:
 			startActivity(MyDynamicActivity.getIntent(mContext, tuid));
 			break;
+		case R.id.layout_header_mvp:
+			changeHeadImg();
+			break;
 		default:
 			break;
 		}
@@ -790,7 +798,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		// TODO Auto-generated method stub
+
 		if (resultCode == RESULT_OK) {
+			cameralHelper.onActivityResult(requestCode, resultCode, intent);
 			if (requestCode == REQUEST_CHANGE_PROFILE) {
 				tUser = DamiCommon.getLoginResult(this);
 				tvEmail.setText(tUser.email);
@@ -859,12 +869,27 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				followUser();
 			}
 		});
 	}
-	
-	
 
+	private void changeHeadImg() {
+		cameralHelper.setCallback(callback);
+		cameralHelper.showDefaultSelectDialog(getString(R.string.set_header));
+	}
+
+	private CameralHelper.GetImageCallback callback = new GetImageCallback() {
+		@Override
+		public void receivePicList(List<String> pathList) {
+			if (pathList != null && pathList.size() > 0) {
+				showToast(pathList.get(0));
+			}
+		}
+
+		@Override
+		public void receivePic(String path) {
+			showToast(path);
+		}
+	};
 }
