@@ -61,7 +61,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/chat_talk_msg_info_msg_voice"
-                android:text="1212"
                 android:textColor="@color/content_gray_color"
                 android:textSize="12sp"
                 android:visibility="visible" />

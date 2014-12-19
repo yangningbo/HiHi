@@ -864,5 +864,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 	}
+	
+	
 
 }

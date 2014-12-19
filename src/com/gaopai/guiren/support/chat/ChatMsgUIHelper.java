@@ -10,6 +10,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -62,7 +63,7 @@ public class ChatMsgUIHelper {
 		mPlayerWrapper.setPlayCallback(playCallback);
 	}
 
-	public LinearLayout.LayoutParams getVoiceViewLengthParams(LinearLayout.LayoutParams lp, MessageInfo commentInfo) {
+	public ViewGroup.LayoutParams getVoiceViewLengthParams(ViewGroup.LayoutParams lp, MessageInfo commentInfo) {
 		final int MAX_SECOND = 20;
 		final int MIN_SECOND = 2;
 		int length = commentInfo.voiceTime;
@@ -75,7 +76,7 @@ public class ChatMsgUIHelper {
 			width = (int) max;
 		}
 		if (lp == null) {
-			lp = new LinearLayout.LayoutParams(width, LayoutParams.WRAP_CONTENT);
+			lp = new ViewGroup.LayoutParams(width, LayoutParams.WRAP_CONTENT);
 		} else {
 			lp.width = width;
 		}

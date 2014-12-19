@@ -59,7 +59,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	private int mCurrentMode = MODEL_VOICE;
 
 	private SpeexPlayerWrapper mPlayerWrapper;
-	private int palyedPosition = -1;
+//	private int palyedPosition = -1;
 
 	private OnClickListener resendClickListener;
 
@@ -224,7 +224,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						palyedPosition = position;
 						mPlayerWrapper.start(messageInfo);
 					}
 				});
@@ -235,7 +234,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				viewHolder.tvText.setText(messageInfo.content);
 			}
 			AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
-			if (mPlayerWrapper.isPlay() && position == palyedPosition) {
+			if (mPlayerWrapper.isPlay() && mPlayerWrapper.getMessageTag().equals(messageInfo.tag)) {
 				drawable.start();
 			} else {
 				drawable.stop();
@@ -443,16 +442,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		public void onStop(boolean stopAutomatic) {
 			// TODO Auto-generated method stub
 			if (stopAutomatic) {
-				int nextPosition = palyedPosition + 1;
-				if (nextPosition < getCount()) {
-					MessageInfo messageInfo = mData.get(nextPosition);
-					if (messageInfo.fileType == MessageType.VOICE
-							&& messageInfo.isReadVoice == MessageState.VOICE_NOT_READED) {
-						palyedPosition = nextPosition;
-						mPlayerWrapper.start(messageInfo);
-						return;
-					}
-				}
 				notifyDataSetChanged();// 通知播放动画
 			} else {
 				notifyDataSetChanged();
