@@ -16,9 +16,7 @@
     <TextView
         android:id="@+id/tv_user_name"
         style="@style/dynamic_item_title_name"
-        android:layout_toRightOf="@id/iv_header"
-        android:text="马虎疼" />
-
+        android:layout_toRightOf="@id/iv_header" />
 
     <RelativeLayout
         android:id="@+id/rl_spread_holder"
@@ -41,36 +39,46 @@
         <TextView
             android:id="@+id/tv_title1"
             style="@style/dynamic_item_title_name"
-            android:layout_toRightOf="@id/iv_header1"
-            android:text="马虎疼" />
+            android:layout_toRightOf="@id/iv_header1" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/ll_dynamic_msg_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_title1"
-            android:layout_below="@id/tv_title1" >
+            android:layout_below="@id/tv_title1"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+d/iv_header1" >
 
-            <RelativeLayout
-                android:id="@+id/chat_voice_layout"
+            <LinearLayout
+                android:id="@+id/layout_msg_text_voice_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/chat_comment_not_text_name"
-                android:background="@drawable/shape_chat_detail_voice_background"
-                android:orientation="horizontal"
-                android:padding="2dp" >
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/selector_chat_left"
+                android:clickable="true"
+                android:gravity="left"
+                android:minHeight="40dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/iv_chat_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:maxWidth="220dp"
+                    android:minWidth="30dp"
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/iv_chat_voice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:maxHeight="45dp"
-                    android:maxWidth="@dimen/voice_max_length_comment"
-                    android:minWidth="@dimen/voice_min_length_comment"
-                    android:scaleType="matrix"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/desc"
+                    android:maxWidth="60dp"
+                    android:minWidth="30dp"
+                    android:scaleType="fitStart"
                     android:src="@drawable/anim_btn_audio_play1"
                     android:visibility="visible" />
 
@@ -78,31 +86,21 @@
                     android:id="@+id/tv_chat_voice_time_length"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/iv_chat_voice"
+                    android:layout_gravity="center_vertical"
                     android:textColor="@color/content_gray_color"
                     android:textSize="12sp"
                     android:visibility="visible" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/iv_chat_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/desc"
-                android:maxHeight="150dp"
-                android:maxWidth="150dp"
-                android:scaleType="fitXY" />
-
-            <TextView
-                android:id="@+id/iv_chat_text"
-                style="@style/chat_talk_style_txt_msg_info_text"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:visibility="visible" />
-        </RelativeLayout>
+                android:scaleType="fitXY"
+                android:visibility="gone" />
+        </FrameLayout>
     </RelativeLayout>
 
     <ImageView

@@ -72,6 +72,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 				user.realname = notifiyVo.user.realname;
 				user.phone = notifiyVo.user.phone;
 				user.post = notifiyVo.user.post;
+				user.depa = notifiyVo.user.depa;
 				user.company = notifiyVo.user.company;
 				user.auth = 1;
 				

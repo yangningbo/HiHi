@@ -122,6 +122,16 @@ public class DynamicAdapter extends BaseAdapter {
 		public void onDeleteItem(String dataid) {
 		}
 
+		@Override
+		public void onVoiceStart() {
+			DynamicAdapter.this.notifyDataSetChanged();
+		}
+
+		@Override
+		public void onVoiceStop() {
+			DynamicAdapter.this.notifyDataSetChanged();
+		}
+
 	};
 
 	// put in list

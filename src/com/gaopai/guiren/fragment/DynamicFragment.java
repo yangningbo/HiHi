@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -295,5 +296,11 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				mAdapter.stopPlayVoice();
 			}
 		}
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		mAdapter.stopPlayVoice();
 	}
 }

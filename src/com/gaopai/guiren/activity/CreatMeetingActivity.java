@@ -21,8 +21,10 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -174,6 +176,20 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
 			}
 		}));
+		etContent.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.et_meeting_info) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
 	}
 
 	@Override

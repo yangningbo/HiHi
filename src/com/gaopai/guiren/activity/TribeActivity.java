@@ -17,10 +17,12 @@ import android.widget.ListView;
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.adapter.TribeAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
+import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -75,8 +77,8 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 				// TODO Auto-generated method stub
 				Tribe tribe = (Tribe) mAdapter.getItem(position);
 				if (tribe.isjoin == 1) {
-					startActivityForResult(
-							ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE), 11);
+					TribeActivity.this.startActivityForResult(
+							ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE), 1);
 					return;
 				}
 				if (tribe.ispwd == 1) {
@@ -90,7 +92,9 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		filter.addAction(ACTION_EXIT_TRIBE);
 		filter.addAction(ACTION_KICK_TRIBE);
 		filter.addAction(MainActivity.LOGIN_SUCCESS_ACTION);
-		registerReceiver(mReceiver, filter);
+		filter.addAction(ActionHolder.ACTION_CANCEL_TRIBE);
+		filter.addAction(ActionHolder.ACTION_QUIT_TRIBE);
+		registerReceiver(filter);
 
 		mListView.doPullRefreshing(true, 0);
 
@@ -101,49 +105,46 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		intent.putExtra("fid", fid);
 		return intent;
 	}
-
-	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (!TextUtils.isEmpty(action)) {
-				if (action.equals(ACTION_EXIT_TRIBE)) {
-					String id = intent.getStringExtra("id");
-					if (!TextUtils.isEmpty(id)) {
-						for (int i = 0; i < mAdapter.list.size(); i++) {
-							if (mAdapter.list.get(i).id.equals(id)) {
-								mAdapter.list.remove(i);
-								mAdapter.notifyDataSetChanged();
-								break;
-							}
-						}
-					}
-
-					// mContext.sendBroadcast(new
-					// Intent(MainActivity.ACTION_UPDATE_TRIBE_SESSION_COUNT));
-				} else if (action.equals(ACTION_KICK_TRIBE)) {
-					String id = intent.getStringExtra("id");
-					if (!TextUtils.isEmpty(id)) {
-						for (int i = 0; i < mAdapter.list.size(); i++) {
-							if (mAdapter.list.get(i).id.equals(id)) {
-								mAdapter.list.remove(i);
-								if (mAdapter != null) {
-									mAdapter.notifyDataSetChanged();
-								}
-								break;
-							}
-						}
-					}
-
-					// mContext.sendBroadcast(new
-					// Intent(MainActivity.ACTION_UPDATE_TRIBE_SESSION_COUNT));
-				} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
-					// mRightBtn.setVisibility(View.VISIBLE);
-					// mContainer.clickrefresh();
-				}
+	
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onReceive(intent);
+		String action = intent.getAction();
+		if (TextUtils.isEmpty(action)) {
+			return;
+		}
+		if (action.equals(ACTION_EXIT_TRIBE)) {
+			String id = intent.getStringExtra("id");
+			if (!TextUtils.isEmpty(id)) {
+				removeItem(id);
+			}
+		} else if (action.equals(ACTION_KICK_TRIBE)) {
+			String id = intent.getStringExtra("id");
+			if (!TextUtils.isEmpty(id)) {
+				removeItem(id);
+			}
+		} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
+		} else if (action.equals(ActionHolder.ACTION_CANCEL_TRIBE) || action.equals(ActionHolder.ACTION_QUIT_TRIBE)) {
+			String id = intent.getStringExtra("tid");
+			if (!TextUtils.isEmpty(id)) {
+				removeItem(id);
 			}
 		}
-	};
+	}
+
+
+	private void removeItem(String id) {
+		for (int i = 0; i < mAdapter.list.size(); i++) {
+			if (mAdapter.list.get(i).id.equals(id)) {
+				mAdapter.list.remove(i);
+				if (mAdapter != null) {
+					mAdapter.notifyDataSetChanged();
+				}
+				break;
+			}
+		}
+	}
 
 	private int page = 1;
 	private boolean isFull = false;
@@ -203,7 +204,7 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void onActivityResult(int request, int result, Intent arg2) {
-		Logger.d(this, result + "  ==");
+		Logger.d(this, result + "  ==" + request);
 		if (result == TribeDetailActivity.RESULT_CANCEL_TRIBE) {
 			mListView.doPullRefreshing(true, 0);
 		}

@@ -3,6 +3,7 @@ package com.gaopai.guiren.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,6 +128,16 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		public void onDeleteItemSuccess(TypeHolder typeHolder) {
 			mContext.sendBroadcast(DynamicHelper.getDeleteIntent(typeHolder.id));
 			DynamicDetailActivity.this.finish();
+		}
+
+		@Override
+		public void onVoiceStart() {
+			dynamicHelper.getView(headerView, typeBean);
+		}
+
+		@Override
+		public void onVoiceStop() {
+			dynamicHelper.getView(headerView, typeBean);
 		}
 	};
 
@@ -342,5 +353,11 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 				dynamicHelper.stopPlayVoice();
 			}
 		}
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		dynamicHelper.stopPlayVoice();
 	}
 }

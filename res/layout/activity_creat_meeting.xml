@@ -21,7 +21,7 @@
                 android:background="@color/white"
                 android:contentDescription="@string/desc"
                 android:scaleType="centerCrop" />
-            
+
             <Button
                 android:id="@+id/btn_upload_pic"
                 android:layout_width="60dp"
@@ -110,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@drawable/selector_white_round_corner"
+            android:background="@drawable/selector_btn_general"
             android:orientation="horizontal" >
 
             <TextView
@@ -134,7 +134,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp" >
 
             <EditText
@@ -145,7 +145,12 @@
                 android:background="@drawable/selector_edit_white_round_corner"
                 android:gravity="top|left"
                 android:hint="请输入会议详细介绍(500字)"
-                android:padding="10dp"
+                android:lines="10"
+                android:maxLength="500"
+                android:paddingLeft="@dimen/general_paading"
+                android:paddingRight="@dimen/general_paading"
+                android:paddingTop="@dimen/general_paading"
+                android:paddingBottom="30dp"
                 android:textSize="@dimen/general_font_4" />
 
             <TextView
@@ -165,7 +170,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_large_gap"
-            android:background="@drawable/selector_white_round_corner"
+            android:background="@drawable/selector_btn_general"
             android:drawableRight="@drawable/icon_switch_active"
             android:gravity="center_vertical"
             android:padding="8dp"

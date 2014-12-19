@@ -397,7 +397,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		});
 
 	}
-	
 
 	@Override
 	protected void onResume() {
@@ -409,7 +408,17 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	protected String getMessageMaxId() {
 		String maxID = "";
 		if (messageInfos != null && messageInfos.size() != 0) {
-			maxID = messageInfos.get(0).id;
+			int count = messageInfos.size();
+			for (int i = 0; i < count; i++) {
+				MessageInfo messageInfo = messageInfos.get(i);
+				if (messageInfo.fileType != MessageType.LOCAL_ANONY_FALSE
+						&& messageInfo.fileType != MessageType.LOCAL_ANONY_TRUE) {
+					maxID = messageInfo.id;
+					return maxID;
+				}
+
+			}
+
 		}
 		return maxID;
 	}
@@ -561,7 +570,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			}
 		}
 	};
-	
 
 	private RecordDialog recordDialog;
 

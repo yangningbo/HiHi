@@ -48,6 +48,7 @@ import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
+import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
 import com.gaopai.guiren.utils.Logger;
@@ -662,6 +663,26 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			isChangeVoice = isAnony();
 			setChangeVoiceView(isChangeVoice);
 			insertTipMessage(isChangeVoice);
+		} else if (action.equals(ActionHolder.ACTION_QUIT_MEETING)) {
+			String id = intent.getStringExtra("tid");
+			if (id.equals(mTribe.id)) {
+				this.finish();
+			}
+		} else if (action.equals(ActionHolder.ACTION_QUIT_TRIBE)) {
+			String id = intent.getStringExtra("tid");
+			if (id.equals(mTribe.id)) {
+				this.finish();
+			}
+		} else if (action.equals(ActionHolder.ACTION_CANCEL_MEETING)) {
+			String id = intent.getStringExtra("tid");
+			if (id.equals(mTribe.id)) {
+				this.finish();
+			}
+		} else if (action.equals(ActionHolder.ACTION_CANCEL_TRIBE)) {
+			String id = intent.getStringExtra("tid");
+			if (id.equals(mTribe.id)) {
+				this.finish();
+			}
 		}
 	}
 

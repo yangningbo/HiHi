@@ -43,8 +43,12 @@
                 android:background="@drawable/selector_edit_white_round_corner"
                 android:gravity="top|left"
                 android:hint="圈子说明，少于500字符"
-                android:lines="6"
-                android:padding="10dp"
+                android:lines="10"
+                android:maxLength="500"
+                android:paddingBottom="30dp"
+                android:paddingLeft="@dimen/general_paading"
+                android:paddingRight="@dimen/general_paading"
+                android:paddingTop="@dimen/general_paading"
                 android:textSize="@dimen/general_font_4" />
 
             <TextView
@@ -64,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_large_gap"
-            android:background="@drawable/selector_white_round_corner"
+            android:background="@drawable/selector_btn_general"
             android:orientation="horizontal" >
 
             <TextView
@@ -97,14 +101,14 @@
                 android:id="@+id/layout_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/white" >
             </com.gaopai.guiren.view.FlowLayout>
 
             <TextView
                 android:id="@+id/tv_edit_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_white_round_corner"
+                android:background="@drawable/selector_btn_general"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
                 android:padding="10dp"
@@ -117,7 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_large_gap"
-            android:background="@drawable/selector_white_round_corner"
+            android:background="@drawable/selector_btn_general"
             android:drawableRight="@drawable/icon_switch_active"
             android:gravity="center_vertical"
             android:padding="8dp"
@@ -135,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_small_gap"
-                android:background="@drawable/selector_edit_white_round_corner"
+                android:background="@drawable/selector_btn_general"
                 android:hint="@string/please_input_password"
                 android:inputType="textPassword"
                 android:padding="10dp"
@@ -146,7 +150,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_small_gap"
-                android:background="@drawable/selector_edit_white_round_corner"
+                android:background="@drawable/selector_btn_general"
                 android:hint="@string/please_input_password_again"
                 android:inputType="textPassword"
                 android:padding="10dp"

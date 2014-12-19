@@ -35,6 +35,7 @@ import com.gaopai.guiren.bean.Tribe.Member;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.fragment.NotificationFragment;
+import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.MessageHelper;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
@@ -521,7 +522,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.tribe_has_been_cancel);
 					deleteConverstion();
-					setResult(RESULT_CANCEL_TRIBE);
+					sendBroadcast(ActionHolder.getExitIntent(mTribeID, ActionHolder.ACTION_CANCEL_TRIBE));
 					TribeDetailActivity.this.finish();
 				} else {
 					otherCondition(data.state, TribeDetailActivity.this);
@@ -538,6 +539,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.operate_success);
+					sendBroadcast(ActionHolder.getExitIntent(mTribeID, ActionHolder.ACTION_QUIT_TRIBE));
 					deleteConverstion();
 					bindBottomButtons();
 				} else {

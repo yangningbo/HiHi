@@ -119,7 +119,7 @@ public class DynamicHelper {
 			// callback.notifyUpdateView();
 		}
 	}
-	
+
 	public void stopPlayVoice() {
 		if (mPlayerWrapper != null && mPlayerWrapper.isPlay()) {
 			mPlayerWrapper.stop();
@@ -147,6 +147,10 @@ public class DynamicHelper {
 		public void onDeleteItemSuccess(TypeHolder typeHolder);
 
 		public void onDeleteItem(String dataid);
+
+		public void onVoiceStart();
+
+		public void onVoiceStop();
 
 	}
 
@@ -186,19 +190,30 @@ public class DynamicHelper {
 			// TODO Auto-generated method stub
 
 		}
+
+		@Override
+		public void onVoiceStart() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onVoiceStop() {
+			// TODO Auto-generated method stub
+
+		}
 	}
 
 	private class PlayCallback extends MediaUIHeper.PlayCallback {
 
 		@Override
 		public void onStart() {
-			callback.notifyUpdateView();
+			callback.onVoiceStart();
 		}
 
 		@Override
 		public void onStop(boolean stopAutomatic) {
-			// TODO Auto-generated method stub
-			callback.notifyUpdateView();
+			callback.onVoiceStop();
 		}
 	}
 
@@ -475,7 +490,8 @@ public class DynamicHelper {
 
 		ImageView ivHeader1;
 		TextView tvUserName1;
-		RelativeLayout msgHolder;
+		View msgHolder;
+		View layoutTextVoice;
 		ImageView ivVoice;
 		ImageView ivPic;
 		TextView tvText;
@@ -489,7 +505,9 @@ public class DynamicHelper {
 			viewHolder.ivHeader1 = (ImageView) view.findViewById(R.id.iv_header1);
 			viewHolder.tvUserName1 = (TextView) view.findViewById(R.id.tv_title1);
 
-			viewHolder.msgHolder = (RelativeLayout) view.findViewById(R.id.ll_dynamic_msg_holder);
+			viewHolder.msgHolder = view.findViewById(R.id.ll_dynamic_msg_holder);
+			viewHolder.layoutTextVoice = view.findViewById(R.id.layout_msg_text_voice_holder);
+
 			viewHolder.ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
 			viewHolder.ivPic = (ImageView) view.findViewById(R.id.iv_chat_photo);
 			viewHolder.tvText = (TextView) view.findViewById(R.id.iv_chat_text);
@@ -617,7 +635,7 @@ public class DynamicHelper {
 		notHideViews(viewHolder, content.fileType);
 		viewHolder.ivVoice.setLayoutParams(ChatMsgHelper.getVoiceViewLengthParams(viewHolder.ivVoice.getLayoutParams(),
 				mContext, content.voiceTime));
-		viewHolder.msgHolder.setOnClickListener(null);
+		viewHolder.layoutTextVoice.setOnClickListener(null);
 		if (!TextUtils.isEmpty(content.headImgUrl)) {
 			ImageLoaderUtil.displayImage(content.headImgUrl, viewHolder.ivHeader1);
 		} else {
@@ -641,7 +659,7 @@ public class DynamicHelper {
 			break;
 		case MessageType.VOICE:
 			viewHolder.tvVoiceLength.setText(content.voiceTime + "''");
-			viewHolder.msgHolder.setOnClickListener(new OnClickListener() {
+			viewHolder.layoutTextVoice.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {

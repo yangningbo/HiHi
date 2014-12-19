@@ -46,6 +46,7 @@ import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.receiver.PushChatMessage;
 import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.service.type.XmppType;
+import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -251,7 +252,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	}
 
 	private void sendMessage(final MessageInfo msg) {
-		Log.d(TAG, "send voice change file name" + msg.voiceUrl);
+		Log.d(TAG, "send voice change file name" + msg.time);
 
 		DamiInfo.sendMessage(msg, new SimpleResponseListener(mContext) {
 			@Override
@@ -266,6 +267,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 							String voice = FeatureFunction.generator(messageInfo.voiceUrl);
 							FeatureFunction.reNameFile(new File(msg.voiceUrl), voice);
 						}
+						messageInfo.time = msg.time;
 						updateNewMessage(messageInfo);
 						modifyMessageState(messageInfo);
 						return;
@@ -477,6 +479,8 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	public final static String ACTION_KICK_TRIBE = "com.gaopai.guiren.intent.action.ACTION_KICK_TRIBE";
 	
 	public final static String ACTION_CHANGE_VOICE = "com.gaopai.guiren.intent.action.ACTION_CHANGE_VOICE";
+	
+	
 
 	private IntentFilter addAciton() {
 		IntentFilter filter = new IntentFilter();
@@ -501,6 +505,10 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		filter.addAction(ACTION_MESSAGE_DELETE);
 		filter.addAction(ACTION_CHANGE_VOICE);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);   
+		filter.addAction(ActionHolder.ACTION_CANCEL_TRIBE);
+		filter.addAction(ActionHolder.ACTION_QUIT_TRIBE);
+		filter.addAction(ActionHolder.ACTION_CANCEL_MEETING);
+		filter.addAction(ActionHolder.ACTION_QUIT_MEETING);   
 		return filter;
 	}
 

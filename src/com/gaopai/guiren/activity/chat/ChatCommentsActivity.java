@@ -640,12 +640,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					bindView();
 					speexPlayerWrapper.start(messageInfo);
 				}
 			});
 
 			AnimationDrawable drawable = (AnimationDrawable) ivVoice.getDrawable();
-			if (speexPlayerWrapper.isPlay()) {
+			if (speexPlayerWrapper.isPlay() && speexPlayerWrapper.getMessageTag().equals(messageInfo.tag)) {
 				drawable.start();
 			} else {
 				drawable.stop();
@@ -832,19 +833,18 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				} else {
 					if (mCurrentModel == VOICE_MODEL) {
 						notHideViews(viewHolder, MessageType.VOICE);
-						viewHolder.voiceImageView.setLayoutParams(getLayoutParamsOfVoiceView(commentInfo));
+						viewHolder.voiceImageView.setLayoutParams(getVoiceViewLengthParams(
+								viewHolder.voiceImageView.getLayoutParams(), commentInfo));
 						viewHolder.voiceTimeText.setText(commentInfo.voiceTime + "''");
 						viewHolder.voiceLayout.setTag(commentInfo);
 						viewHolder.voiceLayout.setOnClickListener(new OnClickListener() {
-
 							@Override
 							public void onClick(View v) {
-								// TODO Auto-generated method stub
 								speexPlayerWrapper.start(commentInfo);
 							}
 						});
 						AnimationDrawable drawable = (AnimationDrawable) viewHolder.voiceImageView.getDrawable();
-						if (speexPlayerWrapper.isPlay() && messageInfo.tag.equals(speexPlayerWrapper.getMessageTag())) {
+						if (speexPlayerWrapper.isPlay() && commentInfo.tag.equals(speexPlayerWrapper.getMessageTag())) {
 							drawable.start();
 						} else {
 							drawable.stop();
@@ -919,20 +919,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		}
 
-	}
-
-	private ViewGroup.LayoutParams getLayoutParamsOfVoiceView(MessageInfo commentInfo) {
-		int length = commentInfo.voiceTime;
-		float max = mContext.getResources().getDimension(R.dimen.voice_max_length_comment);
-		float min = mContext.getResources().getDimension(R.dimen.voice_min_length_comment);
-		int width = (int) min;
-		if (length >= MIN_SECOND && length <= MAX_SECOND) {
-			width += (length - MIN_SECOND) * (int) ((max - min) / (MAX_SECOND - MIN_SECOND));
-		} else if (length > MAX_SECOND) {
-			width = (int) max;
-		}
-		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(width, LayoutParams.WRAP_CONTENT);
-		return lp;
 	}
 
 	static class ViewHolder {

@@ -186,9 +186,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private DyCallback dynamicCallback = new DySoftCallback() {
+		@Override
+		public void onVoiceStart() {
+			// TODO Auto-generated method stub
+			bindDyView();
+		}
 
 		@Override
-		public void notifyUpdateView() {
+		public void onVoiceStop() {
 			// TODO Auto-generated method stub
 			bindDyView();
 		}
@@ -871,6 +876,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					tagList.addAll(data.data);
 					bindUserTags();
 					showToast(R.string.add_tags_success);
+				} else {
+					otherCondition(data.state, ProfileActivity.this);
 				}
 			}
 		});

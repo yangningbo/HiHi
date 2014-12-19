@@ -34,6 +34,7 @@ import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.SimpleStateBean;
 import com.gaopai.guiren.fragment.NotificationFragment;
+import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.MessageHelper;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
@@ -462,7 +463,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Logger.d(this, "current=" + System.currentTimeMillis() + "   diff="
 				+ (System.currentTimeMillis() - mMeeting.start * 1000) / 1000);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10 * 1000, pi); // 设置闹钟，当前时间就唤醒
+		alarmManager.set(AlarmManager.RTC_WAKEUP, mMeeting.start * 1000, pi); // 设置闹钟，当前时间就唤醒
 		setAlarm(true);
 		showToast(R.string.set_alarm_success);
 	}
@@ -549,8 +550,14 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
-				dealWithSimpleResult(this, o);
-				deleteConverstion();
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					getMeetingDetail();
+					sendBroadcast(ActionHolder.getExitIntent(mMeetingID, ActionHolder.ACTION_QUIT_MEETING));
+					deleteConverstion();
+				} else {
+					otherCondition(data.state, MeetingDetailActivity.this);
+				}
 			}
 		});
 	}
@@ -560,14 +567,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 	}
 
-	private void dealWithSimpleResult(SimpleResponseListener listener, Object o) {
-		BaseNetBean data = (BaseNetBean) o;
-		if (data.state != null && data.state.code == 0) {
-			getMeetingDetail();
-		} else {
-			listener.otherCondition(data.state, MeetingDetailActivity.this);
-		}
-	}
 
 	private void applyWithReason(int type) {
 		applyWithReason(type, REQUEST_NORMAL);
@@ -588,6 +587,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		case REQUEST_CANCEL_MEETING:
 			if (resultCode == RESULT_OK) {
 				MeetingDetailActivity.this.finish();
+				sendBroadcast(ActionHolder.getExitIntent(mMeetingID, ActionHolder.ACTION_CANCEL_MEETING));
 				deleteConverstion();
 			}
 			break;

@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -104,6 +106,20 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		tvWordNumLimit = (TextView) findViewById(R.id.tv_num_limit);
 		etDynamicMsg = (EditText) findViewById(R.id.et_dynamic_msg);
 		etDynamicMsg.addTextChangedListener(numLimitWatcher);
+		etDynamicMsg.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.et_dynamic_msg) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
 		etDynamicMsg.clearFocus();
 
 		btnPhoto = (ImageButton) findViewById(R.id.btn_camera);

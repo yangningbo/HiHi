@@ -10,8 +10,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,11 +21,9 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.Tribe;
-import com.gaopai.guiren.bean.net.AddMeetingResult;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.support.TagWindowManager;
@@ -33,7 +33,6 @@ import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
-import com.squareup.picasso.Picasso;
 
 public class CreatTribeActivity extends BaseActivity implements OnClickListener {
 
@@ -157,6 +156,20 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
 			}
 		}));
+		etInfo.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.et_tribe_info) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_UP:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
 	}
 
 	@Override
