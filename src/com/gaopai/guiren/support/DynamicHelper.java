@@ -1036,6 +1036,7 @@ public class DynamicHelper {
 		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
+		v.setEnabled(false);
 		v.findViewById(R.id.btn_delete_tag).setVisibility(View.GONE);
 		return v;
 	}

@@ -21,6 +21,7 @@ import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.adapter.TribeAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -70,13 +71,12 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Tribe tribe = (Tribe) mAdapter.getItem(position);
-				// if (tribe.ispwd == 1) {
-				// startActivity(TribeVierifyActivity.getIntent(mContext, tribe,
-				// 0));
-				// } else {
-				startActivityForResult(ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE),
-						0);
-				// }
+				if (tribe.ispwd == 1) {
+					startActivity(TribeVierifyActivity.getIntent(mContext, tribe, 0));
+				} else {
+					startActivityForResult(
+							ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE), 11);
+				}
 			}
 		});
 
@@ -90,11 +90,6 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		mListView.doPullRefreshing(true, 0);
 
 	}
-	
-	
-	
-
-
 
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
@@ -195,4 +190,11 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int request, int result, Intent arg2) {
+		Logger.d(this, result+"  ==");
+		if (result == TribeDetailActivity.RESULT_CANCEL_TRIBE) {
+			mListView.doPullRefreshing(true, 0);
+		}
+	}
 }

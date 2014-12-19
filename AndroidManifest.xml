@@ -185,10 +185,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.chat.ChatTribeActivity"
+            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.chat.ChatMessageActivity"
+            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

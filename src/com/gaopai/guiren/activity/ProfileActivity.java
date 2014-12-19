@@ -416,19 +416,19 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvPhone.setText(tUser.phone);
 		tvWeixin.setText(mUser.weixin);
 		tvWeibo.setText(mUser.weibo);
-		if (!(isSelf || tUser.isfollow == 1 || tUser.isfollow == 3)) {
+		if (!(isSelf || isBeenFollowed())) {
 			PrivacyConfig pc = tUser.privacyconfig;
 			if (pc.mail == 0) {
-				tvEmail.setText(R.string.profile_view_after_follow);
+				tvEmail.setText(R.string.you_are_not_allowed_to_see_profile);
 			}
 			if (pc.phone == 0) {
-				tvPhone.setText(R.string.profile_view_after_follow);
+				tvPhone.setText(R.string.you_are_not_allowed_to_see_profile);
 			}
 			if (pc.wechat == 0) {
-				tvWeixin.setText(R.string.profile_view_after_follow);
+				tvWeixin.setText(R.string.you_are_not_allowed_to_see_profile);
 			}
 			if (pc.weibo == 0) {
-				tvWeibo.setText(R.string.profile_view_after_follow);
+				tvWeibo.setText(R.string.you_are_not_allowed_to_see_profile);
 			}
 		}
 		if (!isSelf) {
@@ -606,7 +606,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_my_tribes_count:
 		case R.id.tv_my_followers_count:
 			PrivacyConfig pc = tUser.privacyconfig;
-			if (pc.renmai == 0) {
+			if (!isBeenFollowed()) {
 				showToast(R.string.you_are_not_allowed_to_see_profile);
 				return;
 			}
@@ -737,6 +737,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private boolean isFollow() {
 		return (tUser.isfollow == 1 || tUser.isfollow == 3);
+	}
+	private boolean isBeenFollowed() {
+		return (tUser.isfollow == 2 || tUser.isfollow == 3);
 	}
 
 	private void spreadUser() {

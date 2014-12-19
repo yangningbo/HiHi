@@ -154,6 +154,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
+				MessageInfo messageInfo = messageInfos.get(position);
+				if (messageInfo.fileType == MessageType.LOCAL_ANONY_FALSE
+						|| messageInfo.fileType == MessageType.LOCAL_ANONY_TRUE) {
+					return;
+				}
 				Intent intent = new Intent(ChatTribeActivity.this, ChatCommentsActivity.class);
 				intent.putExtra(ChatCommentsActivity.INTENT_CHATTYPE_KEY, mChatType);
 				intent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mTribe);
@@ -237,6 +242,12 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		Logger.d(this, "tribe id=" + mTribe.id);
 		if (isFirstTime) {
 			initMessage(mTribe.id, mChatType);
+			if (mAdapter.getCount() == 0) {
+				if (!isOnLooker) {
+					insertTipMessage(isAnony());
+				}
+				loadMessage(mTribe.id, mChatType);
+			}
 		} else {
 			loadMessage(mTribe.id, mChatType);
 		}
@@ -433,6 +444,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			if (identity == null || System.currentTimeMillis() - identity.updateTime > 24 * 60 * 60 * 1000) {
 				getIndetityByNet();
 			} else {
+				hasIdentity = true;
 				mIdentity = identity;
 			}
 		}
@@ -466,7 +478,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 	}
 
-	private boolean hasIdentity = true;
+	private boolean hasIdentity = false;
 
 	/**
 	 * @update
@@ -649,7 +661,23 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (action.equals(ACTION_CHANGE_VOICE)) {
 			isChangeVoice = isAnony();
 			setChangeVoiceView(isChangeVoice);
+			insertTipMessage(isChangeVoice);
 		}
+	}
+
+	private void insertTipMessage(boolean isAnony) {
+		MessageInfo messageInfo = buildMessage();
+		if (isAnony) {
+			messageInfo.fileType = MessageType.LOCAL_ANONY_TRUE;
+		} else {
+			messageInfo.fileType = MessageType.LOCAL_ANONY_FALSE;
+		}
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
+		MessageTable table = new MessageTable(db);
+		table.insert(messageInfo);
+		messageInfos.add(messageInfo);
+		mAdapter.notifyDataSetChanged();
+		scrollToBottom();
 	}
 
 	private void updateMessgaeItem(MessageInfo messageInfo2) {
@@ -784,8 +812,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	@Override
 	protected void onActivityResult(int request, int result, Intent arg2) {
-		Logger.d(this, "=============" + result + "   " + request);
+		Logger.d(this, result + "  ==");
 		if (result == TribeDetailActivity.RESULT_CANCEL_TRIBE) {
+			setResult(TribeDetailActivity.RESULT_CANCEL_TRIBE);
 			ChatTribeActivity.this.finish();
 		}
 	}

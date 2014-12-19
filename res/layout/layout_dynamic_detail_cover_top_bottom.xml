@@ -9,15 +9,16 @@
         android:id="@+id/view_cover_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16.2dp"
         android:layout_gravity="right"
-        android:src="@drawable/icon_top_angle"/>
+        android:layout_marginRight="16.2dp"
+        android:src="@drawable/icon_top_angle" />
 
     <TextView
         android:id="@+id/tv_spread"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_gray_blue_btn"
+        android:background="@color/general_background_gray"
+        android:clickable="false"
         android:drawableLeft="@drawable/icon_dynamic_spread"
         android:drawablePadding="5dp"
         android:padding="5dp" />
@@ -33,10 +34,11 @@
         android:id="@+id/tv_zan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_gray_blue_btn"
+        android:background="@color/general_background_gray"
+        android:clickable="false"
         android:drawableLeft="@drawable/icon_dynamic_favourite"
         android:drawablePadding="5dp"
-        android:padding="5dp"/>
+        android:padding="5dp" />
 
     <View
         android:id="@+id/line_zan_bottom"
@@ -44,4 +46,5 @@
         android:layout_height="1px"
         android:background="@color/dynamic_horizon_divider"
         android:visibility="visible" />
-</LinearLayout>
+
+</LinearLayout>

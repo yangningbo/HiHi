@@ -584,6 +584,8 @@
     <string name="change_voice">变声</string>
     <string name="change_weired_voice_mode">已切换变声模式</string>
     <string name="change_normal_voice_mode">已切换原声模式</string>
+    <string name="tip_change_weired_voice_mode">小秘书：您现在使用的是匿名身份</string>
+    <string name="tip_change_normal_voice_mode">小秘书：您现在使用的是实名身份</string>
     <string name="not_change_voice">原声</string>
     <string name="create_failed">创建失败</string>
     <string name="create_success">创建成功</string>
@@ -594,7 +596,6 @@
     <string name="spread_success">扩散成功</string>
     <string name="follow_success">关注成功</string>
     <string name="cancel_follow_success">取消关注成功</string>
-    <string name="profile_view_after_follow">添加好友后可查看</string>
     <string name="enter_meeting">进入会议</string>
     <string name="exit_meeting">退出会议</string>
     <string name="clear_local_msg">清除本地消息</string>

@@ -8,7 +8,7 @@
     <TextView
         android:id="@+id/tv_chat_talk_time"
         style="@style/chat_talk_style_txt_time"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:visibility="gone" />
 
     <include 

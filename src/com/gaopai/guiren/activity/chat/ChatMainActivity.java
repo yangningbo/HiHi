@@ -178,6 +178,9 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 				}
 			}
 			mAdapter.addAll(tempMessageInfos);
+			if (tempMessageInfos.size() < 20) {
+				mHasLocalData = false;
+			}
 			scrollToBottom();
 		}
 	}
@@ -395,9 +398,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 	}
 	
-	private void scrollToBottom() {
-		mListView.getRefreshableView().setSelection(mAdapter.getCount());
-	}
 
 	@Override
 	protected void onResume() {

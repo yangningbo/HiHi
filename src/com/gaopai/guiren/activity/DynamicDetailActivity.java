@@ -191,6 +191,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			}
 		});
 		headerView = dynamicHelper.getView(convertView, typeBean);
+		headerView.setClickable(true);
 		if (headerView != null) {
 			mListView.getRefreshableView().addHeaderView(headerView);
 		}

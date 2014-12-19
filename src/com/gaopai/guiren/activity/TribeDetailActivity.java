@@ -243,6 +243,11 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			} else {
 				layoutSetting.setVisibility(View.GONE);
 				btnOnLook.setText(getString(R.string.onlooker));
+				if (mTribe.type == 2) {
+					btnOnLook.setEnabled(false);
+				} else {
+					btnOnLook.setEnabled(true);
+				}
 				btnApplyJoin.setVisibility(View.VISIBLE);
 				btnExitTribe.setVisibility(View.GONE);
 			}

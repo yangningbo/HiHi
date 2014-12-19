@@ -156,6 +156,14 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 
 	private void bindView(final ViewHolder viewHolder, final MessageInfo messageInfo, final int position) {
 		final boolean isMyself = messageInfo.from.equals(mLogin.uid) ? true : false;
+		notHideViews(viewHolder, messageInfo.fileType);
+		if (messageInfo.fileType == MessageType.LOCAL_ANONY_FALSE) {
+			viewHolder.tvChatTime.setText(R.string.tip_change_normal_voice_mode);
+			return;
+		} else if (messageInfo.fileType == MessageType.LOCAL_ANONY_TRUE) {
+			viewHolder.tvChatTime.setText(R.string.tip_change_weired_voice_mode);
+			return;
+		}
 		if (isMyself) {
 			View resendView = ((ViewHolderRight) viewHolder).ivResend;
 			if (MessageState.STATE_SEND_FAILED == messageInfo.sendState) {
@@ -174,7 +182,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead);
 		}
 
-		notHideViews(viewHolder, messageInfo.fileType);
 		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
 				(android.widget.LinearLayout.LayoutParams) viewHolder.ivVoice.getLayoutParams(), messageInfo));
 		viewHolder.layoutTextVoiceHolder.setOnClickListener(null);
@@ -289,6 +296,12 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		viewHolder.tvVoiceLength.setVisibility(View.GONE);
 		viewHolder.ivVoice.setVisibility(View.GONE);
 		viewHolder.wiatProgressBar.setVisibility(View.GONE);
+		viewHolder.tvUserName.setVisibility(View.VISIBLE);
+		viewHolder.tvUserName.setVisibility(View.VISIBLE);
+		viewHolder.ivHead.setVisibility(View.VISIBLE);
+		viewHolder.msgInfoLayout.setVisibility(View.VISIBLE);
+		viewHolder.mCountLayout.setVisibility(View.VISIBLE);
+		
 		switch (which) {
 		case MessageType.TEXT:
 			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
@@ -301,6 +314,15 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
 			viewHolder.ivVoice.setVisibility(View.VISIBLE);
 			viewHolder.tvVoiceLength.setVisibility(View.VISIBLE);
+			break;
+		case MessageType.LOCAL_ANONY_FALSE:
+		case MessageType.LOCAL_ANONY_TRUE:
+			viewHolder.msgInfoLayout.setVisibility(View.GONE);
+			viewHolder.tvUserName.setVisibility(View.GONE);
+			viewHolder.tvUserName.setVisibility(View.GONE);
+			viewHolder.ivHead.setVisibility(View.GONE);
+			viewHolder.mCountLayout.setVisibility(View.GONE);
+			viewHolder.tvChatTime.setVisibility(View.VISIBLE);
 			break;
 		default:
 			break;

@@ -40,6 +40,7 @@
         android:id="@+id/fl_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="false"
         android:layout_alignLeft="@id/layout_dy_name_info_holder"
         android:layout_below="@id/tv_content" >
     </com.gaopai.guiren.view.FlowLayout>

@@ -275,6 +275,11 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		} else {
 			viewNotJoinIn.setVisibility(View.VISIBLE);
 			viewJoinIn.setVisibility(View.GONE);
+			if (mMeeting.type == 2) {
+				btnOnLook.setEnabled(false);
+			} else {
+				btnOnLook.setEnabled(true);
+			}
 		}
 	}
 

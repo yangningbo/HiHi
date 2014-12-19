@@ -143,6 +143,10 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		Log.d(TAG, "add message");
 		messageInfos.add(info);
 		mAdapter.notifyDataSetChanged();
+		scrollToBottom();
+	}
+	
+	protected void scrollToBottom() {
 		if (messageInfos != null && messageInfos.size() != 0) {
 			mListView.getRefreshableView().setSelection(messageInfos.size() - 1);
 		}

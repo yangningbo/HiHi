@@ -9,8 +9,7 @@
         android:id="@+id/tv_chat_talk_time"
         style="@style/chat_talk_style_txt_time"
         android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
-        android:text="2012-123"
+        android:layout_marginTop="5dp"
         android:visibility="visible" />
 
     <ImageView
