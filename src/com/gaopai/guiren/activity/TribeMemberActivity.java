@@ -3,6 +3,8 @@ package com.gaopai.guiren.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import u.aly.ba;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -59,7 +61,17 @@ public class TribeMemberActivity extends BaseActivity {
 		setAbContentView(R.layout.general_pulltorefresh_listview);
 		type = getIntent().getIntExtra(KEY_TYPE, 0);
 
-		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		View back = mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		back.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (isListChanged) {
+					setResult(RESULT_OK);
+				}
+				TribeMemberActivity.this.finish();
+			}
+		});
 		mTribeID = getIntent().getStringExtra(KEY_TRIBE_ID);
 		switch (type) {
 		case TYPE_MEETING_HOST:
@@ -86,12 +98,12 @@ public class TribeMemberActivity extends BaseActivity {
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				 getTribeList();
+				getTribeList();
 			}
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				 getTribeList();
+				getTribeList();
 			}
 		});
 

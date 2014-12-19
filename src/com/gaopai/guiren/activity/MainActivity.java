@@ -80,6 +80,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	public static final String ACTION_SHOW_TOAST = "com.guiren.intent.action.ACTION_SHOW_TOAST";
 	/** 注销 */
 	public static final String ACTION_LOGIN_OUT = "com.guiren.intent.action.ACTION_LOGIN_OUT";
+	public static final String ACTION_UPDATE_PROFILE = "com.guiren.intent.action.ACTION_UPDATE_PROFILE";
 	public final static String LOGIN_SUCCESS_ACTION = "com.guiren.intent.action.LOGIN_SUCCESS_ACTION";
 
 	private View layoutWelcome;
@@ -241,10 +242,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				goToContact(ContactActivity.TYPE_FANS);
 				break;
 			case R.id.slide_btn_my_tribe:
-				startActivity(TribeActivity.class);
+				startActivity(TribeActivity.getIntent(mContext, mUser.uid));
 				break;
 			case R.id.slide_btn_my_meeting:
-				startActivity(MyMeetingActivity.class);
+				startActivity(MyMeetingActivity.getIntent(mContext, mUser.uid));
 				break;
 			case R.id.slide_btn_my_favourite:
 				startActivity(MyFavoriteActivity.class);
@@ -290,6 +291,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		// filter.addAction(LOGIN_SUCCESS_ACTION);
 		// filter.addAction(SYSTEM_EXIT);
 		filter.addAction(ACTION_SHOW_TOAST);
+		filter.addAction(ACTION_UPDATE_PROFILE);
 		// filter.addAction(ACTION_HIDE_NOTIFY);
 		registerReceiver(mReceiver, filter);
 	}
@@ -335,6 +337,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			} else if (ACTION_SHOW_TOAST.equals(action)) {
 				String str = intent.getStringExtra("toast_msg");
 				showToast(str);
+			} else if (ACTION_UPDATE_PROFILE.equals(action)) {
+				bindUserView();
 			}
 		}
 	};

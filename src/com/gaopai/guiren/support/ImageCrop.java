@@ -16,6 +16,9 @@ public class ImageCrop {
 	public static final int REQUEST_CROP_IMG = 199;
 	public static final int MEETING_WIDTH = 640;
 	public static final int MEETING_HEIGHT = 240;
+	
+	public static final int HEADER_WIDTH = 300;
+	public static final int HEADER_HEIGHT = 300;
 	private Uri uri;
 
 	private Context mContext;

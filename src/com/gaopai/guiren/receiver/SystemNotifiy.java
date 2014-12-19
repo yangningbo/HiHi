@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.TribeActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
@@ -73,8 +74,9 @@ public class SystemNotifiy extends AbstractNotifiy {
 				user.post = notifiyVo.user.post;
 				user.company = notifiyVo.user.company;
 				user.auth = 1;
+				
 				DamiCommon.saveLoginResult(mContext, user);
-//				mContext.sendBroadcast(new Intent(ProfileTab.UPDATE_PROFILE_ACTION));
+				mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 				msg = mContext.getString(R.string.pass_real_verify);
 				break;
 

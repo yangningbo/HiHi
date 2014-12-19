@@ -129,17 +129,17 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		@Override
 		public void afterTextChanged(Editable s) {
 			// TODO Auto-generated method stub
-			int nSelStart = 0;
-			int nSelEnd = 0;
-			boolean nOverMaxLength = false;
-
-			nSelStart = etDynamicMsg.getSelectionStart();
-			nSelEnd = etDynamicMsg.getSelectionEnd();
-			nOverMaxLength = (s.length() > 500) ? true : false;
-			if (nOverMaxLength) {
-				s.delete(nSelStart - 1, nSelEnd);
-				etDynamicMsg.setTextKeepState(s);
-			}
+//			int nSelStart = 0;
+//			int nSelEnd = 0;
+//			boolean nOverMaxLength = false;
+//
+//			nSelStart = etDynamicMsg.getSelectionStart();
+//			nSelEnd = etDynamicMsg.getSelectionEnd();
+//			nOverMaxLength = (s.length() > 500) ? true : false;
+//			if (nOverMaxLength) {
+//				s.delete(nSelStart - 1, nSelEnd);
+//				etDynamicMsg.setTextKeepState(s);
+//			}
 			tvWordNumLimit.setText("还能输入" + (500 - s.length()) + "字");
 		}
 	};

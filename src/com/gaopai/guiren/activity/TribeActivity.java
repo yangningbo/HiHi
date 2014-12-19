@@ -35,9 +35,12 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 	public final static String ACTION_EXIT_TRIBE = "com.gaopai.guiren.intent.action.ACTION_EXIT_TRIBE";
 	public final static String ACTION_KICK_TRIBE = "com.gaopai.guiren.intent.action.ACTION_KICK_TRIBE";
 
+	private String fid;// the id of a user who own this tribe list
+
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		fid = getIntent().getStringExtra("fid");
 		initTitleBar();
 		setAbContentView(R.layout.general_pulltorefresh_listview);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
@@ -48,7 +51,7 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(true);
 		mListView.setPullLoadEnabled(false);
-		mListView.setScrollLoadEnabled(true);
+		mListView.setScrollLoadEnabled(false);
 
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
@@ -71,11 +74,13 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Tribe tribe = (Tribe) mAdapter.getItem(position);
-				if (tribe.ispwd == 1) {
-					startActivity(TribeVierifyActivity.getIntent(mContext, tribe, 0));
-				} else {
+				if (tribe.isjoin == 1) {
 					startActivityForResult(
 							ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE), 11);
+					return;
+				}
+				if (tribe.ispwd == 1) {
+					startActivity(TribeVierifyActivity.getIntent(mContext, tribe, 0));
 				}
 			}
 		});
@@ -89,6 +94,12 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 
 		mListView.doPullRefreshing(true, 0);
 
+	}
+
+	public static Intent getIntent(Context context, String fid) {
+		Intent intent = new Intent(context, TribeActivity.class);
+		intent.putExtra("fid", fid);
+		return intent;
 	}
 
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -147,7 +158,7 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		DamiInfo.getTribeList(page, new SimpleResponseListener(mContext) {
+		DamiInfo.getTribeList(fid, page, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				final TribeList data = (TribeList) o;
@@ -192,7 +203,7 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void onActivityResult(int request, int result, Intent arg2) {
-		Logger.d(this, result+"  ==");
+		Logger.d(this, result + "  ==");
 		if (result == TribeDetailActivity.RESULT_CANCEL_TRIBE) {
 			mListView.doPullRefreshing(true, 0);
 		}

@@ -89,7 +89,7 @@ public class ShareTribeFragment extends BaseShareFragment {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		DamiInfo.getTribeList(page, new SimpleResponseListener(getActivity()) {
+		DamiInfo.getTribeList(mLogin.uid, page, new SimpleResponseListener(getActivity()) {
 			@Override
 			public void onSuccess(Object o) {
 				final TribeList data = (TribeList) o;

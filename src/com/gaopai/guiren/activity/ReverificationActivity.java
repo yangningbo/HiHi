@@ -15,6 +15,7 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
+//认证界面
 public class ReverificationActivity extends BaseActivity {
 
 	private EditText etName;
@@ -52,8 +53,9 @@ public class ReverificationActivity extends BaseActivity {
 					showToast(R.string.input_can_not_be_empty);
 					return;
 				}
-				DamiInfo.reAuth(etPartment.getText().toString(), etName.getText().toString(), etCompany.getText().toString(), etJob
-						.getText().toString(), new SimpleResponseListener(mContext, R.string.request_internet_now) {
+				DamiInfo.reAuth(etPartment.getText().toString(), etName.getText().toString(), etCompany.getText()
+						.toString(), etJob.getText().toString(), new SimpleResponseListener(mContext,
+						R.string.request_internet_now) {
 					@Override
 					public void onSuccess(Object o) {
 						// TODO Auto-generated method stub
@@ -71,7 +73,7 @@ public class ReverificationActivity extends BaseActivity {
 
 		etName.setText(mUser.realname);
 		etCompany.setText(mUser.company);
-		// etPartment.setText(mUser.);
+		etPartment.setText(mUser.depa);
 		etJob.setText(mUser.post);
 	}
 }

@@ -412,6 +412,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
 				for (String path : pathList) {
 					if (!TextUtils.isEmpty(path)) {
+						Logger.d(this, path);
 						sendPicFile(MessageType.PICTURE, path);
 					}
 				}

@@ -15,8 +15,8 @@
             android:id="@+id/tv_send_dy_realname"
             style="@style/tribe_detail_item_title"
             android:layout_marginLeft="0dp"
-            android:drawableLeft="@drawable/icon_send_dy_real_name"
             android:background="@drawable/selector_btn_transparent_general"
+            android:drawableLeft="@drawable/icon_send_dy_real_name"
             android:text="@string/send_user_real_name" />
 
         <RelativeLayout
@@ -31,6 +31,7 @@
                 android:background="@drawable/selector_edit_white_round_corner"
                 android:gravity="top|left"
                 android:hint="请输入500字以内的动态"
+                android:maxLength="500"
                 android:padding="5dp" />
 
             <TextView

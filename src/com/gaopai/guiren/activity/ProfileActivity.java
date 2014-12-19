@@ -11,6 +11,7 @@ import u.aly.be;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -44,6 +45,7 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.support.CameralHelper;
+import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.support.CameralHelper.GetImageCallback;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
@@ -133,6 +135,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private DynamicHelper dynamicHelper;
 	private CameralHelper cameralHelper;
+	private ImageCrop imageCrop;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -156,19 +159,28 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
 		dynamicHelper.setCallback(dynamicCallback);
 		cameralHelper = new CameralHelper(this);
+		imageCrop = new ImageCrop(this);
 		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
 		getUserInfo();
 		getRecTags();
-		registerReceiver(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(Intent.ACTION_SCREEN_OFF, MainActivity.ACTION_UPDATE_PROFILE);
 	}
 
 	@Override
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
+		User user = DamiCommon.getLoginResult(this);
+		Logger.d(this, intent.getAction() + user.realname);
 		if (intent != null) {
 			String action = intent.getAction();
 			if (action.equals(Intent.ACTION_SCREEN_OFF)) {
 				dynamicHelper.stopPlayVoice();
+			} else if (action.equals(MainActivity.ACTION_UPDATE_PROFILE)) {
+				if (!isSelf) {
+					return;
+				}
+				tUser = DamiCommon.getLoginResult(this);
+				bindProfileView();
 			}
 		}
 	}
@@ -426,6 +438,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvRealName.setText(tUser.realname);
 		tvCompany.setText(tUser.company);
 		tvJob.setText(tUser.post);
+		tvPartment.setText(tUser.depa);
 	}
 
 	private void bindContactView() {
@@ -499,10 +512,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			List<ConnectionBean.User> userList = new ArrayList<ConnectionBean.User>();
 			Set<String> set = new HashSet<String>();
 			for (SpreadBean bean : tUser.kuosanlist) {
-				if (set.contains(bean.uid)) {
-					continue;
-				}
-				set.add(bean.uid);
+				// if (set.contains(bean.uid)) {
+				// continue;
+				// }
+				// set.add(bean.uid);
 				ConnectionBean.User user = new ConnectionBean.User();
 				user.uid = bean.uid;
 				user.realname = bean.realname;
@@ -556,7 +569,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 				ImageView headerView = (ImageView) view.findViewById(R.id.iv_header);
 				nameView.setText(bean.uname);
-				infoView.setText(bean.content.content);
+				if (bean.content != null && bean.content.content != null) {
+					infoView.setText(bean.content.content);
+				}
 				dateView.setText(FeatureFunction.getGeneralTime(bean.addtime * 1000));
 				if (!TextUtils.isEmpty(bean.s_path)) {
 					Picasso.with(mContext).load(bean.s_path).placeholder(R.drawable.default_header)
@@ -638,22 +653,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivity(ContactActivity.getIntent(mContext, ContactActivity.TYPE_FANS, tUser.uid));
 			break;
 		}
-		// case R.id.tv_my_meetings_count: {
-		// Intent intent = new Intent(mContext, ContactActivity.class);
-		// intent.putExtra(ContactActivity.KEY_TYPE,
-		// ContactActivity.TYPE_FOLLOWERS);
-		// intent.putExtra(ContactActivity.KEY_UID, tUser.uid);
-		// startActivity(intent);
-		// break;
-		// }
-		// case R.id.tv_my_tribes_count: {
-		// Intent intent = new Intent(mContext, ContactActivity.class);
-		// intent.putExtra(ContactActivity.KEY_TYPE,
-		// ContactActivity.TYPE_FOLLOWERS);
-		// intent.putExtra(ContactActivity.KEY_UID, tUser.uid);
-		// startActivity(intent);
-		// break;
-		// }
+		case R.id.tv_my_meetings_count: {
+			startActivity(MyMeetingActivity.getIntent(mContext, tuid));
+			break;
+		}
+		case R.id.tv_my_tribes_count: {
+			startActivity(TribeActivity.getIntent(mContext, tuid));
+			break;
+		}
 		case R.id.tv_my_followers_count: {
 			startActivity(ContactActivity.getIntent(mContext, ContactActivity.TYPE_FOLLOWERS, tUser.uid));
 			break;
@@ -826,6 +833,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				}
 				tUser.commentlist.add(bean);
 				bindBottomDynamicView();
+			} else if (requestCode == ImageCrop.REQUEST_CROP_IMG) {
+				Bitmap photo = imageCrop.decodeWithIntent(intent);
+				if (photo != null) {
+					showToast("==============");
+				}
 			}
 		}
 	}
@@ -884,12 +896,16 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		public void receivePicList(List<String> pathList) {
 			if (pathList != null && pathList.size() > 0) {
 				showToast(pathList.get(0));
+				imageCrop.cropImageUri(ImageCrop.creatUri(pathList.get(0)), ImageCrop.HEADER_WIDTH,
+						ImageCrop.HEADER_HEIGHT, ImageCrop.REQUEST_CROP_IMG);
 			}
 		}
 
 		@Override
 		public void receivePic(String path) {
 			showToast(path);
+			imageCrop.cropImageUri(ImageCrop.creatUri(path), ImageCrop.HEADER_WIDTH, ImageCrop.HEADER_HEIGHT,
+					ImageCrop.REQUEST_CROP_IMG);
 		}
 	};
 }

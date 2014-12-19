@@ -812,10 +812,10 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	@Override
 	protected void onActivityResult(int request, int result, Intent arg2) {
-		Logger.d(this, result + "  ==");
 		if (result == TribeDetailActivity.RESULT_CANCEL_TRIBE) {
 			setResult(TribeDetailActivity.RESULT_CANCEL_TRIBE);
 			ChatTribeActivity.this.finish();
 		}
+		super.onActivityResult(request, result, arg2);
 	}
 }

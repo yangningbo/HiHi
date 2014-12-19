@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseFragment;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
@@ -199,7 +200,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		DamiInfo.getMeetingList(meetingType, page, new SimpleResponseListener(getActivity()) {
+		DamiInfo.getMeetingList(DamiCommon.getUid(act), meetingType, page, new SimpleResponseListener(getActivity()) {
 			@Override
 			public void onSuccess(Object o) {
 				final TribeList data = (TribeList) o;

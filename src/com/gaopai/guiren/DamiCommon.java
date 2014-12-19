@@ -134,7 +134,7 @@ public class DamiCommon {
 	}
 
 	public static void saveLoginResult(Context context, User user) {
-		SharedPreferences preferences = context.getSharedPreferences(LOGIN_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(LOGIN_SHARED, Context.MODE_MULTI_PROCESS);
 		Editor editor = preferences.edit();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(3000);
 		ObjectOutputStream oos = null;
@@ -156,7 +156,7 @@ public class DamiCommon {
 	}
 
 	public static User getLoginResult(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(LOGIN_SHARED, 0);
+		SharedPreferences preferences = context.getSharedPreferences(LOGIN_SHARED, Context.MODE_MULTI_PROCESS);
 		String str = preferences.getString(LOGIN_RESULT, "");
 		User user = null;
 		if (str.equals("")) {

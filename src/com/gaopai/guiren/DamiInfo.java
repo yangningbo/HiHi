@@ -248,20 +248,7 @@ public class DamiInfo implements Serializable {
 		request(Method.GET, UserList.class, params, UserList.TYPE_RECOMMEND, listener, LOGIN_TYPE_NEED_LOGIN);
 	}
 
-	/**
-	 * 获取会议列表
-	 * 
-	 * @param type
-	 *            必传 1--进行中 2--往期 3--我的
-	 * @param page
-	 */
-	public static void getMeetingList(int type, int page, IResponseListener listener) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("type", type + "");
-		params.put("page", String.valueOf(page));
-		params.put("pageSize", String.valueOf(LOAD_SIZE));
-		request(Method.GET, TribeList.class, params, TribeList.MEETING_LIST, listener, 2);
-	}
+
 
 	/**
 	 * 获取会议详情
@@ -276,16 +263,7 @@ public class DamiInfo implements Serializable {
 		request(Method.GET, TribeInfoBean.class, params, TribeInfoBean.TYPE_MEETING_INFO, listener, 2);
 	}
 
-	/**
-	 * 获取我的部落
-	 * 
-	 * @param listener
-	 */
-	public static void getTribeList(int page, IResponseListener listener) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("page", String.valueOf(page));
-		request(Method.GET, TribeList.class, params, TribeList.TRIBE_LIST, listener, LOGIN_TYPE_NEED_LOGIN);
-	}
+	
 
 	/**
 	 * 获取部落详情
@@ -1758,11 +1736,14 @@ public class DamiInfo implements Serializable {
 		if (!TextUtils.isEmpty(email)) {
 			bundle.add("email", email);
 		}
-		if (!TextUtils.isEmpty(weixin)) {
-			bundle.add("weibo", email);
-		}
 		if (!TextUtils.isEmpty(weibo)) {
-			bundle.add("weixin", email);
+			bundle.add("weibo", weibo);
+		}
+		if (!TextUtils.isEmpty(weixin)) {
+			bundle.add("weixin", weixin);
+		}
+		if (!TextUtils.isEmpty(phone)) {
+			bundle.add("phone", phone);
 		}
 
 		String url = SERVER + "user/edit";
@@ -2367,6 +2348,36 @@ public class DamiInfo implements Serializable {
 		bundle.add("dynaid", id);
 		String url = SERVER + "user/delDynamic";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
+	
+	/**
+	 * 获取我的部落
+	 * 
+	 * @param listener
+	 */
+	public static void getTribeList(String fid, int page, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fuid", fid);
+		bundle.add("page", String.valueOf(page));
+		String url = SERVER + "user/mytribe";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, TribeList.class, listener);
+	}
+	
+	/**
+	 * 获取会议列表
+	 * 
+	 * @param type
+	 *            必传 1--进行中 2--往期 3--我的
+	 * @param page
+	 */
+	public static void getMeetingList(String fid, int type, int page, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fuid", fid);
+		bundle.add("page", String.valueOf(page));
+		bundle.add("type", type + "");
+		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
+		String url = SERVER + "index/meetinglist";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, TribeList.class, listener);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.MeetingAdapter;
@@ -27,10 +29,12 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener{
 	
 	private int page = 1;
 	private boolean isFull = false;
+	private String fid;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		fid = getIntent().getStringExtra("fid");
 		initTitleBar();
 		setAbContentView(R.layout.fragment_meeting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
@@ -72,6 +76,12 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener{
 		});
 	}
 
+	public static Intent getIntent(Context context, String fid) {
+		Intent intent = new Intent(context, MyMeetingActivity.class);
+		intent.putExtra("fid", fid);
+		return intent;
+	}
+	
 	private void getMeetingList(final boolean isRefresh, int meetingType) {
 		if (isRefresh) {
 			page = 1;
@@ -82,7 +92,7 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener{
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		DamiInfo.getMeetingList(meetingType, page, new SimpleResponseListener(mContext) {
+		DamiInfo.getMeetingList(fid, meetingType, page, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				final TribeList data = (TribeList) o;

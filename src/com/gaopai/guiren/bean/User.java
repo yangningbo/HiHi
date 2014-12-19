@@ -50,6 +50,8 @@ public class User implements Serializable {
 	@Expose
 	public String post; // 职业
 	@Expose
+	public String depa; // 部门
+	@Expose
 	public int integral = 0; // 积分
 	@Expose
 	public int auth; // 是否是已认证的用户
