@@ -43,6 +43,7 @@ import com.gaopai.guiren.db.NotifyTable;
 import com.gaopai.guiren.db.NotifyUserTable;
 import com.gaopai.guiren.receiver.NotifySystemMessage;
 import com.gaopai.guiren.support.ConversationHelper;
+import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -70,11 +71,12 @@ public class NotifySystemActivity extends BaseActivity {
 		FinalActivity.initInjectedView(this);
 		init();
 		ConversationHelper.resetCountAndRefresh(mContext, "-1");
+		NotifyHelper.clearSysNotification(mContext);
 	}
 
 	private void init() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText("系统通知");
+		mTitleBar.setTitleText(R.string.system_notify);
 
 		listView.setPullLoadEnabled(false);
 		listView.setPullRefreshEnabled(false);

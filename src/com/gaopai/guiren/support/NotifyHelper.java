@@ -1,6 +1,5 @@
 package com.gaopai.guiren.support;
 
-import java.io.IOException;
 import java.util.Calendar;
 
 import android.app.ActivityManager;
@@ -11,36 +10,20 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.database.sqlite.SQLiteDatabase;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
-import com.gaopai.guiren.DamiApp;
-import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.NotifySystemActivity;
-import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
-import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
-import com.gaopai.guiren.db.ConverseationTable;
-import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.fragment.NotificationFragment;
+import com.gaopai.guiren.receiver.ChatMessageNotifiy;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -98,7 +81,6 @@ public class NotifyHelper {
 		return po.getInt(SPConst.KEY_NOTIFY_DAMI, 0) == 1;
 	}
 
-
 	public static void saveNotificationTime(Context context, long time) {
 		PreferenceOperateUtils po = new PreferenceOperateUtils(context);
 		po.setLong(SPConst.KEY_NOTIFICATION_TIME, time);
@@ -153,9 +135,12 @@ public class NotifyHelper {
 		builder.setContentIntent(getChatIntent(messageInfo));
 		Logger.d(this, getCurrentChatId(mContext) + "  ==   " + messageInfo.conversion.toid);
 		if (messageInfo.type == 100) {// 单聊
-			if (isActivityTop(mContext, ".activity.chat.ChatMessageActivity")
-					&& getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
-				ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
+			if (isActivityTop(mContext, ".activity.chat.ChatMessageActivity")) {
+				if (getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
+					ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
+				} else {
+					ConversationHelper.saveToLastMsgList(messageInfo, mContext);
+				}
 				return;
 			}
 			ConversationHelper.saveToLastMsgList(messageInfo, mContext);
@@ -165,9 +150,12 @@ public class NotifyHelper {
 			notificationManager.notify(NOTIFYID_PRIVATE, builder.build());
 		} else { // 部落
 
-			if (isActivityTop(mContext, ".activity.chat.ChatTribeActivity")
-					&& getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
-				ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
+			if (isActivityTop(mContext, ".activity.chat.ChatTribeActivity")) {
+				if (getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
+					ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
+				} else {
+					ConversationHelper.saveToLastMsgList(messageInfo, mContext);
+				}
 				return;
 			}
 
@@ -289,5 +277,31 @@ public class NotifyHelper {
 	public static void setCurrentChatId(Context context, String id) {
 		PreferenceOperateUtils po = new PreferenceOperateUtils(context);
 		po.setString(SPConst.KEY_CHAT_CURRENT_ID, id);
+	}
+
+	public static void clearMsgNotification(Context mContext, int type) {
+		switch (type) {
+		case 100:
+			clearNotification(mContext, NOTIFYID_PRIVATE);
+			break;
+		case 200:
+			clearNotification(mContext, NOTIFYID_TRIBE);
+			break;
+		case 300:
+			clearNotification(mContext, NOTIFYID_MEETING);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public static void clearSysNotification(Context mContext) {
+		clearNotification(mContext, NOTIFYD_SYSTEM);
+	}
+	
+	public static void clearNotification(Context mContext, int id) {
+		NotificationManager notificationManager = (NotificationManager) mContext
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel(id);
 	}
 }

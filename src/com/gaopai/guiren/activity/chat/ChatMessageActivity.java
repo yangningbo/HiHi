@@ -78,6 +78,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		super.onResume();
 		checkHasDraft(user.uid);
 		NotifyHelper.setCurrentChatId(mContext, user.uid);
+		NotifyHelper.clearMsgNotification(mContext, 100);
 		ConversationHelper.resetCountAndRefresh(mContext, user.uid);
 	}
 	

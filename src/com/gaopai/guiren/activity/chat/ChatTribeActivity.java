@@ -213,6 +213,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		super.onResume();
 		checkHasDraft(mTribe.id);
 		NotifyHelper.setCurrentChatId(mContext, mTribe.id);
+		NotifyHelper.clearMsgNotification(mContext, mChatType);
 		ConversationHelper.resetCountAndRefresh(mContext, mTribe.id);
 	}
 
