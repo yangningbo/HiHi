@@ -68,6 +68,7 @@ import com.gaopai.guiren.utils.WeiboTextUrlSpan;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
+import com.squareup.picasso.Picasso;
 
 public class DynamicHelper {
 	public static final int TYPE_SEND_DYNAMIC = 1;
@@ -794,8 +795,9 @@ public class DynamicHelper {
 		}
 		switch (typeBean.type) {
 		case TYPE_SPREAD_LINK:
-			// url
-			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1);
+			Logger.d(this, "image=" + jsonContent.image);
+			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1, R.drawable.logo);
+			Picasso.with(mContext).load(jsonContent.image);
 			viewHolder.tvTitle1.setText(jsonContent.title);
 			viewHolder.tvInfo1.setText(jsonContent.desc);
 			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {

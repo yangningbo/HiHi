@@ -245,8 +245,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
 		layoutHeader = ViewUtil.findViewById(this, R.id.layout_header_mvp);
-		layoutHeader.setOnClickListener(this);
-
+		if (isSelf) {
+			layoutHeader.setOnClickListener(this);
+		}
 		ViewUtil.findViewById(this, R.id.iv_profile_erweima).setOnClickListener(this);
 
 		tvUserInfo = (TextView) findViewById(R.id.tv_user_info);
@@ -347,13 +348,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		} else {
 			bindConnectionView();
 		}
+		bindHeadView();
 
-		layoutHeader.setImage(tUser.headsmall);
-		if (mUser.bigv == 1) {
-			layoutHeader.setMVP(true);
-		} else {
-			layoutHeader.setMVP(false);
-		}
 		// tvFancyCount.setText(String.valueOf(tUser.integral));
 		// tvUserName.setText(tUser.realname);
 		// tvUserInfo.setText(tUser.company);
@@ -367,6 +363,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		bindUserTags();
 		bindBottomDynamicView();
 		bindBottomView();
+	}
+
+	private void bindHeadView() {
+		layoutHeader.setImage(tUser.headsmall);
+		if (mUser.bigv == 1) {
+			layoutHeader.setMVP(true);
+		} else {
+			layoutHeader.setMVP(false);
+		}
 	}
 
 	private void bindUserName() {
@@ -649,7 +654,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_my_meetings_count:
 		case R.id.tv_my_tribes_count:
 		case R.id.tv_my_followers_count:
-			PrivacyConfig pc = tUser.privacyconfig;
 			if (!isBeenFollowed()) {
 				showToast(R.string.you_are_not_allowed_to_see_profile);
 				return;
@@ -848,7 +852,22 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			} else if (requestCode == ImageCrop.REQUEST_CROP_IMG) {
 				Bitmap photo = imageCrop.decodeWithIntent(intent);
 				if (photo != null) {
-					showToast("==============");
+					if (TextUtils.isEmpty(headerImage)) {
+						return;
+					}
+					DamiInfo.editHeader(headerImage, new SimpleResponseListener(mContext, R.string.upload_header_now) {
+						@Override
+						public void onSuccess(Object o) {
+							UserInfoBean data = (UserInfoBean) o;
+							if (data.state != null && data.state.code == 0) {
+								tUser = data.data;
+								bindHeadView();
+								DamiCommon.saveLoginResult(mContext, tUser);
+								sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+								showToast(R.string.upload_header_success);
+							}
+						}
+					});
 				}
 			}
 		}
@@ -903,15 +922,17 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void changeHeadImg() {
+		headerImage = "";
 		cameralHelper.setCallback(callback);
 		cameralHelper.showDefaultSelectDialog(getString(R.string.set_header));
 	}
 
+	private String headerImage;
 	private CameralHelper.GetImageCallback callback = new GetImageCallback() {
 		@Override
 		public void receivePicList(List<String> pathList) {
 			if (pathList != null && pathList.size() > 0) {
-				showToast(pathList.get(0));
+				headerImage = pathList.get(0);
 				imageCrop.cropImageUri(ImageCrop.creatUri(pathList.get(0)), ImageCrop.HEADER_WIDTH,
 						ImageCrop.HEADER_HEIGHT, ImageCrop.REQUEST_CROP_IMG);
 			}
@@ -919,7 +940,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		public void receivePic(String path) {
-			showToast(path);
+			headerImage = path;
 			imageCrop.cropImageUri(ImageCrop.creatUri(path), ImageCrop.HEADER_WIDTH, ImageCrop.HEADER_HEIGHT,
 					ImageCrop.REQUEST_CROP_IMG);
 		}

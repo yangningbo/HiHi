@@ -838,6 +838,8 @@
     <string name="switch_use_anony_name_mode">已切换至匿名</string>
     <string name="nine_picture_at_most">最多可以添加9张</string>
     <string name="set_header">设置头像</string>
+    <string name="upload_header_now">上传头像中&#8230;</string>
+    <string name="upload_header_success">更换头像成功！</string>
     
     
 </resources>

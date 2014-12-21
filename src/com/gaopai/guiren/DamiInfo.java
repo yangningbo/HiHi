@@ -36,6 +36,7 @@ import com.gaopai.guiren.bean.ReportMsgResult;
 import com.gaopai.guiren.bean.TagResultBean;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.TribeList;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
@@ -1747,7 +1748,11 @@ public class DamiInfo implements Serializable {
 		}
 
 		String url = SERVER + "user/edit";
-		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserInfoBean.class, listener);
+	}
+	
+	public static void editHeader(String pic, IResponseListener listener) {
+		editProfile(pic, "", "", "", "", "", listener);
 	}
 
 	public static void getFansList(String uid, int page, String keyword, IResponseListener listener) {
