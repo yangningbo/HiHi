@@ -174,7 +174,8 @@ public class CaptureActivity extends BaseActivity implements Callback {
 		playBeepSoundAndVibrate();
 		Intent intent = new Intent(CaptureActivity.this, TribeDetailActivity.class);
 		Logger.d(CaptureActivity.this, obj.getText());
-		String[] str = obj.getText().split("&");
+		String scanLinkString = obj.getText();
+		String[] str = scanLinkString.split("&");
 		String id = "";
 		String type = "";
 		for (String string : str) {
@@ -187,7 +188,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 				type = string.substring(5);
 			}
 		}
-		Logger.d(this, "id="+id+"   type"+type);
+		Logger.d(this, "id=" + id + "   type" + type);
 		boolean consume = false;
 		if (!TextUtils.isEmpty(id)) {
 			if (type.equals("200")) {
@@ -203,8 +204,12 @@ public class CaptureActivity extends BaseActivity implements Callback {
 				startActivity(MeetingDetailActivity.getIntent(mContext, id));
 			}
 		}
-		if(!consume) {
-			showToast(R.string.data_error);
+		if (!consume) {
+			if (scanLinkString.startsWith("http://") || scanLinkString.startsWith("https://")) {
+				startActivity(WebActivity.getIntent(mContext, scanLinkString, ""));
+			} else {
+				showToast(R.string.data_error);
+			}
 		}
 		CaptureActivity.this.finish();
 		/*

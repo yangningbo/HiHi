@@ -104,6 +104,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		}
 		initTitleBar();
 		setAbContentView(R.layout.activity_tribe_detail);
+		addLoadingView();
+		showLoadingView();
+		
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 		tagWindowManager = new TagWindowManager(this, true, null);
@@ -184,7 +187,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	};
 
 	private void getTribeDetail() {
-		DamiInfo.getTribeDetail(mTribeID, new SimpleResponseListener(mContext, R.string.request_internet_now) {
+		DamiInfo.getTribeDetail(mTribeID, new SimpleResponseListener(mContext) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -193,14 +196,33 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				if (data.state != null && data.state.code == 0) {
 					mTribe = data.data;
 					if (mTribe == null) {
+						showErrorView();
 						return;
 					}
 					isCreator = mTribe.uid.equals(DamiCommon.getUid(mContext));
+					showContent();
 					bindView();
 				} else {
+					showErrorView();
 					this.otherCondition(data.state, TribeDetailActivity.this);
 				}
 
+			}
+			
+			@Override
+			public void onFailure(Object o) {
+				showErrorView();
+			}
+			
+		});
+	}
+	
+	private void showErrorView() {
+		showErrorView(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getTribeDetail();
+				showLoadingView();
 			}
 		});
 	}

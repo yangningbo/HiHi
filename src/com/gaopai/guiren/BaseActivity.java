@@ -21,14 +21,17 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gaopai.guiren.utils.Constant;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.TitleBar;
@@ -159,12 +162,44 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	public void setAbContentView(View contentView) {
+		layoutContent = contentView;
 		contentLayout.removeAllViews();
 		contentLayout.addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 
+	public void addLoadingView() {
+		layoutLoading = mInflater.inflate(R.layout.layout_fetch_data, null);
+		contentLayout.addView(layoutLoading, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+	}
+
+	public View layoutContent;
+	public View layoutLoading;
+
 	public void setAbContentView(int resId) {
 		setAbContentView(mInflater.inflate(resId, null));
+	}
+
+	public void showContent() {
+		layoutContent.setVisibility(View.VISIBLE);
+		layoutLoading.setVisibility(View.GONE);
+	}
+
+	public void showLoadingView() {
+		layoutContent.setVisibility(View.GONE);
+		layoutLoading.setVisibility(View.VISIBLE);
+		((ViewGroup) layoutLoading).getChildAt(0).setVisibility(View.VISIBLE);
+		((ViewGroup) layoutLoading).getChildAt(1).setOnClickListener(null);
+		Logger.d(this, getString(R.string.now_loading));
+		((TextView) ((ViewGroup) layoutLoading).getChildAt(1)).setText(R.string.now_loading);
+	}
+
+	public void showErrorView(OnClickListener listener) {
+		layoutContent.setVisibility(View.GONE);
+		layoutLoading.setVisibility(View.VISIBLE);
+		((ViewGroup) layoutLoading).getChildAt(0).setVisibility(View.GONE);
+		((ViewGroup) layoutLoading).getChildAt(1).setOnClickListener(listener);
+		Logger.d(this, getString(R.string.loading_error_click_retry));
+		((TextView) ((ViewGroup) layoutLoading).getChildAt(1)).setText(R.string.loading_error_click_retry);
 	}
 
 	public void showToast(int resId) {
@@ -472,17 +507,17 @@ public class BaseActivity extends FragmentActivity {
 
 	private void registerBaseAction() {
 		IntentFilter filter = new IntentFilter();
-		
+
 		registerReceiver(filter);
 		registerReceiver(mReceiver, filter);
 		mIsRegisterReceiver = true;
 	}
 
-	//if activity don't want to be finished, like mainActivity, do not call super method
+	// if activity don't want to be finished, like mainActivity, do not call
+	// super method
 	protected void registerReceiver(IntentFilter intentFilter) {
 		intentFilter.addAction(ACTION_FINISH);
 	}
-
 
 	BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override

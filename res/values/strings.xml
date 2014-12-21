@@ -840,6 +840,8 @@
     <string name="set_header">设置头像</string>
     <string name="upload_header_now">上传头像中&#8230;</string>
     <string name="upload_header_success">更换头像成功！</string>
+    <string name="now_loading">正在加载&#8230;</string>
+    <string name="loading_error_click_retry">加载出错，点击重试</string>
     
     
 </resources>

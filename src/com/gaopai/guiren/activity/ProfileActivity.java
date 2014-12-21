@@ -6,17 +6,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -45,7 +44,6 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.support.CameralHelper;
-import com.gaopai.guiren.support.CameralHelper.GetImageCallback;
 import com.gaopai.guiren.support.CameralHelper.Option;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
@@ -55,6 +53,7 @@ import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.support.comment.CommentProfile;
 import com.gaopai.guiren.support.view.HeadView;
+import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -136,7 +135,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private DynamicHelper dynamicHelper;
 	private CameralHelper cameralHelper;
-	private ImageCrop imageCrop;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +143,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_profile);
+		addLoadingView();
+		showLoadingView();
 		tuid = getIntent().getStringExtra(KEY_UID);
 		if (TextUtils.isEmpty(tuid)) {
 			Uri data = getIntent().getData();
@@ -160,7 +161,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
 		dynamicHelper.setCallback(dynamicCallback);
 		cameralHelper = new CameralHelper(this);
-		imageCrop = new ImageCrop(this);
 		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
 		getUserInfo();
 		getRecTags();
@@ -220,17 +220,33 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				final UserInfoBean data = (UserInfoBean) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
+						showContent();
 						tUser = data.data;
 						tagWindowManager.setTagList(tUser.tag);
 						bindView();
 					}
 				} else {
+					showErrorView();
 					otherCondition(data.state, ProfileActivity.this);
 				}
+			}
+
+			@Override
+			public void onFailure(Object o) {
+				showErrorView();
 			}
 		});
 	}
 
+	private void showErrorView() {
+		showErrorView(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getUserInfo();
+				showLoadingView();
+			}
+		});
+	}
 	private TagWindowManager.TagCallback tagCallback = new TagCallback() {
 
 		@Override
@@ -467,23 +483,27 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			PrivacyConfig pc = tUser.privacyconfig;
 			if (pc.mail == 0) {
 				tvEmail.setText(R.string.you_are_not_allowed_to_see_profile);
+				removeTextDrawable(tvEmail);
 			}
 			if (pc.phone == 0) {
 				tvPhone.setText(R.string.you_are_not_allowed_to_see_profile);
+				removeTextDrawable(tvPhone);
 			}
 			if (pc.wechat == 0) {
 				tvWeixin.setText(R.string.you_are_not_allowed_to_see_profile);
+				removeTextDrawable(tvWeixin);
 			}
 			if (pc.weibo == 0) {
 				tvWeibo.setText(R.string.you_are_not_allowed_to_see_profile);
+				removeTextDrawable(tvWeibo);
 			}
 		}
-		if (!isSelf) {
-			removeTextDrawable(tvEmail);
-			removeTextDrawable(tvPhone);
-			removeTextDrawable(tvWeixin);
-			removeTextDrawable(tvWeibo);
-		}
+		// if (!isSelf) {
+		// removeTextDrawable(tvEmail);
+		// removeTextDrawable(tvPhone);
+		// removeTextDrawable(tvWeixin);
+		// removeTextDrawable(tvWeibo);
+		// }
 	}
 
 	private void bindBottomView() {
@@ -685,16 +705,32 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivity(ReverificationActivity.class);
 			break;
 		case R.id.layout_profile_email:
-			changeContact(ChangeProfileActivity.TYPE_EMAIL, tUser.email);
+			if (isSelf) {
+				sendEmail(tUser.email);
+			} else {
+				changeContact(ChangeProfileActivity.TYPE_EMAIL, tUser.email);
+			}
 			break;
 		case R.id.layout_profile_phone_num:
-			changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
+			if (isSelf) {
+				makePhonecall(tUser.phone);
+			} else {
+				changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
+			}
 			break;
 		case R.id.layout_profile_weibo_num:
-			changeContact(ChangeProfileActivity.TYPE_WEIBO, tUser.weibo);
+			if (isSelf) {
+				openWeibo();
+			} else {
+				changeContact(ChangeProfileActivity.TYPE_WEIBO, tUser.weibo);
+			}
 			break;
 		case R.id.layout_profile_weixin_num:
-			changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);
+			if (isSelf) {
+				openWeixin();
+			} else {
+				changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);
+			}
 			break;
 		case R.id.tv_reveal_all_tags:
 			isShowAllTags = true;
@@ -736,6 +772,51 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		default:
 			break;
+		}
+	}
+
+	private void makePhonecall(String phone) {
+		Intent intent = new Intent();
+		intent.setAction("Android.intent.action.CALL");
+		intent.setData(Uri.parse("tel:" + phone));
+		try {
+			startActivity(intent);
+		} catch (Exception e) {
+		}
+	}
+
+	private void sendEmail(String email) {
+		Intent data = new Intent(Intent.ACTION_SENDTO);
+		data.setData(Uri.parse("mailto:" + email));
+		try {
+			startActivity(data);
+		} catch (Exception e) {
+		}
+	}
+	
+	private void openWeixin() {
+		Intent intent = new Intent();
+		ComponentName cmp = new ComponentName("com.tencent.mm","com.tencent.mm.ui.LauncherUI");
+		intent.setAction(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setComponent(cmp);
+		try {
+			startActivityForResult(intent, 0);
+		} catch (Exception e) {
+		}
+	}
+	
+	private void openWeibo() {
+		Intent intent = new Intent();
+		ComponentName cmp = new ComponentName("com.sina.weibo","com.sina.weibo.EditActivity");
+		intent.setAction(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setComponent(cmp);
+		try {
+			startActivityForResult(intent, 0);
+		} catch (Exception e) {
 		}
 	}
 

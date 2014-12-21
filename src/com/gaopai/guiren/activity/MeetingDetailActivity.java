@@ -100,6 +100,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_meeting_detail);
+		
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 
@@ -109,6 +110,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		if (mMeeting != null) {
 			isPreview = true;
 		} else {
+			
 			if (TextUtils.isEmpty(mMeetingID)) {
 				Uri data = getIntent().getData();
 				mMeetingID = data.toString().substring(data.toString().indexOf("//") + 2);
@@ -123,6 +125,9 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			bindBasicView();
 			return;
 		}
+		
+		addLoadingView();
+		showLoadingView();
 
 		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
 		view.setId(R.id.ab_share);
@@ -221,20 +226,36 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	};
 
 	private void getMeetingDetail() {
-		DamiInfo.getMeetingDetail(mMeetingID, new SimpleResponseListener(mContext,
-				getString(R.string.request_internet_now)) {
+		DamiInfo.getMeetingDetail(mMeetingID, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
 				final TribeInfoBean data = (TribeInfoBean) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
+						showContent();
 						mMeeting = data.data;
 						bindView();
 					}
 				} else {
+					showErrorView();
 					otherCondition(data.state, MeetingDetailActivity.this);
 				}
+			}
+
+			@Override
+			public void onFailure(Object o) {
+				showErrorView();
+			}
+		});
+	}
+	
+	private void showErrorView() {
+		showErrorView(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getMeetingDetail();
+				showLoadingView();
 			}
 		});
 	}
