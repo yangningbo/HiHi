@@ -127,6 +127,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		tvStartTime.setText(FeatureFunction.getChatTime(mMeeting.start * 1000));
 		tvEndTime.setText(FeatureFunction.getChatTime(mMeeting.end * 1000));
 		etContent.setText(mMeeting.content);
+		btnCreat.setText(R.string.edit_meeting);
 	}
 
 	private void initialTimeView() {
@@ -445,6 +446,9 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 						str = getString(R.string.edit_success);
 					}
 					showToast(str);
+					if(isEdit) {
+						setResult(RESULT_OK);
+					}
 					CreatMeetingActivity.this.finish();
 				} else {
 					this.otherCondition(data.state, CreatMeetingActivity.this);

@@ -83,6 +83,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	public final static int REQUEST_NORMAL = 0;
 	public final static int REQUEST_BACK_TO_NORMAL = 1;
 	public final static int REQUEST_CANCEL_MEETING = 2;
+	public final static int REQUEST_EDIT_MEETING = 3;
 
 	public static final String ACTION_AGREE_ADD_MEETING = "com.gaopai.guiren.ACTION_AGREE_ADD_MEETING";
 	public static final String ACTION_MEETING_CANCEL = "com.gaopai.guiren.ACTION_MEETING_CANCEL";
@@ -380,7 +381,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		case R.id.grid_modify_meeting: {
 			Intent intent = new Intent(mContext, CreatMeetingActivity.class);
 			intent.putExtra(CreatMeetingActivity.KEY_MEETING, mMeeting);
-			startActivity(intent);
+			startActivityForResult(intent, REQUEST_EDIT_MEETING);
 			break;
 		}
 		case R.id.ab_share:

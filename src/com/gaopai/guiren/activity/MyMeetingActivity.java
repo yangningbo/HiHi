@@ -41,7 +41,7 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 		initTitleBar();
 		setAbContentView(R.layout.fragment_meeting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText("我的会议");
+		mTitleBar.setTitleText(R.string.my_meeting);
 		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
 		view.setId(R.id.ab_add);
 		view.setOnClickListener(this);

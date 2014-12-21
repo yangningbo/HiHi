@@ -8,6 +8,7 @@ import u.aly.A;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -183,7 +184,16 @@ public class ContactActivity extends BaseActivity {
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 		getUserList();
-		registerReceiver(ACTION_UPDATE_LIST_ADD, ACTION_UPDATE_LIST_DELETE);
+		
+	}
+	
+	
+
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
+		super.registerReceiver(intentFilter);
+		intentFilter.addAction(ACTION_UPDATE_LIST_ADD);
+		intentFilter.addAction(ACTION_UPDATE_LIST_DELETE);
 	}
 
 	//send broadcast in ProfileActivity

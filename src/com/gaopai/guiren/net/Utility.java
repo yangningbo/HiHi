@@ -94,6 +94,7 @@ import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
@@ -306,6 +307,7 @@ public class Utility {
 				toastIntent.putExtra("toast_msg", DamiApp.getInstance().getString(R.string.please_login));
 				DamiApp.getInstance().sendBroadcast(toastIntent);
 				FeatureFunction.stopService(DamiApp.getInstance());
+				DamiApp.getInstance().sendBroadcast(new Intent(BaseActivity.ACTION_FINISH));
 				DamiApp.getInstance().sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_OUT));
 				return "";
 			}

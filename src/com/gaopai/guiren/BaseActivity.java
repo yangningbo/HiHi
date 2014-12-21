@@ -48,6 +48,7 @@ import com.umeng.socialize.weixin.controller.UMWXHandler;
 public class BaseActivity extends FragmentActivity {
 
 	protected DamiApp mApplication;
+	public static final String ACTION_FINISH = "com.gaopai.guiren.intent.action.ACTION_FINISH";
 
 	protected Context mContext;
 
@@ -124,7 +125,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
+		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
 		mContext = this;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -134,6 +135,7 @@ public class BaseActivity extends FragmentActivity {
 		displayWidth = display.getWidth();
 		displayHeight = display.getHeight();
 		mApplication = (DamiApp) getApplication();
+		registerBaseAction();
 	}
 
 	protected void initTitleBar() {
@@ -149,7 +151,7 @@ public class BaseActivity extends FragmentActivity {
 		windowLayout.addView(contentLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		setContentView(windowLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
-	
+
 	protected void addTitleBar(ViewGroup holder) {
 		mTitleBar = new TitleBar(this);
 		holder.addView(mTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -178,7 +180,7 @@ public class BaseActivity extends FragmentActivity {
 		});
 
 	}
-	
+
 	public void backToFragment() {
 		getSupportFragmentManager().popBackStack();
 	}
@@ -366,8 +368,8 @@ public class BaseActivity extends FragmentActivity {
 		mAlertDialog.show();
 		return mAlertDialog;
 	}
-	
-	public void showMutiDialog (String title, String[] array, DialogInterface.OnClickListener onClickListener) {
+
+	public void showMutiDialog(String title, String[] array, DialogInterface.OnClickListener onClickListener) {
 		AlertDialog dialog = new AlertDialog.Builder(mContext).setItems(array, onClickListener).create();
 		if (TextUtils.isEmpty(title)) {
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -465,41 +467,41 @@ public class BaseActivity extends FragmentActivity {
 		DamiApp.getInstance().getPou().setBoolean(DamiApp.VOOICE_PLAY_MODE, isModeInCall);
 		DamiApp.getInstance().setPlayMode();
 	}
-	
+
 	private boolean mIsRegisterReceiver = false;
-	
-	//for little actions
-	protected IntentFilter registerReceiver(String...actions) {
+
+	private void registerBaseAction() {
 		IntentFilter filter = new IntentFilter();
-		for (String action:actions) {
-			filter.addAction(action);
-		}
+		
+		registerReceiver(filter);
 		registerReceiver(mReceiver, filter);
 		mIsRegisterReceiver = true;
-		return filter;
 	}
-	
-	//for many actions
+
+	//if activity don't want to be finished, like mainActivity, do not call super method
 	protected void registerReceiver(IntentFilter intentFilter) {
-		registerReceiver(mReceiver, intentFilter);
-		mIsRegisterReceiver = true;
+		intentFilter.addAction(ACTION_FINISH);
 	}
-	
+
+
 	BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(ACTION_FINISH)) {
+				BaseActivity.this.finish();
+			}
 			BaseActivity.this.onReceive(intent);
 		}
 	};
-	
-	protected void onReceive(Intent intent){}; 
-	
+
+	protected void onReceive(Intent intent) {
+	};
+
 	private void unregisterReceiver() {
 		if (mIsRegisterReceiver) {
 			unregisterReceiver(mReceiver);
 		}
 		mIsRegisterReceiver = false;
 	}
-	
 
 }

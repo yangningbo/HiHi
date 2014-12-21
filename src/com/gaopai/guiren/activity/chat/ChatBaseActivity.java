@@ -84,7 +84,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		registerReceiver(addAciton());
 		speexPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
 			@Override
 			public void onSuccess(MessageInfo messageInfo) {
@@ -146,7 +145,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		mAdapter.notifyDataSetChanged();
 		scrollToBottom();
 	}
-	
+
 	protected void scrollToBottom() {
 		if (messageInfos != null && messageInfos.size() != 0) {
 			mListView.getRefreshableView().setSelection(messageInfos.size() - 1);
@@ -238,7 +237,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			msg.voiceUrl = filePath;
 			msg.voiceTime = (int) recordTime;
 			msg.content = "[" + mContext.getString(R.string.voice) + "]";
-			if (isChangeVoice ) {
+			if (isChangeVoice) {
 				msg.samplerate = DamiCommon.getRandomSampleRate();
 			} else {
 				msg.samplerate = 8000;
@@ -341,7 +340,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	private void getImageFromCamera() {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-//		 TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
+		// TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
 
 		if (FeatureFunction.newFolder(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY)) {
 			File out = new File(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY,
@@ -435,7 +434,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			stopPlayVoice();
 		}
 	}
-	
+
 	private void stopPlayVoice() {
 		if (speexPlayerWrapper != null) {
 			speexPlayerWrapper.stop();
@@ -477,13 +476,12 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	public final static String UPDATE_COUNT_ACTION = "com.gaopai.guiren.intent.action.UPDATE_COUNT_ACTION";
 	public final static String ACTION_EXIT_TRIBE = "com.gaopai.guiren.intent.action.ACTION_EXIT_TRIBE";
 	public final static String ACTION_KICK_TRIBE = "com.gaopai.guiren.intent.action.ACTION_KICK_TRIBE";
-	
-	public final static String ACTION_CHANGE_VOICE = "com.gaopai.guiren.intent.action.ACTION_CHANGE_VOICE";
-	
-	
 
-	private IntentFilter addAciton() {
-		IntentFilter filter = new IntentFilter();
+	public final static String ACTION_CHANGE_VOICE = "com.gaopai.guiren.intent.action.ACTION_CHANGE_VOICE";
+
+	@Override
+	protected void registerReceiver(IntentFilter filter) {
+		super.registerReceiver(filter);
 		filter.addAction(SnsService.ACTION_CONNECT_CHANGE);
 		filter.addAction(PushChatMessage.ACTION_SEND_STATE);
 		filter.addAction(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE);
@@ -504,12 +502,11 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		filter.addAction(ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
 		filter.addAction(ACTION_MESSAGE_DELETE);
 		filter.addAction(ACTION_CHANGE_VOICE);
-		filter.addAction(Intent.ACTION_SCREEN_OFF);   
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		filter.addAction(ActionHolder.ACTION_CANCEL_TRIBE);
 		filter.addAction(ActionHolder.ACTION_QUIT_TRIBE);
 		filter.addAction(ActionHolder.ACTION_CANCEL_MEETING);
-		filter.addAction(ActionHolder.ACTION_QUIT_MEETING);   
-		return filter;
+		filter.addAction(ActionHolder.ACTION_QUIT_MEETING);
 	}
 
 	private boolean opconnectState = false;
@@ -563,7 +560,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 
 		} else if (action.equals(ACTION_RECORD_AUTH)) {
 			Toast.makeText(mContext, mContext.getString(R.string.record_auth_control), Toast.LENGTH_LONG).show();
-		} else if(action.equals(Intent.ACTION_SCREEN_OFF)) {
+		} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
 			stopPlayVoice();
 		}
 		onOtherChatBroadCastAction(intent);
@@ -576,8 +573,9 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	protected void addNewMessage(MessageInfo msg) {
 		messageInfos.add(msg);
 		mAdapter.notifyDataSetChanged();
-		if (messageInfos.size() == 1
-				|| (messageInfos.size() - mListView.getRefreshableView().getLastVisiblePosition() <= 1)) {
+		Logger.d(this, "size=" + messageInfos.size() + "   visible="
+				+ mListView.getRefreshableView().getLastVisiblePosition());
+		if (messageInfos.size() - mListView.getRefreshableView().getLastVisiblePosition() <= 2) {
 			mListView.getRefreshableView().setSelection(messageInfos.size());// 定位到最后一行
 		}
 	}

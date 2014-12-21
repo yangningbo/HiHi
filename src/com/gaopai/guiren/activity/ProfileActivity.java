@@ -11,6 +11,7 @@ import u.aly.be;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -163,7 +164,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
 		getUserInfo();
 		getRecTags();
-		registerReceiver(Intent.ACTION_SCREEN_OFF, MainActivity.ACTION_UPDATE_PROFILE);
+	}
+	
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
+		super.registerReceiver(intentFilter);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		intentFilter.addAction(MainActivity.ACTION_UPDATE_PROFILE);
 	}
 
 	@Override

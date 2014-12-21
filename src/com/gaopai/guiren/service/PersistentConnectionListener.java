@@ -19,6 +19,7 @@ import xmpp.push.sns.ConnectionListener;
 import android.content.Intent;
 import android.util.Log;
 
+import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
@@ -58,6 +59,7 @@ public class PersistentConnectionListener implements ConnectionListener {
         	DamiCommon.saveLoginResult(DamiApp.getInstance(), null);
 			DamiCommon.setUid("");
 			DamiCommon.setToken("");
+			DamiApp.getInstance().sendBroadcast(new Intent(BaseActivity.ACTION_FINISH));
 			FeatureFunction.stopService(DamiApp.getInstance());
 			DamiApp.getInstance().sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_OUT));
         }else {

@@ -145,7 +145,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 					// TODO Auto-generated method stub
 					showItemLongClickDialog(messageInfos.get(position));
-					return false;
+					return true;
 				}
 			});
 		}
@@ -366,6 +366,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 		@Override
 		public void favoriteMessage(MessageInfo msg) {
+			Logger.d(this, msg.isfavorite + "   =======");
 			mAdapter.notifyDataSetChanged();
 		}
 
@@ -376,7 +377,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	};
 
 	public void zanMessage(final MessageInfo messageInfo) {
-		msgHelper.zanMessage(messageInfo);
+		msgHelper.zanMessage(messageInfo, isAnony() ? 1 : 0);
 	}
 
 	public void favoriteMessage(final MessageInfo messageInfo) {
@@ -702,12 +703,13 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	private void updateMessgaeItem(MessageInfo messageInfo2) {
-		// TODO Auto-generated method stub
 		MessageInfo target = getTargetMessageInfo(messageInfo2);
 		if (target != null) {
 			target.favoriteCount = messageInfo2.favoriteCount;
 			target.commentCount = messageInfo2.commentCount;
 			target.agreeCount = messageInfo2.agreeCount;
+			target.isAgree = messageInfo2.isAgree;
+			target.isfavorite = messageInfo2.isfavorite;
 			mAdapter.notifyDataSetChanged();
 		}
 	}

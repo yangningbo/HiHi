@@ -1001,6 +1001,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private void modifyMessageState() {
 		Intent favoriteIntent = new Intent(ChatMainActivity.ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
 		favoriteIntent.putExtra("message", messageInfo);
+	
 		mContext.sendBroadcast(favoriteIntent);
 	}
 
@@ -1090,7 +1091,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		case R.id.zan_count_btn:
 			animator = ObjectAnimator.ofFloat(zanCountBtn, "rotationY", 0, 360, 0).setDuration(1500);
 			animator.start();
-			msgHelper.zanMessage(messageInfo);
+			msgHelper.zanMessage(messageInfo, isAnony() ? 1 : 0);
 			break;
 
 		case R.id.favorite_count_btn:
@@ -1566,7 +1567,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				|| result.equals(getString(R.string.mode_in_call))) {
 			changePlayMode();
 		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.cancel_zan))) {
-			msgHelper.zanMessage(msgInfo);
+			msgHelper.zanMessage(msgInfo, isAnony() ? 1 : 0);
 		} else if (result.equals(getString(R.string.retrweet))) {
 			msgHelper.goToRetrweet(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {

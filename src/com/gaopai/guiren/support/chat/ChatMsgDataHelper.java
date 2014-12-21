@@ -147,11 +147,11 @@ public class ChatMsgDataHelper {
 		}
 	}
 
-	public void zanMessage(final MessageInfo messageInfo) {
+	public void zanMessage(final MessageInfo messageInfo, int isAnony) {
 		if (mTribe == null || messageInfo == null) {
 			return;
 		}
-		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, new SimpleResponseListener(mContext,
+		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, isAnony, new SimpleResponseListener(mContext,
 				getString(R.string.request_internet_now)) {
 			@Override
 			public void onSuccess(Object o) {

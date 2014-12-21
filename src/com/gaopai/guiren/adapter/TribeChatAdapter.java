@@ -82,14 +82,19 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 		Button earPhone = (Button) v.findViewById(R.id.btn_ear_phone);
 		earPhone.setTag(messageInfo);
 		earPhone.setOnClickListener(this);
-		
+
 		if (((BaseActivity) mContext).isModeInCall) {
 			earPhone.setText(R.string.mode_in_speaker);
 		} else {
 			earPhone.setText(R.string.mode_in_call);
 		}
 
-		View favorite = v.findViewById(R.id.btn_favorite);
+		Button favorite = (Button) v.findViewById(R.id.btn_favorite);
+		if (messageInfo.isfavorite == 1) {
+			favorite.setText(R.string.cancel_favorite);
+		} else {
+			favorite.setText(R.string.favorite);
+		}
 		favorite.setTag(messageInfo);
 		favorite.setOnClickListener(this);
 
@@ -116,7 +121,12 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 			closePopupWindow();
 			break;
 		case R.id.btn_favorite:
-			getActivity().favoriteMessage((MessageInfo) v.getTag());
+			MessageInfo messageInfo = (MessageInfo) v.getTag();
+			if(messageInfo.isfavorite == 1) {
+				getActivity().unFavoriteMessage(messageInfo);
+			} else {
+				getActivity().favoriteMessage(messageInfo);
+			}
 			closePopupWindow();
 			break;
 

@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -101,7 +102,12 @@ public class MyFavoriteActivity extends BaseActivity {
 				return false;
 			}
 		});
-		registerReceiver(Intent.ACTION_SCREEN_OFF);
+	}
+	
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
+		super.registerReceiver(intentFilter);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	}
 	
 	public void stopPlayVoice() {

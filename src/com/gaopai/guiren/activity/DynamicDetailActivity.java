@@ -2,6 +2,7 @@ package com.gaopai.guiren.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
@@ -76,7 +77,12 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			initComponent();
 		}
 		getDynamicDetail();
-		registerReceiver(Intent.ACTION_SCREEN_OFF);
+	}
+	
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
+		super.registerReceiver(intentFilter);
+		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	}
 
 	private DynamicHelper.DyCallback callback = new DyCallback() {

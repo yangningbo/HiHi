@@ -84,9 +84,14 @@ public class MyDynamicActivity extends BaseActivity {
 		mAdapter = new DynamicAdapter(this);
 		mListView.setAdapter(mAdapter);
 		mListView.doPullRefreshing(true, 0);
-		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC);
 	}
 
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
+		super.registerReceiver(intentFilter);
+		intentFilter.addAction(DynamicHelper.ACTION_REFRESH_DYNAMIC);
+	}
+	
 	public static Intent getIntent(Context context, String fid) {
 		Intent intent = new Intent(context, MyDynamicActivity.class);
 		intent.putExtra("uid", fid);

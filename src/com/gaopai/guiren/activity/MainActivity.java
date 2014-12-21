@@ -103,6 +103,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		view.startAnimation(welcomeAnimation);
 		showMainpage();
 	}
+	
+//	@Override
+//	protected void registerReceiver(IntentFilter intentFilter) {
+//	}
+
 
 	private Drawable getWelcomeRandomDrawable() {
 		int i = (int) (Math.random() * 3);

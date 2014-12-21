@@ -1014,11 +1014,11 @@ public class DamiInfo implements Serializable {
 	 *            消息ID
 	 * @return @
 	 */
-	public static void agreeMessage(String tid, String msgID, IResponseListener listener) {
+	public static void agreeMessage(String tid, String msgID, int isanonymity, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("roomid", tid);
 		bundle.add("msgid", msgID);
-
+		bundle.add("isanonymity", String.valueOf(isanonymity));
 		String url = SERVER + "user/agreemessage";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}

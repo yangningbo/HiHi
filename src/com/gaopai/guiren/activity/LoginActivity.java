@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -103,6 +104,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		mTitleBar.setTitleText(R.string.login);
 		initComponent();
 	}
+	
+	
+
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
+		// TODO Auto-generated method stub
+	}
+
+
 
 	private void initComponent() {
 		mPreferences = this.getSharedPreferences(DamiCommon.REMENBER_SHARED, 0);
