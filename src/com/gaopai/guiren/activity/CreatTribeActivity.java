@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,6 +27,8 @@ import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
+import com.gaopai.guiren.support.CameralHelper;
+import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
@@ -65,6 +68,8 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	private boolean isEdit = false;
 	private Tribe mTribe;
 
+	private CameralHelper cameralHelper;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -83,6 +88,14 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		if (isEdit) {
 			bindEditView();
 		}
+		cameralHelper = new CameralHelper(this, new CameralHelper.Option(1, true, ImageCrop.HEADER_WIDTH,
+				ImageCrop.HEADER_HEIGHT));
+		cameralHelper.setCallback(new CameralHelper.SimpleCallback() {
+			@Override
+			public void receiveCropPic(String path) {
+				setPic(path);
+			}
+		});
 	}
 
 	private void bindEditView() {
@@ -157,19 +170,19 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 			}
 		}));
 		etInfo.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (v.getId() == R.id.et_tribe_info) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_UP:
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (v.getId() == R.id.et_tribe_info) {
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+					switch (event.getAction() & MotionEvent.ACTION_MASK) {
+					case MotionEvent.ACTION_UP:
+						v.getParent().requestDisallowInterceptTouchEvent(false);
+						break;
+					}
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -177,10 +190,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_upload_pic:
-			Intent intent = getIntent();
-			intent.setClass(mContext, LocalPicPathActivity.class);
-//			intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_SINGLE);
-			startActivityForResult(intent, LocalPicPathActivity.REQUEST_CODE_PIC);
+			cameralHelper.btnPhotoAction();
 			break;
 		case R.id.btn_creat:
 			creatTribe();
@@ -225,17 +235,15 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == LocalPicPathActivity.REQUEST_CODE_PIC) {
-			if (resultCode == RESULT_OK) {
-				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
-				Drawable drawable = Drawable.createFromPath(pathList.get(0));
-				btnUploadPic.setBackgroundDrawable(drawable);
-			}
-		}
+	private void setPic(String path) {
+		Drawable drawable = Drawable.createFromPath(path);
+		btnUploadPic.setBackgroundDrawable(drawable);
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		cameralHelper.onActivityResult(requestCode, resultCode, data);
+	}
 
 	private void creatTribe() {
 		final String title = etTitle.getText().toString();
@@ -266,7 +274,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 			showToast(prompt);
 			return;
 		}
-		
+
 		if (isSetPassword) {
 			if (TextUtils.isEmpty(passwordAgain + password)) {
 				showToast(R.string.password_can_not_be_empty);

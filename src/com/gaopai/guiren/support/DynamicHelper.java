@@ -1038,7 +1038,12 @@ public class DynamicHelper {
 		// TODO Auto-generated method stub
 		JsonContent jsonContent = typeBean.jsoncontent;
 		buildCommonView(viewHolder, typeBean);
-		viewHolder.tvContent.setText(jsonContent.content);
+		if (TextUtils.isEmpty(jsonContent.content)) {
+			viewHolder.tvContent.setVisibility(View.GONE);
+		} else {
+			viewHolder.tvContent.setVisibility(View.VISIBLE);
+			viewHolder.tvContent.setText(jsonContent.content);
+		}
 
 		viewHolder.gridLayout.removeAllViews();
 		if (jsonContent.pic != null) {

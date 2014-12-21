@@ -41,6 +41,7 @@ import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
@@ -89,7 +90,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 	public static String KEY_MEETING = "meeting";
 	private boolean isEdit = false;
 
-	private ImageCrop imageCrop;
+	private CameralHelper cameralHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +106,14 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		}
 		initComponent();
 		bindView();
-		imageCrop = new ImageCrop(mContext);
+		cameralHelper = new CameralHelper(this, new CameralHelper.Option(1, true, ImageCrop.MEETING_WIDTH,
+				ImageCrop.MEETING_HEIGHT));
+		cameralHelper.setCallback(new CameralHelper.SimpleCallback() {
+			@Override
+			public void receiveCropBitmap(Bitmap bitmap) {
+				setPic(bitmap);
+			}
+		});
 	}
 
 	private void bindView() {
@@ -178,19 +186,19 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			}
 		}));
 		etContent.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (v.getId() == R.id.et_meeting_info) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_UP:
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (v.getId() == R.id.et_meeting_info) {
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+					switch (event.getAction() & MotionEvent.ACTION_MASK) {
+					case MotionEvent.ACTION_UP:
+						v.getParent().requestDisallowInterceptTouchEvent(false);
+						break;
+					}
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -207,10 +215,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			break;
 		case R.id.iv_meeeting_header:
 		case R.id.btn_upload_pic:
-//			Intent intent = getIntent();
-//			intent.setClass(mContext, LocalPicPathActivity.class);
-//			intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_SINGLE);
-//			startActivityForResult(intent, LocalPicPathActivity.REQUEST_CODE_PIC);
+			cameralHelper.btnPhotoAction();
 			break;
 		case R.id.btn_creat:
 			creatMeeting();
@@ -257,22 +262,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == LocalPicPathActivity.REQUEST_CODE_PIC) {
-			if (resultCode == RESULT_OK) {
-				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
-				Drawable drawable = Drawable.createFromPath(pathList.get(0));
-				mFilePath = pathList.get(0);
-				imageCrop.cropImageUri(ImageCrop.creatUri(mFilePath), ImageCrop.MEETING_WIDTH,
-						ImageCrop.MEETING_HEIGHT, ImageCrop.REQUEST_CROP_IMG);
-				return;
-
-			}
-		} else if (requestCode == ImageCrop.REQUEST_CROP_IMG) {
-			Bitmap photo = imageCrop.decodeWithIntent(data);
-			if (photo != null) {
-				setPic(photo);
-			}
-		}
+		cameralHelper.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private void setPic(Bitmap bitmap) {
@@ -446,7 +436,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 						str = getString(R.string.edit_success);
 					}
 					showToast(str);
-					if(isEdit) {
+					if (isEdit) {
 						setResult(RESULT_OK);
 					}
 					CreatMeetingActivity.this.finish();

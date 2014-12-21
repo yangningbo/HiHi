@@ -67,7 +67,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		setAbContentView(R.layout.activity_send_dynamic);
 		mTitleBar.setTitleText(R.string.send_dynamic);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back).setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -78,10 +77,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		v.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-//				if (isSending) {
-//					return;
-//				}
 				sendDynamic();
 			}
 		});
@@ -89,6 +84,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		cameralHelper = new CameralHelper(this);
 		getTags();
 	}
+	
 
 	@Override
 	public void onBackPressed() {
@@ -134,28 +130,14 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public void afterTextChanged(Editable s) {
-			// TODO Auto-generated method stub
-//			int nSelStart = 0;
-//			int nSelEnd = 0;
-//			boolean nOverMaxLength = false;
-//
-//			nSelStart = etDynamicMsg.getSelectionStart();
-//			nSelEnd = etDynamicMsg.getSelectionEnd();
-//			nOverMaxLength = (s.length() > 500) ? true : false;
-//			if (nOverMaxLength) {
-//				s.delete(nSelStart - 1, nSelEnd);
-//				etDynamicMsg.setTextKeepState(s);
-//			}
 			tvWordNumLimit.setText("还能输入" + (500 - s.length()) + "字");
 		}
 	};
@@ -344,7 +326,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		return imageView;
 	}
 
-	private CameralHelper.GetImageCallback callback = new GetImageCallback() {
+	private CameralHelper.GetImageCallback callback = new CameralHelper.SimpleCallback() {
 		@Override
 		public void receiveOriginPicList(List<String> pathList) {
 			for (String path : pathList) {
@@ -357,18 +339,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		@Override
 		public void receiveOriginPic(String path) {
 			addPicture(path);
-		}
-
-		@Override
-		public void receiveCropPic(String path) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void receiveCropBitmap(Bitmap bitmap) {
-			// TODO Auto-generated method stub
-			
 		}
 	};
 	@Override

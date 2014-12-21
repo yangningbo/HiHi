@@ -40,13 +40,14 @@ public class CameralHelper {
 
 	public CameralHelper(Activity context) {
 		this.mContext = context;
-		imageCrop = new ImageCrop(mContext);
 		option = new Option();
 	}
 
 	public CameralHelper(Activity context, Option option) {
 		this.mContext = context;
-		imageCrop = new ImageCrop(mContext);
+		if (option.isCrop) {
+			imageCrop = new ImageCrop(mContext);
+		}
 		this.option = option;
 	}
 
@@ -76,12 +77,12 @@ public class CameralHelper {
 		dialog.show();
 	}
 
-	protected void btnCameraAction() {
+	public void btnCameraAction() {
 		cropPath = "";
 		getImageFromCamera();
 	}
 
-	protected void btnPhotoAction() {
+	public void btnPhotoAction() {
 		cropPath = "";
 		getImageFromGallery();
 	}

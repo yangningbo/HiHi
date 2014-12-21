@@ -8,15 +8,10 @@ import java.util.UUID;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -28,16 +23,12 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.LocalPicActivity;
-import com.gaopai.guiren.activity.LocalPicPathActivity;
-import com.gaopai.guiren.activity.RotateImageActivity;
 import com.gaopai.guiren.adapter.BaseChatAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.SendMessageResult;
-import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
@@ -47,12 +38,12 @@ import com.gaopai.guiren.receiver.PushChatMessage;
 import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.service.type.XmppType;
 import com.gaopai.guiren.support.ActionHolder;
+import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
-import com.tencent.a.b.i;
 
 //处理聊天界面的逻辑
 public abstract class ChatBaseActivity extends BaseActivity {
@@ -60,18 +51,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 
 	protected User mLogin;
 
-	public final static int MSG_INIT_COMPONENT = 100;
-
-	static final int REQUEST_GET_IMAGE_BY_CAMERA = 1002;
-	static final int REQUEST_ROTATE_IMAGE = 1003;
-	static final int REQUEST_GET_URI = 101;
-	public static final int REQUEST_GET_BITMAP = 124;
-	public static final int REQUEST_GET_BITMAP_LIST = 125;
-
-	private String TEMP_FILE_NAME = "header.jpg";
-
 	protected Handler mHandler;
-	private List<String> downVoiceList = new ArrayList<String>();
 	protected SpeexPlayerWrapper speexPlayerWrapper;
 
 	protected BaseChatAdapter mAdapter;
@@ -81,11 +61,15 @@ public abstract class ChatBaseActivity extends BaseActivity {
 
 	public static final String KEY_MESSAGE = "message";
 	public static String currentChatId = "";
+	
+	private CameralHelper cameralHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		cameralHelper = new CameralHelper(this);
+		cameralHelper.setCallback(callback);
 		speexPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
 			@Override
 			public void onSuccess(MessageInfo messageInfo) {
@@ -104,12 +88,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		mAdapter.setResendClickListener(resendClickListener);
 	}
 
-	/**
-	 * 下载成功后修改消息状态，更新数据库并播放声音
-	 * 
-	 * @param msg
-	 * @param type
-	 */
 	private void downVoiceSuccess(final MessageInfo msg) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable messageTable = new MessageTable(dbDatabase);
@@ -122,7 +100,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		}
 	}
 
-	// 从网络下载下来后首先设置message初始状态， order = 1倒叙插入
 	protected List<MessageInfo> parseMessageList(List<MessageInfo> list, int order) {
 		List<MessageInfo> mList = new ArrayList<MessageInfo>();
 		for (MessageInfo messageInfo : list) {
@@ -177,12 +154,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		MessageTable table = new MessageTable(db);
 		table.update(messageInfo);
 	}
-
-	/**
-	 * 发送并将消息加到消息列表中
-	 * 
-	 * @param msg
-	 */
+	
 	protected void addSaveSendMessage(MessageInfo msg) {
 		msg.sendState = MessageState.STATE_SENDING;
 		addMessageInfo(msg);
@@ -330,98 +302,35 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			}
 		}
 	}
-
-	protected void btnCameraAction() {
-		getImageFromCamera();
-	}
-
-	protected void btnPhotoAction() {
-		getImageFromGallery();
-	}
-
-	private void getImageFromCamera() {
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-		// TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
-
-		if (FeatureFunction.newFolder(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY)) {
-			File out = new File(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY,
-					TEMP_FILE_NAME);
-			Uri uri = Uri.fromFile(out);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-			startActivityForResult(intent, REQUEST_GET_IMAGE_BY_CAMERA);
+	
+	private CameralHelper.GetImageCallback callback = new CameralHelper.SimpleCallback() {
+		@Override
+		public void receiveOriginPic(String path) {
+			sendPicFile(MessageType.PICTURE, path);
 		}
-	}
 
-	private void getImageFromGallery() {
-		Intent intent = new Intent();
-//		intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_MUTI);
-		intent.setClass(mContext, LocalPicPathActivity.class);
-		startActivityForResult(intent, REQUEST_GET_BITMAP_LIST);
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case REQUEST_GET_IMAGE_BY_CAMERA:
-			if (resultCode == RESULT_OK) {
-				if (data != null) {
-					Uri uri = data.getData();
-					if (!TextUtils.isEmpty(uri.getAuthority())) {
-						Cursor cursor = getContentResolver().query(uri, new String[] { MediaColumns.DATA }, null, null,
-								null);
-						if (null == cursor) {
-							return;
-						}
-						cursor.moveToFirst();
-						String path = cursor.getString(cursor.getColumnIndex(MediaColumns.DATA));
-						String extension = path.substring(path.lastIndexOf("."), path.length());
-						if (FeatureFunction.isPic(extension)) {
-							sendPicFile(MessageType.PICTURE, path);
-						}
-					}
-					return;
-				} else {
-					// Here if we give the uri, we need to read it
-					String path = Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY
-							+ TEMP_FILE_NAME;
-					Logger.d(this, "path=" + path);
-					String extension = path.substring(path.indexOf("."), path.length());
-					if (FeatureFunction.isPic(extension)) {
-
-						// if (!TextUtils.isEmpty(path)) {
-						// sendPicFile(MessageType.PICTURE, path);
-						// }
-						Intent intent = new Intent();
-						intent.putExtra(RotateImageActivity.KEY_IMAGE_PATH, path);
-						intent.setClass(ChatBaseActivity.this, RotateImageActivity.class);
-						startActivityForResult(intent, REQUEST_ROTATE_IMAGE);
-					}
-				}
-
-			}
-			break;
-		case REQUEST_ROTATE_IMAGE:
-			if (resultCode == RESULT_OK) {
-				String path = data.getStringExtra(RotateImageActivity.KEY_IMAGE_PATH);
+		@Override
+		public void receiveOriginPicList(List<String> pathList) {
+			for (String path : pathList) {
 				if (!TextUtils.isEmpty(path)) {
 					sendPicFile(MessageType.PICTURE, path);
 				}
 			}
-			break;
-
-		case REQUEST_GET_BITMAP_LIST:
-			if (resultCode == RESULT_OK) {
-				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
-				for (String path : pathList) {
-					if (!TextUtils.isEmpty(path)) {
-						Logger.d(this, path);
-						sendPicFile(MessageType.PICTURE, path);
-					}
-				}
-			}
-			break;
 		}
+	};
+
+	protected void btnCameraAction() {
+		cameralHelper.btnCameraAction();
+	}
+
+	protected void btnPhotoAction() {
+		cameralHelper.btnPhotoAction();
+	}
+
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		cameralHelper.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
