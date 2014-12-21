@@ -346,7 +346,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 	private CameralHelper.GetImageCallback callback = new GetImageCallback() {
 		@Override
-		public void receivePicList(List<String> pathList) {
+		public void receiveOriginPicList(List<String> pathList) {
 			for (String path : pathList) {
 				if (!TextUtils.isEmpty(path)) {
 					addPicture(path);
@@ -355,8 +355,20 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 
 		@Override
-		public void receivePic(String path) {
+		public void receiveOriginPic(String path) {
 			addPicture(path);
+		}
+
+		@Override
+		public void receiveCropPic(String path) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void receiveCropBitmap(Bitmap bitmap) {
+			// TODO Auto-generated method stub
+			
 		}
 	};
 	@Override

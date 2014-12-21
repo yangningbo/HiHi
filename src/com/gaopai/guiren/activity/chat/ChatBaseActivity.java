@@ -355,7 +355,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 
 	private void getImageFromGallery() {
 		Intent intent = new Intent();
-		intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_MUTI);
+//		intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_MUTI);
 		intent.setClass(mContext, LocalPicPathActivity.class);
 		startActivityForResult(intent, REQUEST_GET_BITMAP_LIST);
 	}

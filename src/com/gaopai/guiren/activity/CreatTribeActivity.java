@@ -179,7 +179,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		case R.id.btn_upload_pic:
 			Intent intent = getIntent();
 			intent.setClass(mContext, LocalPicPathActivity.class);
-			intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_SINGLE);
+//			intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_SINGLE);
 			startActivityForResult(intent, LocalPicPathActivity.REQUEST_CODE_PIC);
 			break;
 		case R.id.btn_creat:

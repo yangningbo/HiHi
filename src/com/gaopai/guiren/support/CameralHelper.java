@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -16,11 +17,17 @@ import android.provider.MediaStore.MediaColumns;
 import android.text.TextUtils;
 import android.view.Window;
 
+import com.gaopai.guiren.DamiCommon;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.LocalPicActivity;
 import com.gaopai.guiren.activity.LocalPicPathActivity;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.RotateImageActivity;
+import com.gaopai.guiren.bean.UserInfoBean;
+import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class CameralHelper {
 	public static String TEMP_FILE_NAME = "header.jpg";
@@ -28,9 +35,19 @@ public class CameralHelper {
 	public static final int REQUEST_ROTATE_IMAGE = 1003;
 
 	private Activity mContext;
+	private Option option;
+	private ImageCrop imageCrop;
 
 	public CameralHelper(Activity context) {
 		this.mContext = context;
+		imageCrop = new ImageCrop(mContext);
+		option = new Option();
+	}
+
+	public CameralHelper(Activity context, Option option) {
+		this.mContext = context;
+		imageCrop = new ImageCrop(mContext);
+		this.option = option;
 	}
 
 	public void showDefaultSelectDialog(String title) {
@@ -60,17 +77,17 @@ public class CameralHelper {
 	}
 
 	protected void btnCameraAction() {
+		cropPath = "";
 		getImageFromCamera();
 	}
 
 	protected void btnPhotoAction() {
+		cropPath = "";
 		getImageFromGallery();
 	}
 
 	private void getImageFromCamera() {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-		// TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
 
 		if (FeatureFunction.newFolder(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY)) {
 			File out = new File(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY,
@@ -87,7 +104,7 @@ public class CameralHelper {
 
 	private void getImageFromGallery() {
 		Intent intent = new Intent();
-		intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_MUTI);
+		intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, option.getPicNum());
 		intent.setClass(mContext, LocalPicPathActivity.class);
 		mContext.startActivityForResult(intent, REQUEST_GET_BITMAP_LIST);
 	}
@@ -129,7 +146,11 @@ public class CameralHelper {
 			if (resultCode == Activity.RESULT_OK) {
 				String path = data.getStringExtra(RotateImageActivity.KEY_IMAGE_PATH);
 				if (!TextUtils.isEmpty(path)) {
-					callback.receivePic(path);
+					Logger.d(this, "pic=" + path);
+					callback.receiveOriginPic(path);
+					if (option.isCrop) {
+						cropImage(path);
+					}
 				}
 			}
 			break;
@@ -137,23 +158,103 @@ public class CameralHelper {
 		case REQUEST_GET_BITMAP_LIST:
 			if (resultCode == Activity.RESULT_OK) {
 				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
-				callback.receivePicList(pathList);
+				if (pathList != null && pathList.size() > 0) {
+					callback.receiveOriginPicList(pathList);
+					if (option.isCrop) {
+						cropImage(pathList.get(0));
+					}
+				}
 			}
+			break;
+		case ImageCrop.REQUEST_CROP_IMG:
+			Bitmap photo = imageCrop.decodeWithIntent(data);
+			callback.receiveCropPic(cropPath);
+			callback.receiveCropBitmap(photo);
 			break;
 		}
 	}
-	
+
+	private String cropPath;
+
+	private void cropImage(String path) {
+		cropPath = path;
+		imageCrop.cropImageUri(ImageCrop.creatUri(path), option.cropWidth, option.cropHeight,
+				ImageCrop.REQUEST_CROP_IMG);
+	}
+
 	private GetImageCallback callback;
-	
+
 	public void setCallback(GetImageCallback callback) {
 		if (this.callback != callback) {
 			this.callback = callback;
 		}
-		
 	}
-	
+
+	public void setOption(Option option) {
+		if (this.option != option) {
+			this.option = option;
+		}
+	}
+
 	public static interface GetImageCallback {
-		public void receivePic(String path);
-		public void receivePicList(List<String> pathList);
+		public void receiveOriginPic(String path);
+
+		public void receiveCropPic(String path);
+
+		public void receiveCropBitmap(Bitmap bitmap);
+
+		public void receiveOriginPicList(List<String> pathList);
+	}
+
+	public static class SimpleCallback implements GetImageCallback {
+
+		@Override
+		public void receiveOriginPic(String path) {
+		}
+
+		@Override
+		public void receiveCropPic(String path) {
+
+		}
+
+		@Override
+		public void receiveCropBitmap(Bitmap bitmap) {
+
+		}
+
+		@Override
+		public void receiveOriginPicList(List<String> pathList) {
+
+		}
+
+	}
+
+	public static class Option {
+		private int picNum;
+		public boolean isCrop;
+		public int cropWidth;
+		public int cropHeight;
+
+		public Option() {
+			picNum = 9;
+			isCrop = false;
+			cropWidth = 100;
+			cropHeight = 100;
+		}
+
+		public Option(int picNum, boolean isCrop, int cropWidth, int cropHeight) {
+			this.picNum = picNum;
+			this.isCrop = isCrop;
+			this.cropWidth = cropWidth;
+			this.cropHeight = cropHeight;
+		}
+
+		public int getPicNum() {
+			if (isCrop) {
+				return 1;
+			}
+			return picNum;
+
+		}
 	}
 }

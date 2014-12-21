@@ -207,10 +207,10 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			break;
 		case R.id.iv_meeeting_header:
 		case R.id.btn_upload_pic:
-			Intent intent = getIntent();
-			intent.setClass(mContext, LocalPicPathActivity.class);
-			intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_SINGLE);
-			startActivityForResult(intent, LocalPicPathActivity.REQUEST_CODE_PIC);
+//			Intent intent = getIntent();
+//			intent.setClass(mContext, LocalPicPathActivity.class);
+//			intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_SINGLE);
+//			startActivityForResult(intent, LocalPicPathActivity.REQUEST_CODE_PIC);
 			break;
 		case R.id.btn_creat:
 			creatMeeting();

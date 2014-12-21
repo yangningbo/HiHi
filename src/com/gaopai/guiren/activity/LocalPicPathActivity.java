@@ -31,13 +31,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class LocalPicPathActivity extends BaseActivity {
 
-	public static final int PIC_REQUIRE_SINGLE = 0;// 只要一张图片
-	public static final int PIC_REQUIRE_MUTI = 1;// 最多9张
+//	public static final int PIC_REQUIRE_SINGLE = 0;// 只要一张图片
+//	public static final int PIC_REQUIRE_MUTI = 1;// 最多9张
 	
 	public static final int REQUEST_CODE_PIC = 1;
+	
 	public static final String KEY_PIC_REQUIRE_TYPE = "pic_require";
 
-	private int mRequireType;
+	private int mSelectNum;
 
 	@ViewInject(id = R.id.listview)
 	private MyListView listview;
@@ -67,7 +68,7 @@ public class LocalPicPathActivity extends BaseActivity {
 		setAbContentView(R.layout.activity_localpath);
 		FinalActivity.initInjectedView(this);
 		initView();
-		mRequireType = getIntent().getIntExtra(KEY_PIC_REQUIRE_TYPE, 200);
+		mSelectNum = getIntent().getIntExtra(KEY_PIC_REQUIRE_TYPE, 9);
 	}
 
 	private void initView() {
@@ -184,7 +185,7 @@ public class LocalPicPathActivity extends BaseActivity {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(LocalPicPathActivity.this, LocalPicActivity.class);
 					intent.putStringArrayListExtra("listPath", listImagePath.get(position));
-					intent.putExtra(KEY_PIC_REQUIRE_TYPE, mRequireType);
+					intent.putExtra(KEY_PIC_REQUIRE_TYPE, mSelectNum);
 					startActivityForResult(intent, REQUEST_CODE_PIC);
 				}
 			});

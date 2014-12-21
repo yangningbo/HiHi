@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import u.aly.be;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +16,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -46,11 +45,12 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.support.CameralHelper;
-import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.support.CameralHelper.GetImageCallback;
+import com.gaopai.guiren.support.CameralHelper.Option;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.support.DynamicHelper.DySoftCallback;
+import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.support.comment.CommentProfile;
@@ -849,26 +849,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				}
 				tUser.commentlist.add(bean);
 				bindBottomDynamicView();
-			} else if (requestCode == ImageCrop.REQUEST_CROP_IMG) {
-				Bitmap photo = imageCrop.decodeWithIntent(intent);
-				if (photo != null) {
-					if (TextUtils.isEmpty(headerImage)) {
-						return;
-					}
-					DamiInfo.editHeader(headerImage, new SimpleResponseListener(mContext, R.string.upload_header_now) {
-						@Override
-						public void onSuccess(Object o) {
-							UserInfoBean data = (UserInfoBean) o;
-							if (data.state != null && data.state.code == 0) {
-								tUser = data.data;
-								bindHeadView();
-								DamiCommon.saveLoginResult(mContext, tUser);
-								sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
-								showToast(R.string.upload_header_success);
-							}
-						}
-					});
-				}
 			}
 		}
 	}
@@ -924,25 +904,28 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private void changeHeadImg() {
 		headerImage = "";
 		cameralHelper.setCallback(callback);
+		cameralHelper.setOption(new Option(1, true, ImageCrop.HEADER_WIDTH, ImageCrop.HEADER_HEIGHT));
 		cameralHelper.showDefaultSelectDialog(getString(R.string.set_header));
 	}
 
 	private String headerImage;
-	private CameralHelper.GetImageCallback callback = new GetImageCallback() {
+	private CameralHelper.GetImageCallback callback = new CameralHelper.SimpleCallback() {
 		@Override
-		public void receivePicList(List<String> pathList) {
-			if (pathList != null && pathList.size() > 0) {
-				headerImage = pathList.get(0);
-				imageCrop.cropImageUri(ImageCrop.creatUri(pathList.get(0)), ImageCrop.HEADER_WIDTH,
-						ImageCrop.HEADER_HEIGHT, ImageCrop.REQUEST_CROP_IMG);
-			}
-		}
-
-		@Override
-		public void receivePic(String path) {
-			headerImage = path;
-			imageCrop.cropImageUri(ImageCrop.creatUri(path), ImageCrop.HEADER_WIDTH, ImageCrop.HEADER_HEIGHT,
-					ImageCrop.REQUEST_CROP_IMG);
+		public void receiveCropPic(String path) {
+			Logger.d(this, "pic=" + path);
+			DamiInfo.editHeader(path, new SimpleResponseListener(mContext, R.string.upload_header_now) {
+				@Override
+				public void onSuccess(Object o) {
+					UserInfoBean data = (UserInfoBean) o;
+					if (data.state != null && data.state.code == 0) {
+						tUser = data.data;
+						bindHeadView();
+						DamiCommon.saveLoginResult(mContext, tUser);
+						sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+						showToast(R.string.upload_header_success);
+					}
+				}
+			});
 		}
 	};
 }

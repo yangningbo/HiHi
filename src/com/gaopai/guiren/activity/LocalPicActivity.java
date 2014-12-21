@@ -57,7 +57,7 @@ public class LocalPicActivity extends BaseActivity implements OnClickListener {
 	protected ImageLoader mImageLoader = ImageLoader.getInstance();
 	public LayoutInflater mInflater;
 
-	private int mPicRequireType;
+	private int mSelectNum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +83,7 @@ public class LocalPicActivity extends BaseActivity implements OnClickListener {
 		ivComplete.setId(R.id.ab_complete);
 		ivComplete.setOnClickListener(this);
 
-		mPicRequireType = getIntent().getIntExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE,
-				LocalPicPathActivity.PIC_REQUIRE_MUTI);
+		mSelectNum = getIntent().getIntExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, 9);
 		listPath = getIntent().getStringArrayListExtra("listPath");
 
 		DisplayMetrics dm = MyUtils.getScreenSize(this);
@@ -154,14 +153,8 @@ public class LocalPicActivity extends BaseActivity implements OnClickListener {
 						listSelectPath.remove(listPath.get(position));
 						holder.img_select.setVisibility(View.GONE);
 					} else {
-						if (mPicRequireType == LocalPicPathActivity.PIC_REQUIRE_SINGLE) {
-							if (listSelectPath.size() > 0) {
-								showToast("最多选择1张照片");
-								return;
-							}
-						}
-						if (listSelectPath.size() > 8) {
-							showToast("最多选择9张照片");
+						if (listSelectPath.size() > mSelectNum - 1) {
+							showToast("最多选择" + mSelectNum + "张照片");
 							return;
 						}
 						listSelectPath.add(listPath.get(position));
@@ -218,11 +211,6 @@ public class LocalPicActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ab_complete:
-			if (mPicRequireType == LocalPicPathActivity.PIC_REQUIRE_SINGLE) {
-				listGuirenPath.add(listSelectPath.get(0));
-				finishActivityWithPic();
-				return;
-			}
 			sendMessage(SHOW_PROGRESSBAR);
 			new Thread(new Runnable() {
 				@Override
