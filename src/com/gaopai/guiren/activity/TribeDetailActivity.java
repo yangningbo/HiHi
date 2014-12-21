@@ -275,7 +275,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 					gridView.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID),
+							startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID, isCreator),
 									REQUEST_ALL_TRIBE_USERS);
 						}
 					});
@@ -284,7 +284,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				}
 
 				gridView.setOnClickListener(gridClickListener);
-//				gridView.setOnLongClickListener(gridLongClickListener);
+				// gridView.setOnLongClickListener(gridLongClickListener);
 				Member member = members.get(i);
 				holder.tvUserName.setText(member.realname);
 				ImageLoaderUtil.displayImage(member.headsmall, holder.ivHeader);
@@ -439,7 +439,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			startActivity(TwoDimensionActivity.getIntent(mContext, mTribe));
 			break;
 		case R.id.ml_tribe_users:
-			startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID), REQUEST_ALL_TRIBE_USERS);
+			startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID, isCreator),
+					REQUEST_ALL_TRIBE_USERS);
 			break;
 		default:
 			break;

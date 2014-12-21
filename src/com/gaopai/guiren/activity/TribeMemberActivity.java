@@ -42,6 +42,7 @@ public class TribeMemberActivity extends BaseActivity {
 
 	private String mTribeID = "";
 	public static final String KEY_TRIBE_ID = "tribe_id";
+	public static final String KEY_IS_CREATOR = "is_creator";
 
 	public static final int TYPE_MEETING_HOST = 1;
 	public static final int TYPE_MEETING_GUEST = 2;
@@ -51,6 +52,7 @@ public class TribeMemberActivity extends BaseActivity {
 
 	private int type;
 	public final static String KEY_TYPE = "type";
+	private boolean isCreator;// if show kik button
 
 	private SimpleResponseListener listener;
 
@@ -73,6 +75,7 @@ public class TribeMemberActivity extends BaseActivity {
 			}
 		});
 		mTribeID = getIntent().getStringExtra(KEY_TRIBE_ID);
+		isCreator = getIntent().getBooleanExtra(KEY_IS_CREATOR, false);
 		switch (type) {
 		case TYPE_MEETING_HOST:
 			mTitleBar.setTitleText(R.string.host);
@@ -144,6 +147,13 @@ public class TribeMemberActivity extends BaseActivity {
 	public static Intent getIntent(Context context, String tid) {
 		Intent intent = new Intent(context, TribeMemberActivity.class);
 		intent.putExtra(TribeMemberActivity.KEY_TRIBE_ID, tid);
+		return intent;
+	}
+
+	public static Intent getIntent(Context context, String tid, boolean isCreator) {
+		Intent intent = new Intent(context, TribeMemberActivity.class);
+		intent.putExtra(TribeMemberActivity.KEY_TRIBE_ID, tid);
+		intent.putExtra(KEY_IS_CREATOR, isCreator);
 		return intent;
 	}
 
@@ -243,7 +253,7 @@ public class TribeMemberActivity extends BaseActivity {
 				holder.mHeaderView.setImageResource(R.drawable.default_header);
 			}
 
-			if (type == TYPE_TRIBE_USER) {
+			if (type == TYPE_TRIBE_USER && isCreator) {
 				holder.btnAction.setText(getString(R.string.kick_out_tribe));
 				holder.btnAction.setTag(user);
 				holder.btnAction.setOnClickListener(kickClickListener);

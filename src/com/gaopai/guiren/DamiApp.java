@@ -213,5 +213,4 @@ public class DamiApp extends Application {
 		}
 		return false;
 	}
-
 }

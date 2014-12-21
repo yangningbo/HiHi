@@ -206,10 +206,10 @@ public class NotifyHelper {
 		intent.putExtra("notify", true);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent contentIntent = PendingIntent.getActivity(mContext, 121212, intent,
+		PendingIntent contentIntent = PendingIntent.getActivity(mContext, NOTIFYD_SYSTEM, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(contentIntent);
-		notificationManager.notify(121212, builder.build());
+		notificationManager.notify(NOTIFYD_SYSTEM, builder.build());
 	}
 
 	private PendingIntent getChatIntent(MessageInfo messageInfo) {
@@ -227,10 +227,11 @@ public class NotifyHelper {
 			Tribe tribe = new Tribe();
 			tribe.id = messageInfo.to;
 			tribe.name = messageInfo.title;
+			tribe.type = messageInfo.type;
 			intent.putExtra(ChatTribeActivity.KEY_TRIBE, tribe);
 		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra("type", messageInfo.type);
+		intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, messageInfo.type);
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, messageInfo.to.hashCode(), intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return contentIntent;
