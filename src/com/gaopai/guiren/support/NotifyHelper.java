@@ -17,6 +17,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.NotifySystemActivity;
+import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.ConversationBean;
@@ -96,24 +98,20 @@ public class NotifyHelper {
 		return po.getInt(SPConst.KEY_NOTIFY_DAMI, 0) == 1;
 	}
 
-	public static final String NOTIFICATION_TIME_SHARED = "notification_time_shared";
-	public static final String NOTIFICATION_TIME = "notification_time";
 
 	public static void saveNotificationTime(Context context, long time) {
-		SharedPreferences preferences = context.getSharedPreferences(NOTIFICATION_TIME_SHARED, 0);
-		Editor editor = preferences.edit();
-		editor.putLong(NOTIFICATION_TIME, time);
-		editor.commit();
+		PreferenceOperateUtils po = new PreferenceOperateUtils(context);
+		po.setLong(SPConst.KEY_NOTIFICATION_TIME, time);
 	}
 
 	public static long getNotificationTime(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(NOTIFICATION_TIME_SHARED, 0);
-		return preferences.getLong(NOTIFICATION_TIME, 0);
+		PreferenceOperateUtils po = new PreferenceOperateUtils(context);
+		return po.getLong(SPConst.KEY_NOTIFICATION_TIME, 0L);
 	}
 
 	private void init() {
-		po = mContext.getSharedPreferences(SPConst.SP_SETTING, Context.MODE_MULTI_PROCESS);
-		poChat = mContext.getSharedPreferences(SPConst.SP_AVOID_DISTURB, Context.MODE_MULTI_PROCESS);
+		po = mContext.getSharedPreferences(SPConst.SP_SETTING, SPConst.getMode());
+		poChat = mContext.getSharedPreferences(SPConst.SP_AVOID_DISTURB, SPConst.getMode());
 	}
 
 	public void notifyChatMessage(MessageInfo messageInfo) {
@@ -153,9 +151,10 @@ public class NotifyHelper {
 		builder.setContentTitle(notifyMsg);
 		builder.setContentText(msg);
 		builder.setContentIntent(getChatIntent(messageInfo));
-
+		Logger.d(this, getCurrentChatId(mContext) + "  ==   " + messageInfo.conversion.toid);
 		if (messageInfo.type == 100) {// 单聊
-			if (isActivityTop(mContext, ".activity.chat.ChatMessageActivity")) {
+			if (isActivityTop(mContext, ".activity.chat.ChatMessageActivity")
+					&& getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
 				ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
 				return;
 			}
@@ -165,7 +164,9 @@ public class NotifyHelper {
 			}
 			notificationManager.notify(NOTIFYID_PRIVATE, builder.build());
 		} else { // 部落
-			if (isActivityTop(mContext, ".activity.chat.ChatTribeActivity")) {
+
+			if (isActivityTop(mContext, ".activity.chat.ChatTribeActivity")
+					&& getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
 				ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
 				return;
 			}
@@ -257,7 +258,7 @@ public class NotifyHelper {
 				notifyDefault |= Notification.DEFAULT_SOUND;
 			}
 		}
-	
+
 		builder.setAutoCancel(true);
 		builder.setDefaults(notifyDefault);
 		return builder;
@@ -280,4 +281,13 @@ public class NotifyHelper {
 		return false;
 	}
 
+	public static String getCurrentChatId(Context context) {
+		PreferenceOperateUtils po = new PreferenceOperateUtils(context);
+		return po.getString(SPConst.KEY_CHAT_CURRENT_ID, "");
+	}
+
+	public static void setCurrentChatId(Context context, String id) {
+		PreferenceOperateUtils po = new PreferenceOperateUtils(context);
+		po.setString(SPConst.KEY_CHAT_CURRENT_ID, id);
+	}
 }

@@ -49,6 +49,8 @@ import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.support.ActionHolder;
+import com.gaopai.guiren.support.ConversationHelper;
+import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
 import com.gaopai.guiren.utils.Logger;
@@ -210,7 +212,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		// TODO Auto-generated method stub
 		super.onResume();
 		checkHasDraft(mTribe.id);
-		resetCount(mTribe.id);
+		NotifyHelper.setCurrentChatId(mContext, mTribe.id);
+		ConversationHelper.resetCountAndRefresh(mContext, mTribe.id);
 	}
 
 	// 通知过来的tribe没有role，发送消息时需要用到，所以这里尽快更新呀

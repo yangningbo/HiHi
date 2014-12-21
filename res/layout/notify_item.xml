@@ -23,9 +23,8 @@
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="的立法肯德基flak的飞机拉萨看到"
             android:textColor="@color/one_word_prompt_color"
-            android:textSize="17sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/processed"
@@ -35,7 +34,7 @@
             android:layout_marginTop="3dp"
             android:text="@string/has_deal_with"
             android:textColor="@color/content_gray_color"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/time"
@@ -44,9 +43,8 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/content"
             android:layout_marginTop="3dp"
-            android:text="2014"
             android:textColor="@color/content_gray_color"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -614,7 +614,7 @@
     <string name="message_detail">消息详情</string>
     <string name="report">举报</string>
     <string name="private_chat_setting">隐聊设置</string>
-    <string name="add_tags_success">添加标签成功</string>
+    <string name="add_tags_success">更新标签成功</string>
     <string name="exit_login">退出登录</string>
     <string name="receive_msg_notify">后台接送消息通知</string>
     <string name="msg_notify">消息通知</string>

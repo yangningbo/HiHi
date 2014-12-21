@@ -42,6 +42,7 @@ import com.gaopai.guiren.db.NotifyRoomTable;
 import com.gaopai.guiren.db.NotifyTable;
 import com.gaopai.guiren.db.NotifyUserTable;
 import com.gaopai.guiren.receiver.NotifySystemMessage;
+import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -68,6 +69,7 @@ public class NotifySystemActivity extends BaseActivity {
 		setAbContentView(R.layout.activity_recommend_tribe);
 		FinalActivity.initInjectedView(this);
 		init();
+		ConversationHelper.resetCountAndRefresh(mContext, "-1");
 	}
 
 	private void init() {

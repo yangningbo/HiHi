@@ -1,6 +1,7 @@
 package com.gaopai.guiren.utils;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.gaopai.guiren.DamiCommon;
 
@@ -33,4 +34,18 @@ public class SPConst {
 	
 	public final static String SP_ANONY = "sp_anony";
 	//0 实名 1匿名
+	
+	
+	public final static String SP_DEFAULT = "sp_default";
+	public final static String KEY_CHAT_CURRENT_ID = "chat_current_id";
+	public static final String KEY_NOTIFICATION_TIME = "notification_time";
+	
+	
+	public static int getMode() {
+		int mode = Context.MODE_WORLD_WRITEABLE;
+		if (Build.VERSION.SDK_INT > 11) {
+			mode = Context.MODE_MULTI_PROCESS;
+		}
+		return mode;
+	}
 }

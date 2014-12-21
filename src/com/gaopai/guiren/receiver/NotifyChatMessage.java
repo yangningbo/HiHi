@@ -74,21 +74,13 @@ public class NotifyChatMessage implements NotifyMessage {
 	@Override
 	public void notifyMessage(String msg) {
 		try {
-
 			if (msg.equals("This room is not anonymous.")) {
 				return;
 			}
-			// Gson gson = new Gson();
-			// MessageInfo info = gson.fromJson(msg, MessageInfo.class);
-			// MessageInfo info = JSONObject.parseObject(msg,
-			// MessageInfo.class);
 
 			MessageInfo info = JSONObject.parseObject(msg, MessageInfo.class);
-			// MessageInfo info = chatBean.messageInfo;
 
 			Log.d(TAG, "save()");
-			// ConversationHelper.saveToLastMsgList(info,
-			// xmppManager.getSnsService());
 
 			if (info.istranslate == 1) {
 				SQLiteDatabase dbDatabase = DBHelper.getInstance(xmppManager.getSnsService()).getWritableDatabase();

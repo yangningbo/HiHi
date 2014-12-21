@@ -17,6 +17,7 @@ import com.gaopai.guiren.receiver.NotifyMessage;
 import com.gaopai.guiren.receiver.NotifySystemMessage;
 import com.gaopai.guiren.receiver.PushChatMessage;
 import com.gaopai.guiren.receiver.PushMessage;
+import com.gaopai.guiren.utils.Logger;
 
 /**
  * 
@@ -187,11 +188,12 @@ public class SNSMessageManager implements ChatManagerListener {
 			String chatId = chat.getParticipant().split("@")[0]; // 发来消息的用户
 			String content = message.getBody(); // 发送来的内容.
 			if (SYSTEM_USER.equals(chatId)) {
-				// Log.e("content", content);
+				Logger.d(this, "system");
 				notityMessage(systemMessage, content);
 			} else {
 				if (!TextUtils.isEmpty(content) && content.startsWith("{")) {
 				}
+				Logger.d(this, "chat");
 				notityMessage(chatMessage, content);
 			}
 		}

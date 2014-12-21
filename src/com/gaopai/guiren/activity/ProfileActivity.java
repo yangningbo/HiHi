@@ -165,7 +165,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		getUserInfo();
 		getRecTags();
 	}
-	
+
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
 		super.registerReceiver(intentFilter);
@@ -880,7 +880,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				TagResultBean data = (TagResultBean) o;
 				if (data.state != null && data.state.code == 0) {
 					tagList.clear();
-					tagList.addAll(data.data);
+					if (data.data != null && data.data.size() > 0) {
+						tagList.addAll(data.data);
+					}
 					bindUserTags();
 					showToast(R.string.add_tags_success);
 				} else {

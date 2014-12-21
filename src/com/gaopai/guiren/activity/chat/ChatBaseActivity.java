@@ -48,6 +48,7 @@ import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.service.type.XmppType;
 import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.ConversationHelper;
+import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -79,6 +80,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	protected String mId;// 部落会议id，或者对方用户id
 
 	public static final String KEY_MESSAGE = "message";
+	public static String currentChatId = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -428,6 +430,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
+		NotifyHelper.setCurrentChatId(mContext, "");
 		isLight = false;
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if (pm.isScreenOn()) {
@@ -579,11 +582,4 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			mListView.getRefreshableView().setSelection(messageInfos.size());// 定位到最后一行
 		}
 	}
-
-	protected void resetCount(String id) {
-		SQLiteDatabase dbDatabase = DBHelper.getInstance(this).getWritableDatabase();
-		ConverseationTable table = new ConverseationTable(dbDatabase);
-		table.resetCount(id);
-	}
-
 }

@@ -69,7 +69,7 @@ public class NotificationFragment extends BaseFragment {
 					return;
 				}
 				ConversationBean conversationBean = (ConversationBean) mAdapter.getItem(position);
-				resetCount(conversationBean.toid);
+//				resetCount(conversationBean.toid);
 				switch (conversationBean.type) {
 				case -1:
 					startActivity(NotifySystemActivity.class);
@@ -164,15 +164,15 @@ public class NotificationFragment extends BaseFragment {
 		}
 	}
 
-	private void resetCount(String id) {
-		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
-		ConverseationTable table = new ConverseationTable(dbDatabase);
-		if (table.resetCount(id)) {
-			conversationBeans = table.query();
-			setNotificationSp(conversationBeans);
-			mAdapter.addAll(conversationBeans);
-		}
-	}
+//	private void resetCount(String id) {
+//		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
+//		ConverseationTable table = new ConverseationTable(dbDatabase);
+//		if (table.resetCount(id)) {
+//			conversationBeans = table.query();
+//			setNotificationSp(conversationBeans);
+//			mAdapter.addAll(conversationBeans);
+//		}
+//	}
 	
 	@Override
 	protected void onReceive(Intent intent) {

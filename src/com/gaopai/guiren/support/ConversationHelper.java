@@ -1,6 +1,7 @@
 package com.gaopai.guiren.support;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
@@ -11,6 +12,7 @@ import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.fragment.NotificationFragment;
 
 public class ConversationHelper {
 
@@ -156,6 +158,18 @@ public class ConversationHelper {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
 		table.delete(id);
+	}
+
+	public static boolean resetCount(Context context, String id) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
+		ConverseationTable table = new ConverseationTable(dbDatabase);
+		return table.resetCount(id);
+	}
+
+	public static void resetCountAndRefresh(Context context, String id) {
+		if (resetCount(context, id)) {
+			context.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		}
 	}
 
 }
