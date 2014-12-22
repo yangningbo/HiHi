@@ -52,6 +52,7 @@ import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.support.comment.CommentProfile;
+import com.gaopai.guiren.support.view.AgreeAnimWindow;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
@@ -445,6 +446,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			TagBean tagBean = (TagBean) v.getTag();
+			AgreeAnimWindow.showAnim(v);
 			DamiInfo.zanUserTag(mUser.uid, tagBean.id, new SimpleResponseListener(mContext) {
 				@Override
 				public void onSuccess(Object o) {
@@ -705,28 +707,28 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivity(ReverificationActivity.class);
 			break;
 		case R.id.layout_profile_email:
-			if (isSelf) {
+			if (!isSelf) {
 				sendEmail(tUser.email);
 			} else {
 				changeContact(ChangeProfileActivity.TYPE_EMAIL, tUser.email);
 			}
 			break;
 		case R.id.layout_profile_phone_num:
-			if (isSelf) {
+			if (!isSelf) {
 				makePhonecall(tUser.phone);
 			} else {
 				changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
 			}
 			break;
 		case R.id.layout_profile_weibo_num:
-			if (isSelf) {
+			if (!isSelf) {
 				openWeibo();
 			} else {
 				changeContact(ChangeProfileActivity.TYPE_WEIBO, tUser.weibo);
 			}
 			break;
 		case R.id.layout_profile_weixin_num:
-			if (isSelf) {
+			if (!isSelf) {
 				openWeixin();
 			} else {
 				changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);

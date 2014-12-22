@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -69,14 +69,13 @@
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
     </style>
-    
+
     <style name="chat_name">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/general_text_gray</item>
         <item name="android:textSize">13sp</item>
     </style>
-
 
     <style name="chat_talk_style_txt_msg_info_msg_voice">
         <item name="android:layout_width">wrap_content</item>
@@ -94,7 +93,6 @@
         <item name="android:gravity">center_vertical|right</item>
         <item name="android:visibility">gone</item>
     </style>
-
 
     <style name="chat_talk_style_txt_msg_info_text">
         <item name="android:layout_width">wrap_content</item>
@@ -169,6 +167,7 @@
         <item name="android:windowEnterAnimation">@anim/popup_right_in</item>
         <item name="android:windowExitAnimation">@anim/popup_right_out</item>
     </style>
+
     <style name="window_slide_left">
         <item name="android:windowEnterAnimation">@anim/popup_left_in</item>
         <item name="android:windowExitAnimation">@anim/popup_left_out</item>
@@ -401,12 +400,16 @@
         <item name="android:drawablePadding">10dp</item>
         <item name="android:gravity">center</item>
     </style>
-    
+
     <style name="chat_box_grid">
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingBottom">20dp</item>
         <item name="android:paddingTop">20dp</item>
         <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="agree_popwin_anim_style">
+        <item name="android:windowEnterAnimation">@anim/agree_anim</item>
     </style>
 
 </resources>

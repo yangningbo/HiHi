@@ -75,6 +75,7 @@ import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
+import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.chat.ChatBoxManager;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
@@ -164,6 +165,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private List<MessageInfo> zanList = new ArrayList<MessageInfo>();
 
 	private PreferenceOperateUtils spoAnony;
+	private CameralHelper cameralHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +179,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		mChatType = getIntent().getIntExtra(INTENT_CHATTYPE_KEY, 0);
 		isOnLooker = getIntent().getBooleanExtra(INTENT_SENCE_ONLOOK_KEY, false);
 		msgHelper = new ChatMsgDataHelper(mContext, callback, mTribe, mChatType);
+		cameralHelper = new CameralHelper(this);
+		cameralHelper.setCallback(picCallback);
 		initComponent();
 		mListView.getRefreshableView().addHeaderView(creatHeaderView());
 		bindView();
@@ -971,45 +975,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	private void updateCommentInfoState(MessageInfo messageInfo) {
-		MessageInfo tempInfo = this.messageInfo;
-		updateCommentCount(tempInfo);
-		if (messageInfos == null || messageInfos.size() == 0) {
-			return;
-		}
-		for (int j = 0; j < messageInfos.size(); j++) {
-			if (messageInfo.tag.equals(messageInfos.get(j).tag)) {
-				MessageInfo comment = messageInfos.get(j);
-				comment.sendState = messageInfo.sendState;
-				comment.id = messageInfo.id;
-				comment.imgUrlS = messageInfo.imgUrlS;
-				comment.imgUrlL = messageInfo.imgUrlL;
-				comment.imgWidth = messageInfo.imgWidth;
-				comment.imgHeight = messageInfo.imgHeight;
-				comment.voiceUrl = messageInfo.voiceUrl;
-				Log.d(TAG, "voice url=" + messageInfo.voiceUrl);
-				comment.readState = messageInfo.readState;
-				comment.time = messageInfo.time;
-				comment.displayname = messageInfo.displayname;
-				comment.headImgUrl = messageInfo.headImgUrl;
-				mAdapter.notifyDataSetChanged();
-				break;
-			}
-		}
-	}
-
-	private void modifyMessageState() {
-		Intent favoriteIntent = new Intent(ChatMainActivity.ACTION_COMMENT_OR_ZAN_OR_FAVOURITE);
-		favoriteIntent.putExtra("message", messageInfo);
-	
-		mContext.sendBroadcast(favoriteIntent);
-	}
-
-	private void updateCommentCount(MessageInfo messageInfo) {
-		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
-		MessageTable table = new MessageTable(db);
-		table.updateCommentCount(messageInfo);
-	}
 
 	private void updateZanCount(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
@@ -1017,14 +982,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		table.updateAgreeCount(messageInfo);
 	}
 
-	private void updateFavoriteCount(MessageInfo favoriteMessage, boolean isFavorite) {
-		if (isFavorite) {
-			messageInfo.favoriteCount = favoriteMessage.favoriteCount;
-		} else {
-			messageInfo.favoriteCount++;
-			messageInfo.isfavorite = 1;
-		}
-	}
 
 	private List<MessageInfo> messageInfos = new ArrayList<MessageInfo>();
 
@@ -1146,96 +1103,32 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	protected void btnCameraAction() {
-		getImageFromCamera();
+		cameralHelper.btnCameraAction();
 	}
 
 	protected void btnPhotoAction() {
-		getImageFromGallery();
+		cameralHelper.btnPhotoAction();
 	}
 
-	private void getImageFromCamera() {
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
-		if (FeatureFunction.newFolder(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY)) {
-			File out = new File(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY,
-					FeatureFunction.getPhotoFileName());
-			Uri uri = Uri.fromFile(out);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-			startActivityForResult(intent, REQUEST_GET_IMAGE_BY_CAMERA);
+	private CameralHelper.GetImageCallback picCallback = new CameralHelper.SimpleCallback() {
+		@Override
+		public void receiveOriginPic(String path) {
+			sendPicFile(MessageType.PICTURE, path);
 		}
-	}
 
-	private void getImageFromGallery() {
-		Intent intent = new Intent();
-//		intent.putExtra(LocalPicPathActivity.KEY_PIC_REQUIRE_TYPE, LocalPicPathActivity.PIC_REQUIRE_MUTI);
-		intent.setClass(mContext, LocalPicPathActivity.class);
-		startActivityForResult(intent, REQUEST_GET_BITMAP_LIST);
-	}
-
-	static final int REQUEST_GET_IMAGE_BY_CAMERA = 1002;
-	static final int REQUEST_ROTATE_IMAGE = 1003;
-	static final int REQUEST_GET_URI = 101;
-	public static final int REQUEST_GET_BITMAP = 124;
-	public static final int REQUEST_GET_BITMAP_LIST = 125;
-
-	private String TEMP_FILE_NAME = "header.jpg";
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case REQUEST_GET_IMAGE_BY_CAMERA:
-			if (resultCode == RESULT_OK) {
-				if (data != null) {
-					Uri uri = data.getData();
-					if (!TextUtils.isEmpty(uri.getAuthority())) {
-						Cursor cursor = getContentResolver().query(uri, new String[] { MediaColumns.DATA }, null, null,
-								null);
-						if (null == cursor) {
-							return;
-						}
-						cursor.moveToFirst();
-						String path = cursor.getString(cursor.getColumnIndex(MediaColumns.DATA));
-						String extension = path.substring(path.lastIndexOf("."), path.length());
-						if (FeatureFunction.isPic(extension)) {
-							sendPicFile(MessageType.PICTURE, path);
-						}
-					}
-					return;
-				} else {
-					// Here if we give the uri, we need to read it
-					String path = Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY
-							+ TEMP_FILE_NAME;
-					String extension = path.substring(path.indexOf("."), path.length());
-					if (FeatureFunction.isPic(extension)) {
-						Intent intent = new Intent();
-						intent.putExtra(RotateImageActivity.KEY_IMAGE_PATH, path);
-						intent.setClass(ChatCommentsActivity.this, RotateImageActivity.class);
-						startActivityForResult(intent, REQUEST_ROTATE_IMAGE);
-					}
-				}
-
-			}
-			break;
-		case REQUEST_ROTATE_IMAGE:
-			if (resultCode == RESULT_OK) {
-				String path = data.getStringExtra(RotateImageActivity.KEY_IMAGE_PATH);
+		@Override
+		public void receiveOriginPicList(List<String> pathList) {
+			for (String path : pathList) {
 				if (!TextUtils.isEmpty(path)) {
 					sendPicFile(MessageType.PICTURE, path);
 				}
 			}
-			break;
-
-		case REQUEST_GET_BITMAP_LIST:
-			if (resultCode == RESULT_OK) {
-				List<String> pathList = data.getStringArrayListExtra(LocalPicActivity.KEY_PIC_SELECT_PATH_LIST);
-				for (String path : pathList) {
-					if (!TextUtils.isEmpty(path)) {
-						sendPicFile(MessageType.PICTURE, path);
-					}
-				}
-			}
-			break;
 		}
+	};
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		cameralHelper.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -1435,10 +1328,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		}
 	}
-
-	public final static int ZAN_SUCCESS = 17454;
-	public final static int ZAN_FAILED = 17455;
-	public final static int ZAN_CANCEL_SUCCESS = 17456;
 
 	private void getZanList() {
 		DamiInfo.getMessageZanList(messageInfo.id, new SimpleResponseListener(mContext) {

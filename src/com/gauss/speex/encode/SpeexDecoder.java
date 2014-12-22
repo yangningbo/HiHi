@@ -15,6 +15,7 @@ import android.os.RecoverySystem.ProgressListener;
 
 import com.gaopai.guiren.media.MediaStateCallback;
 import com.gaopai.guiren.media.MediaUIHeper;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.volley.IResponseListener;
 import com.gaopai.guiren.volley.UIHelperUtil;
 import com.gauss.writer.speex.OggCrc;
@@ -44,17 +45,15 @@ public class SpeexDecoder {
 	}
 
 	private void initializeAndroidAudio(int sampleRate) throws Exception {
-		int minBufferSize = AudioTrack.getMinBufferSize(sampleRate,
-				AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+		int minBufferSize = AudioTrack.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_OUT_MONO,
+				AudioFormat.ENCODING_PCM_16BIT);
 
 		if (minBufferSize < 0) {
-			throw new Exception("Failed to get minimum buffer size: "
-					+ Integer.toString(minBufferSize));
+			throw new Exception("Failed to get minimum buffer size: " + Integer.toString(minBufferSize));
 		}
 
-		track = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
-				AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
-				minBufferSize, AudioTrack.MODE_STREAM);
+		track = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate, AudioFormat.CHANNEL_OUT_MONO,
+				AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
 
 	}
 
@@ -71,10 +70,10 @@ public class SpeexDecoder {
 	}
 
 	public synchronized void stop() {
-		if (track != null
-				&& track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+		if (track != null && track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
 			track.stop();
 			track.release();
+			Logger.d(this, "track state" + track.getState());
 			uiHeper.onPlayStop(false);
 		}
 
@@ -146,8 +145,7 @@ public class SpeexDecoder {
 				/* how many segments are there? */
 				segments = header[OGG_SEGOFFSET] & 0xFF;
 				dis.readFully(header, OGG_HEADERSIZE, segments);
-				chksum = OggCrc.checksum(chksum, header, OGG_HEADERSIZE,
-						segments);
+				chksum = OggCrc.checksum(chksum, header, OGG_HEADERSIZE, segments);
 
 				/* decode each segment, writing output to wav */
 				for (curseg = 0; curseg < segments; curseg++) {
@@ -187,11 +185,13 @@ public class SpeexDecoder {
 
 						/* get the amount of decoded data */
 						short[] decoded = new short[160];
-						if ((decsize = speexDecoder.decode(payload, decoded,
-								160)) > 0) {
+						if ((decsize = speexDecoder.decode(payload, decoded, 160)) > 0) {
 							track.write(decoded, 0, decsize);
 							track.setStereoVolume(0.7f, 0.7f);// ���õ�ǰ������С
-							track.play();
+							Logger.d(this, "===" + track.getState());
+							if (track.getState() != AudioTrack.STATE_UNINITIALIZED) {
+								track.play();
+							}
 						}
 						packetNo++;
 					}
@@ -237,8 +237,8 @@ public class SpeexDecoder {
 	 * @return
 	 * @throws Exception
 	 */
-	private boolean readSpeexHeader(final byte[] packet, final int offset,
-			final int bytes, boolean init) throws Exception {
+	private boolean readSpeexHeader(final byte[] packet, final int offset, final int bytes, boolean init)
+			throws Exception {
 		if (bytes != 80) {
 			System.out.println("Oooops");
 			return false;
@@ -256,9 +256,8 @@ public class SpeexDecoder {
 		int channels = readInt(packet, offset + 48);
 		int nframes = readInt(packet, offset + 64);
 		int frameSize = readInt(packet, offset + 56);
-		System.out.println("mode=" + mode + " sampleRate==" + sampleRate
-				+ " channels=" + channels + "nframes=" + nframes + "framesize="
-				+ frameSize);
+		System.out.println("mode=" + mode + " sampleRate==" + sampleRate + " channels=" + channels + "nframes="
+				+ nframes + "framesize=" + frameSize);
 		initializeAndroidAudio(sampleRate);
 
 		if (init) {
@@ -273,20 +272,17 @@ public class SpeexDecoder {
 		/*
 		 * no 0xff on the last one to keep the sign
 		 */
-		return (data[offset] & 0xff) | ((data[offset + 1] & 0xff) << 8)
-				| ((data[offset + 2] & 0xff) << 16) | (data[offset + 3] << 24);
+		return (data[offset] & 0xff) | ((data[offset + 1] & 0xff) << 8) | ((data[offset + 2] & 0xff) << 16)
+				| (data[offset + 3] << 24);
 	}
 
 	protected static long readLong(final byte[] data, final int offset) {
 		/*
 		 * no 0xff on the last one to keep the sign
 		 */
-		return (data[offset] & 0xff) | ((data[offset + 1] & 0xff) << 8)
-				| ((data[offset + 2] & 0xff) << 16)
-				| ((data[offset + 3] & 0xff) << 24)
-				| ((data[offset + 4] & 0xff) << 32)
-				| ((data[offset + 5] & 0xff) << 40)
-				| ((data[offset + 6] & 0xff) << 48) | (data[offset + 7] << 56);
+		return (data[offset] & 0xff) | ((data[offset + 1] & 0xff) << 8) | ((data[offset + 2] & 0xff) << 16)
+				| ((data[offset + 3] & 0xff) << 24) | ((data[offset + 4] & 0xff) << 32)
+				| ((data[offset + 5] & 0xff) << 40) | ((data[offset + 6] & 0xff) << 48) | (data[offset + 7] << 56);
 	}
 
 	protected static int readShort(final byte[] data, final int offset) {

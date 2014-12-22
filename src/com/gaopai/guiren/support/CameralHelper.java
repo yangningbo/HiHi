@@ -17,17 +17,12 @@ import android.provider.MediaStore.MediaColumns;
 import android.text.TextUtils;
 import android.view.Window;
 
-import com.gaopai.guiren.DamiCommon;
-import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.LocalPicActivity;
 import com.gaopai.guiren.activity.LocalPicPathActivity;
-import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.RotateImageActivity;
-import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.utils.Logger;
-import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class CameralHelper {
 	public static String TEMP_FILE_NAME = "header.jpg";
@@ -40,14 +35,13 @@ public class CameralHelper {
 
 	public CameralHelper(Activity context) {
 		this.mContext = context;
+		imageCrop = new ImageCrop(mContext);
 		option = new Option();
 	}
 
 	public CameralHelper(Activity context, Option option) {
 		this.mContext = context;
-		if (option.isCrop) {
-			imageCrop = new ImageCrop(mContext);
-		}
+		imageCrop = new ImageCrop(mContext);
 		this.option = option;
 	}
 
@@ -68,12 +62,13 @@ public class CameralHelper {
 					}
 				});
 		Dialog dialog;
-		if (TextUtils.isEmpty(title)) {
+		if (!TextUtils.isEmpty(title)) {
 			dialog = builder.setTitle(title).create();
 		} else {
 			dialog = builder.create();
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		}
+		dialog.setCanceledOnTouchOutside(true);
 		dialog.show();
 	}
 
