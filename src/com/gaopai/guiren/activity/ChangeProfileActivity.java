@@ -1,7 +1,11 @@
 package com.gaopai.guiren.activity;
 
+import java.util.regex.Pattern;
+
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -12,6 +16,7 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -56,7 +61,7 @@ public class ChangeProfileActivity extends BaseActivity {
 				switch (type) {
 				case TYPE_EMAIL:
 					email = etText.getText().toString();
-					if (!email.contains("@")) {
+					if (!checkIsEmail(email)) {
 						showToast(R.string.please_input_correct_email);
 						return;
 					}
@@ -64,6 +69,10 @@ public class ChangeProfileActivity extends BaseActivity {
 					break;
 				case TYPE_PHONE:
 					phone = etText.getText().toString();
+					if (!checkIsPhone(phone)) {
+						showToast(R.string.please_input_correct_mobile_num);
+						return;
+					}
 					mUser.phone = phone;
 					break;
 				case TYPE_WEIBO:
@@ -83,10 +92,10 @@ public class ChangeProfileActivity extends BaseActivity {
 					@Override
 					public void onSuccess(Object o) {
 						// TODO Auto-generated method stub
-						BaseNetBean data = (BaseNetBean) o;
+						UserInfoBean data = (UserInfoBean) o;
 						if (data.state != null && data.state.code == 0) {
 							ChangeProfileActivity.this.showToast("修改成功");
-							DamiCommon.saveLoginResult(mContext, mUser);
+							DamiCommon.saveLoginResult(mContext, data.data);
 							ChangeProfileActivity.this.setResult(RESULT_OK);
 							ChangeProfileActivity.this.finish();
 						} else {
@@ -100,7 +109,7 @@ public class ChangeProfileActivity extends BaseActivity {
 
 		etText = (EditText) findViewById(R.id.et_change_profile);
 		etText.setText(text);
-		
+
 		if (etText != null) {
 			etText.setSelection(text.length());
 		}
@@ -113,6 +122,12 @@ public class ChangeProfileActivity extends BaseActivity {
 				etText.setText("");
 			}
 		});
+	}
 
+	private boolean checkIsPhone(String phone) {
+		return PhoneNumberUtils.isGlobalPhoneNumber(phone);
+	}
+	private boolean checkIsEmail(String email) {
+		return Patterns.EMAIL_ADDRESS.matcher(email).matches();
 	}
 }

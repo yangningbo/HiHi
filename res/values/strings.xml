@@ -206,6 +206,7 @@
     <string name="cancel_favorite_failed">取消收藏失败</string>
     <string name="give_hime_message">给TA消息</string>
     <string name="profile">个人中心</string>
+    <string name="profile_other">详细资料</string>
     <string name="save">保存</string>
     <string name="reported">举报</string>
     <string name="markname">备注名</string>
@@ -416,7 +417,6 @@
     <string name="the_last_voice">当前已经是最后一首了</string>
     <string name="voice_list_is_null">当前无音频可播放</string>
     <string name="going_meeting">进行中的会议</string>
-    <string name="pass_meeting">往期会议</string>
     <string name="my_meeting">我的会议</string>
     <string name="venue">分会场</string>
     <string name="launch">发起</string>
@@ -574,7 +574,8 @@
 
     <string name="switch_on">ON</string>
     <string name="switch_off">OFF</string>
-    <string name="meeting_title">发现会议</string>
+    <string name="find_meeting_title">发现会议</string>
+    <string name="past_meeting_title">往期会议</string>
     <string name="connection_title">人脉</string>
     <string name="request_internet_now">正在请求数据</string>
     <string name="new_friends">新的好友</string>
@@ -842,6 +843,8 @@
     <string name="upload_header_success">更换头像成功！</string>
     <string name="now_loading">正在加载&#8230;</string>
     <string name="loading_error_click_retry">加载出错，点击重试</string>
+    <string name="meeting_is_past">会议已结束</string>
+    
     
     
 </resources>

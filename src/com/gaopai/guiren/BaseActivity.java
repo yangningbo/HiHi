@@ -381,7 +381,9 @@ public class BaseActivity extends FragmentActivity {
 				dialog.dismiss();
 			}
 		});
-		builder.create().show();
+		Dialog dialog = builder.create();
+		dialog.setCanceledOnTouchOutside(true);
+		dialog.show();
 	}
 
 	public AlertDialog showDialog(String title, String msg) {
@@ -411,6 +413,7 @@ public class BaseActivity extends FragmentActivity {
 		} else {
 			dialog.setTitle(title);
 		}
+		dialog.setCanceledOnTouchOutside(true);
 		dialog.show();
 	}
 

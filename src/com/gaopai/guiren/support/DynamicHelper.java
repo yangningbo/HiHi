@@ -703,6 +703,18 @@ public class DynamicHelper {
 		}
 		return builder;
 	}
+	
+	// for new dynamic in ProfileActivity
+	private Spannable parseProfileHeaderText(String actionInfo) {
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+		int grayColor = mContext.getResources().getColor(R.color.general_text_gray);
+		if (!TextUtils.isEmpty(actionInfo)) {
+			Spannable actionInfoSpannable = MyTextUtils.setTextSize(
+					MyTextUtils.setTextColor(actionInfo, grayColor), 14);
+			builder.append(actionInfoSpannable);
+		}
+		return builder;
+	}
 
 	private String getString(int resId) {
 		return mContext.getString(resId);
@@ -873,7 +885,7 @@ public class DynamicHelper {
 				// viewHolder.tvAction.setText(typeBean.title);
 				spreadAction = typeBean.title;
 			}
-			viewHolder.tvUserName.setText(parseHeaderText("", "-1", "", spreadAction));
+			viewHolder.tvUserName.setText(parseProfileHeaderText(spreadAction));
 			viewHolder.btnDynamicAction.setVisibility(View.GONE);
 			viewHolder.tvDateInfo.setVisibility(View.GONE);
 			// viewHolder.tvUserName.setVisibility(View.GONE);
@@ -1057,19 +1069,11 @@ public class DynamicHelper {
 			if (tags.length > 0) {
 				viewHolder.flTags.setVisibility(View.VISIBLE);
 				for (String tag : tags) {
-					viewHolder.flTags.addView(creatTagWithoutDelete(tag), viewHolder.flTags.getTextLayoutParams());
+					viewHolder.flTags.addView(TagWindowManager.creatTagFlow(tag, null, mInflater, false),
+							viewHolder.flTags.getTextLayoutParams());
 				}
 			}
 		}
-	}
-
-	private View creatTagWithoutDelete(String text) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		v.setEnabled(false);
-		v.findViewById(R.id.btn_delete_tag).setVisibility(View.GONE);
-		return v;
 	}
 
 	public final static int KEY_PHOTO_CLICK_POSITION = 96;

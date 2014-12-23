@@ -17,6 +17,7 @@ import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.adapter.RecommendAdapter;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
+import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.RecommendAddResult;
 import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -135,12 +136,10 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 
 	private void addUser(String id) {
 
-		DamiInfo.requestAddFriend(id, "", "", new SimpleResponseListener(getActivity(),
-				R.string.request_internet_now) {
+		DamiInfo.followInBat(id, new SimpleResponseListener(getActivity(), R.string.request_internet_now) {
 			@Override
 			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				final RecommendAddResult data = (RecommendAddResult) o;
+				final BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					gotoRecTribeFragment();
 				} else {

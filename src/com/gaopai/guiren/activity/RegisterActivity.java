@@ -39,9 +39,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private TextView tvRequestVeryficaion;
 
 	private Handler mHandler;
-
-	private String phoneNum;
-	private String smsCode;
 	private String countryCode = "86";
 	
 	public final static int TYPE_REGISTER = 0;
@@ -67,7 +64,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 				if (msg.what == 0) {
 					setCountDownText(msg.arg1);
 				} else {
-					btnSendVeryfication.setEnabled(true);
+					endCount();
 				}
 			}
 		};
@@ -97,12 +94,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 
 	private boolean isCountDown = false;
-	private TextView rightTextView;
-
-	private void addRightCountDownText() {
-		tvRequestVeryficaion.setVisibility(View.VISIBLE);
-		setCountDownText(60);
-	}
 	
 	private void setCountDownText(int num) {
 		String text1 = "没收到短信？";
@@ -126,25 +117,24 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			// TODO Auto-generated method stub
 			int time = 60;
 			while (isCountDown) {
-				Message message = mHandler.obtainMessage();
-				message.what = 0;
-				message.arg1 = time;
-				message.sendToTarget();
+				sendMessage(0, time);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				time--;
 				if (time < 0) {
-					isCountDown = false;
+					sendMessage(1, time);
 				}
 			}
-			Message message = mHandler.obtainMessage();
-			message.what = 1;
-			message.sendToTarget();
 		}
+	}
+	private void sendMessage(int what, int time) {
+		Message message = mHandler.obtainMessage();
+		message.what = what;
+		message.arg1 = time;
+		message.sendToTarget();
 	}
 
 	private void getSmsCode(String phone, String countryCode) {
@@ -156,21 +146,28 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 				final VerificationResult data = (VerificationResult) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
-//						VerificationResult.SmsCode sms = data.data;
-//						etVeryfication.setText(sms.code);
-//						moveEditTextCursor(etVeryfication);
-//						phoneNum = sms.phone;
-//						smsCode = sms.code;
 					}
 				} else {
+					endCount();
 					otherCondition(data.state, RegisterActivity.this);
 				}
 			}
 		});
-		addRightCountDownText();
+		startCount();
+	}
+	
+	private void startCount() {
 		isCountDown = true;
 		btnSendVeryfication.setEnabled(false);
+		tvRequestVeryficaion.setVisibility(View.VISIBLE);
+		setCountDownText(60);
 		new Thread(new CountDownRunnable()).start();
+	}
+	
+	private void endCount() {
+		isCountDown = false;
+		btnSendVeryfication.setEnabled(true);
+		tvRequestVeryficaion.setVisibility(View.GONE);
 	}
 
 	private void register(String phone, String password, String code) {

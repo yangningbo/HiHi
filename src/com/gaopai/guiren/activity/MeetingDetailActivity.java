@@ -100,7 +100,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_meeting_detail);
-		
+
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 
@@ -110,7 +110,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		if (mMeeting != null) {
 			isPreview = true;
 		} else {
-			
+
 			if (TextUtils.isEmpty(mMeetingID)) {
 				Uri data = getIntent().getData();
 				mMeetingID = data.toString().substring(data.toString().indexOf("//") + 2);
@@ -125,7 +125,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			bindBasicView();
 			return;
 		}
-		
+
 		addLoadingView();
 		showLoadingView();
 
@@ -249,7 +249,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			}
 		});
 	}
-	
+
 	private void showErrorView() {
 		showErrorView(new OnClickListener() {
 			@Override
@@ -478,6 +478,10 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void setAlarmForMeeting() {
+		if (mMeeting.start * 1000 < System.currentTimeMillis()) {
+			showToast(R.string.meeting_is_past);
+			return;
+		}
 		Intent intent = new Intent(MeetingDetailActivity.this, AlarmReceiver.class); // 创建Intent对象
 		intent.putExtra("id", mMeeting.id);
 		intent.setAction(this.getPackageName() + ".meeting." + mMeeting.id);
@@ -588,7 +592,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		ConversationHelper.deleteItem(mContext, mMeetingID);
 		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 	}
-
 
 	private void applyWithReason(int type) {
 		applyWithReason(type, REQUEST_NORMAL);

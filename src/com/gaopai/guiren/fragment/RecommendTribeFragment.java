@@ -129,6 +129,7 @@ public class RecommendTribeFragment extends BaseFragment implements OnClickListe
 				// TODO Auto-generated method stub
 				final RecommendAddResult data = (RecommendAddResult) o;
 				if (data.state != null && data.state.code == 0) {
+					getActivity().finish();
 					// changeAddInfo(tribeList);
 				} else {
 					otherCondition(data.state, getActivity());

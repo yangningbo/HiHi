@@ -29,10 +29,11 @@
             android:id="@+id/tv_select_country"
             android:layout_width="match_parent"
             android:layout_height="@dimen/register_edit_height"
-            android:background="@drawable/selector_white_round_corner"
+            android:background="@drawable/selector_btn_general"
             android:padding="10dp"
             android:text="中华人民共和国"
-            android:textSize="@dimen/general_font_2" />
+            android:gravity="center_vertical"
+            android:textSize="@dimen/general_font_3" />
 
         <TextView
             android:layout_width="match_parent"
@@ -51,7 +52,7 @@
             android:hint="@string/please_input_phone"
             android:padding="10dp"
             android:inputType="phone"
-            android:textSize="@dimen/general_font_2" />
+            android:textSize="@dimen/general_font_3" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,7 +68,7 @@
                 android:background="@drawable/selector_edit_white_round_corner"
                 android:hint="@string/please_input_verify_code"
                 android:padding="10dp"
-                android:textSize="@dimen/general_font_2" />
+                android:textSize="@dimen/general_font_3" />
 
             <Button
                 android:id="@+id/btn_send_veryfication"
@@ -98,7 +99,7 @@
             android:background="@drawable/selector_edit_white_round_corner"
             android:hint="@string/please_input_password"
             android:padding="10dp"
-            android:textSize="@dimen/general_font_2" />
+            android:textSize="@dimen/general_font_3" />
 
         <LinearLayout
             android:layout_width="match_parent"

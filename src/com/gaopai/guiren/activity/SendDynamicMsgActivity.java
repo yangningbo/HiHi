@@ -56,7 +56,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private TextView tvUseRealName;
 	private int isHideName = 0;
 	private boolean isSending = false;
-	
+
 	private CameralHelper cameralHelper;
 
 	@Override
@@ -84,7 +84,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		cameralHelper = new CameralHelper(this);
 		getTags();
 	}
-	
 
 	@Override
 	public void onBackPressed() {
@@ -103,19 +102,19 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		etDynamicMsg = (EditText) findViewById(R.id.et_dynamic_msg);
 		etDynamicMsg.addTextChangedListener(numLimitWatcher);
 		etDynamicMsg.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (v.getId() == R.id.et_dynamic_msg) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_UP:
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (v.getId() == R.id.et_dynamic_msg) {
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+					switch (event.getAction() & MotionEvent.ACTION_MASK) {
+					case MotionEvent.ACTION_UP:
+						v.getParent().requestDisallowInterceptTouchEvent(false);
+						break;
+					}
+				}
+				return false;
+			}
+		});
 		etDynamicMsg.clearFocus();
 
 		btnPhoto = (ImageButton) findViewById(R.id.btn_camera);
@@ -150,8 +149,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				TagResult data = (TagResult) o;
 				if (data.state != null && data.state.code == 0) {
 					for (TagBean tag : data.data) {
-						flowTagsRec.addView(
-								TagWindowManager.creatTageWithAction(tag.tag, addRecTagListener, mInflater),
+						flowTagsRec.addView(TagWindowManager.creatTag(tag.tag, addRecTagListener, mInflater, false),
 								flowTagsRec.getTextLayoutParams());
 					}
 				} else {
@@ -167,7 +165,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			// TODO Auto-generated method stub
 			String text = (String) v.getTag();
 			if (!checkIsTagInList(text)) {
-				flowLayout.addView(TagWindowManager.creatTagWithoutStrech(text, tagDeleteClickListener, mInflater),
+				flowLayout.addView(TagWindowManager.creatTag(text, tagDeleteClickListener, mInflater, true),
 						flowLayout.getTextLayoutParams());
 			}
 		}
@@ -237,7 +235,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		List<String> tagList = new ArrayList<String>();
 		int count = flowLayout.getChildCount();
 		for (int j = 0; j < count; j++) {
-			tagList.add(((TextView) ((ViewGroup) flowLayout.getChildAt(j)).getChildAt(0)).getText().toString());
+			tagList.add(((TextView) ((ViewGroup) flowLayout.getChildAt(j)).getChildAt(1)).getText().toString());
 		}
 		return tagList;
 	}
@@ -253,14 +251,14 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				return;
 			}
 			etTags.setText("");
-			flowLayout.addView(TagWindowManager.creatTagWithoutStrech(str, tagDeleteClickListener, mInflater),
+			flowLayout.addView(TagWindowManager.creatTag(str, tagDeleteClickListener, mInflater, true),
 					flowLayout.getTextLayoutParams());
 			break;
 		case R.id.btn_camera:
 			// showMoreWindow();
 			cameralHelper.setCallback(callback);
 			cameralHelper.showDefaultSelectDialog(null);
-			
+
 			break;
 		case R.id.tv_send_dy_realname:
 			isHideName = 1 - isHideName;
@@ -289,7 +287,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 	};
 
-
 	private List<String> picList = new ArrayList<String>();
 
 	private void addPicture(String file) {
@@ -314,13 +311,14 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		imageView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				showMutiDialog(null, new String[]{getString(R.string.delete)}, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						picGrid.removeView(v);
-						picList.remove(url);
-					}
-				});
+				showMutiDialog(null, new String[] { getString(R.string.delete) },
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								picGrid.removeView(v);
+								picList.remove(url);
+							}
+						});
 			}
 		});
 		return imageView;
@@ -341,6 +339,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			addPicture(path);
 		}
 	};
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {

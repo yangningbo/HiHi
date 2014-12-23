@@ -30,6 +30,8 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.QueryResult;
 import com.gaopai.guiren.bean.net.QueryResult.DataHolder;
 import com.gaopai.guiren.bean.net.TagResult;
+import com.gaopai.guiren.support.TagWindowManager;
+import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.TextFlowLayout;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -37,7 +39,7 @@ import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class SearchActivity extends BaseActivity implements OnClickListener {
-	private TextFlowLayout flowLayout;
+	private FlowLayout flowLayout;
 	private List<TagBean> tagList = new ArrayList<TagBean>();
 	private AutoCompleteTextView etSearch;
 
@@ -65,7 +67,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 		changeSearhList(popupList, fromWhere);
 		initTitleBar();
 		setAbContentView(R.layout.activity_search);
-		flowLayout = (TextFlowLayout) findViewById(R.id.flow_tags);
+		flowLayout = (FlowLayout) findViewById(R.id.flow_tags);
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
 		mAdapter = new SearchAdapter();
 		mListView.setAdapter(mAdapter);
@@ -251,8 +253,9 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 	private void addTags() {
 		TagOnClickListener onClickListener = new TagOnClickListener();
 		for (TagBean tag : tagList) {
-			TextView textView = flowLayout.creatTextView(tag.tag);
-			textView.setOnClickListener(onClickListener);
+			// TextView textView = flowLayout.creatTextView(tag.tag);
+			flowLayout.addView(TagWindowManager.creatTag(tag.tag, onClickListener, mInflater, false),
+					flowLayout.getTextLayoutParams());
 		}
 	}
 

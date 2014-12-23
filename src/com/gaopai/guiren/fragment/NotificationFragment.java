@@ -35,7 +35,6 @@ public class NotificationFragment extends BaseFragment {
 	private NotificationAdapter mAdapter;
 	private List<ConversationBean> conversationBeans = new ArrayList<ConversationBean>();
 	public final static String ACTION_MSG_NOTIFY = "com.gaopai.guiren.intent.action.ACTION_MSG_NOTIFY";
-	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,7 +44,7 @@ public class NotificationFragment extends BaseFragment {
 		}
 		return mView;
 	}
-	
+
 	private void initView() {
 		mListView = (PullToRefreshListView) mView.findViewById(R.id.listView);
 		mListView.setPullLoadEnabled(false);
@@ -69,7 +68,7 @@ public class NotificationFragment extends BaseFragment {
 					return;
 				}
 				ConversationBean conversationBean = (ConversationBean) mAdapter.getItem(position);
-//				resetCount(conversationBean.toid);
+				// resetCount(conversationBean.toid);
 				switch (conversationBean.type) {
 				case -1:
 					startActivity(NotifySystemActivity.class);
@@ -104,13 +103,14 @@ public class NotificationFragment extends BaseFragment {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				final ConversationBean conversationBean = (ConversationBean) mAdapter.getItem(position);
 				// TODO Auto-generated method stub
-				getBaseActivity().showMutiDialog("", new String[]{"删除"}, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						deleteItem(conversationBean.toid);
-						getDataFromDb();
-					}
-				});
+				getBaseActivity().showMutiDialog("", new String[] { getString(R.string.delete) },
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								deleteItem(conversationBean.toid);
+								getDataFromDb();
+							}
+						});
 				return true;
 			}
 		});
@@ -118,6 +118,7 @@ public class NotificationFragment extends BaseFragment {
 	}
 
 	private boolean isInitialed = false;
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
@@ -128,7 +129,7 @@ public class NotificationFragment extends BaseFragment {
 			}
 		}
 	}
-	
+
 	private void deleteItem(String id) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
@@ -142,17 +143,17 @@ public class NotificationFragment extends BaseFragment {
 		setNotificationSp(conversationBeans);
 		mAdapter.addAll(conversationBeans);
 	}
-	
+
 	private void setNotificationSp(List<ConversationBean> conversationBeans) {
 		int count = 0;
 		for (ConversationBean conversationBean : conversationBeans) {
 			count += conversationBean.unreadcount;
 		}
-		PreferenceOperateUtils spo =  new PreferenceOperateUtils(getActivity());
+		PreferenceOperateUtils spo = new PreferenceOperateUtils(getActivity());
 		spo.setBoolean(SPConst.KEY_HAS_NOTIFICATION, count > 0);
 		showNotificationDot();
 	}
-	
+
 	private void showNotificationDot() {
 		PreferenceOperateUtils operateUtils = new PreferenceOperateUtils(getActivity());
 		boolean hasNotification = operateUtils.getBoolean(SPConst.KEY_HAS_NOTIFICATION, false);
@@ -164,16 +165,17 @@ public class NotificationFragment extends BaseFragment {
 		}
 	}
 
-//	private void resetCount(String id) {
-//		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
-//		ConverseationTable table = new ConverseationTable(dbDatabase);
-//		if (table.resetCount(id)) {
-//			conversationBeans = table.query();
-//			setNotificationSp(conversationBeans);
-//			mAdapter.addAll(conversationBeans);
-//		}
-//	}
-	
+	// private void resetCount(String id) {
+	// SQLiteDatabase dbDatabase =
+	// DBHelper.getInstance(getActivity()).getWritableDatabase();
+	// ConverseationTable table = new ConverseationTable(dbDatabase);
+	// if (table.resetCount(id)) {
+	// conversationBeans = table.query();
+	// setNotificationSp(conversationBeans);
+	// mAdapter.addAll(conversationBeans);
+	// }
+	// }
+
 	@Override
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub

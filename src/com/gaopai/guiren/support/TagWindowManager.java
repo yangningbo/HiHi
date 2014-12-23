@@ -91,7 +91,7 @@ public class TagWindowManager implements OnClickListener {
 			bindTags(flowTagsAdd, false);
 		}
 		for (TagBean tag : recTagList) {
-			flowTagsRec.addView(creatTageWithDefaultAction(tag.tag), flowTagsRec.getTextLayoutParams());
+			flowTagsRec.addView(creatTagWithDefaultAction(tag.tag), flowTagsRec.getTextLayoutParams());
 		}
 		Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
 		btnCancel.setOnClickListener(new OnClickListener() {
@@ -112,8 +112,8 @@ public class TagWindowManager implements OnClickListener {
 				StringBuilder tagStringBuilder = new StringBuilder();
 				tagList.clear();
 				for (int i = 0; i < count; i++) {
-					String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).getChildAt(0)).getText()
-							.toString();
+					String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).findViewById(R.id.tv_tag))
+							.getText().toString();
 					TagBean tagBean = new TagBean();
 					tagBean.tag = str;
 					tagList.add(tagBean);
@@ -133,8 +133,8 @@ public class TagWindowManager implements OnClickListener {
 		WindowManager m = mContext.getWindowManager();
 		Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
 		WindowManager.LayoutParams p = dialogWindow.getAttributes(); //
-		p.height = WindowManager.LayoutParams.WRAP_CONTENT; // 高度设置为屏幕的0.6
-		p.width = (int) (d.getWidth() * 0.9); // 宽度设置为屏幕的0.65
+		p.height = (int) (d.getHeight() * 0.8); // 高度设置为屏幕的0.6
+		p.width = (int) (d.getWidth() * 0.95); // 宽度设置为屏幕的0.65
 		dialogWindow.setAttributes(p);
 
 		dialog.show();
@@ -220,7 +220,8 @@ public class TagWindowManager implements OnClickListener {
 
 	private boolean checkIsTagInList(String tag) {
 		for (int i = 0, count = flowTagsAdd.getChildCount(); i < count; i++) {
-			String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).getChildAt(0)).getText().toString();
+			String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).findViewById(R.id.tv_tag)).getText()
+					.toString();
 			if (str.equals(tag)) {
 				mContext.showToast(R.string.tag_exist);
 				return true;
@@ -230,7 +231,11 @@ public class TagWindowManager implements OnClickListener {
 	}
 
 	public void bindTags(FlowLayout taLayoutPara, boolean isWithDelete) {
-		bindTags(taLayoutPara, isWithDelete, tagList, null);
+		if (isWithDelete) {
+			bindTags(taLayoutPara, isWithDelete, tagList, tagDeleteClickListener);
+		} else {
+			bindTags(taLayoutPara, isWithDelete, tagList, null);
+		}
 	}
 
 	public void bindTags(FlowLayout taLayoutPara, boolean isWithDelete, List<TagBean> tagList, OnClickListener listener) {
@@ -239,40 +244,31 @@ public class TagWindowManager implements OnClickListener {
 			tagList = new ArrayList<TagBean>();
 		}
 		for (TagBean tag : tagList) {
-			if (isWithDelete) {
-				taLayoutPara.addView(creatTagWithDeleteDefault(tag.tag), taLayoutPara.getTextLayoutParams());
-			} else {
-				View view = creatTageWithAction(tag.tag, listener, mInflater);
-				view.setTag(tag);
-				taLayoutPara.addView(view, taLayoutPara.getTextLayoutParams());
-			}
+			View view;
+			view = creatTag(tag.tag, listener, mInflater, isWithDelete);
+			view.setTag(tag);
+			taLayoutPara.addView(view, taLayoutPara.getTextLayoutParams());
+		}
+	}
+
+	public void bindTagsFlow(FlowLayout taLayoutPara, boolean isWithDelete, List<TagBean> tagList,
+			OnClickListener listener) {
+		taLayoutPara.removeAllViews();
+		if (tagList == null) {
+			tagList = new ArrayList<TagBean>();
+		}
+		for (TagBean tag : tagList) {
+			taLayoutPara.addView(creatTagFlow(tag.tag, null, mInflater, isWithDelete),
+					taLayoutPara.getTextLayoutParams());
 		}
 	}
 
 	private View creatTagWithDeleteDefault(String text) {
-		return creatTagWithDelete(text, tagDeleteClickListener, mInflater);
-	}
-
-	public static View creatTagWithDelete(String text, OnClickListener listener, LayoutInflater inflater) {
-		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
-		button.setOnClickListener(listener);
-		return v;
-	}
-
-	public static View creatTagWithoutStrech(String text, OnClickListener listener, LayoutInflater inflater) {
-		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag_without_streach, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
-		button.setOnClickListener(listener);
-		return v;
+		return creatTag(text, tagDeleteClickListener, mInflater, true);
 	}
 
 	private View creatTagWithoutDelete(String text) {
-		return creatTageWithAction(text, null, mInflater);
+		return creatTag(text, null, mInflater, false);
 	}
 
 	public OnClickListener addRecClickListener = new OnClickListener() {
@@ -287,26 +283,50 @@ public class TagWindowManager implements OnClickListener {
 		}
 	};
 
-	private View creatTageWithDefaultAction(final String text) {
-		return creatTageWithAction(text, addRecClickListener, mInflater);
-	}
-
-	public static View creatTageWithAction(final String text, OnClickListener listener, LayoutInflater mInflater) {
-		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.btn_send_dynamic_tag, null);
-		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setText(text);
-		v.findViewById(R.id.btn_delete_tag).setVisibility(View.GONE);
-		v.setTag(text);
-		v.setOnClickListener(listener);
-		return v;
+	private View creatTagWithDefaultAction(final String text) {
+		return creatTag(text, addRecClickListener, mInflater, false);
 	}
 
 	private OnClickListener tagDeleteClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			flowTagsAdd.removeView((View) v.getParent());
 		}
 	};
+
+	public static View creatTag(String text, OnClickListener listener, LayoutInflater inflater, boolean isWithDelete) {
+		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag, null);
+		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
+		textView.setMaxEms(10);
+		textView.setSingleLine(true);
+		textView.setText(text);
+		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
+		button.setOnClickListener(listener);
+		if (isWithDelete) {
+			button.setOnClickListener(listener);
+		} else {
+			button.setVisibility(View.GONE);
+			v.setOnClickListener(listener);
+		}
+		v.setTag(text);
+		return v;
+	}
+
+	public static View creatTagFlow(String text, OnClickListener listener, LayoutInflater inflater, boolean isWithDelete) {
+		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag_without_streach, null);
+		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
+		textView.setText(text);
+		textView.setMaxEms(10);
+		textView.setSingleLine(true);
+		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
+		if (isWithDelete) {
+			button.setOnClickListener(listener);
+		} else {
+			button.setVisibility(View.GONE);
+			v.setOnClickListener(listener);
+		}
+		v.setTag(text);
+		return v;
+	}
 
 }

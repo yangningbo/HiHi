@@ -68,13 +68,13 @@ import com.gaopai.guiren.volley.UIHelperUtil;
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
-	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-//	public static final String HOST = "http://192.168.1.239:8081/index.php/";
+//	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+	 public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
-	
+
 	public static final String SHARE_MEETING = "api/Forward/meeting/mid/";
 	public static final String SHARE_TRIBE = "api/Forward/tribe/tid/";
 
@@ -234,7 +234,6 @@ public class DamiInfo implements Serializable {
 		request(Method.POST, LoginResult.class, params, 1, listener, 1);
 	}
 
-
 	/**
 	 * 获取推荐部落列表
 	 * 
@@ -249,8 +248,6 @@ public class DamiInfo implements Serializable {
 		request(Method.GET, UserList.class, params, UserList.TYPE_RECOMMEND, listener, LOGIN_TYPE_NEED_LOGIN);
 	}
 
-
-
 	/**
 	 * 获取会议详情
 	 * 
@@ -263,8 +260,6 @@ public class DamiInfo implements Serializable {
 		params.put("meetingid", id);
 		request(Method.GET, TribeInfoBean.class, params, TribeInfoBean.TYPE_MEETING_INFO, listener, 2);
 	}
-
-	
 
 	/**
 	 * 获取部落详情
@@ -1750,7 +1745,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/edit";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserInfoBean.class, listener);
 	}
-	
+
 	public static void editHeader(String pic, IResponseListener listener) {
 		editProfile(pic, "", "", "", "", "", listener);
 	}
@@ -2296,7 +2291,6 @@ public class DamiInfo implements Serializable {
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, DynamicBean.DySingleBean.class, listener);
 	}
 
-
 	// 外发注册连接 need uid
 	public static void getUserInvitation(IResponseListener listener) {
 		Parameters bundle = new Parameters();
@@ -2316,8 +2310,8 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/UserAuthItem";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, GetVerifyResult.class, listener);
 	}
-	
-	//申请加v
+
+	// 申请加v
 	public static void setUserAuthV(IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/UserAuthV";
@@ -2339,22 +2333,23 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "tribe/joinTribeByPasswd";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-	
-	//删除个人资料界面的评论
+
+	// 删除个人资料界面的评论
 	public static void delComment(String id, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("id", id);
 		String url = SERVER + "user/delComment";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-	//删除动态
+
+	// 删除动态
 	public static void delDynamic(String id, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("dynaid", id);
 		String url = SERVER + "user/delDynamic";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
-	
+
 	/**
 	 * 获取我的部落
 	 * 
@@ -2367,7 +2362,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/mytribe";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, TribeList.class, listener);
 	}
-	
+
 	/**
 	 * 获取会议列表
 	 * 
@@ -2383,6 +2378,14 @@ public class DamiInfo implements Serializable {
 		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
 		String url = SERVER + "index/meetinglist";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, TribeList.class, listener);
+	}
+
+	// 关注多个用户
+	public static void followInBat(String fuid, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("fuid", fuid);
+		String url = SERVER + "user/batFollow";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 
 }

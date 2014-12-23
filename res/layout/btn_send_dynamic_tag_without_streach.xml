@@ -13,7 +13,6 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:textSize="13sp"
-        android:text="阿道夫"
         android:textColor="@color/general_blue" />
 
     <Button
@@ -21,7 +20,6 @@
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_marginLeft="2dp"
-        android:layout_centerVertical="true"
         android:background="@drawable/icon_tag_delete" />
 
 </LinearLayout>

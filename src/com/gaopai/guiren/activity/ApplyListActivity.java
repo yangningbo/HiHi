@@ -236,8 +236,8 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 
 			holder.tvName.setText(user.realname);
 			String content = "";
-			if (!TextUtils.isEmpty(user.content)) {
-				content = user.content;
+			if (!TextUtils.isEmpty(user.company)) {
+				content = user.company;
 			} else {
 				content = user.sign;
 			}

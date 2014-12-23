@@ -5,12 +5,13 @@
     android:layout_height="match_parent"
     android:padding="10dp" >
 
-    <com.gaopai.guiren.view.TextFlowLayout
+    <com.gaopai.guiren.view.FlowLayout
         android:id="@+id/flow_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         custom:tag_columns="4" >
-    </com.gaopai.guiren.view.TextFlowLayout>
+    </com.gaopai.guiren.view.FlowLayout>
 
     <com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView
         android:id="@+id/listview"

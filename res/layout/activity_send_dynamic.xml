@@ -30,14 +30,14 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/selector_edit_white_round_corner"
                 android:gravity="top|left"
-                android:textSize="@dimen/general_font_4"
                 android:hint="请输入500字以内的动态"
-                 android:lines="10"
+                android:lines="10"
                 android:maxLength="500"
+                android:paddingBottom="30dp"
                 android:paddingLeft="@dimen/general_paading"
                 android:paddingRight="@dimen/general_paading"
                 android:paddingTop="@dimen/general_paading"
-                android:paddingBottom="30dp" />
+                android:textSize="@dimen/general_font_4" />
 
             <TextView
                 android:id="@+id/tv_num_limit"
@@ -62,7 +62,8 @@
         <com.gaopai.guiren.view.FlowLayout
             android:id="@+id/flow_tags"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            custom:tag_columns="3" >
         </com.gaopai.guiren.view.FlowLayout>
 
         <LinearLayout
@@ -102,7 +103,8 @@
         <com.gaopai.guiren.view.FlowLayout
             android:id="@+id/flow_tags_recommend"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            custom:tag_columns="3" >
         </com.gaopai.guiren.view.FlowLayout>
 
         <com.gaopai.guiren.view.MyGridLayout

@@ -13,7 +13,7 @@
         android:drawableLeft="@drawable/icon_dy_action_spread"
         android:drawablePadding="5dp"
         android:padding="5dp"
-        android:text="扩散"
+        android:text="@string/spread"
         android:textColor="@color/white"
         android:textSize="13sp" />
 
@@ -32,7 +32,7 @@
         android:drawableLeft="@drawable/icon_dy_action_favorite"
         android:drawablePadding="5dp"
         android:padding="5dp"
-        android:text="赞"
+        android:text="@string/zan"
         android:textColor="@color/white"
         android:textSize="13sp" />
 
@@ -51,7 +51,7 @@
         android:drawableLeft="@drawable/icon_dy_action_comment"
         android:drawablePadding="5dp"
         android:padding="5dp"
-        android:text="评论"
+        android:text="@string/comment"
         android:textColor="@color/white"
         android:textSize="13sp" />
 

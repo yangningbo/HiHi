@@ -11,8 +11,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -62,6 +64,7 @@ import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.LineRelativeLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.squareup.picasso.Picasso;
+import com.umeng.socialize.net.z;
 
 public class ProfileActivity extends BaseActivity implements OnClickListener {
 
@@ -110,10 +113,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private View layoutBottom;
 	private View layoutConnection;
 
-	private TextView tvDyFavoriteCount;
-	private TextView tvDySpreadCount;
-	private TextView tvDyCommentCount;
-
 	private TextView tvDyMonthYear;
 	private TextView tvDyDay;
 
@@ -136,7 +135,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private DynamicHelper dynamicHelper;
 	private CameralHelper cameralHelper;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +221,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					if (data.data != null) {
 						showContent();
 						tUser = data.data;
+						updateUserInfo(data.data);
 						tagWindowManager.setTagList(tUser.tag);
 						bindView();
 					}
@@ -239,6 +238,13 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		});
 	}
 
+	private void updateUserInfo(User user) {
+		if (isSelf) {
+			DamiCommon.saveLoginResult(mContext, user);
+			sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+		}
+	}
+
 	private void showErrorView() {
 		showErrorView(new OnClickListener() {
 			@Override
@@ -248,6 +254,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 	}
+
 	private TagWindowManager.TagCallback tagCallback = new TagCallback() {
 
 		@Override
@@ -258,12 +265,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	};
 
 	private void initComponent() {
-		mTitleBar.setTitleText(getString(R.string.profile));
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
 		layoutHeader = ViewUtil.findViewById(this, R.id.layout_header_mvp);
 		if (isSelf) {
+			mTitleBar.setTitleText(getString(R.string.profile));
 			layoutHeader.setOnClickListener(this);
+		} else {
+			mTitleBar.setTitleText(getString(R.string.profile_other));
 		}
 		ViewUtil.findViewById(this, R.id.iv_profile_erweima).setOnClickListener(this);
 
@@ -321,10 +330,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		layoutBottom = findViewById(R.id.bottom_bar);
 		layoutConnection = findViewById(R.id.layout_profile_connection);
 
-		tvDyFavoriteCount = (TextView) findViewById(R.id.tv_profile_dy_favorite);
-		tvDyCommentCount = (TextView) findViewById(R.id.tv_profile_dy_comment);
-		tvDySpreadCount = (TextView) findViewById(R.id.tv_profile_dy_spread);
-
 		tvDyMonthYear = (TextView) findViewById(R.id.tv_profile_dy_monthyear);
 		tvDyDay = (TextView) findViewById(R.id.tv_profile_dy_day);
 		tvDyViewMore = (TextView) findViewById(R.id.tv_profile_dy_more);
@@ -369,7 +374,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		// tvFancyCount.setText(String.valueOf(tUser.integral));
 		// tvUserName.setText(tUser.realname);
-		// tvUserInfo.setText(tUser.company);
+		tvUserInfo.setText(tUser.company);
 		bindUserName();
 
 		bindContactView();
@@ -445,7 +450,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			TagBean tagBean = (TagBean) v.getTag();
+			final TagBean tagBean = (TagBean) v.getTag();
 			AgreeAnimWindow.showAnim(v);
 			DamiInfo.zanUserTag(mUser.uid, tagBean.id, new SimpleResponseListener(mContext) {
 				@Override
@@ -453,6 +458,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					BaseNetBean data = (BaseNetBean) o;
 					if (data.state != null && data.state.code == 0) {
 						showToast(R.string.zan_success);
+						updateZantagList(tagBean.tag);
+						bindBottomDynamicView();
 					} else {
 						otherCondition(data.state, ProfileActivity.this);
 					}
@@ -460,6 +467,28 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			});
 		}
 	};
+
+	private ZanBean getZanBean() {
+		for (ZanBean zanBean : tUser.zantaglist) {
+			if (zanBean.uid.equals(mUser.uid)) {
+				return zanBean;
+			}
+		}
+		ZanBean zanBean = new ZanBean();
+		zanBean.realname = mUser.realname;
+		zanBean.uid = mUser.uid;
+		zanBean.zantag = "";
+		if (tUser.zantaglist == null) {
+			tUser.zantaglist = new ArrayList<ZanBean>();
+		}
+		tUser.zantaglist.add(zanBean);
+		return zanBean;
+	}
+
+	private void updateZantagList(String tag) {
+		ZanBean zanBean = getZanBean();
+		zanBean.zantag = zanBean.zantag + "《" + tag + "》";
+	}
 
 	private void bindConnectionView() {
 		bindUserName();
@@ -532,6 +561,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		layoutCommentHolder.setLineHalf(true);
 		if (tUser.zantaglist != null && tUser.zantaglist.size() > 0) {
 			isZan = true;
+			layoutZanHolder.setVisibility(View.VISIBLE);
 			List<ConnectionBean.User> userList = new ArrayList<ConnectionBean.User>();
 			for (ZanBean bean : tUser.zantaglist) {
 				ConnectionBean.User user = new ConnectionBean.User();
@@ -539,7 +569,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				user.realname = bean.realname;
 				userList.add(user);
 			}
-			tvBottomFavorite.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList), "赞过"));
+			tvBottomFavorite.setText(getZanTagSpan(tUser.zantaglist));
 			// tvBottomFavorite.setText(MyTextUtils.addConnectionUserList(userList,
 			// "赞过"));
 		} else {
@@ -548,6 +578,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		if (tUser.kuosanlist != null && tUser.kuosanlist.size() > 0) {
 			isSpread = true;
+			layoutSpreadHolder.setVisibility(View.VISIBLE);
 			List<ConnectionBean.User> userList = new ArrayList<ConnectionBean.User>();
 			Set<String> set = new HashSet<String>();
 			for (SpreadBean bean : tUser.kuosanlist) {
@@ -575,6 +606,19 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	private Spannable getZanTagSpan(List<ZanBean> zanList) {
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+		int gray = getResources().getColor(R.color.general_text_gray);
+		for (ZanBean zanBean : zanList) {
+			builder.append(MyTextUtils.addSingleUserSpan(zanBean.realname, zanBean.uid));
+			builder.append(MyTextUtils.setTextColor("认可了他的", gray));
+			builder.append(zanBean.zantag);
+			builder.append(MyTextUtils.setTextColor("标签\n\n", gray));
+		}
+		builder.delete(builder.length() - 2, builder.length());
+		return builder;
+	}
+
 	private View dyView;
 
 	private void bindDyView() {
@@ -588,10 +632,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		tvDyDay.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
 		tvDyMonthYear.setText(calendar.get(Calendar.YEAR) + "." + (calendar.get(Calendar.MONTH) + 1));
-
-		tvDyFavoriteCount.setText(String.valueOf(bean.totalzan));
-		tvDySpreadCount.setText(String.valueOf(bean.totalkuosan));
-		tvDyCommentCount.setText(String.valueOf(bean.totalcomment));
 
 		layoutDyContent.addView(dynamicHelper.getView(dyView, bean));
 	}
@@ -620,24 +660,28 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				if (isSelf) {
 					tvDelete.setVisibility(View.VISIBLE);
 					tvDelete.setOnClickListener(new OnClickListener() {
+
 						@Override
 						public void onClick(View v) {
-							DamiInfo.delComment(bean.id, new SimpleResponseListener(mContext,
-									R.string.request_internet_now) {
-
+							// TODO Auto-generated method stub
+							showDialog(getString(R.string.confirm_delete), "", new DialogInterface.OnClickListener() {
 								@Override
-								public void onSuccess(Object o) {
-									BaseNetBean data = (BaseNetBean) o;
-									if (data.state != null && data.state.code == 0) {
-										tUser.commentlist.remove(bean);
-										bindBottomDynamicView();
-									} else {
-										otherCondition(data.state, ProfileActivity.this);
-									}
-
+								public void onClick(DialogInterface dialog, int which) {
+									DamiInfo.delComment(bean.id, new SimpleResponseListener(mContext,
+											R.string.request_internet_now) {
+										@Override
+										public void onSuccess(Object o) {
+											BaseNetBean data = (BaseNetBean) o;
+											if (data.state != null && data.state.code == 0) {
+												tUser.commentlist.remove(bean);
+												bindBottomDynamicView();
+											} else {
+												otherCondition(data.state, ProfileActivity.this);
+											}
+										}
+									});
 								}
 							});
-
 						}
 					});
 				} else {
@@ -676,7 +720,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_my_meetings_count:
 		case R.id.tv_my_tribes_count:
 		case R.id.tv_my_followers_count:
-			if (!isBeenFollowed()) {
+			if ((!isBeenFollowed()) && (tUser.privacyconfig.renmai == 0)) {
 				showToast(R.string.you_are_not_allowed_to_see_profile);
 				return;
 			}
@@ -795,10 +839,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	private void openWeixin() {
 		Intent intent = new Intent();
-		ComponentName cmp = new ComponentName("com.tencent.mm","com.tencent.mm.ui.LauncherUI");
+		ComponentName cmp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI");
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -808,10 +852,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	private void openWeibo() {
 		Intent intent = new Intent();
-		ComponentName cmp = new ComponentName("com.sina.weibo","com.sina.weibo.EditActivity");
+		ComponentName cmp = new ComponentName("com.sina.weibo", "com.sina.weibo.EditActivity");
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

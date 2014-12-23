@@ -173,8 +173,8 @@
                     android:layout_toRightOf="@id/layout_header_mvp"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:textColor="@color/general_text_gray"
-                    android:textSize="14sp" />
+                    android:textColor="@color/general_text_black"
+                    android:textSize="15sp" />
             </RelativeLayout>
 
             <LinearLayout
@@ -346,26 +346,6 @@
                         android:background="@color/profile_renmai_topbar"
                         android:paddingLeft="@dimen/general_paading" >
 
-                        <TextView
-                            android:id="@+id/tv_profile_dy_favorite"
-                            android:layout_width="60dp"
-                            android:layout_height="match_parent"
-                            android:drawableLeft="@drawable/icon_profile_dy_favorite"
-                            android:gravity="center_vertical" />
-
-                        <TextView
-                            android:id="@+id/tv_profile_dy_spread"
-                            android:layout_width="60dp"
-                            android:layout_height="match_parent"
-                            android:drawableLeft="@drawable/icon_profile_dy_spread"
-                            android:gravity="center_vertical" />
-
-                        <TextView
-                            android:id="@+id/tv_profile_dy_comment"
-                            android:layout_width="60dp"
-                            android:layout_height="match_parent"
-                            android:drawableLeft="@drawable/icon_profile_dy_comment"
-                            android:gravity="center_vertical" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -699,7 +679,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:background="@color/white"
-                    android:padding="5dp" >
+                    android:padding="5dp"
+                    app:tag_columns="4" >
                 </com.gaopai.guiren.view.FlowLayout>
 
                 <TextView

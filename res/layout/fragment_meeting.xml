@@ -7,8 +7,8 @@
     <RelativeLayout
         android:id="@+id/layout_meeting_titlebar"
         android:layout_width="match_parent"
-        android:background="#FEFEFE"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="#FEFEFE" >
 
         <TextView
             android:id="@+id/line_vertical"
@@ -21,8 +21,9 @@
             android:id="@+id/layout_meeting_faxian"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/line_vertical"
-            android:gravity="center" >
+            android:layout_alignRight="@id/line_vertical"
+            android:gravity="center"
+            android:orientation="vertical" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -32,8 +33,10 @@
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
                 android:paddingTop="10dp"
-                android:text="发现会议"
+                android:text="@string/find_meeting_title"
                 android:textSize="18sp" />
+
+            <View style="@style/general_thin_divider_in_white" />
         </LinearLayout>
 
         <LinearLayout
@@ -41,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/line_vertical"
-            android:gravity="center" >
+            android:gravity="center"
+            android:orientation="vertical" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -50,8 +54,10 @@
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
                 android:paddingTop="10dp"
-                android:text="往期会议"
+                android:text="@string/past_meeting_title"
                 android:textSize="18sp" />
+
+            <View style="@style/general_thin_divider_in_white" />
         </LinearLayout>
     </RelativeLayout>
 

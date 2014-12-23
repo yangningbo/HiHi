@@ -236,6 +236,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void setPic(String path) {
+		mFilePath = path;
 		Drawable drawable = Drawable.createFromPath(path);
 		btnUploadPic.setBackgroundDrawable(drawable);
 	}
