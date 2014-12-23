@@ -14,6 +14,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -30,6 +31,8 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.MyTextUtils.NameLengthFilter;
 import com.gaopai.guiren.view.FlowLayout;
 
 public class TagWindowManager implements OnClickListener {
@@ -83,6 +86,8 @@ public class TagWindowManager implements OnClickListener {
 		setTagTransition(flowTagsAdd, mContext);
 		FlowLayout flowTagsRec = (FlowLayout) view.findViewById(R.id.flow_tags_recommend);
 		etTags = (EditText) view.findViewById(R.id.et_tags);
+		InputFilter[] filters = {new MyTextUtils.NameLengthFilter(NameLengthFilter.TAG_LENGTH, true)};
+		etTags.setFilters(filters);
 		btnAddTags = (Button) view.findViewById(R.id.btn_add_tag);
 		btnAddTags.setOnClickListener(this);
 		if (isSelf) {
@@ -297,8 +302,9 @@ public class TagWindowManager implements OnClickListener {
 	public static View creatTag(String text, OnClickListener listener, LayoutInflater inflater, boolean isWithDelete) {
 		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
-		textView.setMaxEms(10);
 		textView.setSingleLine(true);
+		InputFilter[] inputFilters = { new MyTextUtils.NameLengthFilter(10) };
+		textView.setFilters(inputFilters);
 		textView.setText(text);
 		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
 		button.setOnClickListener(listener);
@@ -316,7 +322,8 @@ public class TagWindowManager implements OnClickListener {
 		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag_without_streach, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
-		textView.setMaxEms(10);
+		InputFilter[] inputFilters = { new MyTextUtils.NameLengthFilter(10) };
+		textView.setFilters(inputFilters);
 		textView.setSingleLine(true);
 		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
 		if (isWithDelete) {

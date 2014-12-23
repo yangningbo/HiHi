@@ -487,7 +487,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private void updateZantagList(String tag) {
 		ZanBean zanBean = getZanBean();
-		zanBean.zantag = zanBean.zantag + "《" + tag + "》";
+		zanBean.zantag = zanBean.zantag + "[" + tag + "]";
 	}
 
 	private void bindConnectionView() {
@@ -612,7 +612,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		for (ZanBean zanBean : zanList) {
 			builder.append(MyTextUtils.addSingleUserSpan(zanBean.realname, zanBean.uid));
 			builder.append(MyTextUtils.setTextColor("认可了他的", gray));
-			builder.append(zanBean.zantag);
+			builder.append(MyTextUtils.setTextColor(zanBean.zantag, gray));
 			builder.append(MyTextUtils.setTextColor("标签\n\n", gray));
 		}
 		builder.delete(builder.length() - 2, builder.length());

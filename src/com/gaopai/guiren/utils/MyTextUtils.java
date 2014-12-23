@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.text.InputFilter;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -17,7 +17,6 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
-import android.text.style.ClickableSpan;
 import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
@@ -25,17 +24,13 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.bean.dynamic.ConnectionBean.User;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.GuestBean;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.SpreadBean;
-import com.gaopai.guiren.bean.dynamic.DynamicBean.ZanBean;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.widget.emotion.EmotionManager;
-import com.umeng.socialize.net.v;
 
 public class MyTextUtils {
 	private static final Pattern USER_PATTERN = Pattern.compile("[^、]*");
@@ -47,7 +42,6 @@ public class MyTextUtils {
 			.compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");;
 	private static final String URL_SCHEME = "guiren.web://";
 	private static final Pattern EMOTION_PATTERN = Pattern.compile("\\[(\\S+?)\\]");
-
 
 	public static SpannableString addHttpLinks(String text) {
 		SpannableString result = SpannableString.valueOf(text);
@@ -181,15 +175,17 @@ public class MyTextUtils {
 	public static SpannableString addSingleUserSpan(String text, String uid) {
 		return addSingleSpanGeneral(text, uid, USER_SCHEME);
 	}
-	
+
 	public static SpannableString setTextSize(SpannableString str, int size) {
 		str.setSpan(new AbsoluteSizeSpan(size, true), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return str;
 	}
+
 	public static SpannableString setTextColor(SpannableString str, int color) {
 		str.setSpan(new ForegroundColorSpan(color), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		return str;
 	}
+
 	public static SpannableString setTextColor(String str, int color) {
 		return setTextColor(new SpannableString(str), color);
 	}
@@ -242,4 +238,74 @@ public class MyTextUtils {
 		public String uid;
 		public String realname;
 	}
+
+	public static class NameLengthFilter implements InputFilter {
+		public static final int TAG_LENGTH = 10;
+		int MAX_EN;
+		String regEx = "[\\u4e00-\\u9fa5]";
+		boolean isEdit = false;
+
+		public NameLengthFilter(int mAX_EN) {
+			super();
+			MAX_EN = mAX_EN;
+		}
+
+		public NameLengthFilter(int mAX_EN, boolean isEdit) {
+			super();
+			MAX_EN = mAX_EN;
+			this.isEdit = isEdit;
+		}
+
+		@Override
+		public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+			if (isEdit) {
+				int destCount = dest.toString().length() + getChineseCount(dest.toString());
+				int sourceCount = source.toString().length() + getChineseCount(source.toString());
+				return source.toString().subSequence(0, getLimitStr(source.toString(), MAX_EN - destCount));
+			} else {
+
+				return source.toString().subSequence(0, getLimitStr(source.toString(), MAX_EN));
+			}
+		}
+
+		private int getLimitStr(String str, int desiredLen) {
+			int length = str.length();
+			int resultLen = 0;
+			int tempLen = 0;
+			for (int i = 0; i < length; i++) {
+				char c = str.charAt(i);
+				if (isChinese(c)) {
+					if (tempLen + 2 > desiredLen) {
+						return resultLen;
+					}
+					tempLen += 2;
+					resultLen += 1;
+				} else {
+					if (tempLen + 1 > desiredLen) {
+						return resultLen;
+					}
+					tempLen += 1;
+					resultLen += 1;
+				}
+			}
+			return resultLen;
+		}
+
+		private boolean isChinese(char c) {
+			return '\u4e00' <= c && c <= '\u9fa5';
+		}
+
+		private int getChineseCount(String str) {
+			int count = 0;
+			Pattern p = Pattern.compile(regEx);
+			Matcher m = p.matcher(str);
+			while (m.find()) {
+				for (int i = 0; i <= m.groupCount(); i++) {
+					count = count + 1;
+				}
+			}
+			return count;
+		}
+	}
+
 }
