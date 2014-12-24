@@ -214,7 +214,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			if (isChangeVoice) {
 				msg.samplerate = DamiCommon.getRandomSampleRate();
 			} else {
-				msg.samplerate = 8000;
+				msg.samplerate = 16000;
 			}
 		} else if (type == MessageType.PICTURE) {
 			msg.imgUrlS = filePath;

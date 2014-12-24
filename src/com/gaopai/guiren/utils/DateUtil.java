@@ -921,7 +921,7 @@ public class DateUtil {
 		}
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.setTimeInMillis(start * 1000);
-		return "离会议开始还剩" +timeDifference(startCalendar);
+		return "离会议开始还剩" + timeDifference(startCalendar);
 	}
 
 	/**
@@ -935,7 +935,7 @@ public class DateUtil {
 	public static String timeDifference(Calendar calendar) {
 		String info = "";
 		Calendar currCalendar = Calendar.getInstance();
-		long second = (currCalendar.getTimeInMillis() - calendar.getTimeInMillis()) / 1000;
+		long second = (calendar.getTimeInMillis() - currCalendar.getTimeInMillis()) / 1000;
 		int index = 0;
 		if (second < (60 * 60)) {
 			index = 60;
@@ -944,7 +944,9 @@ public class DateUtil {
 		} else if (second < (30 * (24 * 60 * 60))) {
 			index = (24 * 60 * 60);
 		}
+//		Logger.d("=========", "====second=" + second + "  index" + index);
 		info = second(second, index);
+//		Logger.d("=========", "====info=" + info);
 
 		return info;
 	}
@@ -1064,8 +1066,8 @@ public class DateUtil {
 			Calendar calendar = Calendar.getInstance(Locale.CHINA);
 			calendar.setTimeInMillis(mtime);
 			String str = timeOnlie(calendar);
-			if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))||
-					str.endsWith(DamiApp.getInstance().getString(R.string.second))
+			if (str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
+					|| str.endsWith(DamiApp.getInstance().getString(R.string.second))
 					|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
 				timeStr = str + DamiApp.getInstance().getString(R.string.before);
 			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
@@ -1160,7 +1162,7 @@ public class DateUtil {
 		String info = "";
 		if (index == 1) {
 			info = DamiApp.getInstance().getString(R.string.second);
-		}else if (index == 60) {
+		} else if (index == 60) {
 			info = DamiApp.getInstance().getString(R.string.minutes);
 		} else if (index == (60 * 60)) {
 			info = DamiApp.getInstance().getString(R.string.hour);
@@ -1172,7 +1174,6 @@ public class DateUtil {
 		int num = (int) (second / index);
 		return Math.abs(num) + info;
 	}
-	
 
 	public static String timeDifference(String currTime) {
 		Calendar calendar = Calendar.getInstance();

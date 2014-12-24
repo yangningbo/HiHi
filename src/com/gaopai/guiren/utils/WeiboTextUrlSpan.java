@@ -56,7 +56,10 @@ public class WeiboTextUrlSpan extends ClickableSpan implements ParcelableSpan {
 	@Override
 	public void onClick(View widget) {
 		Uri uri = Uri.parse(mUrl);
-		Logger.d(this, "click="+uri.toString());
+		String uirStr = uri.toString();
+		if (uirStr.contains(MyTextUtils.USER_SCHEME) && uirStr.contains("-1")) {
+			return;
+		}
 		Context context = widget.getContext();
 		openUri(context, uri);
 	}
@@ -73,7 +76,6 @@ public class WeiboTextUrlSpan extends ClickableSpan implements ParcelableSpan {
 	}
 
 	public void openUri(Context context, Uri uri) {
-		Log.d("URI", uri.toString());
 		Intent intent = new Intent("android.intent.action.VIEW", uri);
 		intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
 		if (isIntentAvailable(intent)) {

@@ -63,7 +63,7 @@ public class NotificationFragment extends BaseFragment {
 				if (position == 0) {
 					Intent intent = new Intent(getActivity(), WebActivity.class);
 					intent.putExtra(WebActivity.KEY_URL, getString(R.string.share_dami_url));
-					intent.putExtra(WebActivity.KEY_TITLE, getString(R.string.share_dami_title));
+					intent.putExtra(WebActivity.KEY_TITLE, getString(R.string.dige));
 					startActivity(intent);
 					return;
 				}

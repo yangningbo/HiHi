@@ -64,6 +64,8 @@ import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.bean.MsgZanListResult;
+import com.gaopai.guiren.bean.MsgZanListResult.ZanBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
@@ -162,7 +164,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected PullToRefreshListView mListView;
 	private View viewCoverTop;
 	private ChatMsgDataHelper msgHelper;
-	private List<MessageInfo> zanList = new ArrayList<MessageInfo>();
+	private List<ZanBean> zanList = new ArrayList<ZanBean>();
 
 	private PreferenceOperateUtils spoAnony;
 	private CameralHelper cameralHelper;
@@ -193,7 +195,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		initVoicePlayMode();
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 		// updateVoicePlayModeState(isModeInCall);
-		registerReceiver(getIntentFilter());
 		isChangeVoice = isAnony();
 		setChangeVoiceView(isChangeVoice);
 	}
@@ -214,12 +215,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	private IntentFilter getIntentFilter() {
-		IntentFilter intentFilter = new IntentFilter();
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
 		intentFilter.addAction(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE);
 		intentFilter.addAction(ChatBaseActivity.ACTION_CHANGE_VOICE);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-		return intentFilter;
+		super.registerReceiver(intentFilter);
 	}
 
 	@Override
@@ -463,11 +464,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	};
 
-	private MessageInfo buildZanMessage() {
-		MessageInfo messageInfo = new MessageInfo();
-		messageInfo.displayname = getName();
-		messageInfo.uid = mLogin.uid;
-		return messageInfo;
+	private ZanBean buildZanMessage() {
+		ZanBean zanBean = new ZanBean();
+		zanBean.displayname = getName();
+		zanBean.uid = mLogin.uid;
+		return zanBean;
 	}
 
 	private void removeZanMessage() {
@@ -975,13 +976,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-
 	private void updateZanCount(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
 		table.updateAgreeCount(messageInfo);
 	}
-
 
 	private List<MessageInfo> messageInfos = new ArrayList<MessageInfo>();
 
@@ -1178,7 +1177,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	protected MessageInfo buildMessage() {
 		MessageInfo msg = new MessageInfo();
-		msg.from = mLogin.uid;
+		if (isAnony()) {
+			msg.from = "-1";
+		} else {
+			msg.from = mLogin.uid;
+		}
 		msg.tag = UUID.randomUUID().toString();
 		msg.time = System.currentTimeMillis();
 		msg.readState = 1;
@@ -1187,12 +1190,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		msg.to = mTribe.id;
 		msg.parentid = messageInfo.id;
 		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
-			msg.displayname = mLogin.realname;
+			msg.displayname = User.getUserName(mLogin);
 			msg.headImgUrl = mLogin.headsmall;
 		} else {
 			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0) {
 				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
-				msg.displayname = mLogin.realname;
+				msg.displayname = User.getUserName(mLogin);
 				msg.headImgUrl = mLogin.headsmall;
 			} else {
 				msg.displayname = mIdentity.name;
@@ -1207,7 +1210,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		return msg;
 	}
-
+	
 	private String getName() {
 		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
 			return User.getUserName(mLogin);
@@ -1333,7 +1336,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		DamiInfo.getMessageZanList(messageInfo.id, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
-				final ChatMessageBean data = (ChatMessageBean) o;
+				final MsgZanListResult data = (MsgZanListResult) o;
 				if (data.state != null && data.state.code == 0) {
 					zanList.clear();
 					if (data.data != null && data.data.size() > 0) {
@@ -1355,7 +1358,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		zanCountBtn.setImageDrawable(this.getResources().getDrawable(R.drawable.icon_msg_detail_zan_normal));
 		if (zanList.size() > 0) {
 			zanText.setText(MyTextUtils.addUserSpans(getZanUserList(zanList)));
-			for (MessageInfo info : zanList) {
+			for (ZanBean info : zanList) {
 				if (info.uid.equals(mLogin.uid)) {
 					zanCountBtn
 							.setImageDrawable(this.getResources().getDrawable(R.drawable.icon_msg_detail_zan_active));
@@ -1374,12 +1377,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
 	}
 
-	private List<SpanUser> getZanUserList(List<MessageInfo> messageInfos) {
+	private List<SpanUser> getZanUserList(List<ZanBean> zanBeans) {
 		List<SpanUser> spanUsers = new ArrayList<SpanUser>();
-		for (MessageInfo messageInfo : messageInfos) {
+		for (ZanBean zanBean : zanBeans) {
 			SpanUser spanUser = new SpanUser();
-			spanUser.realname = messageInfo.displayname;
-			spanUser.uid = messageInfo.uid;
+			spanUser.realname = zanBean.displayname;
+			if (zanBean.isanonymity == 1) {
+				spanUser.uid = "-1";
+			} else {
+				spanUser.uid = messageInfo.uid;
+			}
 			spanUsers.add(spanUser);
 		}
 		return spanUsers;

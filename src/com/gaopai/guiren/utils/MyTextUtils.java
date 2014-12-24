@@ -35,9 +35,9 @@ import com.gaopai.guiren.widget.emotion.EmotionManager;
 public class MyTextUtils {
 	private static final Pattern USER_PATTERN = Pattern.compile("[^、]*");
 	private static final String USER_SPLIT_DOT = "、";
-	private static final String USER_SCHEME = "guiren.user://";
-	private static final String TRIBE_SCHEME = "guiren.tribe://";
-	private static final String MEETING_SCHEME = "guiren.meeting://";
+	public static final String USER_SCHEME = "guiren.user://";
+	public static final String TRIBE_SCHEME = "guiren.tribe://";
+	public static final String MEETING_SCHEME = "guiren.meeting://";
 	private static final Pattern URL_PATTERN = Pattern
 			.compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");;
 	private static final String URL_SCHEME = "guiren.web://";
@@ -238,6 +238,9 @@ public class MyTextUtils {
 		public String uid;
 		public String realname;
 	}
+
+	public static InputFilter[] tagTextFilters = { new MyTextUtils.NameLengthFilter(NameLengthFilter.TAG_LENGTH) };
+	public static InputFilter[] tagEditFilters = { new MyTextUtils.NameLengthFilter(NameLengthFilter.TAG_LENGTH, true) };
 
 	public static class NameLengthFilter implements InputFilter {
 		public static final int TAG_LENGTH = 10;

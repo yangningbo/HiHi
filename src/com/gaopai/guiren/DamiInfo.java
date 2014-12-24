@@ -30,6 +30,7 @@ import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.MsgConfigResult;
+import com.gaopai.guiren.bean.MsgZanListResult;
 import com.gaopai.guiren.bean.NewUserList;
 import com.gaopai.guiren.bean.PrivacySettingResult;
 import com.gaopai.guiren.bean.ReportMsgResult;
@@ -2005,7 +2006,7 @@ public class DamiInfo implements Serializable {
 		bundle.add("msgid", msgid);
 
 		String url = SERVER + "user/messageAgreeList";
-		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, ChatMessageBean.class, listener);
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, MsgZanListResult.class, listener);
 	}
 
 	/**

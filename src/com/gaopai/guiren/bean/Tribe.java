@@ -25,7 +25,7 @@ public class Tribe implements Serializable {
 	 * "createtime": "0" //创建时间
 	 */
 	@Expose
-	public String id; 
+	public String id;
 	@Expose
 	public String uid; // 创建者
 	@Expose
@@ -51,7 +51,7 @@ public class Tribe implements Serializable {
 	@Expose
 	public int isjoin; // 0 -- 未加入 1--已加入
 	/**
-	 * role 0 普通用户 ;role 1 会议发起人同时也是主持人 ;role 2 会议嘉宾或者部落自发申请实名用户 ;role 3 会议主持人
+	 *role 0 普通用户 ; role 1 会议发起人同时也是主持人; role 2 会议嘉宾或者部落自发申请实名用户 ; role 3 会议主持人
 	 */
 	@Expose
 	public int role = 0; // 0 -- 普通用户 1--创建者
@@ -66,7 +66,7 @@ public class Tribe implements Serializable {
 	@Expose
 	public MessageInfo mMessageInfo;
 	@Expose
-	public int getmsg = 1; // 消息提醒类型 	1接受并提醒，2接受不提醒
+	public int getmsg = 1; // 消息提醒类型 1接受并提醒，2接受不提醒
 	@Expose
 	public int applyCount = 0; // 申请数
 	@Expose
@@ -80,10 +80,10 @@ public class Tribe implements Serializable {
 	@Expose
 	public String users = "";
 	@Expose
-	public String user = "";//参会人员
+	public String user = "";// 参会人员
 	@Expose
 	public String codeurl = "";
-	
+
 	@Expose
 	public String hosts = "";
 	@Expose
@@ -96,15 +96,14 @@ public class Tribe implements Serializable {
 	public boolean isInTribe = false;
 	@Expose
 	public List<Member> member;
-	
-	public boolean isTribeOrMeeting = true;
-	
-	public int  ispwd;
-	
-	public String tag;
-	
 
-	public static class Member implements Serializable{
+	public boolean isTribeOrMeeting = true;
+
+	public int ispwd;
+
+	public String tag;
+
+	public static class Member implements Serializable {
 		@Expose
 		public String uid;
 		@Expose

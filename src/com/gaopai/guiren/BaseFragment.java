@@ -209,23 +209,6 @@ public class BaseFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		
-		case R.id.tv_creat_meeting: {
-			startActivity(CreatMeetingActivity.class);
-			mTitleBar.closeWindow();
-			break;
-		}
-		case R.id.tv_send_dynamic_:
-			startActivity(SendDynamicMsgActivity.class);
-			mTitleBar.closeWindow();
-			break;
-		case R.id.tv_creat_tribe:
-			startActivity(CreatTribeActivity.class);
-			mTitleBar.closeWindow();
-			break;
-		case R.id.tv_start_chat:
-			mTitleBar.closeWindow();
-			break;
 
 		default:
 			break;

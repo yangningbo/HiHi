@@ -69,13 +69,7 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 
 	private void bindView(GetVerifyResult.Data data) {
 		setInviteNumText(data.invite.num);
-		Case case1 = data.base.item;
-		int total = 0;
-		total += case1.company;
-		total += case1.depa;
-		total += case1.post;
-		total += case1.realname;
-		int percent = total * 5 + data.invite.num * 4;
+		int percent = data.base.iscomplete * 20 + data.invite.num * 4;
 		pvJiaV.setProgress(percent);
 		tvRedPercent.setText(percent + "%");
 		if (percent == 100) {
@@ -115,7 +109,7 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 				public void onSuccess(Object o) {
 					BaseNetBean data = (BaseNetBean) o;
 					if (data.state != null && data.state.code == 0) {
-//						showToast(R.string.)
+						// showToast(R.string.)
 					} else {
 						otherCondition(data.state, ApplyActivity.this);
 					}
@@ -127,9 +121,6 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 	}
-
-
-
 
 	// "data": {
 	// "base": { //认证资料

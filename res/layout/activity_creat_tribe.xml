@@ -98,14 +98,6 @@
             android:background="@drawable/selector_white_round_corner"
             android:orientation="vertical" >
 
-            <com.gaopai.guiren.view.FlowLayout
-                android:id="@+id/layout_tags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                custom:tag_columns="3" >
-            </com.gaopai.guiren.view.FlowLayout>
-
             <TextView
                 android:id="@+id/tv_edit_tag"
                 android:layout_width="match_parent"
@@ -116,6 +108,16 @@
                 android:padding="10dp"
                 android:text="@string/edit_tribe_tag"
                 android:textColor="@color/general_text_black" />
+
+            <com.gaopai.guiren.view.FlowLayout
+                android:id="@+id/layout_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                custom:tag_columns="4" >
+            </com.gaopai.guiren.view.FlowLayout>
         </LinearLayout>
 
         <TextView

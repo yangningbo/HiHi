@@ -53,7 +53,7 @@ public class ChangeProfileActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				if (TextUtils.isEmpty(etText.getText().toString())) {
+				if (TextUtils.isEmpty(etText.getText().toString().trim())) {
 					showToast(R.string.input_can_not_be_empty);
 					return;
 				}
@@ -127,6 +127,7 @@ public class ChangeProfileActivity extends BaseActivity {
 	private boolean checkIsPhone(String phone) {
 		return PhoneNumberUtils.isGlobalPhoneNumber(phone);
 	}
+
 	private boolean checkIsEmail(String email) {
 		return Patterns.EMAIL_ADDRESS.matcher(email).matches();
 	}

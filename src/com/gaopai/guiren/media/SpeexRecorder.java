@@ -12,7 +12,7 @@ public class SpeexRecorder implements Runnable {
 	// private Logger log = LoggerFactory.getLogger(SpeexRecorder.class);
 	private volatile boolean isRecording;
 	private final Object mutex = new Object();
-	private static final int frequency = 8000;
+	private static final int frequency = 16000;
 	private static final int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
 	public static int packagesize = 160;
 	private String fileName = null;
@@ -27,7 +27,6 @@ public class SpeexRecorder implements Runnable {
 
 	@Override
 	public void run() {
-
 		synchronized (mutex) {
 			while (!this.isRecording) {
 				try {

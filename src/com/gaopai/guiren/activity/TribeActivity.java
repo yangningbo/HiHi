@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatBaseActivity;
@@ -38,15 +39,21 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 	public final static String ACTION_KICK_TRIBE = "com.gaopai.guiren.intent.action.ACTION_KICK_TRIBE";
 
 	private String fid;// the id of a user who own this tribe list
+	private boolean isMyself;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		fid = getIntent().getStringExtra("fid");
+		isMyself = DamiCommon.getUid(mContext).equals(fid);
 		initTitleBar();
 		setAbContentView(R.layout.general_pulltorefresh_listview);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText(R.string.my_tribe);
+		if (isMyself) {
+			mTitleBar.setTitleText(R.string.my_tribe);
+		} else {
+			mTitleBar.setTitleText(R.string.his_tribe);
+		}
 		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
 		view.setId(R.id.ab_add);
 		view.setOnClickListener(this);
@@ -76,6 +83,10 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
 				Tribe tribe = (Tribe) mAdapter.getItem(position);
+				if (!isMyself) {
+					startActivity(TribeDetailActivity.getIntent(mContext, tribe.id));
+					return;
+				}
 				if (tribe.isjoin == 1) {
 					TribeActivity.this.startActivityForResult(
 							ChatTribeActivity.getIntent(mContext, tribe, ChatTribeActivity.CHAT_TYPE_TRIBE), 1);
@@ -105,7 +116,7 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		intent.putExtra("fid", fid);
 		return intent;
 	}
-	
+
 	@Override
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
@@ -132,7 +143,6 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 			}
 		}
 	}
-
 
 	private void removeItem(String id) {
 		for (int i = 0; i < mAdapter.list.size(); i++) {

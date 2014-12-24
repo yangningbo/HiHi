@@ -34,6 +34,7 @@ import com.gaopai.guiren.net.MorePicture;
 import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.CameralHelper.GetImageCallback;
 import com.gaopai.guiren.support.TagWindowManager;
+import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.FlowLayout;
@@ -98,6 +99,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		flowTagsRec = (FlowLayout) findViewById(R.id.flow_tags_recommend);
 		TagWindowManager.setTagTransition(flowLayout, mContext);
 		etTags = (EditText) findViewById(R.id.et_tags);
+		etTags.setFilters(MyTextUtils.tagEditFilters);
 		tvWordNumLimit = (TextView) findViewById(R.id.tv_num_limit);
 		etDynamicMsg = (EditText) findViewById(R.id.et_dynamic_msg);
 		etDynamicMsg.addTextChangedListener(numLimitWatcher);

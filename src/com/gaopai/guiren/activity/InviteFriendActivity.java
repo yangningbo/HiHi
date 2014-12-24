@@ -62,19 +62,19 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 					REQUEST_CONTACT);
 			break;
 		case R.id.tv_invite_qq:
-			sm.shareQQ(shareStr, shareStr);
+			sm.shareQQ(getShareInfo() + shareStr, shareStr);
 			break;
 		case R.id.tv_invite_wechat:
-			sm.shareWechat(shareStr, shareStr);
+			sm.shareWechat(getShareInfo() + shareStr, shareStr);
 			break;
 		case R.id.tv_invite_weibo:
-			sm.shareWeibo(shareStr, shareStr);
+			sm.shareWeibo(getShareInfo() + shareStr, shareStr);
 			break;
 		default:
 			break;
 		}
 	}
-	
+
 	private void invite() {
 		DamiInfo.getUserInvitation(new SimpleResponseListener(mContext, R.string.request_share_url) {
 			@Override
@@ -89,7 +89,7 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 			}
 		});
 	}
-	
+
 	public static class InviteUrlResult extends BaseNetBean {
 		public String data;
 	}
@@ -116,11 +116,15 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 			Uri uri = Uri.parse("smsto:" + phoneNum);
 			Intent it = new Intent(Intent.ACTION_SENDTO, uri);
 			String shareStr = getString(R.string.invite_str_1);
-			if (!TextUtils.isEmpty(url)) {
+			if (!TextUtils.isEmpty(getShareInfo() + url)) {
 				shareStr = url;
 			}
 			it.putExtra("sms_body", shareStr);
 			mContext.startActivity(it);
 		}
+	}
+
+	private String getShareInfo() {
+		return getString(R.string.invite_str_1);
 	}
 }

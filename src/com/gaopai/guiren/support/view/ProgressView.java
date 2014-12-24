@@ -69,6 +69,7 @@ public class ProgressView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		// TODO Auto-generated method stub
+		int dotRadius = getHeight() / 2;
 		int height = getHeight() * 2 / 3;
 		int paddingTop = (getHeight() - height) / 2;
 		int paddingLeft = 2;
@@ -77,12 +78,12 @@ public class ProgressView extends View {
 		float radius = height / 2;
 		canvas.drawRoundRect(background, radius, radius, backgroundPaint);
 
-		int processWidth = getWidth() / 100 * percent;
-		RectF forground = new RectF(new Rect(paddingLeft, paddingTop, processWidth, paddingTop + height));
+		int dotProcessWidth = (int) (dotRadius + (getWidth() - 2 * dotRadius) / 100f * percent);
+		RectF forground = new RectF(new Rect(paddingLeft, paddingTop, dotProcessWidth, paddingTop + height));
 		canvas.drawRoundRect(forground, radius, radius, forgroundPaint);
-
 		canvas.drawRoundRect(background, radius, radius, borderPaint);
-		canvas.drawCircle(processWidth, getHeight() / 2, getHeight() / 2, dotPaint);
+
+		canvas.drawCircle(dotProcessWidth, dotRadius, dotRadius, dotPaint);
 	}
 
 	public void setProgress(int progress) {

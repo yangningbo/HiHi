@@ -98,16 +98,23 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 		layoutWelcome = ViewUtil.findViewById(this, R.id.layout_welcome);
 		ImageView view = (ImageView) findViewById(R.id.iv_back);
+		TextView welcome = (TextView) findViewById(R.id.tv_welcome_info);
+		welcome.setText(getWelcomeStr());
 		view.setImageDrawable(getWelcomeRandomDrawable());
 		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.welcome_scale);
 		view.startAnimation(welcomeAnimation);
 		showMainpage();
 	}
-	
-//	@Override
-//	protected void registerReceiver(IntentFilter intentFilter) {
-//	}
 
+	// @Override
+	// protected void registerReceiver(IntentFilter intentFilter) {
+	// }
+
+	private String getWelcomeStr() {
+		int i = (int) (Math.random() * 4);
+		int id = getResources().getIdentifier("welcom_info" + i, "string", MainActivity.this.getPackageName());
+		return getString(id);
+	}
 
 	private Drawable getWelcomeRandomDrawable() {
 		int i = (int) (Math.random() * 3);
@@ -680,10 +687,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			startActivity(CaptureActivity.class);
 			mTitleBar.closeWindow();
 			break;
-		case R.id.tv_start_chat:
-			startActivity(ContactActivity.getIntent(mContext, ContactActivity.TYPE_FOLLOWERS, mUser.uid, true));
-			mTitleBar.closeWindow();
-			break;
 		}
 	}
 
@@ -706,7 +709,5 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
-	
 
 }

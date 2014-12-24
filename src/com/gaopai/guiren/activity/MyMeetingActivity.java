@@ -33,15 +33,21 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 	private int page = 1;
 	private boolean isFull = false;
 	private String fid;
+	private boolean isMyself = false;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		fid = getIntent().getStringExtra("fid");
+		isMyself = DamiCommon.getUid(mContext).equals(fid);
 		initTitleBar();
 		setAbContentView(R.layout.fragment_meeting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText(R.string.my_meeting);
+		if (isMyself) {
+			mTitleBar.setTitleText(R.string.my_meeting);
+		} else {
+			mTitleBar.setTitleText(R.string.his_meeting);
+		}
 		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
 		view.setId(R.id.ab_add);
 		view.setOnClickListener(this);
@@ -56,7 +62,6 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 				getMeetingList(true, MeetingFragment.TYPE_MY_MEETING);
 			}
-
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				getMeetingList(false, MeetingFragment.TYPE_MY_MEETING);
@@ -77,7 +82,6 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 
 			}
 		});
-
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ActionHolder.ACTION_CANCEL_MEETING);
 		filter.addAction(ActionHolder.ACTION_QUIT_MEETING);
@@ -160,7 +164,6 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 		case R.id.ab_add:
 			startActivity(CreatMeetingActivity.class);
 			break;
-
 		default:
 			break;
 		}

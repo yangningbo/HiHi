@@ -188,7 +188,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			btnOnLook.setOnClickListener(this);
 			btnJoinMeeting.setOnClickListener(this);
 			btnSetting.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					showMoreWindow(mMeeting.role);
@@ -205,7 +204,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
 					String id = intent.getStringExtra("id");
 					if (!TextUtils.isEmpty(id) && id.equals(mMeetingID)) {
-						/*
+						/**
 						 * mMeeting.isjoin = 0;
 						 * mApplyBtn.setVisibility(View.VISIBLE);
 						 * mExitBtn.setVisibility(View.GONE);

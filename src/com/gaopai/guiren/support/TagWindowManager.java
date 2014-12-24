@@ -86,8 +86,7 @@ public class TagWindowManager implements OnClickListener {
 		setTagTransition(flowTagsAdd, mContext);
 		FlowLayout flowTagsRec = (FlowLayout) view.findViewById(R.id.flow_tags_recommend);
 		etTags = (EditText) view.findViewById(R.id.et_tags);
-		InputFilter[] filters = {new MyTextUtils.NameLengthFilter(NameLengthFilter.TAG_LENGTH, true)};
-		etTags.setFilters(filters);
+		etTags.setFilters(MyTextUtils.tagEditFilters);
 		btnAddTags = (Button) view.findViewById(R.id.btn_add_tag);
 		btnAddTags.setOnClickListener(this);
 		if (isSelf) {
@@ -117,8 +116,10 @@ public class TagWindowManager implements OnClickListener {
 				StringBuilder tagStringBuilder = new StringBuilder();
 				tagList.clear();
 				for (int i = 0; i < count; i++) {
-					String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).findViewById(R.id.tv_tag))
-							.getText().toString();
+					// String str = ((TextView) ((ViewGroup)
+					// flowTagsAdd.getChildAt(i)).findViewById(R.id.tv_tag))
+					// .getText().toString();
+					String str = getText((ViewGroup) flowTagsAdd.getChildAt(i));
 					TagBean tagBean = new TagBean();
 					tagBean.tag = str;
 					tagList.add(tagBean);
@@ -209,7 +210,7 @@ public class TagWindowManager implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.btn_add_tag:
 			String str = etTags.getText().toString();
-			if (TextUtils.isEmpty(str)) {
+			if (TextUtils.isEmpty(str.trim())) {
 				mContext.showToast(R.string.input_can_not_be_empty);
 				return;
 			}
@@ -225,8 +226,10 @@ public class TagWindowManager implements OnClickListener {
 
 	private boolean checkIsTagInList(String tag) {
 		for (int i = 0, count = flowTagsAdd.getChildCount(); i < count; i++) {
-			String str = ((TextView) ((ViewGroup) flowTagsAdd.getChildAt(i)).findViewById(R.id.tv_tag)).getText()
-					.toString();
+			String str = getText((ViewGroup) flowTagsAdd.getChildAt(i));
+			// String str = ((TextView) ((ViewGroup)
+			// flowTagsAdd.getChildAt(i)).findViewById(R.id.tv_tag)).getText()
+			// .toString();
 			if (str.equals(tag)) {
 				mContext.showToast(R.string.tag_exist);
 				return true;
@@ -303,8 +306,7 @@ public class TagWindowManager implements OnClickListener {
 		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setSingleLine(true);
-		InputFilter[] inputFilters = { new MyTextUtils.NameLengthFilter(10) };
-		textView.setFilters(inputFilters);
+		textView.setFilters(MyTextUtils.tagTextFilters);
 		textView.setText(text);
 		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
 		button.setOnClickListener(listener);
@@ -322,8 +324,7 @@ public class TagWindowManager implements OnClickListener {
 		ViewGroup v = (ViewGroup) inflater.inflate(R.layout.btn_send_dynamic_tag_without_streach, null);
 		TextView textView = (TextView) v.findViewById(R.id.tv_tag);
 		textView.setText(text);
-		InputFilter[] inputFilters = { new MyTextUtils.NameLengthFilter(10) };
-		textView.setFilters(inputFilters);
+		textView.setFilters(MyTextUtils.tagTextFilters);
 		textView.setSingleLine(true);
 		Button button = (Button) v.findViewById(R.id.btn_delete_tag);
 		if (isWithDelete) {
@@ -336,4 +337,11 @@ public class TagWindowManager implements OnClickListener {
 		return v;
 	}
 
+	public static TextView getTV(ViewGroup tagView) {
+		return (TextView) tagView.findViewById(R.id.tv_tag);
+	}
+
+	public static String getText(ViewGroup tagView) {
+		return getTV(tagView).getText().toString();
+	}
 }

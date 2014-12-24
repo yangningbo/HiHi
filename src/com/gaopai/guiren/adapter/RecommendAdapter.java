@@ -66,6 +66,10 @@ public class RecommendAdapter<T> extends BaseAdapter {
 		String re = builder.toString();
 		return re.substring(0, re.length() - 1);
 	}
+	
+	public int getChosedSize() {
+		return choseSet.size();
+	}
 
 	public String getAllIdString() {
 		if (mData.size() == 0) {

@@ -64,10 +64,11 @@ public class NotifyHelper {
 			return true;
 		}
 		if (hour * 60 + minute > fromHour * 60 + fromMinute && hour * 60 + minute < toHour * 60 + toMinute) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
+
 
 	public boolean isPlayRingtone() {
 		return po.getInt(SPConst.KEY_NOTIFY_PLAY_RINGTONES, 0) == 1;
@@ -294,11 +295,11 @@ public class NotifyHelper {
 			break;
 		}
 	}
-	
+
 	public static void clearSysNotification(Context mContext) {
 		clearNotification(mContext, NOTIFYD_SYSTEM);
 	}
-	
+
 	public static void clearNotification(Context mContext, int id) {
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);

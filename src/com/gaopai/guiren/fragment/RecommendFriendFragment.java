@@ -88,7 +88,8 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 
 		@Override
 		public void onClick(View v) {
-			gotoRecTribeFragment();
+//			gotoRecTribeFragment();
+			getActivity().finish();
 		}
 	}
 
@@ -108,6 +109,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
 						mAdapter.addAll(data.data);
+						
 					}
 				} else {
 					otherCondition(data.state, getActivity());
@@ -134,14 +136,14 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		}
 	}
 
-	private void addUser(String id) {
+	private void addUser(String id, int length) {
 
 		DamiInfo.followInBat(id, new SimpleResponseListener(getActivity(), R.string.request_internet_now) {
 			@Override
 			public void onSuccess(Object o) {
 				final BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
-					gotoRecTribeFragment();
+					getActivity().finish();
 				} else {
 					this.otherCondition(data.state, getActivity());
 				}
@@ -156,7 +158,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		case R.id.btn_follow_all:
 			String ids = mAdapter.getAllIdString();
 			if (!TextUtils.isEmpty(ids)) {
-				addUser(ids);
+				addUser(ids, mAdapter.getChosedSize());
 			}
 			break;
 		case R.id.btn_follow:
@@ -164,7 +166,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 				getBaseActivity().showToast(R.string.please_choose_add);
 				return;
 			}
-			addUser(mAdapter.getChoseIdString());
+			addUser(mAdapter.getChoseIdString(), mAdapter.getCount());
 			break;
 		}
 	}

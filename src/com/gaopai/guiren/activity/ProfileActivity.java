@@ -510,7 +510,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvPhone.setText(tUser.phone);
 		tvWeixin.setText(mUser.weixin);
 		tvWeibo.setText(mUser.weibo);
-		if (!(isSelf || isBeenFollowed())) {
+//		if (!(isSelf || isBeenFollowed())) {
 			PrivacyConfig pc = tUser.privacyconfig;
 			if (pc.mail == 0) {
 				tvEmail.setText(R.string.you_are_not_allowed_to_see_profile);
@@ -528,7 +528,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				tvWeibo.setText(R.string.you_are_not_allowed_to_see_profile);
 				removeTextDrawable(tvWeibo);
 			}
-		}
+//		}
 		// if (!isSelf) {
 		// removeTextDrawable(tvEmail);
 		// removeTextDrawable(tvPhone);

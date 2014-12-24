@@ -113,6 +113,11 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			public void receiveCropBitmap(Bitmap bitmap) {
 				setPic(bitmap);
 			}
+
+			@Override
+			public void receiveCropPic(String path) {
+				mFilePath = path;
+			}
 		});
 	}
 

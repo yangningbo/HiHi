@@ -472,23 +472,23 @@ public class DamiCommon {
 		int fh = 1 + r.nextInt(5);
 		switch (fh) {
 		case 1:
-			sampleRate = 6350;
+			sampleRate = 14350;
 			break;
 
 		case 2:
-			sampleRate = 9600;
+			sampleRate = 17600;
 			break;
 
 		case 3:
-			sampleRate = 9800;
+			sampleRate = 17800;
 			break;
 
 		case 4:
-			sampleRate = 10000;
+			sampleRate = 18000;
 			break;
 
 		case 5:
-			sampleRate = 12000;
+			sampleRate = 20000;
 			break;
 
 		}

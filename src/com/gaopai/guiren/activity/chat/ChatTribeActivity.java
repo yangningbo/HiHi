@@ -38,6 +38,7 @@ import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
@@ -404,7 +405,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else {
 			if ((!isAnony()) || (!hasIdentity)) {
 				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
-				msg.displayname = mLogin.realname;
+				msg.displayname =  User.getUserName(mLogin);
 				msg.headImgUrl = mLogin.headsmall;
 			} else {
 				msg.displayname = mIdentity.name;

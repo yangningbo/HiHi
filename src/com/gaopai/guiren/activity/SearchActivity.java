@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -154,7 +155,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			etSearch.setText(((TextView) v).getText());
+			etSearch.setText(TagWindowManager.getText((ViewGroup) v));
 			etSearch.setSelection(etSearch.getText().length());
 			initialPageInfo();
 			getSearchResult();

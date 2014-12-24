@@ -46,6 +46,7 @@ public class ConnectionAdapter extends BaseAdapter {
 	public final static int TYPE_SOMEONE_I_FOLLOW_FOLLOW = 5;
 	public final static int TYPE_SOMEONE_JOIN_MY_MEETING = 6;
 	public final static int TYPE_SOMEONE_JOIN_MY_TRIBE = 7;
+	public final static int TYPE_SOMEONE_SPREAD_USER = 8;
 
 	private static final int TYPE_BE_FRIENDS = 0;
 	private static final int TYPE_GENERAL = 1;
@@ -262,6 +263,10 @@ public class ConnectionAdapter extends BaseAdapter {
 					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 			break;
+		case TYPE_SOMEONE_SPREAD_USER:
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "扩散了一条人脉",
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 		default:
 			break;
 		}
@@ -328,7 +333,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		case TYPE_SYS_REC_USER: {
 			return 0;
 		}
-
+		case TYPE_SOMEONE_SPREAD_USER:
 		case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
 		case TYPE_SOMEONE_FOLLOW_ME: {
 			if (typeHolder.jsoncontent.user != null && typeHolder.jsoncontent.user.size() == 1) {

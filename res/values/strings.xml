@@ -268,6 +268,7 @@
     <string name="copy_successfull">复制成功</string>
     <string name="message_net_connect">连接到网络：</string>
     <string name="guiren_report">大蜜汇报</string>
+    <string name="dige">地歌网</string>
     <string name="fans">粉丝</string>
     <string name="follow">关注</string>
     <string name="private_msg">消息</string>
@@ -357,6 +358,7 @@
     <string name="cancel_follow">取消关注</string>
     <string name="user_detail">用户详情</string>
     <string name="my_tribe">我的圈子</string>
+    <string name="his_tribe">他的圈子</string>
     <string name="hot_tribe">热门圈子</string>
     <string name="view_text_version">查看文字版</string>
     <string name="view_voice_version">查看语音版</string>
@@ -418,6 +420,7 @@
     <string name="voice_list_is_null">当前无音频可播放</string>
     <string name="going_meeting">进行中的会议</string>
     <string name="my_meeting">我的会议</string>
+    <string name="his_meeting">他的会议</string>
     <string name="venue">分会场</string>
     <string name="launch">发起</string>
     <string name="apply_meeting">申请圆桌会</string>
@@ -748,7 +751,7 @@
     <string name="invite_QQ">QQ邀请</string>
     
     <string name="invite_link">http://guirenhui.cn</string>
-    <string name="invite_str_1">老友，以“面具会议、讲后即焚”为特色的职场社交【贵人】真不错，您也来吧！贵人下载地址：http://guirenhui.cn</string>
+    <string name="invite_str_1">我正在使用【贵人】，一款超爽体验的“讲后即焚 移动会议专家”APP，真心话，不冒险。您也赶紧用呗！</string>
     <string name="invite_str_2">
 老友，我正在使用【贵人】，它是一款精英匿名语聊平台，在这里，您可以自由表达，真实沟通，甩掉身份、阶层、地位、职业、亲疏关系等“名缰利锁”，真心话，不冒险。360公司CEO周鸿祎、乐视网CEO贾跃亭等大牛都在，您也赶紧来呗!贵人下载地址：http://guirenhui.cn</string>
     
@@ -771,7 +774,6 @@
     <string name="rp_ok">点击举报</string>
     
     <string name="share_dami_url">http://www.diggg.com.cn/</string>
-    <string name="share_dami_title">大蜜汇报</string>
     
     <string name="data_error">数据出现错误&#8230;</string>
     <string name="tribe_has_been_cancel">圈子已解散</string>
@@ -815,7 +817,11 @@
     <string name="set_alarm_success">提醒已设置</string>
     <string name="cancel_alarm_success">提醒已取消</string>
     
-    <string name="welcom_info">贵人让我们做的更好</string>
+    <string name="welcom_info0">讲后即焚 移动会议专家</string>
+    <string name="welcom_info4">贵人感受新境界</string>
+    <string name="welcom_info3">贵人让我们做得更好</string>
+    <string name="welcom_info2">贵人之路从此开始</string>
+    <string name="welcom_info1">贵人汇聚人脉</string>
     
     <string name="confirm_delete">确定删除?</string>
     <string name="move_up_cancel_voice">手指上滑，取消发送</string>

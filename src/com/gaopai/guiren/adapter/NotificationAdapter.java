@@ -81,7 +81,7 @@ public class NotificationAdapter extends BaseAdapter {
 			holder.tvMsgCount.setVisibility(View.GONE);
 			holder.ivTitleIcon.setVisibility(View.GONE);
 			holder.ivHeader.setImageResource(R.drawable.icon_notification_dami);
-			holder.tvName.setText("大蜜汇报");
+			holder.tvName.setText(R.string.guiren_report);
 			holder.tvInfo.setText("第一手消息");
 			holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			holder.tvName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);

@@ -127,7 +127,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		msg.title = "";
 		msg.to = user.uid;
 		msg.parentid = "0";
-		msg.displayname = mLogin.realname;
+		msg.displayname = User.getUserName(mLogin);
 		msg.headImgUrl = mLogin.headsmall;
 		msg.type = 100;
 		buildConversation(msg);
