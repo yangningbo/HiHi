@@ -39,6 +39,8 @@ public class SpeexDecoder {
 
 	private int mPlayedSampleRate;
 
+	private Object playObject = new Object();
+
 	public SpeexDecoder(File srcPath, int playSampleRate) throws Exception {
 		this.srcPath = srcPath;
 		this.mPlayedSampleRate = playSampleRate;
@@ -73,18 +75,25 @@ public class SpeexDecoder {
 		if (track != null && track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
 			track.stop();
 			track.release();
-			Logger.d(this, "track state" + track.getState());
-			uiHeper.onPlayStop(false);
 		}
+		setIsPlay(false);
+		uiHeper.onPlayStop(false);
 
 	}
 
+	private boolean isPlay = false;
+
+	public synchronized void setIsPlay(boolean isPlay) {
+		this.isPlay = isPlay;
+	}
+
 	public synchronized boolean isPlay() {
-		boolean re = false;
-		if (track != null) {
-			return track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING;
-		}
-		return re;
+		// boolean re = false;
+		// if (track != null) {
+		// return track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING;
+		// }
+		// return re;
+		return isPlay;
 	}
 
 	private MediaUIHeper uiHeper;
@@ -113,7 +122,9 @@ public class SpeexDecoder {
 		int chksum;
 		try {
 			// read until we get to EOF
+			setIsPlay(true);
 			uiHeper.onStart();
+			Logger.d(this, "isPlay=" + isPlay());
 			while (true) {
 				if (Thread.interrupted()) {
 					dis.close();
@@ -189,9 +200,11 @@ public class SpeexDecoder {
 							track.write(decoded, 0, decsize);
 							track.setStereoVolume(0.7f, 0.7f);// ���õ�ǰ������С
 							Logger.d(this, "===" + track.getState());
-							if (track.getState() != AudioTrack.STATE_UNINITIALIZED) {
-								track.play();
-							}
+//							synchronized (this) {
+								if (track.getState() != AudioTrack.STATE_UNINITIALIZED) {
+									track.play();
+								}
+//							}
 						}
 						packetNo++;
 					}
@@ -201,11 +214,12 @@ public class SpeexDecoder {
 			}
 		} catch (EOFException eof) {
 		} finally {
+			setIsPlay(false);
 			if (track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
 				track.stop();
 				track.release();
-				uiHeper.onPlayStop(true);
 			}
+			uiHeper.onPlayStop(true);
 		}
 		dis.close();
 	}

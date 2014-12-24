@@ -671,7 +671,7 @@
     <string name="jiav_congratulation">恭喜你，点击升级为VIP用户吧</string>
     <string name="jiav_info_title">加V说明</string>
     <string name="jiav_progress">加V进度</string>
-    <string name="jiav_finish_profile">完善并认证个人资料</string>
+    <string name="jiav_finish_profile">填写个人资料</string>
     <string name="jiav_invite_user">邀请20位好友加入</string>
 
     <!-- comment -->
@@ -840,5 +840,12 @@
     <string name="no_right_see_phone">您未填写手机号码，无法查看他人手机号码</string>
     <string name="no_right_see_weibo">您未填写微博帐号，无法查看他人微博帐号</string>
     <string name="no_right_see_weixin">您未填写微信号，无法查看他人微信号</string>
+    <string name="from_meeting">来自会议</string>
+    <string name="from_tribe">来自圈子</string>
+    <!--  -->
+    <string name="please_finish_profile">请完善您的资料后在邀请朋友加入贵人</string>
+    
+    
+    
 
 </resources>

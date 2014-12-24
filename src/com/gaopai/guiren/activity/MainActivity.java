@@ -46,6 +46,7 @@ import com.gaopai.guiren.fragment.DynamicFragment;
 import com.gaopai.guiren.fragment.DynamicFragment.BackPressedListener;
 import com.gaopai.guiren.fragment.MeetingFragment;
 import com.gaopai.guiren.fragment.NotificationFragment;
+import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
@@ -479,6 +480,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	protected void onDestroy() {
 		super.onDestroy();
 		MyVolley.getRequestQueue().cancelAll(this);
+		NotifyHelper.clearAllNotification(mContext);
 		unregisterReceiver(mReceiver);
 	}
 

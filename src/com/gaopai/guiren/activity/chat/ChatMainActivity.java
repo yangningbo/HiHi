@@ -147,7 +147,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		// first query database with autoID=-1 (call initMessage)
 		// then continue to query database with autoID=maxId to get more data
 		// (call loadMessage)
-		// if no more data then fetch data from internet
+		// if no more data then fetch data from Internet
 	}
 
 	protected ImageView ivDisturb;

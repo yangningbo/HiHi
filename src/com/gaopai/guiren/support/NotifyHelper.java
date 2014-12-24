@@ -305,4 +305,13 @@ public class NotifyHelper {
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(id);
 	}
+	
+	public static void clearAllNotification(Context context) {
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel(NOTIFYD_SYSTEM);
+		notificationManager.cancel(NOTIFYID_MEETING);
+		notificationManager.cancel(NOTIFYID_PRIVATE);
+		notificationManager.cancel(NOTIFYID_TRIBE);
+	}
 }

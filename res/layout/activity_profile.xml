@@ -138,6 +138,7 @@
                 <com.gaopai.guiren.support.view.HeadView
                     android:id="@+id/layout_header_mvp"
                     android:layout_width="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:layout_height="wrap_content" >
 
                     <ImageView

@@ -14,6 +14,7 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult.Case;
+import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult.Data;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.view.ProgressView;
 import com.gaopai.guiren.utils.Logger;
@@ -34,6 +35,8 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_jiav);
+		addLoadingView();
+		showLoadingView();
 		mTitleBar.setTitleText(R.string.jiav_title);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		tvInviteNum = ViewUtil.findViewById(this, R.id.tv_invite_num);
@@ -52,6 +55,7 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 		getVerifyDetail();
 	}
 
+	GetVerifyResult.Data bean;
 	private void getVerifyDetail() {
 		DamiInfo.getVerifyResult(new SimpleResponseListener(mContext) {
 			@Override
@@ -59,10 +63,28 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 				// TODO Auto-generated method stub
 				GetVerifyResult data = (GetVerifyResult) o;
 				if (data.state != null && data.state.code == 0) {
-					bindView(data.data);
+					showContent();
+					bean = data.data;
+					bindView(bean);
 				} else {
+					showErrorView();
 					otherCondition(data.state, ApplyActivity.this);
 				}
+			}
+			
+			@Override
+			public void onFailure(Object o) {
+				showErrorView();
+			}
+		});
+	}
+	
+	private void showErrorView() {
+		showErrorView(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getVerifyDetail();
+				showLoadingView();
 			}
 		});
 	}
@@ -101,6 +123,10 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 			startActivity(ReverificationActivity.class);
 			break;
 		case R.id.btn_invite_to_guiren:
+			if (bean.base.iscomplete == 0) {
+				showToast(R.string.please_finish_profile);
+				return;
+			}
 			startActivity(InviteFriendActivity.class);
 			break;
 		case R.id.btn_confirm:

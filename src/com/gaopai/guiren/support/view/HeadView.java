@@ -53,7 +53,7 @@ public class HeadView extends ViewGroup {
 	}
 
 	public void setMVP(boolean isMvp) {
-		ivMvp.setVisibility(!isMvp ? View.VISIBLE : View.GONE);
+		ivMvp.setVisibility(isMvp ? View.VISIBLE : View.GONE);
 		invalidate();
 	}
 

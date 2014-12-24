@@ -11,7 +11,7 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/selector_btn_general"
         android:descendantFocusability="blocksDescendants"
-        android:padding="5dp">
+        android:padding="5dp" >
 
         <TextView
             android:id="@+id/chat_comment_not_text_name"
@@ -80,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/desc"
-                android:maxHeight="120dp"
+                android:maxWidth="130dp"
+                android:minWidth="50dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/icon_welcom_background_0"
                 android:visibility="visible" />
@@ -91,6 +92,8 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/desc"
+                android:maxWidth="130dp"
+                android:minWidth="50dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/icon_chat_img_right_cover"
                 android:visibility="gone" />
@@ -104,7 +107,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
-            android:indeterminate="false" />
+            android:indeterminate="false"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </FrameLayout>

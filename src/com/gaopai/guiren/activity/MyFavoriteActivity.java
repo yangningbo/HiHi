@@ -62,7 +62,7 @@ public class MyFavoriteActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.general_pulltorefresh_listview);
-		
+
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText("我的收藏");
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
@@ -103,19 +103,19 @@ public class MyFavoriteActivity extends BaseActivity {
 			}
 		});
 	}
-	
+
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
 		super.registerReceiver(intentFilter);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	}
-	
+
 	public void stopPlayVoice() {
 		if (mPlayerWrapper != null && mPlayerWrapper.isPlay()) {
 			mPlayerWrapper.stop();
 		}
 	}
-	
+
 	@Override
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
@@ -300,12 +300,16 @@ public class MyFavoriteActivity extends BaseActivity {
 	private void bindView(ViewHolder viewHolder, final Favorite favorite, final int position) {
 		// TODO Auto-generated method stub
 		final MessageInfo messageInfo = favorite.message;
-		viewHolder.tvRoom.setText(messageInfo.title);
+		if (messageInfo.type == 200) {
+			viewHolder.tvRoom.setText(getString(R.string.from_tribe) + "(" + messageInfo.title + ")");
+		} else {
+			viewHolder.tvRoom.setText(getString(R.string.from_meeting) + "(" + messageInfo.title + ")");
+		}
 		viewHolder.tvChatTime.setText(DateUtil.getCreateTime(favorite.createtime));
-		
+
 		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
 			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead);
-		} 
+		}
 		viewHolder.tvUserName.setText(messageInfo.displayname);
 		notHideViews(viewHolder, messageInfo.fileType);
 		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(

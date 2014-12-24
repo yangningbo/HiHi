@@ -864,8 +864,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			case MessageType.PICTURE:
 				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 150));
 				notHideViews(viewHolder, MessageType.PICTURE);
-				viewHolder.picImageView.getLayoutParams().width = commentInfo.imgWidth;
-				viewHolder.picImageView.getLayoutParams().height = commentInfo.imgHeight;
+				viewHolder.picImageView.getLayoutParams().width = commentInfo.imgWidth*3;
+				viewHolder.picImageView.getLayoutParams().height = commentInfo.imgHeight*3;
 				viewHolder.messageNameText.setText(replyFromToText);
 				final String path = commentInfo.imgUrlS;
 				if (path.startsWith("http://")) {
