@@ -78,7 +78,6 @@
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="login">登录</string>
-    
     <string name="exit">退出</string>
     <string name="cancel">取消</string>
     <string name="notification">通知</string>
@@ -99,13 +98,11 @@
     <string name="synchronous_contact">从通讯录同步名字</string>
     <string name="modify_pwd">修改密码</string>
     <string name="help_center">帮助中心</string>
-
     <string name="about_us">关于我们</string>
     <string name="logout">退出登录</string>
     <string name="add_more">更多</string>
     <string name="no_more_data">没有更多信息</string>
     <string name="add_more_loading">加载中...</string>
-
     <string name="edit_profile">编辑资料</string>
     <string name="not_must_input">选填内容</string>
     <string name="please_input">请输入</string>
@@ -306,7 +303,6 @@
     <string name="connect_to_server">正在连接聊天服务器!</string>
     <string name="tribe_pic">圈子图片</string>
     <string name="tribe_name">圈子名称</string>
-    <string name="industry">行业</string>
     <string name="tribe_industry">圈子行业</string>
     <string name="tribe_type">圈子私密设置</string>
     <string name="tribe_content">圈子说明</string>
@@ -331,7 +327,6 @@
     <string name="search_tribe_by_industry">通过行业搜索圈子</string>
     <string name="administrator">管理员</string>
     <string name="tribe_category">分类</string>
-
     <string name="menber_count">成员</string>
     <string name="tribe_qr_code">圈子二维码</string>
     <string name="invite_person_into_tribe">邀请成员加入圈子</string>
@@ -604,7 +599,6 @@
     <string name="exit_meeting">退出会议</string>
     <string name="clear_local_msg">清除本地消息</string>
     <string name="avoid_disturb">消息免打扰</string>
-
     <string name="notify_meeting_start">会议开始提醒</string>
     <string name="apply_to_jiabin">申请成为嘉宾</string>
     <string name="apply_to_host">申请成为主持人</string>
@@ -665,13 +659,12 @@
     <string name="cancel_zan_success">取消赞成功</string>
     <string name="zan_failed">赞失败</string>
     <string name="copy">复制</string>
-    
+
     <!-- setting -->
     <string name="clear_cache_now">正在清空缓存&#8230;</string>
     <string name="clear_cache_success">清除完毕</string>
-    
     <string name="comment_success">评论成功</string>
-    
+
     <!-- jiav -->
     <string name="jiav_title">申请加V</string>
     <string name="jiav_info">\u0020\u0020\u0020\u0020\u0020\u0020\u0020感谢您对贵人产品的支持，今后贵人在全国所有的线上线下交流、成员互动等活动均将在线上报名，同时为了确保贵人产品内信息的及时性、准确性，给您营造一个良好的内容氛围以及让您更加便利的参与会议、圈子等相关活动切实保障您的权利。现邀请您完成贵人认证，通过实名认证的用户将拥有V标示，在贵人内将享受更完善的服务体验（了解更多请查看使用帮助）。</string>
@@ -680,7 +673,7 @@
     <string name="jiav_progress">加V进度</string>
     <string name="jiav_finish_profile">完善并认证个人资料</string>
     <string name="jiav_invite_user">邀请20位好友加入</string>
-    
+
     <!-- comment -->
     <string name="send_comment">发表评论</string>
     <string name="send_feedback">提交</string>
@@ -688,7 +681,7 @@
     <string name="please_input_comment">请输入评论内容</string>
     <string name="please_input_feedback">请输入反馈意见</string>
     <string name="feed_success">谢谢您的反馈，祝您天天快乐！</string>
-    
+
     <!-- share -->
     <string name="share_wechat">微信好友</string>
     <string name="share_wechat_group">微信朋友圈</string>
@@ -696,7 +689,7 @@
     <string name="share_guiren_dy">贵人动态</string>
     <string name="share_qq">QQ好友</string>
     <string name="share_qq_zone">QQ空间</string>
-    
+
     <!-- register -->
     <string name="register">注册</string>
     <string name="modify">修改密码</string>
@@ -710,7 +703,6 @@
     <string name="please_input_verify_code">请输入验证码</string>
     <string name="please_chose_country">选择您手机号码所在的国家，以便收到短信</string>
     <string name="please_input_phone">请输入您的手机号码</string>
-    
     <string name="forget_password">忘记密码?</string>
     <string name="new_user_register">新账户注册</string>
     <string name="login_forget_pwd">忘记密码</string>
@@ -732,38 +724,31 @@
     <string name="please_input_old_pwd">请输入旧密码</string>
     <string name="please_input_new_password">请输入新密码</string>
     <string name="modify_password">修改密码</string>
-    
     <string name="dynamic_msg">动态消息</string>
-    
-    
+
     <!-- send dynamic -->
     <string name="send_dynamic">发布动态</string>
     <string name="send_user_real_name">实名发布</string>
     <string name="send_user_nick_name">匿名发布</string>
     <string name="send_success">发送成功</string>
     <string name="send_now">正在发送</string>
-    
+
     <!-- invite friend -->
     <string name="invite_friend">邀请朋友</string>
     <string name="invite_contact">通讯录邀请</string>
     <string name="invite_weibo">微博邀请</string>
     <string name="invite_wechat">微信邀请</string>
     <string name="invite_QQ">QQ邀请</string>
-    
     <string name="invite_link">http://guirenhui.cn</string>
     <string name="invite_str_1">我正在使用【贵人】，一款超爽体验的“讲后即焚 移动会议专家”APP，真心话，不冒险。您也赶紧用呗！</string>
-    <string name="invite_str_2">
-老友，我正在使用【贵人】，它是一款精英匿名语聊平台，在这里，您可以自由表达，真实沟通，甩掉身份、阶层、地位、职业、亲疏关系等“名缰利锁”，真心话，不冒险。360公司CEO周鸿祎、乐视网CEO贾跃亭等大牛都在，您也赶紧来呗!贵人下载地址：http://guirenhui.cn</string>
-    
+    <string name="invite_str_2">老友，我正在使用【贵人】，它是一款精英匿名语聊平台，在这里，您可以自由表达，真实沟通，甩掉身份、阶层、地位、职业、亲疏关系等“名缰利锁”，真心话，不冒险。360公司CEO周鸿祎、乐视网CEO贾跃亭等大牛都在，您也赶紧来呗!贵人下载地址：http://guirenhui.cn</string>
+
     <!-- titlebar -->
     <string name="meeting">会议</string>
     <string name="dynamic">动态</string>
     <string name="connection">人脉</string>
     <string name="message">消息</string>
-    
 
-    
-    
     <!-- report -->
     <string name="rp_yellow">色情</string>
     <string name="rp_cheat">欺诈骗钱</string>
@@ -772,9 +757,7 @@
     <string name="rp_politics">政治</string>
     <string name="rp_chose_reason">请选择投诉原因</string>
     <string name="rp_ok">点击举报</string>
-    
     <string name="share_dami_url">http://www.diggg.com.cn/</string>
-    
     <string name="data_error">数据出现错误&#8230;</string>
     <string name="tribe_has_been_cancel">圈子已解散</string>
     <string name="cancel_tribe">解散圈子</string>
@@ -789,10 +772,9 @@
     <string name="add_tags">贴标签</string>
     <string name="renmai_tags">人脉标签</string>
     <string name="contact_information">联系方式</string>
-    <string name="click_verify">点击认证</string>
+    <string name="click_verify">填写资料</string>
     <string name="level_count">魅力值</string>
     <string name="apply_join">申请加入</string>
-    
     <string name="confirm_exit">确定退出?</string>
     <string name="confirm_cancel_follow">确定取消关注?</string>
     <string name="confirm_cancel_tribe">确定解散圈子?</string>
@@ -800,42 +782,31 @@
     <string name="confirm_cancel_meeting">确定解散会议?</string>
     <string name="confirm_exit_meeting">确定退出会议?</string>
     <string name="confirm_cancel_send_dynamic">确定取消发布?</string>
-    
     <string name="please_choose_add">请选择添加</string>
     <string name="scan_and_scan">扫一扫</string>
     <string name="host">主持人</string>
     <string name="guest">嘉宾</string>
-    
-
     <string name="meeting_users">参会成员</string>
     <string name="tribe_users">部落成员</string>
     <string name="cancel_meeting">解散会议</string>
     <string name="meeting_profile">会议资料</string>
     <string name="share_meeting_title">贵人汇-会议详情</string>
     <string name="share_tribe_title">贵人汇-部落详情</string>
-    
-    <string name="set_alarm_success">提醒已设置</string>
-    <string name="cancel_alarm_success">提醒已取消</string>
-    
     <string name="welcom_info0">讲后即焚 移动会议专家</string>
     <string name="welcom_info4">贵人感受新境界</string>
     <string name="welcom_info3">贵人让我们做得更好</string>
     <string name="welcom_info2">贵人之路从此开始</string>
     <string name="welcom_info1">贵人汇聚人脉</string>
-    
     <string name="confirm_delete">确定删除?</string>
     <string name="move_up_cancel_voice">手指上滑，取消发送</string>
     <string name="remove_cancel_voice">松开手指，取消发送</string>
-    
     <string name="refetch_nickname">获取花名失败，是否重新获取？</string>
     <string name="identity_name">花名</string>
     <string name="picture_scheme">[图片]</string>
     <string name="draft_scheme">[草稿]</string>
     <string name="voice_scheme">[语音]</string>
-    
     <string name="request_share_url">正在获取分享地址&#8230;</string>
     <string name="you_are_not_allowed_to_see_profile">对方已设置隐私保护</string>
-    
     <string name="no_tags">暂无标签</string>
     <string name="alarm_meeting_is_on_going">大人会议已开始，请速速就座！</string>
     
@@ -843,14 +814,31 @@
     <string name="user_anony_name">使用匿名</string>
     <string name="switch_use_real_name_mode">已切换至实名模式</string>
     <string name="switch_use_anony_name_mode">已切换至匿名</string>
+    
+    <string name="avoid_disturb_on">消息免打扰</string>
+    <string name="avoid_disturb_off">接收消息</string>
+    <string name="switch_avoid_disturb_on">已开启消息免打扰</string>
+    <string name="switch_avoid_disturb_off">已关闭消息免打扰</string>
+    
+    <string name="meeting_start_alarm_on">会议开始提醒</string>
+    <string name="meeting_start_alarm_off">取消提醒</string>
+    <string name="switch_meeting_start_alarm_on">已开启会议提醒</string>
+    <string name="switch_meeting_start_alarm_off">已关闭会议提醒</string>
+    
     <string name="nine_picture_at_most">最多可以添加9张</string>
     <string name="set_header">设置头像</string>
     <string name="upload_header_now">上传头像中&#8230;</string>
     <string name="upload_header_success">更换头像成功！</string>
     <string name="now_loading">正在加载&#8230;</string>
     <string name="loading_error_click_retry">加载出错，点击重试</string>
-    <string name="meeting_is_past">会议已结束</string>
+    <string name="meeting_is_start">会议已开始</string>
+    <string name="enter_app">进入贵人</string>
+    <string name="meeting_is_checking">正在进行审核</string>
+    <string name="meeting_not_pass_checking">会议没有通过审核</string>
     
-    
-    
+    <string name="no_right_see_email">您未填写邮箱，无法查看他人邮箱</string>
+    <string name="no_right_see_phone">您未填写手机号码，无法查看他人手机号码</string>
+    <string name="no_right_see_weibo">您未填写微博帐号，无法查看他人微博帐号</string>
+    <string name="no_right_see_weixin">您未填写微信号，无法查看他人微信号</string>
+
 </resources>

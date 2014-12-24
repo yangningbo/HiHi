@@ -265,7 +265,7 @@ public class ConnectionAdapter extends BaseAdapter {
 			break;
 		case TYPE_SOMEONE_SPREAD_USER:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
-					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "扩散了一条人脉",
+					MyTextUtils.addSingleUserSpan(content.realname, content.uid), "扩散了一条人脉",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 		default:
 			break;

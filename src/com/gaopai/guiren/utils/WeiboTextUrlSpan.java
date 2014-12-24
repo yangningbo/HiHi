@@ -56,8 +56,8 @@ public class WeiboTextUrlSpan extends ClickableSpan implements ParcelableSpan {
 	@Override
 	public void onClick(View widget) {
 		Uri uri = Uri.parse(mUrl);
-		String uirStr = uri.toString();
-		if (uirStr.contains(MyTextUtils.USER_SCHEME) && uirStr.contains("-1")) {
+		String uriStr = uri.toString();
+		if (uriStr.contains(MyTextUtils.USER_SCHEME) && uriStr.contains("-1")) {
 			return;
 		}
 		Context context = widget.getContext();

@@ -9,13 +9,16 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.AddReasonActivity;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.Tribe;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
@@ -85,6 +88,7 @@ public class ChatMsgDataHelper {
 					messageInfo.isfavorite = 1;
 					updateFavoriteCountToDb(messageInfo);
 					callback.favoriteMessage(messageInfo);
+					addFavoriteCount();
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}
@@ -95,6 +99,19 @@ public class ChatMsgDataHelper {
 		} else if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING) {
 			DamiInfo.favoriteMeetingMessage(mTribe.id, messageInfo.id, listener);
 		}
+	}
+	
+	public void addFavoriteCount() {
+		User user = DamiCommon.getLoginResult(mContext);
+		user.favoriteCount = user.favoriteCount + 1;
+		DamiCommon.saveLoginResult(mContext, user);
+		mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+	public void minusFavoriteCount() {
+		User user = DamiCommon.getLoginResult(mContext);
+		user.favoriteCount = user.favoriteCount - 1;
+		DamiCommon.saveLoginResult(mContext, user);
+		mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}
 
 	public void unFavoriteMessage(final MessageInfo messageInfo) {
@@ -113,6 +130,7 @@ public class ChatMsgDataHelper {
 					messageInfo.isfavorite = 0;
 					updateFavoriteCountToDb(messageInfo);
 					callback.unFavoriteMessage(messageInfo);
+					minusFavoriteCount();
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}

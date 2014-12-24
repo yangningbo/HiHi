@@ -423,7 +423,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:text="真实姓名" />
+                            android:text="姓名" />
 
                         <TextView
                             android:id="@+id/tv_profile_real_name"
@@ -449,7 +449,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:text="所属公司" />
+                            android:text="单位" />
 
                         <TextView
                             android:id="@+id/tv_profile_company"
@@ -475,7 +475,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:text="所在部门" />
+                            android:text="职务" />
 
                         <TextView
                             android:id="@+id/tv_profile_partment"
@@ -501,7 +501,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:text="所属职业" />
+                            android:text="行业" />
 
                         <TextView
                             android:id="@+id/tv_profile_job"

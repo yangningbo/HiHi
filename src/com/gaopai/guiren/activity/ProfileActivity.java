@@ -508,27 +508,44 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private void bindContactView() {
 		tvEmail.setText(tUser.email);
 		tvPhone.setText(tUser.phone);
-		tvWeixin.setText(mUser.weixin);
-		tvWeibo.setText(mUser.weibo);
-//		if (!(isSelf || isBeenFollowed())) {
-			PrivacyConfig pc = tUser.privacyconfig;
-			if (pc.mail == 0) {
-				tvEmail.setText(R.string.you_are_not_allowed_to_see_profile);
-				removeTextDrawable(tvEmail);
-			}
-			if (pc.phone == 0) {
-				tvPhone.setText(R.string.you_are_not_allowed_to_see_profile);
-				removeTextDrawable(tvPhone);
-			}
-			if (pc.wechat == 0) {
-				tvWeixin.setText(R.string.you_are_not_allowed_to_see_profile);
-				removeTextDrawable(tvWeixin);
-			}
-			if (pc.weibo == 0) {
-				tvWeibo.setText(R.string.you_are_not_allowed_to_see_profile);
-				removeTextDrawable(tvWeibo);
-			}
-//		}
+		tvWeixin.setText(tUser.weixin);
+		tvWeibo.setText(tUser.weibo);
+		// if (!(isSelf || isBeenFollowed())) {
+		if (isSelf) {
+			return;
+		}
+		PrivacyConfig pc = tUser.privacyconfig;
+		if (pc.mail == 0) {
+			tvEmail.setText(R.string.you_are_not_allowed_to_see_profile);
+			removeTextDrawable(tvEmail);
+		} else if (TextUtils.isEmpty(mUser.email.trim())) {
+			tvEmail.setText(R.string.no_right_see_email);
+			removeTextDrawable(tvEmail);
+		}
+
+		if (pc.phone == 0) {
+			tvPhone.setText(R.string.you_are_not_allowed_to_see_profile);
+			removeTextDrawable(tvPhone);
+		} else if (TextUtils.isEmpty(mUser.phone.trim())) {
+			tvPhone.setText(R.string.no_right_see_phone);
+			removeTextDrawable(tvPhone);
+		}
+
+		if (pc.wechat == 0) {
+			tvWeixin.setText(R.string.you_are_not_allowed_to_see_profile);
+			removeTextDrawable(tvWeixin);
+		} else if (TextUtils.isEmpty(mUser.weixin.trim())) {
+			tvWeixin.setText(R.string.no_right_see_weixin);
+			removeTextDrawable(tvWeixin);
+		}
+
+		if (pc.weibo == 0) {
+			tvWeibo.setText(R.string.you_are_not_allowed_to_see_profile);
+			removeTextDrawable(tvWeibo);
+		} else if (TextUtils.isEmpty(mUser.weibo.trim())) {
+			tvWeibo.setText(R.string.no_right_see_weibo);
+			removeTextDrawable(tvWeibo);
+		}
 		// if (!isSelf) {
 		// removeTextDrawable(tvEmail);
 		// removeTextDrawable(tvPhone);

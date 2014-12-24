@@ -23,6 +23,7 @@ import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult;
 import com.gaopai.guiren.activity.InviteFriendActivity.InviteUrlResult;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
+import com.gaopai.guiren.bean.BatFollowResult;
 import com.gaopai.guiren.bean.CheckUpdateResult;
 import com.gaopai.guiren.bean.FavoriteList;
 import com.gaopai.guiren.bean.InviteNumResult;
@@ -275,15 +276,7 @@ public class DamiInfo implements Serializable {
 		request(Method.GET, TribeInfoBean.class, params, TribeInfoBean.TYPE_TRIBE_INFO, listener, LOGIN_TYPE_NEED_LOGIN);
 	}
 
-	/**
-	 * 获取系统默认标签
-	 * 
-	 * @param listener
-	 */
-	public static void getTags(IResponseListener listener) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		request(Method.GET, TagResult.class, params, 0, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
-	}
+
 
 	/**
 	 * 查询
@@ -614,6 +607,7 @@ public class DamiInfo implements Serializable {
 		bundle.add("type", String.valueOf(messageInfo.type));
 		bundle.add("tag", messageInfo.tag);
 		bundle.add("to", messageInfo.to);
+		bundle.add("from", messageInfo.from);
 		bundle.add("fileType", String.valueOf(messageInfo.fileType));
 
 		if (!TextUtils.isEmpty(messageInfo.content)) {
@@ -2386,7 +2380,18 @@ public class DamiInfo implements Serializable {
 		Parameters bundle = new Parameters();
 		bundle.add("fuid", fuid);
 		String url = SERVER + "user/batFollow";
-		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BatFollowResult.class, listener);
+	}
+	
+	/**
+	 * 获取系统默认标签
+	 * 
+	 * @param listener
+	 */
+	public static void getTags(IResponseListener listener) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("num", "9");
+		request(Method.GET, TagResult.class, params, 0, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
 	}
 
 }

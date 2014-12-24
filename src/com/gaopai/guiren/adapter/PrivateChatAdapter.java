@@ -26,12 +26,12 @@ public class PrivateChatAdapter extends BaseChatAdapter implements View.OnClickL
 		viewHolder.tvUserName.setVisibility(View.GONE);
 		viewHolder.mCountLayout.setVisibility(View.GONE);
 
-		viewHolder.msgInfoLayout.setTag(messageInfo);
+		viewHolder.layoutTextVoiceHolder.setTag(messageInfo);
 		if (messageInfo.fileType == MessageType.PICTURE) {
-			viewHolder.msgInfoLayout.setOnLongClickListener(null);
+			viewHolder.layoutTextVoiceHolder.setOnLongClickListener(null);
 			return;
 		}
-		viewHolder.msgInfoLayout.setOnLongClickListener(showMoreWindowClickListener);
+		viewHolder.layoutTextVoiceHolder.setOnLongClickListener(showMoreWindowClickListener);
 	}
 
 	private View.OnLongClickListener showMoreWindowClickListener = new View.OnLongClickListener() {

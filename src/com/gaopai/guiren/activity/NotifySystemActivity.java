@@ -27,14 +27,17 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatCommentsActivity;
+import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.adapter.NotifyAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.NotifiyType;
 import com.gaopai.guiren.bean.NotifiyVo;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.NotifyMessageTable;
@@ -109,10 +112,12 @@ public class NotifySystemActivity extends BaseActivity {
 					sendSMS(mNotifyList.get(position).phone, mNotifyList.get(position).code);
 					break;
 
+					//my tribe has passed
 				case NotifiyType.PASS_CREATE_TRIBE:
 					Intent tribeSettingIntent = new Intent(mContext, TribeDetailActivity.class);
 					tribeSettingIntent.putExtra("id", mNotifyList.get(position).room.id);
 					startActivity(tribeSettingIntent);
+					MainActivity.addTribe(mContext);
 					break;
 
 				case NotifiyType.APPLY_ADD_TRIBE:
@@ -121,19 +126,18 @@ public class NotifySystemActivity extends BaseActivity {
 					startActivity(applyTribeIntent);
 					break;
 
+					//someone agree my apply
 				case NotifiyType.AGREE_ADD_TRIBE:
+					MainActivity.addTribe(mContext);
+					
 				case NotifiyType.AGREE_INVITE_ADD_TRIBE:
 				case NotifiyType.DISAGREE_ADD_TRIBE:
 				case NotifiyType.DISAGREE_INVITE_ADD_TRIBE:
-					// Intent intent = new Intent(mContext,
-					// ChatMainActivity.class);
-					// intent.putExtra(ChatMainActivity.CHAT_TYPE_KEY,
-					// BaseChatActivity.TRIBE_CHAT_TYPE);
-					// intent.putExtra(ChatMainActivity.TRIBE_EXTRAS,
-					// mNotifyList.get(position).mRoom);
-					// startActivity(intent);
+					startActivity(ChatTribeActivity.getIntent(mContext, mNotifyList.get(position).room,
+							ChatTribeActivity.CHAT_TYPE_TRIBE));
 					break;
 
+				//someone invite me to join
 				case NotifiyType.INVITE_ADD_TRIBE:
 					if (mNotifyList.get(position).processed == 0) {
 						showActionDialog(position, 0);
@@ -145,6 +149,7 @@ public class NotifySystemActivity extends BaseActivity {
 					meetingDetailIntent.putExtra(MeetingDetailActivity.KEY_MEETING_ID,
 							mNotifyList.get(position).room.id);
 					startActivity(meetingDetailIntent);
+					MainActivity.addMeeting(mContext);
 					break;
 
 				case NotifiyType.APPLY_ADD_MEETING:
@@ -155,6 +160,7 @@ public class NotifySystemActivity extends BaseActivity {
 					break;
 
 				case NotifiyType.AGREE_ADD_MEETING:
+					MainActivity.addMeeting(mContext);
 				case NotifiyType.AGREE_INVITE_ADD_MEETING:
 				case NotifiyType.REFUSE_ADD_MEETING:
 				case NotifiyType.REFUSE_INVITE_ADD_MEETING:
@@ -461,14 +467,17 @@ public class NotifySystemActivity extends BaseActivity {
 				dialog.dismiss();
 			}
 		}).create();
+		dialog.setCanceledOnTouchOutside(true);
 		dialog.show();
 	}
 
 	private void agreeJoin(final int pos, final int type) {
-		if (type == 0) {
+		if (type == 0) {// tribe
 			DamiInfo.agreeInvite(mNotifyList.get(pos).room.id, new MyListener(pos));
-		} else if (type == 1) {
+			MainActivity.addTribe(mContext);
+		} else if (type == 1) {//meeting
 			DamiInfo.agreeMeetingInvite(mNotifyList.get(pos).room.id, new MyListener(pos));
+			MainActivity.addMeeting(mContext);
 		} else if (type == 2) {
 			DamiInfo.agreeSeekingContacts(mNotifyList.get(pos).user.uid, mNotifyList.get(pos).message.id,
 					new MyListener(pos));

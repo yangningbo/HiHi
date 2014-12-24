@@ -114,6 +114,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="@string/deal_apply_host" />
         </LinearLayout>
 
@@ -128,21 +129,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="@string/edit_meeting" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/grid_cancel_meeting"
-            style="@style/meeting_detail_more_layout" >
-
-            <ImageView
-                style="@style/meeting_detail_more_img"
-                android:src="@drawable/icon_meeting_detail_exit_meeting" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/destroy_meeting" />
         </LinearLayout>
 
         <LinearLayout
@@ -185,6 +173,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/clear_local_msg" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/grid_cancel_meeting"
+            style="@style/meeting_detail_more_layout" >
+
+            <ImageView
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_exit_meeting" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/destroy_meeting" />
         </LinearLayout>
     </com.gaopai.guiren.view.MyGridLayout>
 

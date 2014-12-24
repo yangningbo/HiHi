@@ -1,6 +1,6 @@
 package com.gaopai.guiren.fragment;
 
-import android.text.TextUtils;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,15 +11,16 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.gaopai.guiren.BaseFragment;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.adapter.RecommendAdapter;
+import com.gaopai.guiren.bean.BatFollowResult;
+import com.gaopai.guiren.bean.BatFollowResult.BatFollowBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
-import com.gaopai.guiren.bean.net.BaseNetBean;
-import com.gaopai.guiren.bean.net.RecommendAddResult;
-import com.gaopai.guiren.support.FragmentHelper;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -29,7 +30,6 @@ import com.gaopai.guiren.volley.SimpleResponseListener;
 public class RecommendFriendFragment extends BaseFragment implements OnClickListener {
 	private PullToRefreshListView mListView;
 	private Button btnAddAll;
-	private View btnJumpOver;
 	private RecommendAdapter<User> mAdapter;
 	private String TAG = RecommendFriendFragment.class.getName();
 
@@ -41,7 +41,6 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 			contentLayout.addView(mView, layoutParamsFF);
 			mListView = (PullToRefreshListView) mView.findViewById(R.id.listView);
 			ViewUtil.findViewById(mView, R.id.btn_follow).setOnClickListener(this);
-			ViewUtil.findViewById(mView, R.id.btn_follow_all).setOnClickListener(this);
 			initView();
 		}
 	}
@@ -49,8 +48,6 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 	private void initView() {
 
 		mTitleBar.setTitleText(R.string.recommend_friend);
-		btnJumpOver = mTitleBar.addRightTextView("跳过");
-		btnJumpOver.setOnClickListener(new JumpOverClickListener());
 
 		mListView.setPullLoadEnabled(false);
 		mListView.setPullRefreshEnabled(false);
@@ -84,20 +81,6 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		getUserList();
 	}
 
-	private class JumpOverClickListener implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-//			gotoRecTribeFragment();
-			getActivity().finish();
-		}
-	}
-
-	private void gotoRecTribeFragment() {
-		FragmentHelper.replaceFragment(android.R.id.content, getFragmentManager(), RecommendTribeFragment.class);
-
-	}
-
 	private void getUserList() {
 
 		DamiInfo.getRecommendFriendList(new SimpleResponseListener(getActivity()) {
@@ -109,7 +92,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
 						mAdapter.addAll(data.data);
-						
+
 					}
 				} else {
 					otherCondition(data.state, getActivity());
@@ -141,8 +124,13 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		DamiInfo.followInBat(id, new SimpleResponseListener(getActivity(), R.string.request_internet_now) {
 			@Override
 			public void onSuccess(Object o) {
-				final BaseNetBean data = (BaseNetBean) o;
+				final BatFollowResult data = (BatFollowResult) o;
 				if (data.state != null && data.state.code == 0) {
+					BatFollowBean bean = data.data;
+					User user = DamiCommon.getLoginResult(act);
+					user.followers = user.followers + bean.complete;
+					DamiCommon.saveLoginResult(act, user);
+					act.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 					getActivity().finish();
 				} else {
 					this.otherCondition(data.state, getActivity());
@@ -155,12 +143,6 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.btn_follow_all:
-			String ids = mAdapter.getAllIdString();
-			if (!TextUtils.isEmpty(ids)) {
-				addUser(ids, mAdapter.getChosedSize());
-			}
-			break;
 		case R.id.btn_follow:
 			if (mAdapter.choseSet.size() == 0) {
 				getBaseActivity().showToast(R.string.please_choose_add);

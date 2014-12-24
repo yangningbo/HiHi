@@ -25,9 +25,11 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.SendDynamicResult;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.net.MorePicture;
@@ -218,6 +220,12 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				SendDynamicResult data = (SendDynamicResult) o;
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.send_success);
+					
+					User user = DamiCommon.getLoginResult(mContext);
+					user.dynamicCount = user.dynamicCount + 1;
+					DamiCommon.saveLoginResult(mContext, user);
+					mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+					
 					SendDynamicMsgActivity.this.finish();
 				} else {
 					otherCondition(data.state, SendDynamicMsgActivity.this);

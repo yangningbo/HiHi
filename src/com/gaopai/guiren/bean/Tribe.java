@@ -43,7 +43,8 @@ public class Tribe implements Serializable {
 	@Expose
 	public String content = ""; // 部落说明或会议大纲
 	@Expose
-	public int check = 0; // 1 审核通过的
+	public int check = 0; // 0-未审核 1-通过 2-未通过
+
 	@Expose
 	public long createtime; // 创建时间
 	@Expose

@@ -10,6 +10,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -120,6 +121,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			}
 		});
 	}
+	
 
 	private void bindView() {
 		// TODO Auto-generated method stub
@@ -359,8 +361,8 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		final String end = tvEndTime.getText().toString();
 		Tribe tempTribe = new Tribe();
 		tempTribe.content = info;
-		tempTribe.start = DateUtil.getTimeStamp(start);
-		tempTribe.end = DateUtil.getTimeStamp(end);
+		tempTribe.start = DateUtil.getTimeStamp(start)/1000;
+		tempTribe.end = DateUtil.getTimeStamp(end)/1000;
 		tempTribe.name = title;
 		tempTribe.logosmall = mFilePath;
 		Intent intent = new Intent(mContext, MeetingDetailActivity.class);

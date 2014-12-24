@@ -5,23 +5,13 @@
     android:background="@color/u_recomend_bg" >
 
     <Button
-        android:id="@+id/btn_follow_all"
+        android:id="@+id/btn_follow"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/u_blue"
-        android:text="全部关注"
-        android:textColor="@color/white"
-        android:textSize="@dimen/u_recommend_btn_text_size" />
-    <Button
-        android:id="@+id/btn_follow"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_above="@id/btn_follow_all"
-        android:layout_centerHorizontal="true"
         android:background="@color/u_yellow"
-        android:text="关注"
+        android:text="@string/enter_app"
         android:textColor="@color/white"
         android:textSize="@dimen/u_recommend_btn_text_size" />
 

@@ -98,15 +98,6 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(UPDATE_COUNT_ACTION);
-		filter.addAction(ACTION_EXIT_TRIBE);
-		filter.addAction(ACTION_KICK_TRIBE);
-		filter.addAction(MainActivity.LOGIN_SUCCESS_ACTION);
-		filter.addAction(ActionHolder.ACTION_CANCEL_TRIBE);
-		filter.addAction(ActionHolder.ACTION_QUIT_TRIBE);
-		registerReceiver(filter);
-
 		mListView.doPullRefreshing(true, 0);
 
 	}
@@ -115,6 +106,18 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		Intent intent = new Intent(context, TribeActivity.class);
 		intent.putExtra("fid", fid);
 		return intent;
+	}
+
+	
+	@Override
+	protected void registerReceiver(IntentFilter filter) {
+		filter.addAction(UPDATE_COUNT_ACTION);
+		filter.addAction(ACTION_EXIT_TRIBE);
+		filter.addAction(ACTION_KICK_TRIBE);
+		filter.addAction(MainActivity.LOGIN_SUCCESS_ACTION);
+		filter.addAction(ActionHolder.ACTION_CANCEL_TRIBE);
+		filter.addAction(ActionHolder.ACTION_QUIT_TRIBE);
+		super.registerReceiver(filter);
 	}
 
 	@Override
@@ -148,9 +151,7 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		for (int i = 0; i < mAdapter.list.size(); i++) {
 			if (mAdapter.list.get(i).id.equals(id)) {
 				mAdapter.list.remove(i);
-				if (mAdapter != null) {
-					mAdapter.notifyDataSetChanged();
-				}
+				mAdapter.notifyDataSetChanged();
 				break;
 			}
 		}

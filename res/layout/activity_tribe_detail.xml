@@ -249,9 +249,11 @@
 
         <com.gaopai.guiren.view.FlowLayout
             android:id="@+id/tribe_tags"
+            android:paddingLeft="@dimen/general_paading"
+            android:paddingRight="@dimen/general_paading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            custom:tag_columns="3" >
+            custom:tag_columns="4" >
         </com.gaopai.guiren.view.FlowLayout>
 
         <LinearLayout

@@ -35,8 +35,10 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
+import com.gaopai.guiren.activity.SendDynamicMsgActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.WebActivity;
@@ -266,6 +268,10 @@ public class DynamicHelper {
 					}
 					typeBean.spread.add(spreadBean);
 					callback.notifyUpdateView();
+					//update dynamic count
+					user.dynamicCount = user.dynamicCount + 1;
+					DamiCommon.saveLoginResult(mContext, user);
+					mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}

@@ -546,6 +546,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 					showToast(R.string.tribe_has_been_cancel);
 					deleteConverstion();
 					sendBroadcast(ActionHolder.getExitIntent(mTribeID, ActionHolder.ACTION_CANCEL_TRIBE));
+					MainActivity.minusTribe(mContext);
 					TribeDetailActivity.this.finish();
 				} else {
 					otherCondition(data.state, TribeDetailActivity.this);
@@ -563,6 +564,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.operate_success);
 					sendBroadcast(ActionHolder.getExitIntent(mTribeID, ActionHolder.ACTION_QUIT_TRIBE));
+					MainActivity.minusTribe(mContext);
+					getTribeDetail();
 					deleteConverstion();
 					bindBottomButtons();
 				} else {

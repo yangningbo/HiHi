@@ -34,7 +34,7 @@ public class ReverificationActivity extends BaseActivity {
 		setAbContentView(R.layout.activity_verification_profile);
 		mUser = DamiCommon.getLoginResult(this);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
-		mTitleBar.setTitleText("认证");
+		mTitleBar.setTitleText(R.string.click_verify);
 
 		etName = (EditText) findViewById(R.id.et_real_name);
 		etCompany = (EditText) findViewById(R.id.et_company);

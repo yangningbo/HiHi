@@ -710,4 +710,43 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	public static void updateDynamicCount(Context context) {
+		User user = DamiCommon.getLoginResult(context);
+		user.dynamicCount = user.dynamicCount + 1;
+		DamiCommon.saveLoginResult(context, user);
+		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+
+	public static void updateFansCount(Context context) {
+		User user = DamiCommon.getLoginResult(context);
+		user.fansers = user.fansers + 1;
+		DamiCommon.saveLoginResult(context, user);
+		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+
+	public static void addTribe(Context context) {
+		User user = DamiCommon.getLoginResult(context);
+		user.tribeCount = user.tribeCount + 1;
+		DamiCommon.saveLoginResult(context, user);
+		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+	public static void minusTribe(Context context) {
+		User user = DamiCommon.getLoginResult(context);
+		user.tribeCount = user.tribeCount - 1;
+		DamiCommon.saveLoginResult(context, user);
+		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+	public static void addMeeting(Context context) {
+		User user = DamiCommon.getLoginResult(context);
+		user.meetingCount = user.meetingCount + 1;
+		DamiCommon.saveLoginResult(context, user);
+		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+	public static void minusMeeting(Context context) {
+		User user = DamiCommon.getLoginResult(context);
+		user.meetingCount = user.meetingCount - 1;
+		DamiCommon.saveLoginResult(context, user);
+		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+
 }

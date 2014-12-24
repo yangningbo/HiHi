@@ -169,6 +169,9 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 				// TODO Auto-generated method stub
 				TagResult data = (TagResult) o;
 				if (data.state != null && data.state.code == 0) {
+					if (data.data == null || data.data.size() == 0) {
+						return;
+					}
 					tagList = data.data;
 					addTags();
 				} else {
