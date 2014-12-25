@@ -1,11 +1,13 @@
 package com.gaopai.guiren.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
@@ -20,7 +22,7 @@ public class ReverificationActivity extends BaseActivity {
 
 	private EditText etName;
 	private EditText etCompany;
-	private EditText etPartment;
+	private TextView etIndustry;
 	private EditText etJob;
 	private Button btnVerificaion;
 
@@ -38,9 +40,8 @@ public class ReverificationActivity extends BaseActivity {
 
 		etName = (EditText) findViewById(R.id.et_real_name);
 		etCompany = (EditText) findViewById(R.id.et_company);
-		etPartment = (EditText) findViewById(R.id.et_partment);
+		etIndustry = (TextView) findViewById(R.id.et_industry);
 		etJob = (EditText) findViewById(R.id.et_job);
-
 		btnVerificaion = (Button) findViewById(R.id.btn_verificaition);
 		btnVerificaion.setOnClickListener(new OnClickListener() {
 
@@ -48,12 +49,12 @@ public class ReverificationActivity extends BaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (TextUtils.isEmpty(etName.getText().toString()) || TextUtils.isEmpty(etCompany.getText().toString())
-						|| TextUtils.isEmpty(etPartment.getText().toString())
+						|| TextUtils.isEmpty(etIndustry.getText().toString())
 						|| TextUtils.isEmpty(etJob.getText().toString())) {
 					showToast(R.string.input_can_not_be_empty);
 					return;
 				}
-				DamiInfo.reAuth(etPartment.getText().toString(), etName.getText().toString(), etCompany.getText()
+				DamiInfo.reAuth(etIndustry.getText().toString(), etName.getText().toString(), etCompany.getText()
 						.toString(), etJob.getText().toString(), new SimpleResponseListener(mContext,
 						R.string.request_internet_now) {
 					@Override
@@ -73,7 +74,25 @@ public class ReverificationActivity extends BaseActivity {
 
 		etName.setText(mUser.realname);
 		etCompany.setText(mUser.company);
-		etPartment.setText(mUser.depa);
+		etIndustry.setText(mUser.depa);
 		etJob.setText(mUser.post);
+		findViewById(R.id.layout_industry).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showChoseIndustryDialog();
+			}
+		});
+	}
+
+	private String[] industries = new String[] { "电子商务", "移动互联网", "社交网络", "网络游戏", "大数据", "在线视频", "企业软件", "智能硬件", "金融业",
+			"投资", "汽车业", "奢侈品", "房地产", "其它" };
+
+	private void showChoseIndustryDialog() {
+		showMutiDialog(null, industries, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				etIndustry.setText(industries[which]);
+			}
+		});
 	}
 }

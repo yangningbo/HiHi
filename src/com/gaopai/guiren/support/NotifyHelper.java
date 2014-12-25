@@ -14,7 +14,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.NotifySystemActivity;
+import com.gaopai.guiren.activity.WebActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -36,7 +38,8 @@ public class NotifyHelper {
 	public static final int NOTIFYID_PRIVATE = 10000080;
 	public static final int NOTIFYID_TRIBE = 10000081;
 	public static final int NOTIFYID_MEETING = 10000082;
-	public static final int NOTIFYD_SYSTEM = 1000000083;
+	public static final int NOTIFYD_SYSTEM = 100000083;
+	public static final int NOTIFYD_DAMI = 100000084;
 
 	private Context mContext;
 	private NotificationManager notificationManager;
@@ -68,7 +71,6 @@ public class NotifyHelper {
 		}
 		return true;
 	}
-
 
 	public boolean isPlayRingtone() {
 		return po.getInt(SPConst.KEY_NOTIFY_PLAY_RINGTONES, 0) == 1;
@@ -129,6 +131,9 @@ public class NotifyHelper {
 			notifyMsg = messageInfo.title;
 		} else if (messageInfo.type == 300) {
 			notifyMsg = messageInfo.title;
+		} else if (messageInfo.type == -2) {
+			msg = mContext.getString(R.string.guiren_report);
+			notifyMsg = messageInfo.title;
 		}
 
 		builder.setContentTitle(notifyMsg);
@@ -149,8 +154,7 @@ public class NotifyHelper {
 				return;
 			}
 			notificationManager.notify(NOTIFYID_PRIVATE, builder.build());
-		} else { // 部落
-
+		} else if (messageInfo.type == 200 || messageInfo.type == 300) {// 部落
 			if (isActivityTop(mContext, ".activity.chat.ChatTribeActivity")) {
 				if (getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
 					ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
@@ -172,6 +176,11 @@ public class NotifyHelper {
 				notificationManager.notify(NOTIFYID_TRIBE, builder.build());
 			} else {
 				notificationManager.notify(NOTIFYID_MEETING, builder.build());
+			}
+		} else if (messageInfo.type == -2) {
+			ConversationHelper.saveToLastMsgList(messageInfo, mContext);
+			if (isDamiNotify()) {
+				notificationManager.notify(NOTIFYD_DAMI, builder.build());
 			}
 		}
 
@@ -212,6 +221,8 @@ public class NotifyHelper {
 			user.realname = messageInfo.displayname;
 			user.headsmall = messageInfo.headImgUrl;
 			intent.putExtra(ChatMessageActivity.KEY_USER, user);
+		} else if (messageInfo.type == -2) {
+			intent = WebActivity.getIntent(mContext, messageInfo.conversion.headurl, messageInfo.conversion.name);
 		} else {
 			intent = new Intent(mContext, ChatTribeActivity.class);
 			Tribe tribe = new Tribe();
@@ -219,9 +230,9 @@ public class NotifyHelper {
 			tribe.name = messageInfo.title;
 			tribe.type = messageInfo.type;
 			intent.putExtra(ChatTribeActivity.KEY_TRIBE, tribe);
+			intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, messageInfo.type);
 		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, messageInfo.type);
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, messageInfo.to.hashCode(), intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return contentIntent;
@@ -305,7 +316,7 @@ public class NotifyHelper {
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(id);
 	}
-	
+
 	public static void clearAllNotification(Context context) {
 		NotificationManager notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);

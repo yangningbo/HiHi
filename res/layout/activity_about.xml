@@ -58,189 +58,107 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/profile_favorite_bg"
             android:orientation="vertical" >
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/about_item_height" >
+                android:layout_height="@dimen/about_item_height"
+                android:background="@drawable/selector_btn_general"
+                android:padding="@dimen/general_paading" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/user_qq_group"
-                    android:textColor="@color/one_word_prompt_color"
-                    android:textSize="16sp" />
+                    android:gravity="left"
+                    android:text="@string/user_qq_group" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
+                    android:gravity="right"
                     android:text="@string/user_qq_group_value"
-                    android:textColor="@color/content_gray_color"
-                    android:textSize="15sp" />
-            </RelativeLayout>
+                    android:textColor="@color/content_gray_color" />
+            </LinearLayout>
+
+            <View style="@style/general_thin_divider_in_white" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/create_tribe_divider_line"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/about_item_height" >
+                android:layout_height="@dimen/about_item_height"
+                android:background="@drawable/selector_btn_general"
+                android:padding="@dimen/general_paading" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/server_qq"
-                    android:textColor="@color/one_word_prompt_color"
-                    android:textSize="16sp" />
+                    android:gravity="left"
+                    android:text="@string/server_qq" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
+                    android:gravity="right"
                     android:text="@string/server_qq_value"
-                    android:textColor="@color/content_gray_color"
-                    android:textSize="15sp" />
-            </RelativeLayout>
+                    android:textColor="@color/content_gray_color" />
+            </LinearLayout>
+
+            <View style="@style/general_thin_divider_in_white" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/create_tribe_divider_line"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/about_item_height" >
+                android:layout_height="@dimen/about_item_height"
+                android:background="@drawable/selector_btn_general"
+                android:padding="@dimen/general_paading" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/server_wechat_cliend"
-                    android:textColor="@color/one_word_prompt_color"
-                    android:textSize="16sp" />
+                    android:gravity="left"
+                    android:text="@string/server_wechat_cliend" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
+                    android:gravity="right"
                     android:text="@string/server_wechat_cliend_value"
-                    android:textColor="@color/content_gray_color"
-                    android:textSize="15sp" />
-            </RelativeLayout>
+                    android:textColor="@color/content_gray_color" />
+            </LinearLayout>
+
+            <View style="@style/general_thin_divider_in_white" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/create_tribe_divider_line"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/about_item_height" >
+                android:layout_height="@dimen/about_item_height"
+                android:background="@drawable/selector_btn_general"
+                android:padding="@dimen/general_paading" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/sina_weibo"
-                    android:textColor="@color/one_word_prompt_color"
-                    android:textSize="16sp" />
+                    android:gravity="left"
+                    android:text="@string/sina_weibo" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
+                    android:gravity="right"
                     android:text="@string/sina_weibo_value"
-                    android:textColor="@color/content_gray_color"
-                    android:textSize="15sp" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/create_tribe_divider_line"
-                android:orientation="vertical" >
+                    android:textColor="@color/content_gray_color" />
             </LinearLayout>
 
-            <RelativeLayout
+            <View style="@style/general_thin_divider_in_white" />
+
+            <TextView
                 android:id="@+id/project_secretary_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/about_item_height"
-                android:background="@drawable/selector_btn_general" >
+                style="@style/about_item"
+                android:text="@string/project_secretary" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/project_secretary"
-                    android:textColor="@color/one_word_prompt_color"
-                    android:textSize="16sp" />
+            <View style="@style/general_thin_divider_in_white" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="@string/desc"
-                    android:src="@drawable/create_tribe_arrow" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/create_tribe_divider_line"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/qrlayout"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/about_item_height"
-                android:background="@drawable/selector_btn_general" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/download_app_address_qr_code"
-                    android:textColor="@color/one_word_prompt_color"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="@string/desc"
-                    android:src="@drawable/create_tribe_arrow" />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_qrcode"
+                style="@style/about_item"
+                android:text="@string/download_app_address_qr_code" />
         </LinearLayout>
 
         <LinearLayout

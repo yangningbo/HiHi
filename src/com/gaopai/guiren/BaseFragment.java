@@ -240,6 +240,7 @@ public class BaseFragment extends Fragment implements OnClickListener {
 	}
 	
 	private boolean mIsRegisterReceiver = false;
+	
 	protected IntentFilter registerReceiver(String...actions) {
 		IntentFilter filter = new IntentFilter();
 		for (String action:actions) {

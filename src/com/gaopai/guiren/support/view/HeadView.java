@@ -115,7 +115,8 @@ public class HeadView extends ViewGroup {
 		// TODO Auto-generated method stub
 		ivHeader.layout(0, 0, ivHeader.getMeasuredWidth(), ivHeader.getMeasuredHeight());
 		if (ivMvp.getVisibility() == VISIBLE) {
-			ivMvp.layout(getMeasuredWidth() - ivMvp.getMeasuredWidth(), getMeasuredHeight() - ivMvp.getMeasuredHeight(), getMeasuredWidth(), getMeasuredHeight());
+			ivMvp.layout(getMeasuredWidth() - ivMvp.getMeasuredWidth(),
+					getMeasuredHeight() - ivMvp.getMeasuredHeight(), getMeasuredWidth(), getMeasuredHeight());
 		}
 	}
 }

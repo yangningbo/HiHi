@@ -1116,6 +1116,8 @@ public class DynamicHelper {
 		CommnetHolder commnetHolder = typeBean.commnetHolder;
 		commnetHolder.displayname = getUserName(user);
 		commnetHolder.dataid = typeBean.id;
+		commnetHolder.todisplayname = null;
+		commnetHolder.toid = null;
 		commnetHolder.type = 1;
 	}
 

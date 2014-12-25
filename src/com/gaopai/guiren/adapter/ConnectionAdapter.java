@@ -19,6 +19,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ConnectionDetailActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
@@ -51,7 +52,9 @@ public class ConnectionAdapter extends BaseAdapter {
 	private static final int TYPE_BE_FRIENDS = 0;
 	private static final int TYPE_GENERAL = 1;
 	private static final int TYPE_PIC_GENERAL = 2;
-
+	
+	private com.gaopai.guiren.bean.User mLogin;
+	
 	public void showSoftKeyboard() {
 		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
@@ -61,6 +64,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		mFragment = fragment;
 		mContext = fragment.getActivity();
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mLogin =  DamiCommon.getLoginResult(mContext);
 	}
 
 	public void addAll(List<TypeHolder> o) {
@@ -232,6 +236,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		User user = getSingleUser(content);
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		switch (type) {
+		
 		case TYPE_WEIBO_USER_JOIN:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您关注的微博用户",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了贵人"));
@@ -264,9 +269,14 @@ public class ConnectionAdapter extends BaseAdapter {
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 			break;
 		case TYPE_SOMEONE_SPREAD_USER:
-			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
-					MyTextUtils.addSingleUserSpan(content.realname, content.uid), "扩散了一条人脉",
-					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
+			if (content.uid.equals(mLogin.uid)) {
+				viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您扩散了一条人脉",
+						MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
+			} else {
+				viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+						MyTextUtils.addSingleUserSpan(content.realname, content.uid), "扩散了一条人脉",
+						MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
+			}
 		default:
 			break;
 		}

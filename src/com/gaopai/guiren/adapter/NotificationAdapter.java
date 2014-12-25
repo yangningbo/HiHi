@@ -29,14 +29,14 @@ public class NotificationAdapter extends BaseAdapter {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
 	}
-	
-	public void buildListWithDami() {
-		list.clear();
-		list.add(new ConversationBean());
-	}
 
-	public void addAll(List<ConversationBean> o) {
-		buildListWithDami();
+	public void addAll(List<ConversationBean> o, boolean hasDami) {
+		list.clear();
+		if (!hasDami) {
+			ConversationBean conversationBean = new ConversationBean();
+			conversationBean.unreadcount = 0;
+			list.add(conversationBean);
+		}
 		list.addAll(o);
 		notifyDataSetChanged();
 	}
@@ -77,18 +77,26 @@ public class NotificationAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		if (position == 0) {
+		ConversationBean bean = list.get(position);
+		
+		if (bean.unreadcount > 0) {
+			holder.tvMsgCount.setVisibility(View.VISIBLE);
+			holder.tvMsgCount.setText(String.valueOf(bean.unreadcount));
+		} else {
 			holder.tvMsgCount.setVisibility(View.GONE);
+		}
+		
+		if (position == 0) {
 			holder.ivTitleIcon.setVisibility(View.GONE);
 			holder.ivHeader.setImageResource(R.drawable.icon_notification_dami);
-			holder.tvName.setText(R.string.guiren_report);
-			holder.tvInfo.setText("第一手消息");
+			holder.tvName.setText(R.string.dige);
+			holder.tvInfo.setText(R.string.dige_info);
 			holder.tvInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			holder.tvName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			return convertView;
 		}
 		
-		ConversationBean bean = list.get(position);
+		
 		if (!TextUtils.isEmpty(bean.headurl)) {
 			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader);
 		} else {
@@ -116,12 +124,7 @@ public class NotificationAdapter extends BaseAdapter {
 			holder.tvInfo.setText(buildDraft(bean.unfinishinput));
 		}
 		
-		if (bean.unreadcount > 0) {
-			holder.tvMsgCount.setVisibility(View.VISIBLE);
-			holder.tvMsgCount.setText(String.valueOf(bean.unreadcount));
-		} else {
-			holder.tvMsgCount.setVisibility(View.GONE);
-		}
+		
 		return convertView;
 	}
 	

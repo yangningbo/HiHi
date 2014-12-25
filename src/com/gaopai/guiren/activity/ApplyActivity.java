@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -11,10 +12,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult.Case;
 import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult.Data;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.view.ProgressView;
 import com.gaopai.guiren.utils.Logger;
@@ -29,6 +32,10 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 	private ProgressView pvJiaV;
 
 	private Button btnJiav;
+
+	private int requiredTotal = 20;
+	
+	private User mLogin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +58,13 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 		btnJiav.setEnabled(false);
 
 		pvJiaV = (ProgressView) findViewById(R.id.tv_invite_num_1);
+		mLogin = DamiCommon.getLoginResult(mContext);
 		// getInviteUserNum();
 		getVerifyDetail();
 	}
 
 	GetVerifyResult.Data bean;
+
 	private void getVerifyDetail() {
 		DamiInfo.getVerifyResult(new SimpleResponseListener(mContext) {
 			@Override
@@ -71,14 +80,13 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 					otherCondition(data.state, ApplyActivity.this);
 				}
 			}
-			
 			@Override
 			public void onFailure(Object o) {
 				showErrorView();
 			}
 		});
 	}
-	
+
 	private void showErrorView() {
 		showErrorView(new OnClickListener() {
 			@Override
@@ -90,12 +98,22 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void bindView(GetVerifyResult.Data data) {
+		requiredTotal = data.invite.totalnum;
 		setInviteNumText(data.invite.num);
-		int percent = data.base.iscomplete * 20 + data.invite.num * 4;
+		int percent = data.base.iscomplete * 20 + data.invite.num * (80 / requiredTotal);
+		if (percent > 100) {
+			percent = 100;
+		}
 		pvJiaV.setProgress(percent);
 		tvRedPercent.setText(percent + "%");
 		if (percent == 100) {
-			btnJiav.setEnabled(true);
+			if (mLogin.bigv == 0) {
+				btnJiav.setEnabled(true);
+			} else {
+				btnJiav.setEnabled(true);
+				btnJiav.setText(R.string.jiav_success);
+				btnJiav.setOnClickListener(null);
+			}
 		}
 	}
 
@@ -135,7 +153,12 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 				public void onSuccess(Object o) {
 					BaseNetBean data = (BaseNetBean) o;
 					if (data.state != null && data.state.code == 0) {
-						// showToast(R.string.)
+						User mLoginUser = DamiCommon.getLoginResult(mContext);
+						mLoginUser.bigv = 1;
+						DamiCommon.saveLoginResult(mContext, mLoginUser);
+						sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+						btnJiav.setText(R.string.jiav_success);
+						btnJiav.setOnClickListener(null);
 					} else {
 						otherCondition(data.state, ApplyActivity.this);
 					}

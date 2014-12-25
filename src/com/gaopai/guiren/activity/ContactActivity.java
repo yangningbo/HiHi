@@ -139,8 +139,7 @@ public class ContactActivity extends BaseActivity {
 		mListView.setOnRefreshListener(new OnRefreshListener<IndexableListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<IndexableListView> refreshView) {
-				// TODO Auto-generated method stub
-
+				getUserList();
 			}
 
 			@Override
@@ -183,8 +182,7 @@ public class ContactActivity extends BaseActivity {
 		mListView.setAdapter(mAdapter);
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
-		getUserList();
-		
+		mListView.doPullRefreshing(true, 0);
 	}
 	
 	

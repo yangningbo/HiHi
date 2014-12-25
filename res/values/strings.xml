@@ -203,6 +203,7 @@
     <string name="cancel_favorite_failed">取消收藏失败</string>
     <string name="give_hime_message">给TA消息</string>
     <string name="profile">个人中心</string>
+    <string name=" my_profile">我的资料</string>
     <string name="profile_other">详细资料</string>
     <string name="save">保存</string>
     <string name="reported">举报</string>
@@ -266,6 +267,7 @@
     <string name="message_net_connect">连接到网络：</string>
     <string name="guiren_report">大蜜汇报</string>
     <string name="dige">地歌网</string>
+    <string name="dige_info">第一手行业资讯</string>
     <string name="fans">粉丝</string>
     <string name="follow">关注</string>
     <string name="private_msg">消息</string>
@@ -668,11 +670,12 @@
     <!-- jiav -->
     <string name="jiav_title">申请加V</string>
     <string name="jiav_info">\u0020\u0020\u0020\u0020\u0020\u0020\u0020感谢您对贵人产品的支持，今后贵人在全国所有的线上线下交流、成员互动等活动均将在线上报名，同时为了确保贵人产品内信息的及时性、准确性，给您营造一个良好的内容氛围以及让您更加便利的参与会议、圈子等相关活动切实保障您的权利。现邀请您完成贵人认证，通过实名认证的用户将拥有V标示，在贵人内将享受更完善的服务体验（了解更多请查看使用帮助）。</string>
-    <string name="jiav_congratulation">恭喜你，点击升级为VIP用户吧</string>
+    <string name="jiav_congratulation">点击升级为VIP用户吧</string>
     <string name="jiav_info_title">加V说明</string>
     <string name="jiav_progress">加V进度</string>
     <string name="jiav_finish_profile">填写个人资料</string>
     <string name="jiav_invite_user">邀请20位好友加入</string>
+    <string name="jiav_success">恭喜您已成为贵人VIP用户!</string>
 
     <!-- comment -->
     <string name="send_comment">发表评论</string>
@@ -844,8 +847,5 @@
     <string name="from_tribe">来自圈子</string>
     <!--  -->
     <string name="please_finish_profile">请完善您的资料后在邀请朋友加入贵人</string>
-    
-    
-    
 
 </resources>

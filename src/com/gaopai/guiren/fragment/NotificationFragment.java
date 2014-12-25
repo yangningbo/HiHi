@@ -25,6 +25,8 @@ import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.support.ConversationHelper;
+import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -65,6 +67,7 @@ public class NotificationFragment extends BaseFragment {
 					intent.putExtra(WebActivity.KEY_URL, getString(R.string.share_dami_url));
 					intent.putExtra(WebActivity.KEY_TITLE, getString(R.string.dige));
 					startActivity(intent);
+					ConversationHelper.resetCountAndRefresh(act, "-2");
 					return;
 				}
 				ConversationBean conversationBean = (ConversationBean) mAdapter.getItem(position);
@@ -140,15 +143,29 @@ public class NotificationFragment extends BaseFragment {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
 		conversationBeans = table.query();
-		setNotificationSp(conversationBeans);
-		mAdapter.addAll(conversationBeans);
+		mAdapter.addAll(conversationBeans, initialData(conversationBeans));
 	}
 
-	private void setNotificationSp(List<ConversationBean> conversationBeans) {
+	// if contains dami
+	private boolean initialData(List<ConversationBean> conversationBeans) {
 		int count = 0;
-		for (ConversationBean conversationBean : conversationBeans) {
+		int length = conversationBeans.size();
+		int damiPosition = -1;
+		for (int i = 0; i < length; i++) {
+			ConversationBean conversationBean = conversationBeans.get(i);
 			count += conversationBean.unreadcount;
+			if (conversationBean.toid.equals("-2")) {
+				damiPosition = i;
+			}
 		}
+		if (damiPosition > 0) {
+			conversationBeans.add(0, conversationBeans.remove(damiPosition));
+		}
+		setNotification(count);
+		return damiPosition >= 0;
+	}
+
+	private void setNotification(int count) {
 		PreferenceOperateUtils spo = new PreferenceOperateUtils(getActivity());
 		spo.setBoolean(SPConst.KEY_HAS_NOTIFICATION, count > 0);
 		showNotificationDot();

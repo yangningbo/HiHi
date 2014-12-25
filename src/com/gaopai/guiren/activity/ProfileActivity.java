@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import u.aly.be;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -269,7 +271,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		layoutHeader = ViewUtil.findViewById(this, R.id.layout_header_mvp);
 		if (isSelf) {
-			mTitleBar.setTitleText(getString(R.string.profile));
+			mTitleBar.setTitleText(getString(R.string.my_profile));
 			layoutHeader.setOnClickListener(this);
 		} else {
 			mTitleBar.setTitleText(getString(R.string.profile_other));
@@ -389,7 +391,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private void bindHeadView() {
 		layoutHeader.setImage(tUser.headsmall);
-		if (mUser.bigv == 1) {
+		if (tUser.bigv == 1) {
 			layoutHeader.setMVP(true);
 		} else {
 			layoutHeader.setMVP(false);
@@ -400,10 +402,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		SpannableString name;
 		if (tUser.bigv == 1) {
-			name = new SpannableString(tUser.realname + HeadView.MVP_NAME_STR);
+			name = new SpannableString(User.getUserName(tUser) + HeadView.MVP_NAME_STR);
 			HeadView.getMvpName(mContext, name);
 		} else {
-			name = new SpannableString(tUser.realname);
+			name = new SpannableString(User.getUserName(tUser));
 		}
 		MyTextUtils.setTextSize(name, 22);
 		MyTextUtils.setTextColor(name, getResources().getColor(R.color.general_text_black));
@@ -518,7 +520,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		if (pc.mail == 0) {
 			tvEmail.setText(R.string.you_are_not_allowed_to_see_profile);
 			removeTextDrawable(tvEmail);
-		} else if (TextUtils.isEmpty(mUser.email.trim())) {
+		} else if (TextUtils.isEmpty(mUser.email)) {
 			tvEmail.setText(R.string.no_right_see_email);
 			removeTextDrawable(tvEmail);
 		}
@@ -526,7 +528,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		if (pc.phone == 0) {
 			tvPhone.setText(R.string.you_are_not_allowed_to_see_profile);
 			removeTextDrawable(tvPhone);
-		} else if (TextUtils.isEmpty(mUser.phone.trim())) {
+		} else if (TextUtils.isEmpty(mUser.phone)) {
 			tvPhone.setText(R.string.no_right_see_phone);
 			removeTextDrawable(tvPhone);
 		}
@@ -534,7 +536,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		if (pc.wechat == 0) {
 			tvWeixin.setText(R.string.you_are_not_allowed_to_see_profile);
 			removeTextDrawable(tvWeixin);
-		} else if (TextUtils.isEmpty(mUser.weixin.trim())) {
+		} else if (TextUtils.isEmpty(mUser.weixin)) {
 			tvWeixin.setText(R.string.no_right_see_weixin);
 			removeTextDrawable(tvWeixin);
 		}
@@ -542,7 +544,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		if (pc.weibo == 0) {
 			tvWeibo.setText(R.string.you_are_not_allowed_to_see_profile);
 			removeTextDrawable(tvWeibo);
-		} else if (TextUtils.isEmpty(mUser.weibo.trim())) {
+		} else if (TextUtils.isEmpty(mUser.weibo)) {
 			tvWeibo.setText(R.string.no_right_see_weibo);
 			removeTextDrawable(tvWeibo);
 		}
@@ -690,7 +692,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 										public void onSuccess(Object o) {
 											BaseNetBean data = (BaseNetBean) o;
 											if (data.state != null && data.state.code == 0) {
-												tUser.commentlist.remove(bean);
+												int len = tUser.commentlist.size();
+												for (int i = 0; i < len; i++) {
+													CommentBean commentBean = tUser.commentlist.get(i);
+													if (commentBean.id.equals(bean.id)) {
+														tUser.commentlist.remove(i);
+														break;
+													}
+												}
 												bindBottomDynamicView();
 											} else {
 												otherCondition(data.state, ProfileActivity.this);
@@ -839,11 +848,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void makePhonecall(String phone) {
-		Intent intent = new Intent();
-		intent.setAction("Android.intent.action.CALL");
-		intent.setData(Uri.parse("tel:" + phone));
+		Intent Telintent = new Intent();
+		Telintent.setAction(Intent.ACTION_CALL);
+		Telintent.setData(Uri.parse("tel:" + phone));
 		try {
-			startActivity(intent);
+			startActivity(Telintent);
 		} catch (Exception e) {
 		}
 	}

@@ -145,9 +145,9 @@ public class RecommendAdapter<T> extends BaseAdapter {
 			holder.btnAdd.setOnClickListener(mAddClickListener);
 			holder.btnAdd.setTag(user);
 			if (choseSet.contains(user.uid)) {
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_selected_btn);
+				holder.btnAdd.setImageResource(R.drawable.rec_people_selected_btn);
 			} else {
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_add_btn);
+				holder.btnAdd.setImageResource(R.drawable.rec_people_add_btn);
 			}
 		} else if (mType == RECOMMEND_TRIBE) {
 			Tribe tribe = (Tribe) getItem(position);
@@ -161,9 +161,9 @@ public class RecommendAdapter<T> extends BaseAdapter {
 			holder.btnAdd.setOnClickListener(mAddClickListener);
 			holder.btnAdd.setTag(tribe);
 			if (choseSet.contains(tribe.id)) {
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_selected_btn);
+				holder.btnAdd.setImageResource(R.drawable.rec_people_selected_btn);
 			} else {
-				holder.btnAdd.setBackgroundResource(R.drawable.rec_people_add_btn);
+				holder.btnAdd.setImageResource(R.drawable.rec_people_add_btn);
 			}
 		}
 		return convertView;

@@ -51,12 +51,12 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		if (isMyself) {
 			mTitleBar.setTitleText(R.string.my_tribe);
+			View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
+			view.setId(R.id.ab_add);
+			view.setOnClickListener(this);
 		} else {
 			mTitleBar.setTitleText(R.string.his_tribe);
 		}
-		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
-		view.setId(R.id.ab_add);
-		view.setOnClickListener(this);
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(true);
 		mListView.setPullLoadEnabled(false);

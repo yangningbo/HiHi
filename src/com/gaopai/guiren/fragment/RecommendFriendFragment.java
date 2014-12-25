@@ -145,7 +145,8 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		switch (v.getId()) {
 		case R.id.btn_follow:
 			if (mAdapter.choseSet.size() == 0) {
-				getBaseActivity().showToast(R.string.please_choose_add);
+//				getBaseActivity().showToast(R.string.please_choose_add);
+				getBaseActivity().finish();
 				return;
 			}
 			addUser(mAdapter.getChoseIdString(), mAdapter.getCount());

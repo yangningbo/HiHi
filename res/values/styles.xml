@@ -411,5 +411,14 @@
     <style name="agree_popwin_anim_style">
         <item name="android:windowEnterAnimation">@anim/agree_anim</item>
     </style>
+    
+     <style name="about_item">
+        <item name="android:drawableRight">@drawable/icon_right_arrow</item>
+        <item name="android:padding">@dimen/general_paading</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+          <item name="android:background">@drawable/selector_btn_general</item>
+    </style>
+    
 
 </resources>

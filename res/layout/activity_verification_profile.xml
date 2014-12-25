@@ -79,7 +79,7 @@
             android:text="职务" />
 
         <EditText
-            android:id="@+id/et_partment"
+            android:id="@+id/et_job"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/transparent"
@@ -92,9 +92,10 @@
     <View style="@style/general_thin_divider_in_white" />
 
     <LinearLayout
+        android:id="@+id/layout_industry"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/white"
+        android:background="@drawable/selector_btn_general"
         android:orientation="horizontal"
         android:padding="7dp" >
 
@@ -104,8 +105,8 @@
             android:gravity="center_vertical"
             android:text="行业" />
 
-        <EditText
-            android:id="@+id/et_job"
+        <TextView
+            android:id="@+id/et_industry"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/transparent"

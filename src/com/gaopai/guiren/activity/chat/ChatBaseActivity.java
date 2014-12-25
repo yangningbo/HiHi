@@ -9,6 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -218,10 +221,21 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			}
 		} else if (type == MessageType.PICTURE) {
 			msg.imgUrlS = filePath;
+			Point point = sizeOfPic(filePath);
+			msg.imgWidth = point.x;
+			msg.imgHeight = point.y;
 		}
 		msg.isReadVoice = 1;// 自己的语音标记为已读
 		msg.fileType = type;
 		addSaveSendMessage(msg);
+	}
+	
+	private Point sizeOfPic(String path) {
+		Point point = new Point();
+		Bitmap bitmap = BitmapFactory.decodeFile(path);
+		point.x = bitmap.getWidth();
+		point.y = bitmap.getHeight();
+		return point;
 	}
 
 	private void sendMessage(final MessageInfo msg) {
@@ -318,6 +332,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			}
 		}
 	};
+	
 
 	protected void btnCameraAction() {
 		cameralHelper.btnCameraAction();

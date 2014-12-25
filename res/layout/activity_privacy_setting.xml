@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
-        android:text="人脉指您的圈子、关注、粉丝"
+        android:text="人脉指您的会议、圈子、关注、粉丝"
         android:textColor="@color/setting_tv_gray" />
 
 </LinearLayout>

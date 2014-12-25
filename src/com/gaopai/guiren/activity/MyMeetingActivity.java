@@ -45,12 +45,12 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		if (isMyself) {
 			mTitleBar.setTitleText(R.string.my_meeting);
+			View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
+			view.setId(R.id.ab_add);
+			view.setOnClickListener(this);
 		} else {
 			mTitleBar.setTitleText(R.string.his_meeting);
 		}
-		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_add);
-		view.setId(R.id.ab_add);
-		view.setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.layout_meeting_titlebar).setVisibility(View.GONE);
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false); // 下拉刷新

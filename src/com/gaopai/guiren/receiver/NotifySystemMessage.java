@@ -67,20 +67,4 @@ public class NotifySystemMessage implements NotifyMessage {
 			Log.i(TAG, "notityMessage()", e);
 		}
 	}
-
-	// 如果发送的是通过邀请，则不再显示通知，直接发送信息
-	private boolean isInvitePassed(NotifiyVo notifiyVo) {
-		if (notifiyVo.type == NotifiyType.PASS_INVITE_CODE) {
-			// Intent i = new
-			// Intent(ApplyInvitationActivity.SEND_MESSAGE_ACTION);
-			// i.putExtra(ApplyInvitationActivity.GUI_REN_CODE_KEY,
-			// notifiyVo.mContent);
-			// DamiApp.getInstance().sendBroadcast(i);
-			return true;
-		}
-		return false;
-	}
-	
-
-
 }

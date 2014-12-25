@@ -124,8 +124,12 @@ public class NotifyChatMessage implements NotifyMessage {
 
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(xmppManager.getSnsService()).getWritableDatabase();
 		MessageTable table = new MessageTable(dbDatabase);
+		chatMessageNotifiy.notifiy(info);
+		if (info.type == -2) {
+			sendBroadUpdateCount();
+			return;
+		}
 		table.insert(info);
-
 		if (!info.parentid.equals("0")) {
 			MessageInfo message = table.queryByID(info.parentid);
 			if (message != null) {
@@ -134,7 +138,6 @@ public class NotifyChatMessage implements NotifyMessage {
 			}
 		}
 		sendBroad(info);
-
 	}
 
 	private void sendBroad(MessageInfo info) {
@@ -148,10 +151,14 @@ public class NotifyChatMessage implements NotifyMessage {
 		Intent intent = new Intent(ACTION_NOTIFY_CHAT_MESSAGE);
 		intent.putExtra(EXTRAS_NOTIFY_CHAT_MESSAGE, info);
 		// intent.putExtra(EXTRAS_NOTIFY_SESSION_MESSAGE, sessionList);
-		chatMessageNotifiy.notifiy(info);
-		xmppManager.getSnsService().sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+
+		sendBroadUpdateCount();
 		if (xmppManager != null && xmppManager.getSnsService() != null) {
 			xmppManager.getSnsService().sendBroadcast(intent);
 		}
+	}
+	
+	private void sendBroadUpdateCount() {
+		xmppManager.getSnsService().sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 	}
 }
