@@ -132,8 +132,12 @@ public class NotifyHelper {
 		} else if (messageInfo.type == 300) {
 			notifyMsg = messageInfo.title;
 		} else if (messageInfo.type == -2) {
-			msg = mContext.getString(R.string.guiren_report);
-			notifyMsg = messageInfo.title;
+			notifyMsg = mContext.getString(R.string.guiren_report);
+			if (messageInfo.conversion != null) {
+				msg = messageInfo.conversion.name;
+			} else {
+				msg = messageInfo.content;
+			}
 		}
 
 		builder.setContentTitle(notifyMsg);
@@ -305,6 +309,10 @@ public class NotifyHelper {
 		default:
 			break;
 		}
+	}
+
+	public static void clearDamiNotification(Context mContext) {
+		clearNotification(mContext, NOTIFYD_DAMI);
 	}
 
 	public static void clearSysNotification(Context mContext) {

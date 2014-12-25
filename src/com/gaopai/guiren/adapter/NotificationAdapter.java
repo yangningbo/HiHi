@@ -76,16 +76,19 @@ public class NotificationAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		ConversationBean bean = list.get(position);
-		
+
 		if (bean.unreadcount > 0) {
 			holder.tvMsgCount.setVisibility(View.VISIBLE);
 			holder.tvMsgCount.setText(String.valueOf(bean.unreadcount));
+			if (bean.unreadcount > 99) {
+				holder.tvMsgCount.setText("99+");
+			}
 		} else {
 			holder.tvMsgCount.setVisibility(View.GONE);
 		}
-		
+
 		if (position == 0) {
 			holder.ivTitleIcon.setVisibility(View.GONE);
 			holder.ivHeader.setImageResource(R.drawable.icon_notification_dami);
@@ -95,8 +98,7 @@ public class NotificationAdapter extends BaseAdapter {
 			holder.tvName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			return convertView;
 		}
-		
-		
+
 		if (!TextUtils.isEmpty(bean.headurl)) {
 			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader);
 		} else {
@@ -123,11 +125,10 @@ public class NotificationAdapter extends BaseAdapter {
 		} else {
 			holder.tvInfo.setText(buildDraft(bean.unfinishinput));
 		}
-		
-		
+
 		return convertView;
 	}
-	
+
 	private SpannableString buildDraft(String draft) {
 		String draftInfo = mContext.getString(R.string.draft_scheme);
 		SpannableString spannableString = new SpannableString(draftInfo + draft);

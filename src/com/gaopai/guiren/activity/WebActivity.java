@@ -35,6 +35,8 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.support.ConversationHelper;
+import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.support.ShareManager.CallDyback;
 import com.gaopai.guiren.utils.Logger;
@@ -64,6 +66,8 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		setAbContentView(R.layout.activity_web);
 		mContext = this;
 		initComponent();
+		ConversationHelper.resetCountAndRefresh(mContext, "-2");
+		NotifyHelper.clearDamiNotification(mContext);
 	}
 
 	private String mUrl;

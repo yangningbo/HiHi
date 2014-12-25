@@ -67,7 +67,6 @@ public class NotificationFragment extends BaseFragment {
 					intent.putExtra(WebActivity.KEY_URL, getString(R.string.share_dami_url));
 					intent.putExtra(WebActivity.KEY_TITLE, getString(R.string.dige));
 					startActivity(intent);
-					ConversationHelper.resetCountAndRefresh(act, "-2");
 					return;
 				}
 				ConversationBean conversationBean = (ConversationBean) mAdapter.getItem(position);

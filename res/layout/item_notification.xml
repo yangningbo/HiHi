@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/tv_message_count"
-            android:layout_width="@dimen/notification_item_dot_size"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/notification_item_dot_size"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -32,7 +32,6 @@
             android:background="@drawable/shape_notify_red_dot"
             android:gravity="center"
             android:minWidth="@dimen/notification_item_dot_size"
-            android:text="10"
             android:textColor="@color/white"
             android:textSize="12sp" />
 
