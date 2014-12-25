@@ -76,7 +76,7 @@ public class ChatMsgDataHelper {
 		if (mTribe == null || messageInfo == null) {
 			return;
 		}
-		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
+		SimpleResponseListener listener = new SimpleResponseListener(mContext ) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -118,7 +118,7 @@ public class ChatMsgDataHelper {
 		if (mTribe == null || messageInfo == null) {
 			return;
 		}
-		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
+		SimpleResponseListener listener = new SimpleResponseListener(mContext ) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -147,7 +147,7 @@ public class ChatMsgDataHelper {
 		if (mTribe == null || messageInfo == null) {
 			return;
 		}
-		SimpleResponseListener listener = new SimpleResponseListener(mContext, getString(R.string.request_internet_now)) {
+		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				BaseNetBean data = (BaseNetBean) o;
@@ -169,8 +169,7 @@ public class ChatMsgDataHelper {
 		if (mTribe == null || messageInfo == null) {
 			return;
 		}
-		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, isAnony, new SimpleResponseListener(mContext,
-				getString(R.string.request_internet_now)) {
+		DamiInfo.agreeMessage(mTribe.id, messageInfo.id, isAnony, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub

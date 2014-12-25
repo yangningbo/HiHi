@@ -45,6 +45,7 @@ import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -64,7 +65,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 
 	public static final String KEY_MESSAGE = "message";
 	public static String currentChatId = "";
-	
+
 	private CameralHelper cameralHelper;
 
 	@Override
@@ -157,7 +158,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		MessageTable table = new MessageTable(db);
 		table.update(messageInfo);
 	}
-	
+
 	protected void addSaveSendMessage(MessageInfo msg) {
 		msg.sendState = MessageState.STATE_SENDING;
 		addMessageInfo(msg);
@@ -229,18 +230,18 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		msg.fileType = type;
 		addSaveSendMessage(msg);
 	}
-	
+
 	private Point sizeOfPic(String path) {
 		Point point = new Point();
 		Bitmap bitmap = BitmapFactory.decodeFile(path);
-		point.x = bitmap.getWidth();
-		point.y = bitmap.getHeight();
+		point.x = MyUtils.px2dip(mContext, bitmap.getWidth());
+		point.y = MyUtils.px2dip(mContext, bitmap.getHeight());
 		return point;
 	}
 
 	private void sendMessage(final MessageInfo msg) {
 		Log.d(TAG, "send voice change file name" + msg.time);
-
+		msg.sendState = MessageState.STATE_SENDING;
 		DamiInfo.sendMessage(msg, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
@@ -316,7 +317,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			}
 		}
 	}
-	
+
 	private CameralHelper.GetImageCallback callback = new CameralHelper.SimpleCallback() {
 		@Override
 		public void receiveOriginPic(String path) {
@@ -332,7 +333,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			}
 		}
 	};
-	
 
 	protected void btnCameraAction() {
 		cameralHelper.btnCameraAction();
@@ -341,7 +341,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	protected void btnPhotoAction() {
 		cameralHelper.btnPhotoAction();
 	}
-
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

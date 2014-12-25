@@ -2,13 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/icon_pop_background"
+    android:background="#434343"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/tv_send_dynamic"
         style="@style/titlebar_pop_text"
-        android:background="@drawable/selector_btn_transparent_drak_top"
         android:drawableLeft="@drawable/icon_pop_send_dy"
         android:text="@string/send_dynamic" />
 
@@ -25,7 +24,6 @@
     <TextView
         android:id="@+id/tv_creat_meeting"
         style="@style/titlebar_pop_text"
-        android:background="@drawable/selector_btn_transparent_drak_top"
         android:drawableLeft="@drawable/icon_pop_creat_meeting"
         android:text="@string/create_meeting" />
 
@@ -34,7 +32,6 @@
     <TextView
         android:id="@+id/tv_creat_tribe"
         style="@style/titlebar_pop_text"
-        android:background="@drawable/selector_btn_transparent_drak_bottom"
         android:drawableLeft="@drawable/icon_pop_creat_tribe"
         android:text="@string/create_tribe" />
 

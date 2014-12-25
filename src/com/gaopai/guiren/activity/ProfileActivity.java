@@ -429,11 +429,19 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				return;
 			}
 			if (tagList.size() > 10 && (!isShowAllTags)) {
-				tagWindowManager.bindTags(tagLayout, false, tagList.subList(0, 9), zanClickListener);
+				if (isSelf) {
+					tagWindowManager.bindTags(tagLayout, false, tagList.subList(0, 9), null);
+				} else {
+					tagWindowManager.bindTags(tagLayout, false, tagList.subList(0, 9), zanClickListener);
+				}
 				tvRevealAllTags.setVisibility(View.VISIBLE);
 				return;
 			}
-			tagWindowManager.bindTags(tagLayout, false, tagList, zanClickListener);
+			if (isSelf) {
+				tagWindowManager.bindTags(tagLayout, false, tagList, null);
+			} else {
+				tagWindowManager.bindTags(tagLayout, false, tagList, zanClickListener);
+			}
 			tvRevealAllTags.setVisibility(View.GONE);
 		} else {
 			bindEmptyTagView();

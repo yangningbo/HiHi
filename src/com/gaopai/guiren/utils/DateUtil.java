@@ -944,9 +944,9 @@ public class DateUtil {
 		} else if (second < (30 * (24 * 60 * 60))) {
 			index = (24 * 60 * 60);
 		}
-//		Logger.d("=========", "====second=" + second + "  index" + index);
+		// Logger.d("=========", "====second=" + second + "  index" + index);
 		info = second(second, index);
-//		Logger.d("=========", "====info=" + info);
+		// Logger.d("=========", "====info=" + info);
 
 		return info;
 	}
@@ -1070,11 +1070,12 @@ public class DateUtil {
 					|| str.endsWith(DamiApp.getInstance().getString(R.string.second))
 					|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
 				timeStr = str + DamiApp.getInstance().getString(R.string.before);
-			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
-					|| str.endsWith(DamiApp.getInstance().getString(R.string.long_ago))) {
+			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))) {
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 				Date date = calendar.getTime();
 				timeStr = format.format(date);
+			} else {
+				timeStr = str;
 			}
 
 			return timeStr;
@@ -1119,8 +1120,7 @@ public class DateUtil {
 					|| str.endsWith(DamiApp.getInstance().getString(R.string.minutes))
 					|| str.endsWith(DamiApp.getInstance().getString(R.string.hour))) {
 				timeStr = str + DamiApp.getInstance().getString(R.string.before);
-			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))
-					|| str.endsWith(DamiApp.getInstance().getString(R.string.long_ago))) {
+			} else if (str.endsWith(DamiApp.getInstance().getString(R.string.day))) {
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 				Date date = calendar.getTime();
 				timeStr = format.format(date);
@@ -1150,7 +1150,7 @@ public class DateUtil {
 			index = 60;
 		} else if (second < (24 * 60 * 60)) {
 			index = 60 * 60;
-		} else if (second < (30 * (24 * 60 * 60))) {
+		} else {
 			index = (24 * 60 * 60);
 		}
 		info = second(second, index);
@@ -1168,10 +1168,11 @@ public class DateUtil {
 			info = DamiApp.getInstance().getString(R.string.hour);
 		} else if (index == (24 * 60 * 60)) {
 			info = DamiApp.getInstance().getString(R.string.day);
-		} else {
-			return DamiApp.getInstance().getString(R.string.long_ago);
 		}
 		int num = (int) (second / index);
+		if (index == 1 && num < 20) {
+			return DamiApp.getInstance().getString(R.string.just_now);
+		}
 		return Math.abs(num) + info;
 	}
 

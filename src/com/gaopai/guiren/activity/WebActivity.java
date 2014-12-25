@@ -241,7 +241,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		} else {
 			mWebView.loadUrl(mReportUrl);
 		}
-		showProgressDialog();
+		showProgressDialog(R.string.now_loading);
 	}
 
 	StringBuilder stringBuilder = new StringBuilder();

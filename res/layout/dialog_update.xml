@@ -37,15 +37,14 @@
 
         <TextView
             android:id="@+id/btn_cancle"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/qq_login_btn"
+            android:background="@drawable/selector_tribe_detail_btn_blue"
             android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="取消"
+            android:padding="@dimen/general_paading"
+            android:text="@string/cancel"
             android:textColor="@color/white" />
     </LinearLayout>
 

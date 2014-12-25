@@ -917,7 +917,6 @@ public class DynamicHelper {
 		uid = typeBean.uid;
 		userInfo = typeBean.post;
 		if (typeBean.isanonymous == 1) {
-			viewHolder.ivHeader.setImageResource(R.drawable.icon_dynamic_anynoms);
 			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader);
 			// viewHolder.tvUserName.setText(R.string.no_name);
 			// viewHolder.tvUserInfo.setText("");

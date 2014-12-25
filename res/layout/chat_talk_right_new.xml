@@ -31,37 +31,37 @@
         android:layout_toLeftOf="@id/iv_chat_talk_img_head"
         android:visibility="visible" />
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/layout_msg_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_user_name"
         android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@id/iv_chat_talk_img_head" >
+        android:layout_toLeftOf="@id/iv_chat_talk_img_head"
+        android:gravity="center_vertical|right"
+        android:orientation="horizontal" >
 
-        <LinearLayout
+        <ProgressBar
+            android:id="@+id/pb_chat_progress"
+            style="?android:attr/progressBarStyleSmallTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|right"
-            android:orientation="horizontal" >
+            android:layout_gravity="center_vertical"
+            android:indeterminate="false" />
 
-            <ProgressBar
-                android:id="@+id/pb_chat_progress"
-                style="?android:attr/progressBarStyleSmallTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:indeterminate="false" />
+        <!-- resend button -->
 
-            <!-- resend button -->
+        <ImageView
+            android:id="@+id/iv_chat_resend_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/resend_btn"
+            android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/iv_chat_resend_icon"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/resend_btn"
-                android:visibility="gone" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
             <LinearLayout
                 android:id="@+id/layout_msg_text_voice_holder"
@@ -103,35 +103,35 @@
                     android:src="@drawable/anim_btn_audio_play2"
                     android:visibility="visible" />
             </LinearLayout>
-        </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/layout_msg_pic_holder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" >
-
-            <ImageView
-                android:id="@+id/iv_chat_photo"
+            <FrameLayout
+                android:id="@+id/layout_msg_pic_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/desc"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_welcom_background_0"
-                android:visibility="visible" />
+                android:visibility="gone" >
 
-            <ImageView
-                android:id="@+id/iv_chat_photo_cover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/desc"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_chat_img_right_cover"
-                android:visibility="visible" />
+                <ImageView
+                    android:id="@+id/iv_chat_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/desc"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_welcom_background_0"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/iv_chat_photo_cover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/desc"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_chat_img_right_cover"
+                    android:visibility="visible" />
+            </FrameLayout>
         </FrameLayout>
-    </FrameLayout>
+    </LinearLayout>
 
     <!-- comment icon and number -->
 

@@ -656,7 +656,7 @@
 
     <!-- action -->
     <string name="zan">赞</string>
-    <string name="cancel_zan">取消</string>
+    <string name="cancel_zan">取消赞</string>
     <string name="zan_success">赞成功</string>
     <string name="cancel_zan_success">取消赞成功</string>
     <string name="zan_failed">赞失败</string>

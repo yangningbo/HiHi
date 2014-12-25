@@ -135,18 +135,7 @@
         <item name="android:background">@color/general_background</item>
     </style>
 
-    <style name="login_edit_box_style">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">@dimen/login_edit_box_height</item>
-        <item name="android:background">@drawable/login_edit_bg</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/login_box_text_size</item>
-        <item name="android:textColorHint">@color/hint_color</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:hint">@string/desc</item>
-    </style>
+    
 
     <style name="dialog_middle" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
