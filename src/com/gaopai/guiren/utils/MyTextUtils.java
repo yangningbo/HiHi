@@ -61,7 +61,7 @@ public class MyTextUtils {
 		return result;
 	}
 
-	public static Spannable addEmotions(String value) {
+	public static Spannable addEmotions(CharSequence value) {
 		return addEmotions(new SpannableString(value));
 	}
 
@@ -226,7 +226,7 @@ public class MyTextUtils {
 		return result;
 	}
 
-	public static Spannable getSpannableString(CharSequence... strings) {
+	public static CharSequence getSpannableString(CharSequence... strings) {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		for (CharSequence spannableString : strings) {
 			builder.append(spannableString);

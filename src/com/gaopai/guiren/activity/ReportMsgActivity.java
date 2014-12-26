@@ -277,6 +277,13 @@ public class ReportMsgActivity extends BaseActivity {
 		viewHolder.btnErrorReport.setOnClickListener(btnActionListener);
 		viewHolder.btnKikout.setOnClickListener(btnActionListener);
 		viewHolder.btnShide.setOnClickListener(btnActionListener);
+		
+		if (type == TYPE_MEETING) {
+			viewHolder.btnKikout.setText(R.string.kick_out_meeting);
+		} else {
+			viewHolder.btnKikout.setText(R.string.kick_out_tribe);
+		}
+		
 		switch (messageInfo.fileType) {
 		case MessageType.TEXT:
 			viewHolder.tvText.setText(MyTextUtils.addHttpLinks(messageInfo.content));

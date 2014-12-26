@@ -73,7 +73,7 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 	}
 
 	public void clear() {
-		this.rows.clear();
+		this.mUserList.clear();
 		notifyDataSetChanged();
 	}
 

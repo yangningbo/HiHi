@@ -46,7 +46,7 @@ public class ConnectionBean extends BaseNetBean {
 		public String headsmall;
 		public String company;
 		public String post;
-		public int bigV;
+		public int bigv;
 	}
 
 	public static class ZanBean implements Serializable {

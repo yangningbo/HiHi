@@ -19,8 +19,7 @@
             android:layout_marginLeft="@dimen/general_paading"
             android:layout_marginRight="@dimen/general_paading"
             android:contentDescription="@string/desc"
-            android:scaleType="centerCrop"
-            android:src="@drawable/logo" />
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/tv_message_count"

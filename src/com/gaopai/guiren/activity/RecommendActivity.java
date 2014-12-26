@@ -21,4 +21,8 @@ public class RecommendActivity extends BaseActivity {
 		FragmentHelper
 				.replaceFragment(android.R.id.content, getSupportFragmentManager(), RecommendFriendFragment.class);
 	}
+
+	@Override
+	public void onBackPressed() {
+	}
 }

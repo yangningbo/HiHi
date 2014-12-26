@@ -178,7 +178,6 @@ public class DynamicHelper {
 
 		@Override
 		public void onCommentSuccess() {
-			// TODO Auto-generated method stub
 
 		}
 
@@ -268,7 +267,7 @@ public class DynamicHelper {
 					}
 					typeBean.spread.add(spreadBean);
 					callback.notifyUpdateView();
-					//update dynamic count
+					// update dynamic count
 					user.dynamicCount = user.dynamicCount + 1;
 					DamiCommon.saveLoginResult(mContext, user);
 					mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
@@ -709,14 +708,14 @@ public class DynamicHelper {
 		}
 		return builder;
 	}
-	
+
 	// for new dynamic in ProfileActivity
 	private Spannable parseProfileHeaderText(String actionInfo) {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		int grayColor = mContext.getResources().getColor(R.color.general_text_gray);
 		if (!TextUtils.isEmpty(actionInfo)) {
-			Spannable actionInfoSpannable = MyTextUtils.setTextSize(
-					MyTextUtils.setTextColor(actionInfo, grayColor), 14);
+			Spannable actionInfoSpannable = MyTextUtils
+					.setTextSize(MyTextUtils.setTextColor(actionInfo, grayColor), 14);
 			builder.append(actionInfoSpannable);
 		}
 		return builder;
@@ -763,11 +762,13 @@ public class DynamicHelper {
 		viewHolder.tvText.setVisibility(View.GONE);
 		viewHolder.tvVoiceLength.setVisibility(View.GONE);
 		viewHolder.ivVoice.setVisibility(View.GONE);
+		viewHolder.layoutTextVoice.setVisibility(View.VISIBLE);
 		switch (which) {
 		case MessageType.TEXT:
 			viewHolder.tvText.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.PICTURE:
+			viewHolder.layoutTextVoice.setVisibility(View.GONE);
 			viewHolder.ivPic.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.VOICE:
@@ -821,7 +822,7 @@ public class DynamicHelper {
 			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					mContext.startActivity(WebActivity.getIntent(mContext, jsonContent.url, jsonContent.title));
+					mContext.startActivity(WebActivity.getIntent(mContext, jsonContent.url, getString(R.string.dige)));
 				}
 			});
 
@@ -941,10 +942,17 @@ public class DynamicHelper {
 			viewHolder.tvUserName.setText(parseHeaderText(userName, uid, userInfo, spreadAction));
 		}
 
+		viewHolder.tvDateInfo.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		if (typeBean.uid.equals(user.uid)) {
 			setDateDeleteSpan(viewHolder.tvDateInfo, typeBean);
 		} else {
 			viewHolder.tvDateInfo.setText(DateUtil.getCreateTime(Long.valueOf(typeBean.time)));
+		}
+
+		// take care of detail activity, so put it here, not in the scope of
+		// type SpreadMsg
+		if (typeBean.type == TYPE_SPREAD_MSG) {
+			addMsgFromInfo(viewHolder.tvDateInfo, typeBean.jsoncontent);
 		}
 
 		if (mDyKind == DY_MY_LIST) {
@@ -967,7 +975,6 @@ public class DynamicHelper {
 			viewHolder.lineSpread.setVisibility(isShowSpread ? View.VISIBLE : View.GONE);
 			viewHolder.tvZan.setVisibility(View.VISIBLE);
 			viewHolder.tvZan.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-			// viewHolder.tvZan.setText(MyTextUtils.addZanUserList(typeBean.zanList));
 			viewHolder.tvZan.setText(MyTextUtils.addUserSpans(getZanUserList(typeBean.zanList)));
 		} else {
 			viewHolder.tvZan.setVisibility(View.GONE);
@@ -985,13 +992,24 @@ public class DynamicHelper {
 	}
 
 	private void setDateDeleteSpan(TextView tView, TypeHolder typeBean) {
-		tView.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		
 		tView.setTag(typeBean);
 		String date = DateUtil.getCreateTime(Long.valueOf(typeBean.time)) + "   ";
 		SpannableString spannableString = new SpannableString(date + "删除");
 		spannableString.setSpan(new DeleteSpanClick(typeBean.id, WeiboTextUrlSpan.TYPE_CONNECTION), date.length(),
 				spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tView.setText(spannableString);
+	}
+
+	private void addMsgFromInfo(TextView textView, JsonContent jsonContent) {
+		if (jsonContent.type == 300) {
+			textView.setText(MyTextUtils.getSpannableString(textView.getText(), "   来自会议:",
+					MyTextUtils.addSingleMeetingSpan(jsonContent.title, jsonContent.to)));
+		} else {
+			textView.setText(MyTextUtils.getSpannableString(textView.getText(), "   来自圈子:",
+					MyTextUtils.addSingleTribeSpan(jsonContent.title, jsonContent.to)));
+		}
+
 	}
 
 	public class DeleteSpanClick extends WeiboTextUrlSpan {

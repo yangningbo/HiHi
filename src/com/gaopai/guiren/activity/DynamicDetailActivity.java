@@ -68,7 +68,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		mTitleBar.setTitleText("动态详情");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		user = DamiCommon.getLoginResult(mContext);
-
 		typeBean = (TypeHolder) getIntent().getSerializableExtra(KEY_TYPEHOLDER);
 		if (typeBean == null) {
 			sid = getIntent().getStringExtra(KEY_SID);
@@ -160,7 +159,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 						initComponent();
 					} else {
 						typeBean = data.data;
-						// getHeaderView();
+//						 getHeaderView();
 						dynamicHelper.buildCommonView(
 								(com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon) headerView.getTag(),
 								typeBean);

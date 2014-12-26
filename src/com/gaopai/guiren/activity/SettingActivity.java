@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,6 +41,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 		ViewUtil.findViewById(this, R.id.tv_send_feedback).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_about_us).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_help).setOnClickListener(this);
+		ViewUtil.findViewById(this, R.id.tv_send_prise).setOnClickListener(this);
 	}
 
 	@Override
@@ -92,9 +94,22 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			Intent aboutIntent = new Intent(mContext, AboutActivity.class);
 			startActivity(aboutIntent);
 			break;
+		case R.id.tv_send_prise:
+			giveHaoping();
+			break;
 
 		default:
 			break;
+		}
+	}
+	
+	private void giveHaoping() {
+		Uri uri = Uri.parse("market://details?id="+ getPackageName());
+		Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		try {
+			mContext.startActivity(intent);
+		} catch (Exception e) {
 		}
 	}
 

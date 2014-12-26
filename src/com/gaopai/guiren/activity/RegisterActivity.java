@@ -37,6 +37,8 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private EditText etPassword;
 	private TextView tvSelectCountry;
 	private TextView tvRequestVeryficaion;
+	
+	private Button btnEye;
 
 	private Handler mHandler;
 	private String countryCode = "86";
@@ -82,6 +84,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		tvSelectCountry = ViewUtil.findViewById(this, R.id.tv_select_country);
 		tvSelectCountry.setOnClickListener(this);
 		tvRequestVeryficaion = ViewUtil.findViewById(this, R.id.tv_request_veryfication);
+		
+		btnEye = ViewUtil.findViewById(this, R.id.btn_pswd_eye);
+		btnEye.setOnClickListener(this);
 		
 		if (type == TYPE_REGISTER) {
 			btnConfirm.setText(R.string.confirm_register);
@@ -221,6 +226,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		editText.setSelection(editText.length());
 	}
 
+	private boolean isShowPswd = true;
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -238,7 +244,16 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_select_country:
 			startActivityForResult(CountryCodeActivity.class, 0);
 			break;
-
+		case R.id.btn_pswd_eye:
+			isShowPswd = !isShowPswd;
+			int selection = etPassword.getSelectionStart();
+			if (isShowPswd) {
+				etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+			} else {
+				etPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+			}
+			etPassword.setSelection(selection);
+			break;
 		default:
 			break;
 		}

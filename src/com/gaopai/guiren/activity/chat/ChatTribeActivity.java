@@ -48,6 +48,7 @@ import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
+import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.ConversationHelper;
@@ -548,7 +549,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			}
 		}
 	}
-
+	
+	private void deleteConverstion() {
+		ConversationHelper.deleteItemAndUpadte(mContext, mTribe.id);
+	}
+	
 	@Override
 	protected void onOtherChatBroadCastAction(Intent intent) {
 		// TODO Auto-generated method stub
@@ -571,6 +576,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 					} else if (mChatType == CHAT_TYPE_MEETING) {
 						destoryDialog(mContext.getString(R.string.you_have_exit_meeting));
 					}
+					deleteConverstion();
 				}
 			}
 
@@ -583,6 +589,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 					} else if (mChatType == CHAT_TYPE_MEETING) {
 						destoryDialog(mContext.getString(R.string.you_have_been_removed_from_meeting));
 					}
+					deleteConverstion();
 				}
 			}
 

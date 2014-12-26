@@ -479,7 +479,7 @@
                             android:text="职务" />
 
                         <TextView
-                            android:id="@+id/tv_profile_partment"
+                            android:id="@+id/tv_profile_job"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical|right"
@@ -505,7 +505,7 @@
                             android:text="行业" />
 
                         <TextView
-                            android:id="@+id/tv_profile_job"
+                            android:id="@+id/tv_profile_partment"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical|right"

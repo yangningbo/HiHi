@@ -56,11 +56,13 @@ public class NotifySettingActivity extends BaseActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_notification_setting);
+		addLoadingView();
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.msg_notify);
 		initComponent();
-		getSettings();
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_SETTING);
+		getSettings();
+		showLoadingView();
 	}
 
 	private void getSettings() {
@@ -73,15 +75,32 @@ public class NotifySettingActivity extends BaseActivity implements OnClickListen
 				MsgConfigResult data = (MsgConfigResult) o;
 				if (data.state != null && data.state.code == 0) {
 					settingBean = data.data;
+					showContent();
 					bindView();
 				} else {
+					showErrorView();
 					otherCondition(data.state, NotifySettingActivity.this);
 				}
 			}
 
+			@Override
+			public void onFailure(Object o) {
+				showErrorView();
+				super.onFailure(o);
+			}
 		});
 	}
-
+	
+	private void showErrorView() {
+		showErrorView(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showLoadingView();
+				getSettings();
+			}
+		});
+	}
+	
 	private void bindView() {
 		// TODO Auto-generated method stub
 		saveDataInSp();

@@ -348,6 +348,7 @@ public class MyUtils {
 		File file = new File(FeatureFunction.getExternalCacheDir(context), "voice");
 		if (!file.exists()) {
 			file.mkdirs();
+			Logger.d("======", "===");
 		}
 		return file;
 	}

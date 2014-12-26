@@ -19,6 +19,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.ConversationBean;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.MyUtils;
+import com.squareup.picasso.Picasso;
 
 public class NotificationAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;
@@ -35,6 +36,7 @@ public class NotificationAdapter extends BaseAdapter {
 		if (!hasDami) {
 			ConversationBean conversationBean = new ConversationBean();
 			conversationBean.unreadcount = 0;
+			conversationBean.type = -2;
 			list.add(conversationBean);
 		}
 		list.addAll(o);
@@ -98,20 +100,28 @@ public class NotificationAdapter extends BaseAdapter {
 			holder.tvName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			return convertView;
 		}
-
-		if (!TextUtils.isEmpty(bean.headurl)) {
-			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader);
-		} else {
-			holder.ivHeader.setImageResource(R.drawable.default_tribe);
-		}
-		if (bean.type == 200 || bean.type == 300) {
+		holder.ivTitleIcon.setVisibility(View.GONE);
+		
+		switch (bean.type) {
+		case 100:
+			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader, R.drawable.default_header);
+			break;
+		case 200:
+		case 300:
+			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader, R.drawable.default_tribe);
 			holder.ivTitleIcon.setVisibility(View.VISIBLE);
 			int drawable = (bean.type == 300) ? R.drawable.icon_notification_meeting
 					: R.drawable.icon_notification_tribe;
 			holder.ivTitleIcon.setImageResource(drawable);
-		} else {
-			holder.ivTitleIcon.setVisibility(View.GONE);
+			break;
+		case -1:
+			holder.ivHeader.setImageResource(R.drawable.logo);
+			break;
+
+		default:
+			break;
 		}
+
 		holder.tvName.setText(bean.name);
 		if (TextUtils.isEmpty(bean.unfinishinput)) {
 			holder.tvInfo.setText(bean.lastmsgcontent);

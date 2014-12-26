@@ -93,6 +93,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 	private User loginUser;
 
+	private View shareView;
+
 	private boolean isFromAlarm = false;// if alarm service start this activity,
 										// true show some toasts
 
@@ -114,7 +116,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		if (mMeeting != null) {
 			isPreview = true;
 		} else {
-			if (TextUtils.isEmpty(mMeetingID.trim())) {
+			if (TextUtils.isEmpty(mMeetingID)) {
 				Uri data = getIntent().getData();
 				mMeetingID = data.toString().substring(data.toString().indexOf("//") + 2);
 			}
@@ -122,6 +124,9 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.meeting_detail_title));
+		shareView = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
+		shareView.setId(R.id.ab_share);
+		shareView.setOnClickListener(this);
 
 		initComponent();
 		if (isPreview) {
@@ -130,11 +135,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 
 		addLoadingView();
-		showLoadingView();
 
-		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
-		view.setId(R.id.ab_share);
-		view.setOnClickListener(this);
 		getMeetingDetail();
 		if (isFromAlarm) {
 			showToast(R.string.alarm_meeting_is_on_going);
@@ -153,26 +154,26 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	@Override
 	protected void onReceive(Intent intent) {
 		String action = intent.getAction();
-		if (!TextUtils.isEmpty(action)) {
-			if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
-				String id = intent.getStringExtra("id");
-				if (!TextUtils.isEmpty(id) && id.equals(mMeetingID)) {
-					/**
-					 * mMeeting.isjoin = 0;
-					 * mApplyBtn.setVisibility(View.VISIBLE);
-					 * mExitBtn.setVisibility(View.GONE);
-					 */
-					getMeetingDetail();
-				}
-			} else if (action.equals(ACTION_AGREE_ADD_MEETING)) {
-				String id = intent.getStringExtra("id");
-				if (!TextUtils.isEmpty(id) && id.equals(mMeetingID)) {
-					getMeetingDetail();
-				}
-			} else if (action.equals(ACTION_MEETING_CANCEL)) {
-				finish();
-				showToast(mContext.getString(R.string.meeting_cancel));
+		if (TextUtils.isEmpty(action)) {
+			return;
+		}
+		if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
+			String id = intent.getStringExtra("id");
+			if (!TextUtils.isEmpty(id) && id.equals(mMeetingID)) {
+				/**
+				 * mMeeting.isjoin = 0; mApplyBtn.setVisibility(View.VISIBLE);
+				 * mExitBtn.setVisibility(View.GONE);
+				 */
+				getMeetingDetail();
 			}
+		} else if (action.equals(ACTION_AGREE_ADD_MEETING)) {
+			String id = intent.getStringExtra("id");
+			if (!TextUtils.isEmpty(id) && id.equals(mMeetingID)) {
+				getMeetingDetail();
+			}
+		} else if (action.equals(ACTION_MEETING_CANCEL)) {
+			finish();
+			showToast(mContext.getString(R.string.meeting_cancel));
 		}
 		super.onReceive(intent);
 	}
@@ -238,6 +239,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	};
 
 	private void getMeetingDetail() {
+		showLoadingView();
 		DamiInfo.getMeetingDetail(mMeetingID, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
@@ -267,7 +269,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			@Override
 			public void onClick(View v) {
 				getMeetingDetail();
-				showLoadingView();
 			}
 		});
 	}
@@ -294,6 +295,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		tvMeetingGuest.setText(mMeeting.guest);
 		tvMeetingJoinIn.setText(mMeeting.user);
 		bindJoinInView();
+
+		if (mMeeting.check == 1) {
+			shareView.setVisibility(View.VISIBLE);
+		} else {
+			shareView.setVisibility(View.GONE);
+		}
 	}
 
 	private void bindBasicView() {
@@ -328,9 +335,13 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			tvMeetingHost.setText(mMeeting.realname);
 			return;
 		}
+		
 		tvMeetingGuest.setEnabled(true);
 		tvMeetingHost.setEnabled(true);
 		tvMeetingJoinIn.setEnabled(true);
+		btnSetting.setEnabled(true);
+		btnOnLook.setEnabled(true);
+		btnEnterMeeting.setText(R.string.enter_meeting);
 
 		boolean isJoin = (mMeeting.isjoin == 1);
 		if (isJoin) {
@@ -345,6 +356,10 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				btnOnLook.setEnabled(true);
 			}
 		}
+	}
+	
+	private boolean isMeetingStart() {
+		return mMeeting.start * 1000 < System.currentTimeMillis();
 	}
 
 	@Override
@@ -373,6 +388,10 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				break;
 			}
 		case R.id.grid_enter_meeting:
+			if (!isMeetingStart()) {
+				showToast(R.string.meeting_is_not_begin);
+				return;
+			}
 			startActivity(ChatTribeActivity.getIntent(mContext, mMeeting, ChatTribeActivity.CHAT_TYPE_MEETING));
 			break;
 
@@ -515,7 +534,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void setAlarmForMeeting() {
-		if (mMeeting.start * 1000 < System.currentTimeMillis()) {
+		if (isMeetingStart()) {
 			showToast(R.string.meeting_is_start);
 			return;
 		}
@@ -530,7 +549,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void cancelMeetingAlarm() {
-		if (mMeeting.start * 1000 < System.currentTimeMillis()) {
+		if (isMeetingStart()) {
 			showToast(R.string.meeting_is_start);
 			return;
 		}
@@ -629,6 +648,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
+		case REQUEST_EDIT_MEETING:
+			return;
 		case REQUEST_CANCEL_MEETING:
 			if (resultCode == RESULT_OK) {
 				MeetingDetailActivity.this.finish();
@@ -688,7 +709,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	private void changeAvoidDisturb(View v) {
 		int anony = spo.getInt(SPConst.getSingleSpId(mContext, mMeetingID), 0);
 		if (anony == 0) {
-			showToast(R.string.switch_avoid_disturb_on);//yes we did remove notification
+			showToast(R.string.switch_avoid_disturb_on);// yes we did remove
+														// notification
 		} else {
 			showToast(R.string.switch_avoid_disturb_off);
 		}
@@ -697,10 +719,14 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void setAvoidDisturb(View v) {
-		int anony = spo.getInt(SPConst.getSingleSpId(mContext, mMeetingID), 0);//0=now we have notification
-		setSwitchState(v, 1-anony);
+		int anony = spo.getInt(SPConst.getSingleSpId(mContext, mMeetingID), 0);// 0=now
+																				// we
+																				// have
+																				// notification
+		setSwitchState(v, 1 - anony);
 		if (anony == 0) {
-			setViewText(v, R.string.avoid_disturb_on);//want to remove notification 
+			setViewText(v, R.string.avoid_disturb_on);// want to remove
+														// notification
 		} else {
 			setViewText(v, R.string.avoid_disturb_off);
 		}
@@ -768,7 +794,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
 			setAvoidDisturb(view);
 			view.setOnClickListener(this);
-			
+
 			view = viewGroup.findViewById(R.id.grid_user_real_name);
 			setUseRealName(view);
 			view.setOnClickListener(this);
@@ -831,7 +857,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
 			setAlarm(view);
 			view.setOnClickListener(this);
-			
+
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
 			setAvoidDisturb(view);
 			view.setOnClickListener(this);
@@ -856,11 +882,11 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_clear_local_msg);
 			view.setOnClickListener(this);
-			
+
 			view = viewGroup.findViewById(R.id.grid_notify_meeting_start);
 			setAlarm(view);
 			view.setOnClickListener(this);
-			
+
 			view = viewGroup.findViewById(R.id.grid_avoid_disturb);
 			setAvoidDisturb(view);
 			view.setOnClickListener(this);

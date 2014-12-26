@@ -192,20 +192,20 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
 			}
 		}));
-		etContent.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (v.getId() == R.id.et_meeting_info) {
-					v.getParent().requestDisallowInterceptTouchEvent(true);
-					switch (event.getAction() & MotionEvent.ACTION_MASK) {
-					case MotionEvent.ACTION_UP:
-						v.getParent().requestDisallowInterceptTouchEvent(false);
-						break;
-					}
-				}
-				return false;
-			}
-		});
+//		etContent.setOnTouchListener(new OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				if (v.getId() == R.id.et_meeting_info) {
+//					v.getParent().requestDisallowInterceptTouchEvent(true);
+//					switch (event.getAction() & MotionEvent.ACTION_MASK) {
+//					case MotionEvent.ACTION_UP:
+//						v.getParent().requestDisallowInterceptTouchEvent(false);
+//						break;
+//					}
+//				}
+//				return false;
+//			}
+//		});
 	}
 
 	@Override

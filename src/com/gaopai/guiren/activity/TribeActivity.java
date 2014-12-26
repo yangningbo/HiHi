@@ -30,6 +30,19 @@ import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
+/**
+ * For data manipulation, we follow a simple pattern as if the action is
+ * positive, then we manipulate data in the current interface, like insert or
+ * delete, and then send BroadCast to notify other components. on the other
+ * hand, for the passive action, which means others notify us to change based on
+ * the message, then we won't do the manipulation of remote data, just refresh
+ * our interface.
+ * 
+ * e.g. when receiving a message from net, we save that message and do some
+ * proper manipulation, like change the state of message, delete, insert or
+ * update the database. Then send broadcast to notify ChatActivity to update.
+ * 
+ */
 public class TribeActivity extends BaseActivity implements OnClickListener {
 	private PullToRefreshListView mListView;
 	private TribeAdapter mAdapter;
@@ -108,7 +121,6 @@ public class TribeActivity extends BaseActivity implements OnClickListener {
 		return intent;
 	}
 
-	
 	@Override
 	protected void registerReceiver(IntentFilter filter) {
 		filter.addAction(UPDATE_COUNT_ACTION);

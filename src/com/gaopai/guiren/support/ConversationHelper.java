@@ -154,10 +154,15 @@ public class ConversationHelper {
 		table.insert(conversation);
 	}
 
-	public static void deleteItem(Context context, String id) {
+	public static boolean deleteItem(Context context, String id) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
-		table.delete(id);
+		return table.delete(id);
+	}
+	public static void deleteItemAndUpadte(Context context, String id) {
+		if (deleteItem(context, id)) {
+			context.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		}
 	}
 
 	public static boolean resetCount(Context context, String id) {
@@ -171,5 +176,4 @@ public class ConversationHelper {
 			context.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 		}
 	}
-
 }

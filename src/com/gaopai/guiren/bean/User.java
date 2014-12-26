@@ -50,7 +50,7 @@ public class User implements Serializable {
 	@Expose
 	public String post; // 职业
 	@Expose
-	public String depa; // 部门
+	public String depa; // 部门 换成了行业
 	@Expose
 	public int integral = 0; // 积分
 	@Expose

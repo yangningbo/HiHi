@@ -98,7 +98,6 @@ public class DamiCommon {
 	public static final int SAMPLERATE_LIMIT_HIGN = 1700;
 	public static final int SAMPLERATE_OFFSET = 800;
 
-
 	public static int mPlaySimpleRate = 8000;
 	public static final int MESSAGE_CONTENT_LEN = 5000;
 	private static int mIsReceive = -1;
@@ -307,7 +306,6 @@ public class DamiCommon {
 		editor.commit();
 	}
 
-	
 	public static boolean getAcceptMsgAuth(Context context) {
 		boolean isReceive = true;
 		if (mIsReceive == -1) {
@@ -464,6 +462,37 @@ public class DamiCommon {
 		}
 	}
 
+	// public static int getRandomSampleRate() {
+	// Random r = new Random();
+	//
+	// int sampleRate = 0;
+	//
+	// int fh = 1 + r.nextInt(5);
+	// switch (fh) {
+	// case 1:
+	// sampleRate = 14350;
+	// break;
+	//
+	// case 2:
+	// sampleRate = 17600;
+	// break;
+	//
+	// case 3:
+	// sampleRate = 17800;
+	// break;
+	//
+	// case 4:
+	// sampleRate = 18000;
+	// break;
+	//
+	// case 5:
+	// sampleRate = 20000;
+	// break;
+	//
+	// }
+	// return sampleRate;
+	// }
+
 	public static int getRandomSampleRate() {
 		Random r = new Random();
 
@@ -472,30 +501,28 @@ public class DamiCommon {
 		int fh = 1 + r.nextInt(5);
 		switch (fh) {
 		case 1:
-			sampleRate = 14350;
+			sampleRate = 6350;
 			break;
 
 		case 2:
-			sampleRate = 17600;
+			sampleRate = 9600;
 			break;
 
 		case 3:
-			sampleRate = 17800;
+			sampleRate = 9800;
 			break;
 
 		case 4:
-			sampleRate = 18000;
+			sampleRate = 10000;
 			break;
 
 		case 5:
-			sampleRate = 20000;
+			sampleRate = 12000;
 			break;
 
 		}
 		return sampleRate;
 	}
-
-	
 
 	public static void saveInstallFirst(Context context, boolean isFirst) {
 		SharedPreferences preferences = context.getSharedPreferences(INSTALL_FIRST_SHARED, 0);

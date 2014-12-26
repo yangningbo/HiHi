@@ -1,6 +1,7 @@
 package com.gaopai.guiren.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -59,10 +60,15 @@ public class ReverificationActivity extends BaseActivity {
 						R.string.request_internet_now) {
 					@Override
 					public void onSuccess(Object o) {
-						// TODO Auto-generated method stub
 						BaseNetBean data = (BaseNetBean) o;
 						if (data.state != null && data.state.code == 0) {
-							ReverificationActivity.this.showToast("申请成功，正在接受审核");
+							mUser.realname = etName.getText().toString();
+							mUser.company = etCompany.getText().toString();
+							mUser.depa = etIndustry.getText().toString();
+							mUser.post = etJob.getText().toString();
+							DamiCommon.saveLoginResult(mContext, mUser);
+							sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+							setResult(RESULT_OK);
 							ReverificationActivity.this.finish();
 						} else {
 							otherCondition(data.state, ReverificationActivity.this);

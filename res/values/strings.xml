@@ -267,7 +267,7 @@
     <string name="message_net_connect">连接到网络：</string>
     <string name="guiren_report">大蜜汇报</string>
     <string name="dige">地歌网</string>
-    <string name="dige_info">第一手行业资讯</string>
+    <string name="dige_info">互联网靠谱资讯提供商</string>
     <string name="fans">粉丝</string>
     <string name="follow">关注</string>
     <string name="private_msg">消息</string>
@@ -847,5 +847,6 @@
     <string name="from_tribe">来自圈子</string>
     <!--  -->
     <string name="please_finish_profile">请完善您的资料后在邀请朋友加入贵人</string>
+    <string name="meeting_is_not_begin">会议还未开始</string>
 
 </resources>

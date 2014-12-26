@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp" >
 
-            <EditText
+            <com.gaopai.guiren.support.view.ScrollEditText
                 android:id="@+id/et_tribe_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                 android:background="@drawable/selector_edit_white_round_corner"
                 android:gravity="top|left"
                 android:hint="圈子说明，少于500字符"
-                android:lines="10"
+                android:lines="6"
                 android:maxLength="500"
                 android:paddingBottom="30dp"
                 android:paddingLeft="@dimen/general_paading"

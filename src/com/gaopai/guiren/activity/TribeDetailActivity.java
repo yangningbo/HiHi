@@ -152,11 +152,6 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		layoutAdmin = findViewById(R.id.layout_tribe_detail_admin);
 		layoutSetting = findViewById(R.id.layout_tribe_detail_setting);
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(TribeActivity.ACTION_KICK_TRIBE);
-		filter.addAction(ACTION_AGREE_ADD_TRIBE);
-		registerReceiver(mReceiver, filter);
-
 		getTribeDetail();
 	}
 
@@ -165,26 +160,39 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		intent.putExtra(KEY_TRIBE_ID, tid);
 		return intent;
 	}
+	
+	
+	
 
-	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (!TextUtils.isEmpty(action)) {
-				if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
-					String id = intent.getStringExtra("id");
-					if (!TextUtils.isEmpty(id) && id.equals(mTribeID)) {
-						getTribeDetail();
-					}
-				} else if (action.equals(ACTION_AGREE_ADD_TRIBE)) {
-					String id = intent.getStringExtra("id");
-					if (!TextUtils.isEmpty(id) && id.equals(mTribeID)) {
-						getTribeDetail();
-					}
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
+		// TODO Auto-generated method stub
+		intentFilter.addAction(TribeActivity.ACTION_KICK_TRIBE);
+		intentFilter.addAction(ACTION_AGREE_ADD_TRIBE);
+		super.registerReceiver(intentFilter);
+	}
+
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onReceive(intent);
+		String action = intent.getAction();
+		if (!TextUtils.isEmpty(action)) {
+			if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
+				String id = intent.getStringExtra("id");
+				if (!TextUtils.isEmpty(id) && id.equals(mTribeID)) {
+					deleteConverstion();
+					getTribeDetail();
+				}
+			} else if (action.equals(ACTION_AGREE_ADD_TRIBE)) {
+				String id = intent.getStringExtra("id");
+				if (!TextUtils.isEmpty(id) && id.equals(mTribeID)) {
+					getTribeDetail();
 				}
 			}
 		}
-	};
+	}
+
 
 	private void getTribeDetail() {
 		DamiInfo.getTribeDetail(mTribeID, new SimpleResponseListener(mContext) {
@@ -236,7 +244,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		changeSwitch(tvAvoidDisturb, isAvoidDisturb());
 		changeSwitch(tvUseRealIdentity, isUserRealIdentity());
 
-		ImageLoaderUtil.displayImage(mTribe.logosmall, ivTribeLogo);
+		ImageLoaderUtil.displayImage(mTribe.logosmall, ivTribeLogo, R.drawable.default_tribe);
 		bindBottomButtons();
 		bindMemberView();
 		bindTags();
@@ -484,8 +492,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void deleteConverstion() {
-		ConversationHelper.deleteItem(mContext, mTribeID);
-		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		ConversationHelper.deleteItemAndUpadte(mContext, mTribeID);
 	}
 
 	private DeleteCallback deleteCallback = new DeleteCallback() {

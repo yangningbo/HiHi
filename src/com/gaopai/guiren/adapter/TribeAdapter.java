@@ -63,8 +63,6 @@ public class TribeAdapter extends BaseAdapter {
 					.findViewById(R.id.tv_date);
 			holder.mContentTextView = (TextView) convertView
 					.findViewById(R.id.tv_info);
-			holder.mMessageCount = (TextView) convertView
-					.findViewById(R.id.tv_message_count);
 			holder.mHeaderView = (ImageView) convertView
 					.findViewById(R.id.iv_header);
 			convertView.setTag(holder);
@@ -79,7 +77,6 @@ public class TribeAdapter extends BaseAdapter {
 		}
 		holder.mUserNameTextView.setText(tribe.name);
 		holder.mTimeTextView.setVisibility(View.GONE);
-		holder.mMessageCount.setVisibility(View.GONE);
 		holder.mContentTextView.setText(tribe.content);
 		return convertView;
 	}
@@ -88,7 +85,6 @@ public class TribeAdapter extends BaseAdapter {
 		TextView mUserNameTextView;
 		TextView mContentTextView;
 		TextView mTimeTextView;
-		TextView mMessageCount;
 		ImageView mHeaderView;
 	}
 

@@ -52,9 +52,9 @@ public class ConnectionAdapter extends BaseAdapter {
 	private static final int TYPE_BE_FRIENDS = 0;
 	private static final int TYPE_GENERAL = 1;
 	private static final int TYPE_PIC_GENERAL = 2;
-	
+
 	private com.gaopai.guiren.bean.User mLogin;
-	
+
 	public void showSoftKeyboard() {
 		InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
@@ -64,7 +64,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		mFragment = fragment;
 		mContext = fragment.getActivity();
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mLogin =  DamiCommon.getLoginResult(mContext);
+		mLogin = DamiCommon.getLoginResult(mContext);
 	}
 
 	public void addAll(List<TypeHolder> o) {
@@ -96,31 +96,6 @@ public class ConnectionAdapter extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		int type = getItemViewType(position);
-		// TypeHolder typeBean = mData.get(position);
-		// switch (type + 1) {
-		// case TYPE_SOMEONE_JOIN_MY_MEETING:
-		// case TYPE_SOMEONE_JOIN_MY_TRIBE:
-		// case TYPE_WEIBO_USER_JOIN:
-		// case TYPE_PHONE_USER_JOIN:
-		// case TYPE_SYS_REC_USER: {
-		// if (convertView == null) {
-		// convertView = inflateItemView(TYPE_GENERAL);
-		// }
-		// buildJoinView((ViewHolderGeneral) convertView.getTag(), typeBean,
-		// position, type + 1);
-		// break;
-		// }
-		//
-		// case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
-		// case TYPE_SOMEONE_FOLLOW_ME: {
-		// if (convertView == null) {
-		// convertView = inflateItemView(TYPE_PIC_GENERAL);
-		// }
-		// buildPicGridView((ViewHolderPicGridGeneral) convertView.getTag(),
-		// typeBean, position, type + 1);
-		// break;
-		// }
-		// }
 		TypeHolder typeBean = mData.get(position);
 		switch (type) {
 
@@ -169,12 +144,6 @@ public class ConnectionAdapter extends BaseAdapter {
 	}
 
 	private void buildPicGridView(ViewHolderPicGridGeneral viewHolder, TypeHolder typeBean, int position, int type) {
-		// if (!TextUtils.isEmpty(typeBean.headsmall)) {
-		// ImageLoaderUtil.displayImage(typeBean.headsmall,
-		// viewHolder.ivHeader);
-		// } else {
-		// viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-		// }
 		viewHolder.ivHeader.setImageResource(R.drawable.icon_connection_default);
 
 		JsonContent jsonContent = typeBean.jsoncontent;
@@ -197,11 +166,7 @@ public class ConnectionAdapter extends BaseAdapter {
 			cacheImage(viewHolder.gridLayout, length);
 			for (int i = 0; i < length; i++) {
 				ImageView iv = (ImageView) viewHolder.gridLayout.getChildAt(i);
-				if (!TextUtils.isEmpty(userList.get(i).headsmall)) {
-					ImageLoaderUtil.displayImage(userList.get(i).headsmall, iv);
-				} else {
-					iv.setImageResource(R.drawable.default_header);
-				}
+				ImageLoaderUtil.displayImage(userList.get(i).headsmall, iv, R.drawable.default_header);
 			}
 		}
 		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));
@@ -236,7 +201,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		User user = getSingleUser(content);
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		switch (type) {
-		
+
 		case TYPE_WEIBO_USER_JOIN:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您关注的微博用户",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了贵人"));
@@ -282,8 +247,8 @@ public class ConnectionAdapter extends BaseAdapter {
 		}
 
 		viewHolder.layoutHeader.setImage(user.headsmall);
-		viewHolder.layoutHeader.setMVP(user.bigV == 1);
-		
+		viewHolder.layoutHeader.setMVP(user.bigv == 1);
+
 		viewHolder.tvUserName.setText(user.realname);
 		viewHolder.tvUserInfo.setText(user.company);
 		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));

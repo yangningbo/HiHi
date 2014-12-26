@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <EditText
+            <com.gaopai.guiren.support.view.ScrollEditText
                 android:id="@+id/et_dynamic_msg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -31,7 +31,7 @@
                 android:background="@drawable/selector_edit_white_round_corner"
                 android:gravity="top|left"
                 android:hint="请输入500字以内的动态"
-                android:lines="10"
+                android:lines="6"
                 android:maxLength="500"
                 android:paddingBottom="30dp"
                 android:paddingLeft="@dimen/general_paading"

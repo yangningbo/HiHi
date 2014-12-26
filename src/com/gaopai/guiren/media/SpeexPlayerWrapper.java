@@ -22,6 +22,7 @@ import com.gaopai.guiren.adapter.BaseChatAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.net.Utility;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.volley.AjaxCallBack;
 import com.gaopai.guiren.volley.VoiceTask;
@@ -131,6 +132,7 @@ public class SpeexPlayerWrapper {
 		String tag = FeatureFunction.generator(msg.voiceUrl);
 		String tagName = new File(voicePath, tag).getAbsolutePath();
 		HttpGet get = new HttpGet(msg.voiceUrl);
+		Logger.d(this, "the voice url=" + msg.voiceUrl);
 		DefaultHttpClient client = (DefaultHttpClient) Utility.getNewHttpClient(Utility.DEFAULT_TIMEOUT);
 
 		VoiceTask<File> voiceTask = new VoiceTask<File>(client, new SyncBasicHttpContext(new BasicHttpContext()),

@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="5dp"
+            android:padding="@dimen/general_paading"
             android:src="@drawable/icon_chat_title_ear_phone" />
 
         <TextView

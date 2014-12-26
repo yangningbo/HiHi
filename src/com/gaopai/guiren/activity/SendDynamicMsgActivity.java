@@ -105,21 +105,21 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		tvWordNumLimit = (TextView) findViewById(R.id.tv_num_limit);
 		etDynamicMsg = (EditText) findViewById(R.id.et_dynamic_msg);
 		etDynamicMsg.addTextChangedListener(numLimitWatcher);
-		etDynamicMsg.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (v.getId() == R.id.et_dynamic_msg) {
-					v.getParent().requestDisallowInterceptTouchEvent(true);
-					switch (event.getAction() & MotionEvent.ACTION_MASK) {
-					case MotionEvent.ACTION_UP:
-						v.getParent().requestDisallowInterceptTouchEvent(false);
-						break;
-					}
-				}
-				return false;
-			}
-		});
-		etDynamicMsg.clearFocus();
+//		etDynamicMsg.setOnTouchListener(new OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				if (v.getId() == R.id.et_dynamic_msg) {
+//					v.getParent().requestDisallowInterceptTouchEvent(true);
+//					switch (event.getAction() & MotionEvent.ACTION_MASK) {
+//					case MotionEvent.ACTION_UP:
+//						v.getParent().requestDisallowInterceptTouchEvent(false);
+//						break;
+//					}
+//				}
+//				return false;
+//			}
+//		});
+//		etDynamicMsg.clearFocus();
 
 		btnPhoto = (ImageButton) findViewById(R.id.btn_camera);
 		btnPhoto.setOnClickListener(this);

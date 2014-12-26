@@ -169,20 +169,6 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
 			}
 		}));
-		etInfo.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (v.getId() == R.id.et_tribe_info) {
-					v.getParent().requestDisallowInterceptTouchEvent(true);
-					switch (event.getAction() & MotionEvent.ACTION_MASK) {
-					case MotionEvent.ACTION_UP:
-						v.getParent().requestDisallowInterceptTouchEvent(false);
-						break;
-					}
-				}
-				return false;
-			}
-		});
 	}
 
 	@Override

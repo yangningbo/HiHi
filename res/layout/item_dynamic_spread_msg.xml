@@ -112,16 +112,6 @@
         android:maxHeight="40dp"
         android:scaleType="fitStart" />
 
-    <TextView
-        android:id="@+id/tv_date_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_user_name"
-        android:layout_below="@id/iv_picture"
-        android:layout_marginTop="7dp"
-        android:text="2天前        朋友的朋友"
-        android:textColor="@color/general_text_gray" />
-
     <ImageButton
         android:id="@+id/btn_dynamic_ation"
         android:layout_width="25dp"
@@ -131,6 +121,16 @@
         android:layout_marginRight="12dp"
         android:background="@color/transparent"
         android:src="@drawable/icon_dynamic_comment_action" />
+
+    <TextView
+        android:id="@+id/tv_date_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/iv_picture"
+        android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@id/btn_dynamic_ation"
+        android:textColor="@color/general_text_gray" />
 
     <include
         android:layout_width="match_parent"

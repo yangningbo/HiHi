@@ -87,7 +87,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private TextView tvRealName;
 	private TextView tvCompany;
-	private TextView tvPartment;
+	private TextView tvIndustry;
 	private TextView tvJob;
 
 	private TextView tvEmail;
@@ -223,6 +223,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					if (data.data != null) {
 						showContent();
 						tUser = data.data;
+						tUser.realname = User.getUserName(tUser);
 						updateUserInfo(data.data);
 						tagWindowManager.setTagList(tUser.tag);
 						bindView();
@@ -292,7 +293,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		tvRealName = (TextView) findViewById(R.id.tv_profile_real_name);
 		tvCompany = (TextView) findViewById(R.id.tv_profile_company);
-		tvPartment = (TextView) findViewById(R.id.tv_profile_partment);
+		tvIndustry = (TextView) findViewById(R.id.tv_profile_partment);
 		tvJob = (TextView) findViewById(R.id.tv_profile_job);
 
 		tvEmail = (TextView) findViewById(R.id.tv_profile_email);
@@ -372,13 +373,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		} else {
 			bindConnectionView();
 		}
-		bindHeadView();
-
-		// tvFancyCount.setText(String.valueOf(tUser.integral));
-		// tvUserName.setText(tUser.realname);
-		tvUserInfo.setText(tUser.company);
-		bindUserName();
-
+		bindTopSectionView();
 		bindContactView();
 		bindDyView();
 		if (tUser.tag != null) {
@@ -387,6 +382,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		bindUserTags();
 		bindBottomDynamicView();
 		bindBottomView();
+	}
+	
+	private void bindTopSectionView() {
+		bindHeadView();
+		bindUserName();
+		tvUserInfo.setText(tUser.company);
 	}
 
 	private void bindHeadView() {
@@ -512,7 +513,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvRealName.setText(tUser.realname);
 		tvCompany.setText(tUser.company);
 		tvJob.setText(tUser.post);
-		tvPartment.setText(tUser.depa);
+		tvIndustry.setText(tUser.depa);
 	}
 
 	private void bindContactView() {
@@ -745,6 +746,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	public final static int REQUEST_CHANGE_PROFILE = 0;
 	public final static int REQUEST_COMMENT = 1;
+	public final static int REQUEST_VERIFY_PROFILE = 2;
 
 	@Override
 	public void onClick(View v) {
@@ -782,7 +784,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 		case R.id.tv_reverification:
-			startActivity(ReverificationActivity.class);
+			startActivityForResult(ReverificationActivity.class, REQUEST_VERIFY_PROFILE);
 			break;
 		case R.id.layout_profile_email:
 			if (!isSelf) {
@@ -1010,6 +1012,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				}
 				tUser.commentlist.add(bean);
 				bindBottomDynamicView();
+			}
+			
+			if (requestCode == REQUEST_VERIFY_PROFILE) {
+				tUser = DamiCommon.getLoginResult(this);
+				bindProfileView();
+				bindTopSectionView();
 			}
 		}
 	}

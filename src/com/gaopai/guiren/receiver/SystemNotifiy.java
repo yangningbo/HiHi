@@ -75,7 +75,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 				user.depa = notifiyVo.user.depa;
 				user.company = notifiyVo.user.company;
 				user.auth = 1;
-				
+
 				DamiCommon.saveLoginResult(mContext, user);
 				mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 				msg = mContext.getString(R.string.pass_real_verify);
@@ -156,8 +156,9 @@ public class SystemNotifiy extends AbstractNotifiy {
 
 			case NotifiyType.PASS_CREATE_MEETING:
 				msg = mContext.getString(R.string.pass_create_meeting);
-				// mContext.sendBroadcast(new
-				// Intent(MeatingTab.REFRESH_LIST_ACTION));
+				applyTribeIntent = new Intent(MeetingDetailActivity.ACTION_AGREE_ADD_MEETING);
+				applyTribeIntent.putExtra("id", notifiyVo.room.id);
+				mContext.sendBroadcast(applyTribeIntent);
 				break;
 
 			case NotifiyType.REFUSE_CREATE_MEETING:
@@ -303,7 +304,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 
 			case NotifiyType.ROOM_RECEIVE_REPORT_MSG:
 				notifiyVo.message.mIsShide = 1;
-				// messageTable.updateShide(notifiyVo.message);
+				messageTable.updateShide(notifiyVo.message);
 				Intent shiedIntent = new Intent(ChatBaseActivity.ACTION_SHIED_MESSAGE);
 				shiedIntent.putExtra("tag", notifiyVo.message.tag);
 				mContext.sendBroadcast(shiedIntent);

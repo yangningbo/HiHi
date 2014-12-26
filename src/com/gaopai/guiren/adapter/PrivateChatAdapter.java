@@ -8,7 +8,9 @@ import android.text.ClipboardManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -51,7 +53,12 @@ public class PrivateChatAdapter extends BaseChatAdapter implements View.OnClickL
 		copy.setTag(messageInfo.content);
 		copy.setOnClickListener(this);
 
-		View earPhone = v.findViewById(R.id.btn_ear_phone);
+		TextView earPhone = (TextView) v.findViewById(R.id.btn_ear_phone);
+		if (((BaseActivity) mContext).isModeInCall) {
+			earPhone.setText(R.string.mode_in_speaker);
+		} else {
+			earPhone.setText(R.string.mode_in_call);
+		}
 		earPhone.setTag(messageInfo);
 		earPhone.setOnClickListener(this);
 		showActionWindow(anchor, v, this);

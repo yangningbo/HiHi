@@ -106,7 +106,6 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		mBackWardBtn = (ImageView) findViewById(R.id.backward);
 		mBackWardBtn.setOnClickListener(this);
 		mForwardBtn = (ImageView) findViewById(R.id.forward);
-		mForwardBtn.setImageResource(R.drawable.forwardward_gray);
 		mForwardBtn.setEnabled(false);
 		mForwardBtn.setOnClickListener(this);
 		mRefreshBtn = (ImageView) findViewById(R.id.refresh);
@@ -191,10 +190,8 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 				removeProgressDialog();
 				if (mWebView.canGoForward()) {
 					mForwardBtn.setEnabled(true);
-					mForwardBtn.setImageResource(R.drawable.forward);
 				} else {
 					mForwardBtn.setEnabled(false);
-					mForwardBtn.setImageResource(R.drawable.forwardward_gray);
 				}
 				stringBuilder = new StringBuilder();
 				view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
@@ -325,5 +322,4 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		Logger.d(this, "===============" + mWebImage);
 		Logger.d(this, "===============" + mWebContent);
 	}
-
 }

@@ -232,6 +232,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				notHideViews(viewHolder, MessageType.TEXT);
 				viewHolder.wiatProgressBar.setVisibility(View.GONE);
 				viewHolder.tvText.setText(messageInfo.content);
+				onBindView(viewHolder, messageInfo);
 			}
 			AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
 			if (mPlayerWrapper.isPlay() && mPlayerWrapper.getMessageTag().equals(messageInfo.tag)) {

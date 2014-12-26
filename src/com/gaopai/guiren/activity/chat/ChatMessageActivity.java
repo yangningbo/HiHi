@@ -4,31 +4,23 @@ import java.util.UUID;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.PrivacyChatSettingActivity;
 import com.gaopai.guiren.adapter.PrivateChatAdapter;
-import com.gaopai.guiren.adapter.TribeChatAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
-import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
-import com.gaopai.guiren.db.ConverseationTable;
-import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.NotifyHelper;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.SPConst;
 
 //私信界面
@@ -76,6 +68,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		Logger.d(this, "onResume to referesh");
 		checkHasDraft(user.uid);
 		NotifyHelper.setCurrentChatId(mContext, user.uid);
 		NotifyHelper.clearMsgNotification(mContext, 100);
@@ -172,9 +165,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
-
 		case R.id.ab_chat_more:
 			Intent intent = new Intent(this, PrivacyChatSettingActivity.class);
 			intent.putExtra(PrivacyChatSettingActivity.KEY_UID, user.uid);
@@ -189,7 +180,6 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 
 	@Override
 	protected boolean isAvoidDisturb() {
-		// TODO Auto-generated method stub
 		return spo.getInt(SPConst.getTribeUserId(mContext, user.uid), 0) == 1;
 	}
 }

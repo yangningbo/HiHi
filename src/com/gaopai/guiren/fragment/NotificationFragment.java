@@ -27,6 +27,7 @@ import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.NotifyHelper;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -199,6 +200,7 @@ public class NotificationFragment extends BaseFragment {
 		if (intent != null) {
 			String action = intent.getAction();
 			if (action.equals(ACTION_MSG_NOTIFY)) {
+				Logger.d(this, "receive notify...");
 				getDataFromDb();
 			}
 		}

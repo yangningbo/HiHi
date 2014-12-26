@@ -83,7 +83,7 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 		}
 
 		viewHolder.layoutHeader.setImage(user.headsmall);
-		viewHolder.layoutHeader.setMVP(user.bigV == 1);
+		viewHolder.layoutHeader.setMVP(user.bigv == 1);
 		
 		viewHolder.tvUserName.setText(user.realname);
 		viewHolder.tvUserInfo.setText(user.company);

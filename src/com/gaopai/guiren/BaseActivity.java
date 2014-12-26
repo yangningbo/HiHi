@@ -192,7 +192,7 @@ public class BaseActivity extends FragmentActivity {
 		Logger.d(this, getString(R.string.now_loading));
 		((TextView) ((ViewGroup) layoutLoading).getChildAt(1)).setText(R.string.now_loading);
 	}
-
+	
 	public void showErrorView(OnClickListener listener) {
 		layoutContent.setVisibility(View.GONE);
 		layoutLoading.setVisibility(View.VISIBLE);
