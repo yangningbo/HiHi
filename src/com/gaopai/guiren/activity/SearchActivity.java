@@ -28,6 +28,8 @@ import com.gaopai.guiren.adapter.SearchAdapter.Section;
 import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.dynamic.DynamicBean;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.net.QueryResult;
 import com.gaopai.guiren.bean.net.QueryResult.DataHolder;
 import com.gaopai.guiren.bean.net.TagResult;
@@ -70,7 +72,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 		setAbContentView(R.layout.activity_search);
 		flowLayout = (FlowLayout) findViewById(R.id.flow_tags);
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
-		mAdapter = new SearchAdapter();
+		mAdapter = new SearchAdapter(mContext);
 		mListView.setAdapter(mAdapter);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		etSearch = mTitleBar.addSearchEditText();
@@ -92,25 +94,31 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 
 		mListView.setScrollLoadEnabled(false);
 		mListView.setPullRefreshEnabled(false);
+		mListView.setPullLoadEnabled(false);
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
 				Row row = mAdapter.getItem(position);
-				if (row.type == 1) {
-					if (((Item) row).object instanceof User) {
-						User user = (User) ((Item) row).object;
-						jumpToOtherActivity(ProfileActivity.KEY_UID, user.uid, ProfileActivity.class);
-					} else if (((Item) row).object instanceof Tribe) {
-						Tribe tribe = (Tribe) ((Item) row).object;
-						if (tribe.isTribeOrMeeting) {
-							jumpToOtherActivity(TribeDetailActivity.KEY_TRIBE_ID, tribe.id, TribeDetailActivity.class);
-						} else {
-							jumpToOtherActivity(MeetingDetailActivity.KEY_MEETING_ID, tribe.id,
-									MeetingDetailActivity.class);
-						}
-					}
+				switch (row.type) {
+				case SearchAdapter.TYPE_USER:
+					User user = (User) ((Item) row).object;
+					startActivity(ProfileActivity.getIntent(mContext, user.uid));
+					break;
+				case SearchAdapter.TYPE_TRIBE:
+					Tribe tribe = (Tribe) ((Item) row).object;
+					startActivity(TribeDetailActivity.getIntent(mContext, tribe.id));
+					break;
+				case SearchAdapter.TYPE_MEETING:
+					Tribe meeting = (Tribe) ((Item) row).object;
+					startActivity(MeetingDetailActivity.getIntent(mContext, meeting.id));
+					break;
+				case SearchAdapter.TYPE_DYNAMIC:
+					TypeHolder typeHolder =  (TypeHolder) ((Item) row).object;
+					startActivity(DynamicDetailActivity.getIntent(mContext, typeHolder.id));
+					break;
+				default:
+					break;
 				}
 			}
 		});
@@ -118,27 +126,18 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
 				getSearchResult();
 			}
 		});
 	}
 
-	private void jumpToOtherActivity(String key, String id, Class clazz) {
-		Intent intent = new Intent();
-		intent.putExtra(key, id);
-		intent.setClass(mContext, clazz);
-		startActivity(intent);
-	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ab_search:
 			mType = SEARCH_ALL;
@@ -224,30 +223,39 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 		List<Row> rowList = new ArrayList<Row>();
 		int total = 0;
 		if (data.user != null && data.user.size() > 0) {
-			rowList.add(new Section("用户", 0));
+			rowList.add(new Section("用户", SearchAdapter.TYPE_HEADER));
 			for (User user : data.user) {
-				rowList.add(new Item(user, 1));
+				rowList.add(new Item(user, SearchAdapter.TYPE_USER));
 			}
 			total = total + data.user.size();
 		}
 		if (data.tribe != null && data.tribe.size() > 0) {
-			rowList.add(new Section("圈子", 0));
+			rowList.add(new Section("圈子", SearchAdapter.TYPE_HEADER));
 			for (Tribe tribe : data.tribe) {
 				tribe.isTribeOrMeeting = true;
-				rowList.add(new Item(tribe, 1));
+				rowList.add(new Item(tribe, SearchAdapter.TYPE_TRIBE));
 			}
 			total = total + data.tribe.size();
 
 		}
 		if (data.meeting != null && data.meeting.size() > 0) {
-			rowList.add(new Section("会议", 0));
+			rowList.add(new Section("会议", SearchAdapter.TYPE_HEADER));
 			for (Tribe tribe : data.meeting) {
 				tribe.isTribeOrMeeting = false;
-				rowList.add(new Item(tribe, 1));
+				rowList.add(new Item(tribe, SearchAdapter.TYPE_MEETING));
 			}
 			total = total + data.meeting.size();
 
 		}
+		if (data.dynamic != null && data.dynamic.size() > 0) {
+			rowList.add(new Section("动态", SearchAdapter.TYPE_HEADER));
+			for (TypeHolder dynamic : data.dynamic) {
+				rowList.add(new Item(dynamic, SearchAdapter.TYPE_DYNAMIC));
+			}
+			total = total + data.dynamic.size();
+
+		}
+
 		mAdapter.addAll(rowList);
 		if (total == 0) {
 			setEmptyListview();
@@ -285,4 +293,13 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 		addContentView(tv, params);
 		mListView.getRefreshableView().setEmptyView(tv);
 	}
+
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mAdapter.stopPlay();
+	}
+	
+	
 }

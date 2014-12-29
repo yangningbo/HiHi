@@ -13,52 +13,50 @@
         android:background="@drawable/shape_erweima_round_corner"
         android:padding="20dp" >
 
-        <ImageView
-            android:id="@+id/iv_header"
-            style="@style/connection_item_header1"
-            android:contentDescription="@string/desc" />
+        <com.gaopai.guiren.support.view.HeadView
+            android:id="@+id/layout_header_mvp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_header"
+                style="@style/connection_item_header1"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/layout_header_mvp"
+                android:layout_alignRight="@id/layout_header_mvp"
+                android:layout_marginBottom="-8dp"
+                android:layout_marginRight="-6dp"
+                android:src="@drawable/icon_mvp_head"
+                android:visibility="gone" />
+        </com.gaopai.guiren.support.view.HeadView>
 
         <TextView
             android:id="@+id/tv_user_name"
             style="@style/connection_item_title1"
-            android:layout_toRightOf="@id/iv_header"
-            android:textColor="@color/white"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/tv_meilizhi_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_user_name"
-            android:layout_marginLeft="@dimen/general_paading"
-            android:layout_toRightOf="@id/tv_user_name"
-            android:text="@string/level_count"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tv_star_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_user_name"
-            android:layout_toRightOf="@id/tv_meilizhi_info"
-            android:textColor="@color/red_dongtai_bg"
-            android:textSize="18sp" />
+            android:singleLine="true"
+            android:layout_toRightOf="@id/layout_header_mvp"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_user_info"
             style="@style/connection_item_info1"
             android:layout_alignLeft="@id/tv_user_name"
             android:layout_below="@id/tv_user_name"
-            android:singleLine="true"
             android:ellipsize="end"
+            android:singleLine="true"
             android:textColor="@color/white" />
 
         <ImageView
             android:id="@+id/iv_erweima"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_below="@id/iv_header"
+            android:layout_below="@id/layout_header_mvp"
             android:layout_marginTop="@dimen/general_large_gap"
             android:scaleType="fitXY" />
 

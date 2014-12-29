@@ -317,7 +317,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				// gridView.setOnLongClickListener(gridLongClickListener);
 				Member member = members.get(i);
 				holder.tvUserName.setText(member.realname);
-				ImageLoaderUtil.displayImage(member.headsmall, holder.ivHeader);
+				ImageLoaderUtil.displayImage(member.headsmall, holder.ivHeader, R.drawable.default_header);
 				gridView.setTag(member);
 				mlUserLayout.addView(gridView);
 			}

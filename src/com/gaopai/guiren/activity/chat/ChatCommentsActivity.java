@@ -624,10 +624,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void bindView() {
-		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
-			headImageView.setTag(messageInfo.headImgUrl);
-			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, headImageView);
-		}
+		ImageLoaderUtil.displayImage(messageInfo.headImgUrl, headImageView, R.drawable.default_header);
 		nameTextView.setText(messageInfo.displayname);
 		tvText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		notHideViews(messageInfo.fileType);
@@ -666,9 +663,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			ivPhoto.getLayoutParams().width = width;
 			ivPhotoCover.getLayoutParams().height = height;
 			ivPhotoCover.getLayoutParams().width = width;
-			ImageLoaderUtil.displayImage(path, ivPhoto);
+			ImageLoaderUtil.displayImage(path, ivPhoto, R.drawable.default_pic);
 			if (path.startsWith("http://")) {
-				ImageLoaderUtil.displayImage(path, ivPhoto);
+				ImageLoaderUtil.displayImage(path, ivPhoto, R.drawable.default_pic);
 			}
 			ivPhoto.setTag(messageInfo);
 			ivPhoto.setOnClickListener(photoClickListener);
@@ -864,8 +861,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			case MessageType.PICTURE:
 				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 150));
 				notHideViews(viewHolder, MessageType.PICTURE);
-				viewHolder.picImageView.getLayoutParams().width = commentInfo.imgWidth*3;
-				viewHolder.picImageView.getLayoutParams().height = commentInfo.imgHeight*3;
+				viewHolder.picImageView.getLayoutParams().width = commentInfo.imgWidth * 3;
+				viewHolder.picImageView.getLayoutParams().height = commentInfo.imgHeight * 3;
 				viewHolder.messageNameText.setText(replyFromToText);
 				final String path = commentInfo.imgUrlS;
 				if (path.startsWith("http://")) {
@@ -1210,7 +1207,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		return msg;
 	}
-	
+
 	private String getName() {
 		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
 			return User.getUserName(mLogin);

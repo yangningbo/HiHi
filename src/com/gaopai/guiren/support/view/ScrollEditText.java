@@ -1,9 +1,6 @@
 package com.gaopai.guiren.support.view;
 
-import com.gaopai.guiren.utils.Logger;
-
 import android.content.Context;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.EditText;
@@ -37,7 +34,6 @@ public class ScrollEditText extends EditText {
 		case MotionEvent.ACTION_MOVE:
 			float currentY = (int) event.getY();
 			float deltaScroll = currentY - lastPos;
-			Logger.d(this, "delta y=" + deltaScroll);
 			if (getScrollY() == 0) {
 				if (deltaScroll > 0) {
 					getParent().requestDisallowInterceptTouchEvent(false);
@@ -47,7 +43,7 @@ public class ScrollEditText extends EditText {
 			}
 			int boxHeight = getHeight() - getPaddingTop() - getPaddingBottom();
 			int bottom = getLayout().getLineBottom(getLineCount() - 1);
-			Logger.d(this, "top=" + boxHeight + "  bottom=" + bottom + "   scrolly=" + getScrollY());
+//			Logger.d(this, "top=" + boxHeight + "  bottom=" + bottom + "   scrolly=" + getScrollY());
 			if (Math.abs(boxHeight + getScrollY() - bottom) < 5) {
 				if (deltaScroll > 0) {
 					getParent().requestDisallowInterceptTouchEvent(true);

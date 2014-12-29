@@ -642,11 +642,7 @@ public class DynamicHelper {
 		viewHolder.ivVoice.setLayoutParams(ChatMsgHelper.getVoiceViewLengthParams(viewHolder.ivVoice.getLayoutParams(),
 				mContext, content.voiceTime));
 		viewHolder.layoutTextVoice.setOnClickListener(null);
-		if (!TextUtils.isEmpty(content.headImgUrl)) {
-			ImageLoaderUtil.displayImage(content.headImgUrl, viewHolder.ivHeader1);
-		} else {
-			viewHolder.ivHeader1.setImageResource(R.drawable.default_header);
-		}
+		ImageLoaderUtil.displayImage(content.headImgUrl, viewHolder.ivHeader1, R.drawable.default_header);
 		viewHolder.tvUserName1.setText(content.displayName);
 		switch (content.fileType) {
 		case MessageType.TEXT:
@@ -656,9 +652,9 @@ public class DynamicHelper {
 		case MessageType.PICTURE:
 			final String path = content.imgUrlS.trim();
 			MessageInfo messageInfo = ChatMsgHelper.creatPicMsg(content.imgUrlS, content.imgUrlL, content.sid);
-			ImageLoaderUtil.displayImage(path, viewHolder.ivPic);
+			ImageLoaderUtil.displayImage(path, viewHolder.ivPic, R.drawable.default_pic);
 			if (path.startsWith("http://")) {
-				ImageLoaderUtil.displayImage(path, viewHolder.ivPic);
+				ImageLoaderUtil.displayImage(path, viewHolder.ivPic, R.drawable.default_pic);
 			}
 			viewHolder.ivPic.setTag(messageInfo);
 			viewHolder.ivPic.setOnClickListener(singlePhotoClickListener);
@@ -828,11 +824,7 @@ public class DynamicHelper {
 
 			break;
 		case TYPE_SPREAD_TRIBE:
-			if (!TextUtils.isEmpty(jsonContent.logo)) {
-				ImageLoaderUtil.displayImage(jsonContent.logo, viewHolder.ivHeader1);
-			} else {
-				viewHolder.ivHeader1.setImageResource(R.drawable.default_tribe);
-			}
+			ImageLoaderUtil.displayImage(jsonContent.logo, viewHolder.ivHeader1, R.drawable.default_tribe);
 			viewHolder.tvTitle1.setText(jsonContent.name);
 			viewHolder.tvInfo1.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			viewHolder.tvInfo1.setText(MyTextUtils.getSpannableString("圈子知名人物：",
@@ -851,7 +843,7 @@ public class DynamicHelper {
 			});
 			break;
 		case TYPE_SPREAD_USER:
-			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1);
+			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1, R.drawable.default_header);
 			viewHolder.tvTitle1.setText(jsonContent.realname);
 			viewHolder.tvInfo1.setText(jsonContent.post);
 			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
@@ -906,11 +898,7 @@ public class DynamicHelper {
 		viewHolder.lineZan.setVisibility(View.GONE);
 		viewHolder.lineSpread.setVisibility(View.GONE);
 
-		if (!TextUtils.isEmpty(typeBean.s_path)) {
-			ImageLoaderUtil.displayImage(typeBean.s_path, viewHolder.ivHeader);
-		} else {
-			viewHolder.ivHeader.setImageResource(R.drawable.default_header);
-		}
+		ImageLoaderUtil.displayImage(typeBean.s_path, viewHolder.ivHeader, R.drawable.default_header);
 
 		// viewHolder.tvUserName.setText(typeBean.realname);
 		// viewHolder.tvUserInfo.setText(typeBean.post);
@@ -918,7 +906,7 @@ public class DynamicHelper {
 		uid = typeBean.uid;
 		userInfo = typeBean.post;
 		if (typeBean.isanonymous == 1) {
-			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader);
+			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader, R.drawable.default_header);
 			// viewHolder.tvUserName.setText(R.string.no_name);
 			// viewHolder.tvUserInfo.setText("");
 			userInfo = "";
@@ -992,7 +980,7 @@ public class DynamicHelper {
 	}
 
 	private void setDateDeleteSpan(TextView tView, TypeHolder typeBean) {
-		
+
 		tView.setTag(typeBean);
 		String date = DateUtil.getCreateTime(Long.valueOf(typeBean.time)) + "   ";
 		SpannableString spannableString = new SpannableString(date + "删除");
@@ -1119,7 +1107,7 @@ public class DynamicHelper {
 
 	private ImageView getImageView(String url) {
 		ImageView imageView = new ImageView(mContext);
-		ImageLoaderUtil.displayImage(url, imageView);
+		ImageLoaderUtil.displayImage(url, imageView, R.drawable.default_pic);
 		android.view.ViewGroup.LayoutParams lp = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		imageView.setLayoutParams(lp);

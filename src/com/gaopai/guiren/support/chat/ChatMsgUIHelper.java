@@ -44,7 +44,7 @@ public class ChatMsgUIHelper {
 			}
 		});
 	}
-	
+
 	/**
 	 * 下载成功后修改消息状态，更新数据库并播放声音
 	 * 
@@ -54,11 +54,11 @@ public class ChatMsgUIHelper {
 	private void downVoiceSuccess(final MessageInfo msg) {
 		if (mPlayerWrapper.getMessageTag().equals(msg.tag)) {
 			mPlayerWrapper.start(msg);
-//			mAdapter.notifyDataSetChanged();
+			// mAdapter.notifyDataSetChanged();
 		}
 	}
-	
-	//should call this before use mPlayerWrapper
+
+	// should call this before use mPlayerWrapper
 	public void setPlayedCallback(PlayCallback playCallback) {
 		mPlayerWrapper.setPlayCallback(playCallback);
 	}
@@ -108,11 +108,9 @@ public class ChatMsgUIHelper {
 			return holder;
 		}
 	}
-	
+
 	public void bindBaseView(BaseViewHolder viewHolder, MessageInfo messageInfo) {
-		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
-			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead);
-		} 
+		ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead, R.drawable.default_header);
 		viewHolder.tvUserName.setText(messageInfo.displayname);
 		notHideViews(viewHolder, messageInfo.fileType);
 		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
@@ -132,9 +130,9 @@ public class ChatMsgUIHelper {
 			viewHolder.ivPhotoCover.getLayoutParams().height = height;
 			viewHolder.ivPhotoCover.getLayoutParams().width = width;
 
-			ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto);
+			ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto, R.drawable.default_pic);
 			if (path.startsWith("http://")) {
-				ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto);
+				ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto, R.drawable.default_pic);
 			}
 			viewHolder.ivPhoto.setTag(messageInfo);
 			viewHolder.ivPhoto.setOnClickListener(photoClickListener);
@@ -145,22 +143,22 @@ public class ChatMsgUIHelper {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-//					palyedPosition = position;
-//					mPlayerWrapper.start(messageInfo);
+					// palyedPosition = position;
+					// mPlayerWrapper.start(messageInfo);
 				}
 			});
 
 			AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
-//			if (mPlayerWrapper.isPlay() && position == palyedPosition) {
-//				drawable.start();
-//			} else {
-//				drawable.stop();
-//				drawable.selectDrawable(0);
-//			}
+			// if (mPlayerWrapper.isPlay() && position == palyedPosition) {
+			// drawable.start();
+			// } else {
+			// drawable.stop();
+			// drawable.selectDrawable(0);
+			// }
 			break;
 		}
 	}
-	
+
 	private OnClickListener photoClickListener = new OnClickListener() {
 
 		@Override
@@ -174,7 +172,7 @@ public class ChatMsgUIHelper {
 			mContext.startActivity(intent);
 		}
 	};
-	
+
 	private void notHideViews(BaseViewHolder viewHolder, int which) {
 		viewHolder.layoutPicHolder.setVisibility(View.GONE);
 		viewHolder.layoutTextVoiceHolder.setVisibility(View.GONE);

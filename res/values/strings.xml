@@ -693,9 +693,10 @@
     <string name="share_qq">QQ好友</string>
     <string name="share_qq_zone">QQ空间</string>
 
-    <!-- register -->
+    <!-- login  register -->
     <string name="register">注册</string>
     <string name="modify">修改密码</string>
+    <string name="third_party_login">第三方登录账号</string>
     <string name="register_success">注册成功</string>
     <string name="modify_success">修改成功</string>
     <string name="veryficaion_can_not_be_empty">验证码不能为空</string>
@@ -705,10 +706,11 @@
     <string name="send_verify_code">发送验证码</string>
     <string name="please_input_verify_code">请输入验证码</string>
     <string name="please_chose_country">选择您手机号码所在的国家，以便收到短信</string>
-    <string name="please_input_phone">请输入您的手机号码</string>
+    <string name="please_input_phone">请输入手机号码</string>
     <string name="forget_password">忘记密码?</string>
     <string name="new_user_register">新账户注册</string>
     <string name="login_forget_pwd">忘记密码</string>
+    <string name="login_forget_pwd_ask">忘记密码?</string>
     <string name="confirm_pwd">确认密码</string>
     <string name="user_protocol">用户协议</string>
     <string name="input_signup_pwd">请输入注册密码</string>
@@ -724,10 +726,11 @@
     <string name="please_input_correct_email">请输入正确邮箱格式</string>
     <string name="please_input_correct_mobile_num">请输入正确格式的手机号</string>
     <string name="modify_loading">修改中...</string>
-    <string name="please_input_old_pwd">请输入旧密码</string>
+    <string name="please_input_old_password">请输入旧密码</string>
     <string name="please_input_new_password">请输入新密码</string>
     <string name="modify_password">修改密码</string>
     <string name="dynamic_msg">动态消息</string>
+    <string name="china_full_name">中华人民共和国</string>
 
     <!-- send dynamic -->
     <string name="send_dynamic">发布动态</string>
@@ -812,22 +815,18 @@
     <string name="you_are_not_allowed_to_see_profile">对方已设置隐私保护</string>
     <string name="no_tags">暂无标签</string>
     <string name="alarm_meeting_is_on_going">大人会议已开始，请速速就座！</string>
-    
     <string name="user_real_name">使用实名</string>
     <string name="user_anony_name">使用匿名</string>
     <string name="switch_use_real_name_mode">已切换至实名模式</string>
     <string name="switch_use_anony_name_mode">已切换至匿名</string>
-    
     <string name="avoid_disturb_on">消息免打扰</string>
     <string name="avoid_disturb_off">接收消息</string>
     <string name="switch_avoid_disturb_on">已开启消息免打扰</string>
     <string name="switch_avoid_disturb_off">已关闭消息免打扰</string>
-    
     <string name="meeting_start_alarm_on">会议开始提醒</string>
     <string name="meeting_start_alarm_off">取消提醒</string>
     <string name="switch_meeting_start_alarm_on">已开启会议提醒</string>
     <string name="switch_meeting_start_alarm_off">已关闭会议提醒</string>
-    
     <string name="nine_picture_at_most">最多可以添加9张</string>
     <string name="set_header">设置头像</string>
     <string name="upload_header_now">上传头像中&#8230;</string>
@@ -838,7 +837,6 @@
     <string name="enter_app">进入贵人</string>
     <string name="meeting_is_checking">正在进行审核</string>
     <string name="meeting_not_pass_checking">会议没有通过审核</string>
-    
     <string name="no_right_see_email">您未填写邮箱，无法查看他人邮箱</string>
     <string name="no_right_see_phone">您未填写手机号码，无法查看他人手机号码</string>
     <string name="no_right_see_weibo">您未填写微博帐号，无法查看他人微博帐号</string>
@@ -848,5 +846,6 @@
     <!--  -->
     <string name="please_finish_profile">请完善您的资料后在邀请朋友加入贵人</string>
     <string name="meeting_is_not_begin">会议还未开始</string>
+    <string name="ellipsize">&#8230;</string>
 
 </resources>

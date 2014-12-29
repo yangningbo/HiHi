@@ -307,9 +307,7 @@ public class MyFavoriteActivity extends BaseActivity {
 		}
 		viewHolder.tvChatTime.setText(DateUtil.getCreateTime(favorite.createtime));
 
-		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
-			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead);
-		}
+		ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead, R.drawable.default_header);
 		viewHolder.tvUserName.setText(messageInfo.displayname);
 		notHideViews(viewHolder, messageInfo.fileType);
 		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
@@ -329,9 +327,9 @@ public class MyFavoriteActivity extends BaseActivity {
 			viewHolder.ivPhotoCover.getLayoutParams().height = height;
 			viewHolder.ivPhotoCover.getLayoutParams().width = width;
 
-			ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto);
+			ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto, R.drawable.default_pic);
 			if (path.startsWith("http://")) {
-				ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto);
+				ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto, R.drawable.default_pic);
 			}
 			viewHolder.ivPhoto.setTag(messageInfo);
 			viewHolder.ivPhoto.setOnClickListener(photoClickListener);

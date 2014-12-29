@@ -54,11 +54,7 @@ public class ContactActivity extends BaseActivity {
 	private PullToRefreshIndexableListView mListView;
 	private CopyOfConnectionAdapter mAdapter;
 	private SingleIndexScroller indexScroller;
-
-	private SimpleResponseListener listener;
-
 	private EditText etSearch;
-
 	private boolean isSearchMode = false;
 	public List<User> mSearchUserList = new ArrayList<User>();
 
@@ -86,10 +82,8 @@ public class ContactActivity extends BaseActivity {
 		indexScroller = (SingleIndexScroller) findViewById(R.id.scroller);
 		etSearch = (EditText) findViewById(R.id.et_search);
 		etSearch.addTextChangedListener(new TextWatcher() {
-
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
 				if (isSearchMode && s.length() > 0) {
 					return;
 				}
@@ -99,21 +93,16 @@ public class ContactActivity extends BaseActivity {
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 		etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_SEND
 						|| (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-					Log.d(TAG, "event" + event.getAction());
 					if (event.getAction() == KeyEvent.ACTION_DOWN) {
 						if (etSearch.getText().length() == 0) {
 							ContactActivity.this.showToast(getString(R.string.input_can_not_be_empty));

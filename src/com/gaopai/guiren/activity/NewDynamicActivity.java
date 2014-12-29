@@ -119,11 +119,7 @@ public class NewDynamicActivity extends BaseActivity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			TypeHolder bean = dataList.get(position);
-			if (!TextUtils.isEmpty(bean.head)) {
-				ImageLoaderUtil.displayImage(bean.head, holder.ivHeader);
-			} else {
-				holder.ivHeader.setImageResource(R.drawable.default_header);
-			}
+			ImageLoaderUtil.displayImage(bean.head, holder.ivHeader, R.drawable.default_header);
 			holder.tvName.setText(bean.realname);
 			holder.tvDate.setText(DateUtil.getCreateTime(bean.addtime));
 			JsonContent jsonContent = bean.jsoncontent;
@@ -174,13 +170,13 @@ public class NewDynamicActivity extends BaseActivity {
 			switch (jsonContent.type) {
 			case DynamicHelper.TYPE_SPREAD_MSG:// chat msg
 				if (!TextUtils.isEmpty(jsonContent.imgUrlS)) {
-					ImageLoaderUtil.displayImage(jsonContent.imgUrlS, ivPic);
+					ImageLoaderUtil.displayImage(jsonContent.imgUrlS, ivPic, R.drawable.default_pic);
 					return true;
 				}
 				break;
 			case DynamicHelper.TYPE_SPREAD_LINK:
 				if (!TextUtils.isEmpty(jsonContent.image)) {
-					ImageLoaderUtil.displayImage(jsonContent.image, ivPic);
+					ImageLoaderUtil.displayImage(jsonContent.image, ivPic, R.drawable.default_pic);
 					return true;
 				}
 				break;
@@ -190,21 +186,26 @@ public class NewDynamicActivity extends BaseActivity {
 					String imgaurlString = jsonContent.pic.get(0).imgUrlS;
 					if (!TextUtils.isEmpty(imgaurlString)) {
 						ivPic.setVisibility(View.VISIBLE);
-						ImageLoaderUtil.displayImage(imgaurlString, ivPic);
+						ImageLoaderUtil.displayImage(imgaurlString, ivPic, R.drawable.default_pic);
 						return true;
 					}
 				}
 				break;
 			case DynamicHelper.TYPE_SPREAD_TRIBE:
+				if (!TextUtils.isEmpty(jsonContent.logo)) {
+					ImageLoaderUtil.displayImage(jsonContent.logo, ivPic, R.drawable.default_tribe);
+					return true;
+				}
+				break;
 			case DynamicHelper.TYPE_SPREAD_MEETING:
 				if (!TextUtils.isEmpty(jsonContent.logo)) {
-					ImageLoaderUtil.displayImage(jsonContent.logo, ivPic);
+					ImageLoaderUtil.displayImage(jsonContent.logo, ivPic, R.drawable.icon_default_meeting);
 					return true;
 				}
 				break;
 			case DynamicHelper.TYPE_SPREAD_USER:
 				if (!TextUtils.isEmpty(jsonContent.head)) {
-					ImageLoaderUtil.displayImage(jsonContent.head, ivPic);
+					ImageLoaderUtil.displayImage(jsonContent.head, ivPic, R.drawable.default_header);
 					return true;
 				}
 				break;

@@ -56,7 +56,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	private TextView tvPrivacySetting;
 	private View layoutPasswordSetting;
 
-	private boolean isSetPassword = true;
+	private boolean isSetPassword = false;
 	private int mPrivacy = 1;
 	private String mFilePath = "";
 	private String mTags = "";
@@ -100,7 +100,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 
 	private void bindEditView() {
 		mTitleBar.setTitleText(R.string.edit_tribe);
-		ImageLoaderUtil.displayImage(mTribe.logolarge, btnUploadPic);
+		ImageLoaderUtil.displayImage(mTribe.logolarge, btnUploadPic, R.drawable.default_tribe);
 		etTitle.setText(mTribe.name);
 		if (mTribe.type == 1) {
 			mPrivacy = 1;
@@ -161,6 +161,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 
 		tvNumLimit = ViewUtil.findViewById(this, R.id.tv_num_limit);
 		layoutTags = ViewUtil.findViewById(this, R.id.layout_tags);
+		showPasswordView();
 
 		etInfo.addTextChangedListener(ViewUtil.creatNumLimitWatcher(etInfo, 500, new OnTextChangedListener() {
 			@Override

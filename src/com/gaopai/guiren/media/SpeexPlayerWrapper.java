@@ -20,7 +20,6 @@ import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.BaseChatAdapter;
 import com.gaopai.guiren.bean.MessageInfo;
-import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.net.Utility;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;

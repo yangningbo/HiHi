@@ -160,6 +160,8 @@ public class SpeexDecoder {
 
 				/* decode each segment, writing output to wav */
 				for (curseg = 0; curseg < segments; curseg++) {
+					
+					
 
 					if (Thread.interrupted()) {
 						dis.close();
@@ -199,12 +201,13 @@ public class SpeexDecoder {
 						if ((decsize = speexDecoder.decode(payload, decoded, 160)) > 0) {
 							track.write(decoded, 0, decsize);
 							track.setStereoVolume(0.7f, 0.7f);// ���õ�ǰ������С
-							Logger.d(this, "===" + track.getState());
-//							synchronized (this) {
-								if (track.getState() != AudioTrack.STATE_UNINITIALIZED) {
+							synchronized (this) {
+								if (!isPlay) {
+									return;
+								} else {
 									track.play();
 								}
-//							}
+							}
 						}
 						packetNo++;
 					}

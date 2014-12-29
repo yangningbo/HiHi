@@ -3,8 +3,10 @@ package com.gaopai.guiren.bean;
 import java.io.Serializable;
 import java.util.List;
 
+import android.content.Context;
 import android.text.TextUtils;
 
+import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.PicBean;
@@ -78,7 +80,7 @@ public class User implements Serializable {
 	@Expose
 	public String sign = ""; // 个性签名
 	@Expose
-	public int isfollow = 0; // 0-没有关系 1-关注 2-被关注 3-相互关注   关注指的是我关注别人
+	public int isfollow = 0; // 0-没有关系 1-关注 2-被关注 3-相互关注 关注指的是我关注别人
 	@Expose
 	public String displayName = "";
 	@Expose
@@ -105,14 +107,12 @@ public class User implements Serializable {
 	public int relation;// 和我有没有关系，有关系为1，没关系为0
 	@Expose
 	public int totalcomfriend;// 和我有多少共同好友
-	
-
 
 	public String reason;
 
 	public String weibo;
 	public String weixin;
-	
+
 	public int bigv;
 
 	public List<SpreadBean> kuosanlist;
@@ -122,10 +122,10 @@ public class User implements Serializable {
 	public PrivacyConfig privacyconfig;
 
 	public int kuosanlistnum;
-	
+
 	public TypeHolder newdyna;
-	
-	public String codeurl;//QRcode
+
+	public String codeurl;// QRcode
 
 	public class RoomIds implements Serializable {
 		@Expose
@@ -205,7 +205,20 @@ public class User implements Serializable {
 			return user.realname;
 		} else if (!TextUtils.isEmpty(user.nickname)) {
 			return user.nickname;
-		} 
+		}
 		return "";
+	}
+
+	public static String getSubUserName(User user, Context context) {
+		return getSubUserName(user, context, 6);
+	}
+
+	public static String getSubUserName(User user, Context context, int len) {
+		int maxLen = len;
+		String name = User.getUserName(user);
+		if (name.length() > maxLen) {
+			return name.substring(0, maxLen) + context.getString(R.string.ellipsize);
+		}
+		return name;
 	}
 }

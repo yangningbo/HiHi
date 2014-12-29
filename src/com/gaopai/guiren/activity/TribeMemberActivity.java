@@ -247,11 +247,7 @@ public class TribeMemberActivity extends BaseActivity {
 			User user = list.get(position);
 			holder.mUserNameTextView.setText(user.realname);
 			holder.mContentTextView.setText(user.post);
-			if (!TextUtils.isEmpty(user.headsmall)) {
-				ImageLoaderUtil.displayImage(user.headsmall, holder.mHeaderView);
-			} else {
-				holder.mHeaderView.setImageResource(R.drawable.default_header);
-			}
+			ImageLoaderUtil.displayImage(user.headsmall, holder.mHeaderView, R.drawable.default_header);
 
 			if (type == TYPE_TRIBE_USER && isCreator) {
 				holder.btnAction.setText(getString(R.string.kick_out_tribe));

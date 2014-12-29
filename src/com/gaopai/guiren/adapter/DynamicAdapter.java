@@ -203,12 +203,31 @@ public class DynamicAdapter extends BaseAdapter {
 
 	@Override
 	public int getViewTypeCount() {
-		return 7;
+		return 4;
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		return mData.get(position).type - 1;
+		return getDymaicLayoutType(mData.get(position).type);
+	}
+	
+	public static int getDymaicLayoutType(int type) {
+		switch (type) {
+		case DynamicHelper.TYPE_SPREAD_OTHER_DYNAMIC:
+		case DynamicHelper.TYPE_SEND_DYNAMIC:
+			return 0;
+		case DynamicHelper.TYPE_SPREAD_USER:
+		case DynamicHelper.TYPE_SPREAD_TRIBE:
+		case DynamicHelper.TYPE_SPREAD_LINK: {
+			return 1;
+		}
+		case DynamicHelper.TYPE_SPREAD_MEETING: {
+			return 2;
+		}
+		case DynamicHelper.TYPE_SPREAD_MSG:
+			return 3;
+		}
+		return -1;
 	}
 
 	private OnClickListener moreCommentClickListener = new OnClickListener() {

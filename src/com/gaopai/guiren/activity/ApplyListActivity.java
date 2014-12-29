@@ -67,7 +67,7 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 				// TODO Auto-generated method stub
 				UserList data = (UserList) o;
 				if (data.state != null && data.state.code == 0) {
-					if (data.data!=null && data.data.size() > 0) {
+					if (data.data != null && data.data.size() > 0) {
 						mUserList.clear();
 						mUserList.addAll(data.data);
 						mAdapter.notifyDataSetChanged();
@@ -90,7 +90,6 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 		mListView.setAdapter(mAdapter);
 		getUserList();
 	}
-
 
 	class MyListener extends SimpleResponseListener {
 		private int postion;
@@ -118,7 +117,6 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 		}
 
 	}
-	
 
 	private void agreeJoin(final int pos) {
 		if (mType == 0) {
@@ -131,7 +129,6 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 			DamiInfo.agreeGuestApply(mTribeID, mUserList.get(pos).uid, new MyListener(pos));
 		}
 	}
-
 
 	private void getUserList() {
 		if (mType == 0) {
@@ -177,9 +174,9 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public class TribePersonAdapter extends BaseAdapter {
 
 		private final LayoutInflater mInflater;
@@ -228,11 +225,7 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 
 			final User user = mData.get(position);
 
-			if (!TextUtils.isEmpty(user.headsmall)) {
-				ImageLoaderUtil.displayImage(user.headsmall, holder.ivHeader);
-			} else {
-				holder.ivHeader.setImageResource(R.drawable.default_header);
-			}
+			ImageLoaderUtil.displayImage(user.headsmall, holder.ivHeader, R.drawable.default_header);
 
 			holder.tvName.setText(user.realname);
 			String content = "";
@@ -243,7 +236,7 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 			}
 			holder.tvContent.setText(content);
 			holder.btnAgree.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
@@ -251,7 +244,7 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 				}
 			});
 			holder.btnRefuse.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
@@ -264,7 +257,7 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 				}
 			});
 			holder.layoutHolder.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
@@ -274,9 +267,8 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 			return convertView;
 		}
 
-		
-
 	}
+
 	static class ViewHolder {
 		TextView tvName;
 		TextView tvContent;

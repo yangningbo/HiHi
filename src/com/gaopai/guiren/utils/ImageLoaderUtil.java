@@ -86,15 +86,11 @@ public class ImageLoaderUtil {
 		imageLoader.displayImage(url, imageView);
 	}
 
-	public static void displayImage(String url, ImageView imageView) {
-//		 imageLoader.displayImage(url, imageView, options);
-		Picasso.with(DamiApp.getInstance()).load(url).into(imageView);
-	}
 
 	public static void displayImage(String url, ImageView imageView, int defultImage) {
 		if (!TextUtils.isEmpty(url)) {
-//			 imageLoader.displayImage(url, imageView, options);
-			Picasso.with(DamiApp.getInstance()).load(url).error(defultImage).placeholder(defultImage).into(imageView);
+			 imageLoader.displayImage(url, imageView, options);
+//			Picasso.with(DamiApp.getInstance()).load(url).error(defultImage).placeholder(defultImage).into(imageView);
 		} else {
 			imageView.setImageResource(defultImage);
 		}

@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.graphics.Bitmap;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Layout;
 import android.text.Spannable;
@@ -310,5 +311,4 @@ public class MyTextUtils {
 			return count;
 		}
 	}
-
 }

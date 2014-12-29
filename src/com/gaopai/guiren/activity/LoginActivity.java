@@ -27,7 +27,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,9 +53,6 @@ import com.umeng.socialize.sso.UMSsoHandler;
 
 /**
  * 登录界面。包括微博，qq
- * 
- * @author Administrator
- * 
  */
 public class LoginActivity extends BaseActivity implements OnClickListener, OnTouchListener {
 
@@ -109,7 +105,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
-		// TODO Auto-generated method stub
 	}
 
 
@@ -138,7 +133,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
 			if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
 				InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -166,14 +160,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			getQQLogin();
 			break;
 
-//		case R.id.look:
-//			setResult(MainActivity.UNLOGIN_REQUEST);
-//			LoginActivity.this.finish();
-//			break;
-//
-//		case R.id.agree_protocal:
-//			startActivity(UserProtocalActivity.class);
-//			break;
 		case R.id.tv_forget_password:
 			startRegister(RegisterActivity.TYPE_FORGET_PASSWORD);
 			break;
@@ -518,10 +504,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 	private void getInfo(final SHARE_MEDIA sm) {
 		mController.getPlatformInfo(LoginActivity.this, sm, new UMDataListener() {
-
 			@Override
 			public void onStart() {
-
 			}
 
 			@Override

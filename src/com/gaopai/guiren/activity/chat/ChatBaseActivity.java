@@ -87,7 +87,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	}
 
 	protected void initAdapter(BaseChatAdapter chatAdapter) {
-		// mHandler = handler;
 		mAdapter = chatAdapter;
 		mAdapter.setResendClickListener(resendClickListener);
 	}
@@ -348,13 +347,10 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private boolean isLight = true;
-
 	@Override
 	protected void onStop() {
 		super.onStop();
 		NotifyHelper.setCurrentChatId(mContext, "");
-		isLight = false;
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if (pm.isScreenOn()) {
 			stopPlayVoice();
@@ -370,7 +366,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		isLight = true;
 	}
 
 	protected OnClickListener resendClickListener = new OnClickListener() {
@@ -483,7 +478,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			final MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
 			updateMessage(messageInfo);
 			// changeVoiceState(messageInfo);
-
 		} else if (action.equals(ACTION_RECORD_AUTH)) {
 			Toast.makeText(mContext, mContext.getString(R.string.record_auth_control), Toast.LENGTH_LONG).show();
 		} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
@@ -499,10 +493,8 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	protected void addNewMessage(MessageInfo msg) {
 		messageInfos.add(msg);
 		mAdapter.notifyDataSetChanged();
-		Logger.d(this, "size=" + messageInfos.size() + "   visible="
-				+ mListView.getRefreshableView().getLastVisiblePosition());
 		if (messageInfos.size() - mListView.getRefreshableView().getLastVisiblePosition() <= 2) {
-			mListView.getRefreshableView().setSelection(messageInfos.size());// 定位到最后一行
+			mListView.getRefreshableView().setSelection(messageInfos.size());
 		}
 	}
 }

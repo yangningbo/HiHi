@@ -37,7 +37,7 @@
                 android:paddingLeft="@dimen/general_paading"
                 android:paddingRight="@dimen/general_paading"
                 android:paddingTop="@dimen/general_paading"
-                android:textSize="@dimen/general_font_4" />
+                android:textSize="@dimen/general_font_small" />
 
             <TextView
                 android:id="@+id/tv_num_limit"

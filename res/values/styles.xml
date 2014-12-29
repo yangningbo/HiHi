@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -134,8 +134,6 @@
         <item name="android:layout_height">fill_parent</item>
         <item name="android:background">@color/general_background</item>
     </style>
-
-    
 
     <style name="dialog_middle" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -400,14 +398,26 @@
     <style name="agree_popwin_anim_style">
         <item name="android:windowEnterAnimation">@anim/agree_anim</item>
     </style>
-    
-     <style name="about_item">
+
+    <style name="about_item">
         <item name="android:drawableRight">@drawable/icon_right_arrow</item>
         <item name="android:padding">@dimen/general_paading</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-          <item name="android:background">@drawable/selector_btn_general</item>
+        <item name="android:background">@drawable/selector_btn_general</item>
     </style>
-    
+
+    <style name="general_edittext">
+        <item name="android:layout_height">@dimen/general_button_medium</item>
+        <item name="android:background">@drawable/selector_edit_white_round_corner</item>
+        <item name="android:textSize">@dimen/general_font_medium</item>
+        <item name="android:padding">@dimen/general_paading</item>
+    </style>
+    <style name="general_edittext_small">
+        <item name="android:layout_height">@dimen/general_button_small</item>
+        <item name="android:background">@drawable/selector_edit_white_round_corner</item>
+        <item name="android:textSize">@dimen/general_font_small</item>
+        <item name="android:padding">@dimen/general_paading</item>
+    </style>
 
 </resources>

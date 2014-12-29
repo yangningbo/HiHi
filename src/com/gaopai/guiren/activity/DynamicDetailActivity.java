@@ -83,6 +83,12 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		super.registerReceiver(intentFilter);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	}
+	
+	public static Intent getIntent(Context context, String sid) {
+		Intent intent = new Intent(context, DynamicDetailActivity.class);
+		intent.putExtra(KEY_SID, sid);
+		return intent;
+	}
 
 	private DynamicHelper.DyCallback callback = new DyCallback() {
 

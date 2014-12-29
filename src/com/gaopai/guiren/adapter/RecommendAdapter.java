@@ -22,7 +22,9 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.NewUser;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.ViewUtil;
 
 public class RecommendAdapter<T> extends BaseAdapter {
 
@@ -66,7 +68,7 @@ public class RecommendAdapter<T> extends BaseAdapter {
 		String re = builder.toString();
 		return re.substring(0, re.length() - 1);
 	}
-	
+
 	public int getChosedSize() {
 		return choseSet.size();
 	}
@@ -128,18 +130,15 @@ public class RecommendAdapter<T> extends BaseAdapter {
 			holder.tvUserName = (TextView) convertView.findViewById(R.id.tv_user_name);
 			holder.ivHeader = (ImageView) convertView.findViewById(R.id.iv_header);
 			holder.btnAdd = (ImageButton) convertView.findViewById(R.id.btn_add);
+			holder.layoutHeader = ViewUtil.findViewById(convertView, R.id.layout_header_mvp);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		if (mType == RECOMMEND_FRIEND) {
 			User user = (User) getItem(position);
-			Log.d("user", user.headsmall);
-			if (!TextUtils.isEmpty(user.headsmall)) {
-				ImageLoaderUtil.displayImage(user.headsmall, holder.ivHeader);
-			} else {
-				holder.ivHeader.setImageResource(R.drawable.default_header);
-			}
+			holder.layoutHeader.setImage(user.headsmall);
+			holder.layoutHeader.setMVP(user.bigv == 1);
 			holder.tvUserName.setText(user.realname);
 			holder.tvRecommend.setText(user.reason);
 			holder.btnAdd.setOnClickListener(mAddClickListener);
@@ -152,11 +151,7 @@ public class RecommendAdapter<T> extends BaseAdapter {
 		} else if (mType == RECOMMEND_TRIBE) {
 			Tribe tribe = (Tribe) getItem(position);
 			holder.tvRecommend.setText("系统根据您的标签推荐圈子");
-			if (!TextUtils.isEmpty(tribe.logosmall)) {
-				ImageLoaderUtil.displayImage(tribe.logosmall, holder.ivHeader);
-			} else {
-				holder.ivHeader.setImageResource(R.drawable.default_tribe);
-			}
+			ImageLoaderUtil.displayImage(tribe.logosmall, holder.ivHeader, R.drawable.default_header);
 			holder.tvUserName.setText(tribe.name);
 			holder.btnAdd.setOnClickListener(mAddClickListener);
 			holder.btnAdd.setTag(tribe);
@@ -174,5 +169,6 @@ public class RecommendAdapter<T> extends BaseAdapter {
 		TextView tvRecommend;
 		ImageView ivHeader;
 		ImageButton btnAdd;
+		HeadView layoutHeader;
 	}
 }

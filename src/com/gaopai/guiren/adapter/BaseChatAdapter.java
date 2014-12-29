@@ -59,7 +59,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	private int mCurrentMode = MODEL_VOICE;
 
 	private SpeexPlayerWrapper mPlayerWrapper;
-//	private int palyedPosition = -1;
+	// private int palyedPosition = -1;
 
 	private OnClickListener resendClickListener;
 
@@ -177,10 +177,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		onBindView(viewHolder, messageInfo);
 		displayTime(viewHolder.tvChatTime, position);
 
-		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
-			viewHolder.ivHead.setTag(messageInfo.headImgUrl);
-			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead);
-		}
+		ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead, R.drawable.default_header);
 
 		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
 				(android.widget.LinearLayout.LayoutParams) viewHolder.ivVoice.getLayoutParams(), messageInfo));
@@ -301,7 +298,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		viewHolder.ivHead.setVisibility(View.VISIBLE);
 		viewHolder.msgInfoLayout.setVisibility(View.VISIBLE);
 		viewHolder.mCountLayout.setVisibility(View.VISIBLE);
-		
+
 		switch (which) {
 		case MessageType.TEXT:
 			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);

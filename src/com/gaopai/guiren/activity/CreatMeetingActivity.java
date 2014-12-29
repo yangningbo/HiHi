@@ -86,7 +86,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 
 	private String mFilePath = "";
 
-	private boolean isSetPassword = true;
+	private boolean isSetPassword = false;
 	private Tribe mMeeting;
 	public static String KEY_MEETING = "meeting";
 	private boolean isEdit = false;
@@ -130,7 +130,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			return;
 		}
 		mTitleBar.setTitleText(R.string.edit_meeting);
-		ImageLoaderUtil.displayImage(mMeeting.logolarge, ivHeader);
+		ImageLoaderUtil.displayImage(mMeeting.logolarge, ivHeader, R.drawable.icon_default_meeting);
 		etTitle.setText(mMeeting.name);
 		if (mMeeting.type == 1) {
 			mPrivacy = 1;
@@ -179,7 +179,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		layoutPrivacySetting = ViewUtil.findViewById(this, R.id.layout_privacy_setting);
 		layoutPrivacySetting.setOnClickListener(this);
 		layoutPasswordSetting = ViewUtil.findViewById(this, R.id.layout_password);
-
+		showPasswordView();
 		tvPrivacySetting = ViewUtil.findViewById(this, R.id.tv_privacy_setting);
 		ivHeader = (ImageView) findViewById(R.id.iv_meeeting_header);
 
@@ -188,24 +188,9 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		etContent.addTextChangedListener(ViewUtil.creatNumLimitWatcher(etContent, 500, new OnTextChangedListener() {
 			@Override
 			public void onTextChanged(Editable s) {
-				// TODO Auto-generated method stub
 				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
 			}
 		}));
-//		etContent.setOnTouchListener(new OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				if (v.getId() == R.id.et_meeting_info) {
-//					v.getParent().requestDisallowInterceptTouchEvent(true);
-//					switch (event.getAction() & MotionEvent.ACTION_MASK) {
-//					case MotionEvent.ACTION_UP:
-//						v.getParent().requestDisallowInterceptTouchEvent(false);
-//						break;
-//					}
-//				}
-//				return false;
-//			}
-//		});
 	}
 
 	@Override
@@ -435,7 +420,6 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		SimpleResponseListener listener = new SimpleResponseListener(mContext, R.string.now_creat) {
 			@Override
 			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					String str = getString(R.string.create_success_and_wait);
@@ -452,7 +436,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		};
-		// php can only decode second, so let it be
+		//jumiao tells me that php can only decode second, so let it be second
 		if (isEdit) {
 			DamiInfo.editMeeting(mMeeting.id, title, mFilePath, String.valueOf(mPrivacy), info, startl, endl, password,
 					listener);

@@ -383,7 +383,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		bindBottomDynamicView();
 		bindBottomView();
 	}
-	
+
 	private void bindTopSectionView() {
 		bindHeadView();
 		bindUserName();
@@ -403,10 +403,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		SpannableString name;
 		if (tUser.bigv == 1) {
-			name = new SpannableString(User.getUserName(tUser) + HeadView.MVP_NAME_STR);
+			name = new SpannableString(User.getSubUserName(tUser, mContext) + HeadView.MVP_NAME_STR);
 			HeadView.getMvpName(mContext, name);
 		} else {
-			name = new SpannableString(User.getUserName(tUser));
+			name = new SpannableString(User.getSubUserName(tUser, mContext));
 		}
 		MyTextUtils.setTextSize(name, 22);
 		MyTextUtils.setTextColor(name, getResources().getColor(R.color.general_text_black));
@@ -421,6 +421,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		tvUserName.setText(builder.append(name).append(meiliInfo).append(integra));
 	}
+	
+	
 
 	private void bindUserTags() {
 		// if (tagList != null && tagList.size() > 0) {
@@ -1013,7 +1015,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				tUser.commentlist.add(bean);
 				bindBottomDynamicView();
 			}
-			
+
 			if (requestCode == REQUEST_VERIFY_PROFILE) {
 				tUser = DamiCommon.getLoginResult(this);
 				bindProfileView();

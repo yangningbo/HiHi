@@ -481,28 +481,14 @@ public class ViewUtil {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-//				int nSelStart = 0;
-//				int nSelEnd = 0;
-//				boolean nOverMaxLength = false;
-//
-//				nSelStart = etDynamicMsg.getSelectionStart();
-//				nSelEnd = etDynamicMsg.getSelectionEnd();
-//				nOverMaxLength = (s.length() > numLimit) ? true : false;
-//				if (nOverMaxLength) {
-//					s.delete(nSelStart - 1, nSelEnd);
-//					etDynamicMsg.setTextKeepState(s);
-//				}
 				changedListener.onTextChanged(s);
 			}
 		};

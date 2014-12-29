@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.dynamic.DynamicBean;
+import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.volley.GsonObj;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
@@ -29,6 +31,7 @@ public class QueryResult extends BaseNetBean implements GsonObj {
 		public List<User> user;
 		public List<Tribe> tribe;
 		public List<Tribe> meeting;
+		public List<TypeHolder> dynamic;
 	}
 
 }

@@ -11,10 +11,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -34,7 +32,6 @@ import com.gaopai.guiren.bean.net.SendDynamicResult;
 import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.net.MorePicture;
 import com.gaopai.guiren.support.CameralHelper;
-import com.gaopai.guiren.support.CameralHelper.GetImageCallback;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
@@ -43,6 +40,9 @@ import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
+/**
+ * The boss owe us 100 yuan(the monetary unit of China) in Mid-Autumn Festival!
+ */
 public class SendDynamicMsgActivity extends BaseActivity implements OnClickListener {
 
 	private Button btnAddTags;
@@ -72,7 +72,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				showExitDialog();
 			}
 		});
@@ -105,21 +104,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		tvWordNumLimit = (TextView) findViewById(R.id.tv_num_limit);
 		etDynamicMsg = (EditText) findViewById(R.id.et_dynamic_msg);
 		etDynamicMsg.addTextChangedListener(numLimitWatcher);
-//		etDynamicMsg.setOnTouchListener(new OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				if (v.getId() == R.id.et_dynamic_msg) {
-//					v.getParent().requestDisallowInterceptTouchEvent(true);
-//					switch (event.getAction() & MotionEvent.ACTION_MASK) {
-//					case MotionEvent.ACTION_UP:
-//						v.getParent().requestDisallowInterceptTouchEvent(false);
-//						break;
-//					}
-//				}
-//				return false;
-//			}
-//		});
-//		etDynamicMsg.clearFocus();
 
 		btnPhoto = (ImageButton) findViewById(R.id.btn_camera);
 		btnPhoto.setOnClickListener(this);
@@ -130,7 +114,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	}
 
 	private TextWatcher numLimitWatcher = new TextWatcher() {
-
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
 		}
@@ -177,7 +160,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 	private boolean checkIsTagInList(String tag) {
 		for (int i = 0, count = flowLayout.getChildCount(); i < count; i++) {
-			String str = ((TextView) ((ViewGroup) flowLayout.getChildAt(i)).getChildAt(0)).getText().toString();
+			String str = TagWindowManager.getText((ViewGroup) flowLayout.getChildAt(i));
 			if (str.equals(tag)) {
 				showToast(R.string.tag_exist);
 				return true;
@@ -220,12 +203,12 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				SendDynamicResult data = (SendDynamicResult) o;
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.send_success);
-					
+
 					User user = DamiCommon.getLoginResult(mContext);
 					user.dynamicCount = user.dynamicCount + 1;
 					DamiCommon.saveLoginResult(mContext, user);
 					mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
-					
+
 					SendDynamicMsgActivity.this.finish();
 				} else {
 					otherCondition(data.state, SendDynamicMsgActivity.this);
@@ -245,7 +228,9 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		List<String> tagList = new ArrayList<String>();
 		int count = flowLayout.getChildCount();
 		for (int j = 0; j < count; j++) {
-			tagList.add(((TextView) ((ViewGroup) flowLayout.getChildAt(j)).getChildAt(1)).getText().toString());
+			tagList.add(TagWindowManager.getText((ViewGroup) flowLayout.getChildAt(j)));
+			// tagList.add(((TextView) ((ViewGroup)
+			// flowLayout.getChildAt(j)).getChildAt(1)).getText().toString());
 		}
 		return tagList;
 	}
@@ -260,9 +245,11 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				showToast(R.string.input_can_not_be_empty);
 				return;
 			}
+			if (!checkIsTagInList(str)) {
+				flowLayout.addView(TagWindowManager.creatTag(str, tagDeleteClickListener, mInflater, true),
+						flowLayout.getTextLayoutParams());
+			}
 			etTags.setText("");
-			flowLayout.addView(TagWindowManager.creatTag(str, tagDeleteClickListener, mInflater, true),
-					flowLayout.getTextLayoutParams());
 			break;
 		case R.id.btn_camera:
 			// showMoreWindow();

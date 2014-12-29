@@ -57,12 +57,12 @@ public class ReportMsgActivity extends BaseActivity {
 	private int page = 1;
 	private boolean isFull = false;
 	private List<ReportMsgBean> mReportList = new ArrayList<ReportMsgBean>();
-	
+
 	public final static int TYPE_TRIBE = 0;
 	public final static int TYPE_MEETING = 1;
 	public final static String KEY_TYPE = "type";
 	private int type;
-	
+
 	public final static String KEY_TID = "tid";
 	private String tid;
 
@@ -141,7 +141,7 @@ public class ReportMsgActivity extends BaseActivity {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		SimpleResponseListener listener =  new SimpleResponseListener(mContext) {
+		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				final ReportMsgResult data = (ReportMsgResult) o;
@@ -224,7 +224,7 @@ public class ReportMsgActivity extends BaseActivity {
 
 	static class ViewHolder {
 		int flag = 0; // 1 好友 0 自己
-		TextView  tvText, tvVoiceLength, tvUserName, tvShideReason;
+		TextView tvText, tvVoiceLength, tvUserName, tvShideReason;
 		ImageView ivHead, ivPhoto, ivVoice, ivZan;
 		ProgressBar wiatProgressBar;
 		RelativeLayout msgInfoLayout, msgLayout;
@@ -233,7 +233,8 @@ public class ReportMsgActivity extends BaseActivity {
 		public static Object getInstance(View view, ViewHolder holder) {
 			holder.msgInfoLayout = (RelativeLayout) view.findViewById(R.id.layout_msg_text_voice_holder);
 			holder.msgLayout = (RelativeLayout) view.findViewById(R.id.rl_msg_holder);
-//			holder.tvChatTime = (TextView) view.findViewById(R.id.tv_chat_talk_time);
+			// holder.tvChatTime = (TextView)
+			// view.findViewById(R.id.tv_chat_talk_time);
 			holder.tvText = (TextView) view.findViewById(R.id.iv_chat_text);
 
 			holder.ivHead = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
@@ -244,9 +245,9 @@ public class ReportMsgActivity extends BaseActivity {
 			holder.tvVoiceLength = (TextView) view.findViewById(R.id.tv_chat_voice_time_length);
 
 			holder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
-			
+
 			holder.tvShideReason = ViewUtil.findViewById(view, R.id.tv_reason);
-			
+
 			holder.btnErrorReport = ViewUtil.findViewById(view, R.id.btn_error_report);
 			holder.btnKikout = ViewUtil.findViewById(view, R.id.btn_kick_tribe);
 			holder.btnShide = ViewUtil.findViewById(view, R.id.btn_shide_msg);
@@ -260,11 +261,11 @@ public class ReportMsgActivity extends BaseActivity {
 	private void bindView(ViewHolder viewHolder, final ReportMsgBean favorite, final int position) {
 		// TODO Auto-generated method stub
 		final MessageInfo messageInfo = favorite.message;
-//		viewHolder.tvRoom.setText(messageInfo.title);
-//		viewHolder.tvChatTime.setText(FeatureFunction.getCreateTime(favorite.createtime));
+		// viewHolder.tvRoom.setText(messageInfo.title);
+		// viewHolder.tvChatTime.setText(FeatureFunction.getCreateTime(favorite.createtime));
 		if (!TextUtils.isEmpty(messageInfo.headImgUrl)) {
 			viewHolder.ivHead.setTag(messageInfo.headImgUrl);
-			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead);
+			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead, R.drawable.default_header);
 		}
 		viewHolder.tvUserName.setText(messageInfo.displayname);
 		notHideViews(viewHolder, messageInfo.fileType);
@@ -277,13 +278,13 @@ public class ReportMsgActivity extends BaseActivity {
 		viewHolder.btnErrorReport.setOnClickListener(btnActionListener);
 		viewHolder.btnKikout.setOnClickListener(btnActionListener);
 		viewHolder.btnShide.setOnClickListener(btnActionListener);
-		
+
 		if (type == TYPE_MEETING) {
 			viewHolder.btnKikout.setText(R.string.kick_out_meeting);
 		} else {
 			viewHolder.btnKikout.setText(R.string.kick_out_tribe);
 		}
-		
+
 		switch (messageInfo.fileType) {
 		case MessageType.TEXT:
 			viewHolder.tvText.setText(MyTextUtils.addHttpLinks(messageInfo.content));
@@ -292,9 +293,9 @@ public class ReportMsgActivity extends BaseActivity {
 		case MessageType.PICTURE:
 			final String path = messageInfo.imgUrlS.trim();
 
-			ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto);
+			ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto, R.drawable.default_pic);
 			if (path.startsWith("http://")) {
-				ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto);
+				ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto, R.drawable.default_pic);
 			}
 			viewHolder.ivPhoto.setTag(messageInfo);
 			viewHolder.ivPhoto.setOnClickListener(photoClickListener);
@@ -321,7 +322,7 @@ public class ReportMsgActivity extends BaseActivity {
 			break;
 		}
 	}
-	
+
 	private OnClickListener btnActionListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -341,14 +342,14 @@ public class ReportMsgActivity extends BaseActivity {
 			}
 		}
 	};
-	
+
 	private void refuseReport(final ReportMsgBean bean) {
 		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
 				BaseNetBean data = (BaseNetBean) o;
-				if (data.state!=null&& data.state.code==0) {
+				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.operate_success);
 					mReportList.remove(bean);
 					mAdapter.notifyDataSetChanged();
@@ -363,14 +364,14 @@ public class ReportMsgActivity extends BaseActivity {
 			DamiInfo.refuseReport(bean.message.id, listener);
 		}
 	}
-	
+
 	private void agreeReport(final ReportMsgBean bean, boolean isKick) {
 		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
 				BaseNetBean data = (BaseNetBean) o;
-				if (data.state!=null&& data.state.code==0) {
+				if (data.state != null && data.state.code == 0) {
 					bean.message.mIsShide = 1;
 					SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 					MessageTable table = new MessageTable(db);
@@ -383,10 +384,10 @@ public class ReportMsgActivity extends BaseActivity {
 				}
 			}
 		};
-		String fuid=  "";
+		String fuid = "";
 		if (isKick) {
 			fuid = bean.user.uid;
-		} 
+		}
 		if (type == TYPE_MEETING) {
 			DamiInfo.agreeMeetingReport(bean.message.id, fuid, listener);
 		} else {

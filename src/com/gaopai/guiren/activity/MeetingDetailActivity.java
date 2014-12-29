@@ -286,11 +286,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 
 	private void bindView() {
 		bindBasicView();
-		if (!TextUtils.isEmpty(mMeeting.logolarge)) {
-			ImageLoaderUtil.displayImage(mMeeting.logolarge, ivMeetingHeader);
-		} else {
-			ivMeetingHeader.setImageResource(R.drawable.icon_default_meeting);
-		}
+		ImageLoaderUtil.displayImage(mMeeting.logolarge, ivMeetingHeader, R.drawable.icon_default_meeting);
 		tvMeetingHost.setText(mMeeting.hosts);
 		tvMeetingGuest.setText(mMeeting.guest);
 		tvMeetingJoinIn.setText(mMeeting.user);
@@ -335,7 +331,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			tvMeetingHost.setText(mMeeting.realname);
 			return;
 		}
-		
+
 		tvMeetingGuest.setEnabled(true);
 		tvMeetingHost.setEnabled(true);
 		tvMeetingJoinIn.setEnabled(true);
@@ -357,7 +353,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			}
 		}
 	}
-	
+
 	private boolean isMeetingStart() {
 		return mMeeting.start * 1000 < System.currentTimeMillis();
 	}
@@ -469,6 +465,9 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 		case R.id.ab_share:
 			// share();
+			if (mMeeting == null) {
+				return;
+			}
 			ShareManager shareManager = new ShareManager(this);
 			shareManager.shareTribeLink(getString(R.string.share_meeting_title), mMeeting.content, DamiInfo.HOST
 					+ DamiInfo.SHARE_MEETING + mMeeting.id);

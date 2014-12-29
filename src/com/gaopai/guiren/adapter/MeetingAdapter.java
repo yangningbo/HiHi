@@ -74,11 +74,8 @@ public class MeetingAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		if (!TextUtils.isEmpty(mData.get(position).logolarge)) {
-			ImageLoaderUtil.displayImage(mData.get(position).logolarge, holder.mMeetingIcon);
-		} else {
-			holder.mMeetingIcon.setImageResource(R.drawable.icon_default_meeting);
-		}
+		ImageLoaderUtil.displayImage(mData.get(position).logolarge, holder.mMeetingIcon,
+				R.drawable.icon_default_meeting);
 
 		holder.mTitleTextView.setText(mData.get(position).name);
 		String time = DateUtil.getCreatTimeFromSeconds(mData.get(position).start, mData.get(position).end);
@@ -95,11 +92,11 @@ public class MeetingAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	final static class ViewHolder {
+	public final static class ViewHolder {
 		TextView mTitleTextView;
 		ImageView mMeetingIcon;
-		private TextView mTimeTextView;
-		private TextView mCountTextView;
+		TextView mTimeTextView;
+		TextView mCountTextView;
 
 		@Override
 		public int hashCode() {

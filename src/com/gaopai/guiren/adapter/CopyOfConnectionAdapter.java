@@ -50,7 +50,6 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 
 		@Override
 		public int compareTo(Item another) {
-			// TODO Auto-generated method stub
 			return this.pingYinText.compareTo(another.pingYinText);
 		}
 	}
@@ -89,13 +88,11 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		ViewHolder viewHolder;
 		if (getItemViewType(position) == 0) { // Item
 			if (convertView == null) {

@@ -23,13 +23,10 @@
 
         <EditText
             android:id="@+id/et_tribe_title"
+            style="@style/general_edittext_small"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_large_gap"
-            android:background="@drawable/selector_edit_white_round_corner"
-            android:hint="圈子名称2~15个字符"
-            android:padding="10dp"
-            android:textSize="@dimen/general_font_4" />
+            android:hint="圈子名称2~15个字符" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -50,7 +47,7 @@
                 android:paddingLeft="@dimen/general_paading"
                 android:paddingRight="@dimen/general_paading"
                 android:paddingTop="@dimen/general_paading"
-                android:textSize="@dimen/general_font_4" />
+                android:textSize="@dimen/general_font_small" />
 
             <TextView
                 android:id="@+id/tv_num_limit"
@@ -140,25 +137,19 @@
 
             <EditText
                 android:id="@+id/et_enter_password"
+                style="@style/general_edittext_small"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_small_gap"
-                android:background="@drawable/selector_btn_general"
                 android:hint="@string/please_input_password"
-                android:inputType="textPassword"
-                android:padding="10dp"
-                android:textSize="@dimen/general_font_4" />
+                android:inputType="textPassword" />
 
             <EditText
                 android:id="@+id/et_enter_password_again"
+                style="@style/general_edittext_small"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_small_gap"
-                android:background="@drawable/selector_btn_general"
                 android:hint="@string/please_input_password_again"
-                android:inputType="textPassword"
-                android:padding="10dp"
-                android:textSize="@dimen/general_font_4" />
+                android:inputType="textPassword" />
         </LinearLayout>
 
         <Button

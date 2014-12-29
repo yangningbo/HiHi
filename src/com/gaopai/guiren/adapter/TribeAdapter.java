@@ -57,24 +57,16 @@ public class TribeAdapter extends BaseAdapter {
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.item_general, null);
-			holder.mUserNameTextView = (TextView) convertView
-					.findViewById(R.id.tv_title);
-			holder.mTimeTextView = (TextView) convertView
-					.findViewById(R.id.tv_date);
-			holder.mContentTextView = (TextView) convertView
-					.findViewById(R.id.tv_info);
-			holder.mHeaderView = (ImageView) convertView
-					.findViewById(R.id.iv_header);
+			holder.mUserNameTextView = (TextView) convertView.findViewById(R.id.tv_title);
+			holder.mTimeTextView = (TextView) convertView.findViewById(R.id.tv_date);
+			holder.mContentTextView = (TextView) convertView.findViewById(R.id.tv_info);
+			holder.mHeaderView = (ImageView) convertView.findViewById(R.id.iv_header);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		Tribe tribe = list.get(position);
-		if (!TextUtils.isEmpty(tribe.logosmall)) {
-			ImageLoaderUtil.displayImage(tribe.logosmall, holder.mHeaderView);
-		} else {
-			holder.mHeaderView.setImageResource(R.drawable.default_tribe);
-		}
+		ImageLoaderUtil.displayImage(tribe.logosmall, holder.mHeaderView, R.drawable.default_tribe);
 		holder.mUserNameTextView.setText(tribe.name);
 		holder.mTimeTextView.setVisibility(View.GONE);
 		holder.mContentTextView.setText(tribe.content);
