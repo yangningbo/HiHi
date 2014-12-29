@@ -12,15 +12,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.PowerManager;
-import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -55,9 +51,6 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.LocalPicActivity;
-import com.gaopai.guiren.activity.LocalPicPathActivity;
-import com.gaopai.guiren.activity.RotateImageActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.TribeActivity;
 import com.gaopai.guiren.bean.Identity;
@@ -81,6 +74,7 @@ import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.chat.ChatBoxManager;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
+import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
@@ -666,6 +660,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			ImageLoaderUtil.displayImage(path, ivPhoto, R.drawable.default_pic);
 			if (path.startsWith("http://")) {
 				ImageLoaderUtil.displayImage(path, ivPhoto, R.drawable.default_pic);
+				ImageLoaderUtil.displayImageByProgress(path, ivPhoto, null, null);
+			} else {
+				ImageLoaderUtil.displayImageByProgress("file://" + path, ivPhoto, null, null);
 			}
 			ivPhoto.setTag(messageInfo);
 			ivPhoto.setOnClickListener(photoClickListener);
@@ -770,14 +767,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder.rootLayout = (RelativeLayout) convertView.findViewById(R.id.chat_talk_msg_info);
 				viewHolder.voiceLayout = (RelativeLayout) convertView.findViewById(R.id.chat_voice_layout);
 				viewHolder.voiceTimeText = (TextView) convertView.findViewById(R.id.chat_talk_voice_num);
-				viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.chat_talk_msg_progressBar);
-				viewHolder.resendImageView = (ImageView) convertView.findViewById(R.id.chat_talk_msg_sendsate);
+				viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.pb_chat_progress);
+				viewHolder.resendImageView = (ImageView) convertView.findViewById(R.id.iv_chat_resend_icon);
 				viewHolder.layoutPicHolder = convertView.findViewById(R.id.layout_msg_pic_holder);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
+			
 			viewHolder.messageNameText.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 5));
 			if (position == 0) {
 				viewHolder.messageNameText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_comment, 0,
@@ -788,6 +786,27 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 
 			final MessageInfo commentInfo = messageInfos.get(position);
+			
+			final boolean isMyself = commentInfo.from.equals(mLogin.uid) ? true : false;
+			if (isMyself) {
+				View resendView = viewHolder.resendImageView;
+				if (MessageState.STATE_SEND_FAILED == commentInfo.sendState) {
+					resendView.setVisibility(View.VISIBLE);
+				} else {
+					resendView.setVisibility(View.GONE);
+				}
+				resendView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						sendMessage(commentInfo);
+					}
+				});
+				if (MessageState.STATE_SENDING == commentInfo.sendState) {
+					viewHolder.progressBar.setVisibility(View.VISIBLE);
+				} else {
+					viewHolder.progressBar.setVisibility(View.GONE);
+				}
+			}
 			viewHolder.messageNameText.setTag(position);
 			viewHolder.messageNameText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			CharSequence replyFromToText;
@@ -799,18 +818,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			} else {
 				replyFromToText = MyTextUtils.getSpannableString(
 						MyTextUtils.addSingleUserSpan(commentInfo.displayname, commentInfo.from), ":");
-			}
-
-			if (commentInfo.sendState == 0) {
-				viewHolder.resendImageView.setVisibility(View.GONE);
-				viewHolder.resendImageView.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-
-					}
-				});
-			} else {
-				viewHolder.resendImageView.setVisibility(View.GONE);
 			}
 			switch (commentInfo.fileType) {
 			case MessageType.TEXT:
@@ -861,28 +868,27 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			case MessageType.PICTURE:
 				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 150));
 				notHideViews(viewHolder, MessageType.PICTURE);
-				viewHolder.picImageView.getLayoutParams().width = commentInfo.imgWidth * 3;
-				viewHolder.picImageView.getLayoutParams().height = commentInfo.imgHeight * 3;
+
+				int width = (int) (MyUtils.dip2px(mContext, commentInfo.imgWidth) * 0.7);
+				int height = (int) (MyUtils.dip2px(mContext, commentInfo.imgHeight) * 0.7);
+
+				viewHolder.picImageView.getLayoutParams().width = width;
+				viewHolder.picImageView.getLayoutParams().height = height;
 				viewHolder.messageNameText.setText(replyFromToText);
 				final String path = commentInfo.imgUrlS;
 				if (path.startsWith("http://")) {
-					viewHolder.progressBar.setVisibility(View.VISIBLE);
 					ImageLoaderUtil.displayImageByProgress(path, viewHolder.picImageView, null, viewHolder.progressBar);
 				} else {
 					ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.picImageView, null,
 							viewHolder.progressBar);
-					viewHolder.progressBar.setVisibility(View.GONE);
 				}
 				viewHolder.picImageView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Log.d(TAG, "the sendstate is " + commentInfo.sendState);
-						// if (commentInfo.sendState == 1) {
 						Intent intent = new Intent(mContext, ShowImagesActivity.class);
 						intent.putExtra("position", position);
 						intent.putExtra("msgList", (Serializable) messageInfos);
 						mContext.startActivity(intent);
-						// }
 					}
 				});
 				break;
@@ -1166,6 +1172,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		} else if (type == MessageType.PICTURE) {
 			msg.imgUrlS = filePath;
+			Point point = ChatMsgHelper.sizeOfPic(filePath);
+			msg.imgWidth = point.x;
+			msg.imgHeight = point.y;
 		}
 		msg.isReadVoice = 1;// 自己的语音标记为已读
 		msg.fileType = type;

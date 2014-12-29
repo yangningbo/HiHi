@@ -492,6 +492,7 @@ public class MessageTable {
 		ContentValues allPromotionInfoValues = new ContentValues();
 		allPromotionInfoValues
 				.put(COLUMN_FAVORITE_COUNT, message.favoriteCount);
+		allPromotionInfoValues.put(COLUMN_IS_FAVORITE, message.isfavorite);
 
 		try {
 			mDBStore.update(

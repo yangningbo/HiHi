@@ -68,7 +68,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		mContext = context;
 		mLogin = DamiCommon.getLoginResult(mContext);
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		options = new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnLoading(R.drawable.normal)
+		options = new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnLoading(R.drawable.default_header)
 				.cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 		mPlayerWrapper = playerWrapper;
 		mPlayerWrapper.setPlayCallback(new PlayCallback());
@@ -199,15 +199,13 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			viewHolder.ivPhoto.getLayoutParams().width = width;
 			viewHolder.ivPhotoCover.getLayoutParams().height = height;
 			viewHolder.ivPhotoCover.getLayoutParams().width = width;
-			ImageLoaderUtil.displayImageByProgress(path, viewHolder.ivPhoto, options, viewHolder.wiatProgressBar);
+			Logger.d(this, "path=" + path);
 			if (path.startsWith("http://")) {
 				ImageLoaderUtil.displayImageByProgress(path, viewHolder.ivPhoto, options, viewHolder.wiatProgressBar);
 			} else {
 				ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.ivPhoto, options,
 						viewHolder.wiatProgressBar);
 				showWaitProgressBar(messageInfo, viewHolder);
-				if (messageInfo.sendState == MessageState.STATE_SEND_FAILED) {
-				}
 			}
 			viewHolder.layoutPicHolder.setTag(R.id.dy_photo_position, position);
 			viewHolder.layoutPicHolder.setOnClickListener(photoClickListener);
@@ -217,7 +215,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				viewHolder.tvVoiceLength.setText(messageInfo.voiceTime + "''");
 				showWaitProgressBar(messageInfo, viewHolder);
 				viewHolder.layoutTextVoiceHolder.setOnClickListener(new OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub

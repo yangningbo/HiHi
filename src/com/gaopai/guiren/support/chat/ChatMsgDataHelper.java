@@ -22,6 +22,7 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class ChatMsgDataHelper {
@@ -76,7 +77,7 @@ public class ChatMsgDataHelper {
 		if (mTribe == null || messageInfo == null) {
 			return;
 		}
-		SimpleResponseListener listener = new SimpleResponseListener(mContext ) {
+		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -100,13 +101,14 @@ public class ChatMsgDataHelper {
 			DamiInfo.favoriteMeetingMessage(mTribe.id, messageInfo.id, listener);
 		}
 	}
-	
+
 	public void addFavoriteCount() {
 		User user = DamiCommon.getLoginResult(mContext);
 		user.favoriteCount = user.favoriteCount + 1;
 		DamiCommon.saveLoginResult(mContext, user);
 		mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}
+
 	public void minusFavoriteCount() {
 		User user = DamiCommon.getLoginResult(mContext);
 		user.favoriteCount = user.favoriteCount - 1;
@@ -118,7 +120,7 @@ public class ChatMsgDataHelper {
 		if (mTribe == null || messageInfo == null) {
 			return;
 		}
-		SimpleResponseListener listener = new SimpleResponseListener(mContext ) {
+		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -126,6 +128,7 @@ public class ChatMsgDataHelper {
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					Toast.makeText(mContext, R.string.cancel_favorite_success, Toast.LENGTH_SHORT).show();
+					Logger.d(this, "favoritecount=" + messageInfo.favoriteCount);
 					messageInfo.favoriteCount--;
 					messageInfo.isfavorite = 0;
 					updateFavoriteCountToDb(messageInfo);
@@ -186,6 +189,7 @@ public class ChatMsgDataHelper {
 						messageInfo.agreeCount--;
 						callback.unZanMessage(messageInfo);
 					}
+					updateZanCountToDb(messageInfo);
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}

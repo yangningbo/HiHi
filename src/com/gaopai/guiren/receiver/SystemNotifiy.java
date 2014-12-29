@@ -326,6 +326,10 @@ public class SystemNotifiy extends AbstractNotifiy {
 				return;
 
 			case NotifiyType.UNFAVORITE_MESSAGE:
+				if (notifiyVo.user != null && notifiyVo.user.uid.equals(DamiCommon.getUid(mContext))) {
+					//do not notify me if I give this action.
+					return;
+				}
 				MessageInfo unfavoriteMessage = messageTable.query(notifiyVo.message.tag);
 				if (unfavoriteMessage != null) {
 					unfavoriteMessage.favoriteCount--;
@@ -340,8 +344,11 @@ public class SystemNotifiy extends AbstractNotifiy {
 				}
 				return;
 			case NotifiyType.MESSAGE_ZAN_ADD:
+				if (notifiyVo.user != null && notifiyVo.user.uid.equals(DamiCommon.getUid(mContext))) {
+					//do not notify me if I give this action.
+					return;
+				}
 				messageInfo = messageTable.query(notifiyVo.message.tag);
-				Logger.d(this, "zan_message");
 				if (messageInfo != null) {
 					messageInfo.agreeCount++;
 					messageTable.updateAgreeCount(messageInfo);
@@ -355,6 +362,10 @@ public class SystemNotifiy extends AbstractNotifiy {
 				}
 				return;
 			case NotifiyType.MESSAGE_ZAN_CANCEL:
+				if (notifiyVo.user != null && notifiyVo.user.uid.equals(DamiCommon.getUid(mContext))) {
+					//do not notify me if I give this action.
+					return;
+				}
 				unfavoriteMessage = messageTable.query(notifiyVo.message.tag);
 				if (unfavoriteMessage != null) {
 					unfavoriteMessage.agreeCount--;

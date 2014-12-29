@@ -122,7 +122,7 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 			break;
 		case R.id.btn_favorite:
 			MessageInfo messageInfo = (MessageInfo) v.getTag();
-			if(messageInfo.isfavorite == 1) {
+			if (messageInfo.isfavorite == 1) {
 				getActivity().unFavoriteMessage(messageInfo);
 			} else {
 				getActivity().favoriteMessage(messageInfo);

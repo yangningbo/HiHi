@@ -42,7 +42,11 @@ public class TwoDimensionActivity extends BaseActivity {
 		mTitleBar.setTitleText(qrHolder.titleText).setTextColor(getResources().getColor(R.color.white));
 		mTitleBar.setBackgroundColor(getResources().getColor(R.color.black));
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back_in_dark);
-
+		if (qrHolder.type == 1) {
+			mTitleBar.setTitleText("圈子二维码");
+		} else {
+			mTitleBar.setTitleText("我的二维码");
+		}
 		tvUserName = ViewUtil.findViewById(this, R.id.tv_user_name);
 		tvUserInfo = ViewUtil.findViewById(this, R.id.tv_user_info);
 		ivHeader = ViewUtil.findViewById(this, R.id.iv_header);

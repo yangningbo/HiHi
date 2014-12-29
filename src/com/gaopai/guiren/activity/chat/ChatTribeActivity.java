@@ -368,6 +368,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		@Override
 		public void unFavoriteMessage(MessageInfo msg) {
 			mAdapter.notifyDataSetChanged();
+			Logger.d(this, "favoritecount===" + msg.favoriteCount);
 		}
 
 		@Override

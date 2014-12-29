@@ -58,8 +58,8 @@ public class ImageLoaderUtil {
 				// 设置图片在下载前是否重置，复位
 				.cacheInMemory(true).cacheOnDisk(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 
-		options_normal = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.normal)
-				.showImageOnLoading(R.drawable.normal).showImageOnFail(R.drawable.normal).resetViewBeforeLoading(false)
+		options_normal = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.default_header)
+				.showImageOnLoading(R.drawable.default_header).showImageOnFail(R.drawable.default_header).resetViewBeforeLoading(false)
 				// 设置图片在下载前是否重置，复位
 				.cacheInMemory(true).cacheOnDisk(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 		animateFirstListener = new AnimateFirstDisplayListener();
@@ -106,6 +106,9 @@ public class ImageLoaderUtil {
 
 	public static void displayImageByProgress(String url, ImageView imageView, DisplayImageOptions options,
 			final ProgressBar progressbar) {
+		if (options == null) {
+			options = options_normal;
+		}
 		imageLoader.displayImage(url, imageView, options, new ImageLoadingListener() {
 
 			@Override

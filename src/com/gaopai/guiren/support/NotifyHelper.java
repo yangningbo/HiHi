@@ -109,39 +109,39 @@ public class NotifyHelper {
 		// return;
 		// }
 		NotificationCompat.Builder builder = getNotificationBuilder();
-		String msg = "";
+		String notifyMsgContent = "";
 		switch (messageInfo.fileType) {
 		case MessageType.PICTURE:
-			msg = mContext.getString(R.string.get_picture);
+			notifyMsgContent = mContext.getString(R.string.get_picture);
 			break;
 		case MessageType.TEXT:
-			msg = messageInfo.content;
+			notifyMsgContent = messageInfo.content;
 			break;
 		case MessageType.VOICE:
-			msg = mContext.getString(R.string.get_voice);
+			notifyMsgContent = mContext.getString(R.string.get_voice);
 			break;
 		default:
 			break;
 		}
 
-		String notifyMsg = "";
+		String notifyMsgTitle = "";
 		if (messageInfo.type == 100) {
-			notifyMsg = messageInfo.displayname;
+			notifyMsgTitle = messageInfo.displayname;
 		} else if (messageInfo.type == 200) {
-			notifyMsg = messageInfo.title;
+			notifyMsgTitle = messageInfo.title;
 		} else if (messageInfo.type == 300) {
-			notifyMsg = messageInfo.title;
+			notifyMsgTitle = messageInfo.title;
 		} else if (messageInfo.type == -2) {
-			notifyMsg = mContext.getString(R.string.guiren_report);
+			notifyMsgTitle = mContext.getString(R.string.guiren_report);
 			if (messageInfo.conversion != null) {
-				msg = messageInfo.conversion.name;
+				notifyMsgContent = messageInfo.conversion.name;
 			} else {
-				msg = messageInfo.content;
+				notifyMsgContent = messageInfo.content;
 			}
 		}
 
-		builder.setContentTitle(notifyMsg);
-		builder.setContentText(msg);
+		builder.setContentTitle(notifyMsgTitle);
+		builder.setContentText(notifyMsgContent);
 		builder.setContentIntent(getChatIntent(messageInfo));
 		Logger.d(this, getCurrentChatId(mContext) + "  ==   " + messageInfo.conversion.toid);
 		if (messageInfo.type == 100) {// 单聊
@@ -226,7 +226,7 @@ public class NotifyHelper {
 			user.headsmall = messageInfo.headImgUrl;
 			intent.putExtra(ChatMessageActivity.KEY_USER, user);
 		} else if (messageInfo.type == -2) {
-			intent = WebActivity.getIntent(mContext, messageInfo.conversion.headurl, messageInfo.conversion.name);
+			intent = WebActivity.getIntent(mContext, messageInfo.url, messageInfo.conversion.name);
 		} else {
 			intent = new Intent(mContext, ChatTribeActivity.class);
 			Tribe tribe = new Tribe();

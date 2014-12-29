@@ -1,6 +1,9 @@
 package com.gaopai.guiren.support.chat;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
@@ -47,5 +50,21 @@ public class ChatMsgHelper {
 		}
 		return lp;
 	}
-
+	
+	// caculate the dimen of pic until receive size from server
+	// Maximum of sizes is smaller than 200
+	public static Point sizeOfPic(String path) {
+		Point point = new Point();
+		Bitmap bitmap = BitmapFactory.decodeFile(path);
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		float ratio = Math.max(width / 200f, height / 200f);
+		if (ratio > 1) {
+			width = (int) (width / ratio);
+			height = (int) (height / ratio);
+		}
+		point.x = width;
+		point.y = height;
+		return point;
+	}
 }

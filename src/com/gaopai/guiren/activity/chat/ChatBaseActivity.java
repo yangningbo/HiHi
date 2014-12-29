@@ -44,6 +44,7 @@ import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.NotifyHelper;
+import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -221,7 +222,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			}
 		} else if (type == MessageType.PICTURE) {
 			msg.imgUrlS = filePath;
-			Point point = sizeOfPic(filePath);
+			Point point = ChatMsgHelper.sizeOfPic(filePath);
 			msg.imgWidth = point.x;
 			msg.imgHeight = point.y;
 		}
@@ -230,13 +231,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		addSaveSendMessage(msg);
 	}
 
-	private Point sizeOfPic(String path) {
-		Point point = new Point();
-		Bitmap bitmap = BitmapFactory.decodeFile(path);
-		point.x = MyUtils.px2dip(mContext, bitmap.getWidth());
-		point.y = MyUtils.px2dip(mContext, bitmap.getHeight());
-		return point;
-	}
+
 
 	private void sendMessage(final MessageInfo msg) {
 		Log.d(TAG, "send voice change file name" + msg.time);
