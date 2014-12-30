@@ -160,10 +160,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
 			String id = intent.getStringExtra("id");
 			if (!TextUtils.isEmpty(id) && id.equals(mMeetingID)) {
-				/**
-				 * mMeeting.isjoin = 0; mApplyBtn.setVisibility(View.VISIBLE);
-				 * mExitBtn.setVisibility(View.GONE);
-				 */
 				getMeetingDetail();
 			}
 		} else if (action.equals(ACTION_AGREE_ADD_MEETING)) {
@@ -230,13 +226,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			}
 		});
 	}
-
-	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-
-		}
-	};
 
 	private void getMeetingDetail() {
 		showLoadingView();
@@ -392,7 +381,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 
 		case R.id.btn_want_in_meeting:
-			// applyWithReason(AddReasonActivity.TYPE_TO_JOIN_MEETING);
 			if (mMeeting.ispwd == 0) {
 				wantJoinMeeting();
 			} else {
@@ -464,7 +452,6 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 		case R.id.ab_share:
-			// share();
 			if (mMeeting == null) {
 				return;
 			}

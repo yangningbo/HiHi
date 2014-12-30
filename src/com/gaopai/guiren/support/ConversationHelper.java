@@ -12,6 +12,7 @@ import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.fragment.NotificationFragment;
 
 public class ConversationHelper {
@@ -157,6 +158,8 @@ public class ConversationHelper {
 	public static boolean deleteItem(Context context, String id) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
+		MessageTable messageTable = new MessageTable(dbDatabase);
+		messageTable.deleteRecord(id);
 		return table.delete(id);
 	}
 	public static void deleteItemAndUpadte(Context context, String id) {

@@ -111,7 +111,7 @@ public class NotificationFragment extends BaseFragment {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								deleteItem(conversationBean.toid);
+								ConversationHelper.deleteItem(act, conversationBean.toid);
 								getDataFromDb();
 							}
 						});
@@ -132,12 +132,6 @@ public class NotificationFragment extends BaseFragment {
 				isInitialed = true;
 			}
 		}
-	}
-
-	private void deleteItem(String id) {
-		SQLiteDatabase dbDatabase = DBHelper.getInstance(getActivity()).getWritableDatabase();
-		ConverseationTable table = new ConverseationTable(dbDatabase);
-		table.delete(id);
 	}
 
 	private void getDataFromDb() {

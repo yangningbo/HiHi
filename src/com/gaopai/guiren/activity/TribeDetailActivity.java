@@ -181,7 +181,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
 				String id = intent.getStringExtra("id");
 				if (!TextUtils.isEmpty(id) && id.equals(mTribeID)) {
-					deleteConverstion();
+//					deleteConverstion();
 					getTribeDetail();
 				}
 			} else if (action.equals(ACTION_AGREE_ADD_TRIBE)) {

@@ -33,10 +33,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_user_name"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/iv_chat_talk_img_head"
             android:background="@drawable/icon_chat_left_normal"
-            android:minHeight="45dp" >
+            android:minHeight="40dp" >
 
             <ImageView
                 android:id="@+id/iv_chat_voice"

@@ -62,13 +62,13 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 					REQUEST_CONTACT);
 			break;
 		case R.id.tv_invite_qq:
-			sm.shareQQ(getShareInfo() + shareStr, shareStr);
+			sm.shareQQ(getShareInfo() + shareStr, getShareTitle(),  shareStr);
 			break;
 		case R.id.tv_invite_wechat:
-			sm.shareWechat(getShareInfo() + shareStr, shareStr);
+			sm.shareWechat(getShareInfo() + shareStr, getShareTitle(), shareStr);
 			break;
 		case R.id.tv_invite_weibo:
-			sm.shareWeibo(getShareInfo() + shareStr, shareStr);
+			sm.shareWeibo(getShareInfo() + shareStr, getShareTitle(), shareStr);
 			break;
 		default:
 			break;
@@ -125,6 +125,10 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 	}
 
 	private String getShareInfo() {
-		return getString(R.string.invite_str_1);
+		return getString(R.string.invite_str_2);
+	}
+	
+	private String getShareTitle() {
+		return getString(R.string.one_word_prompt);
 	}
 }

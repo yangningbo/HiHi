@@ -31,6 +31,7 @@ import com.gaopai.guiren.db.NotifyUserTable;
 import com.gaopai.guiren.db.TribeTable;
 import com.gaopai.guiren.fragment.MeetingFragment;
 import com.gaopai.guiren.service.SnsService;
+import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.utils.Logger;
 
@@ -220,7 +221,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 			case NotifiyType.MEETING_KICK_OUT:
 				msg = mContext.getString(R.string.you_have_been_kick_out_meeting);
 				identityTable.delete(notifiyVo.room.id);
-				messageTable.deleteRecord(notifiyVo.room.id);
+				ConversationHelper.deleteItemAndUpadte(mContext, notifiyVo.room.id);
 				Intent kickMeetingIntent = new Intent(TribeActivity.ACTION_KICK_TRIBE);
 				kickMeetingIntent.putExtra("id", notifiyVo.room.id);
 				mContext.sendBroadcast(kickMeetingIntent);

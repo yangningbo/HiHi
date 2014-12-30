@@ -78,10 +78,11 @@ public class ReportMsgActivity extends BaseActivity {
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false); // 下拉刷新
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
-		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
+		mListView.setScrollLoadEnabled(false);// 滑动到底部自动刷新，启用
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+				getReportList(false);
 			}
 
 			@Override
@@ -94,12 +95,11 @@ public class ReportMsgActivity extends BaseActivity {
 		mPlayerWrapper = new SpeexPlayerWrapper(mContext, new OnDownLoadCallback() {
 			@Override
 			public void onSuccess(MessageInfo messageInfo) {
-				// TODO Auto-generated method stub
 				downVoiceSuccess(messageInfo);
 			}
 		});
 		mPlayerWrapper.setPlayCallback(new PlayCallback());
-		getReportList(false);
+		mListView.doPullRefreshing(true, 0);
 	}
 
 	class MyCancelListener extends SimpleResponseListener {
@@ -386,7 +386,7 @@ public class ReportMsgActivity extends BaseActivity {
 		};
 		String fuid = "";
 		if (isKick) {
-			fuid = bean.user.uid;
+			fuid = bean.message.from;
 		}
 		if (type == TYPE_MEETING) {
 			DamiInfo.agreeMeetingReport(bean.message.id, fuid, listener);

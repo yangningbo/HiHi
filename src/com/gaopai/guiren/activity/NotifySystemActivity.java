@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import u.aly.ad;
-
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.app.AlertDialog;
@@ -19,7 +17,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -27,7 +24,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatCommentsActivity;
@@ -37,7 +33,6 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.NotifiyType;
 import com.gaopai.guiren.bean.NotifiyVo;
-import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.NotifyMessageTable;
@@ -161,6 +156,7 @@ public class NotifySystemActivity extends BaseActivity {
 
 				case NotifiyType.AGREE_ADD_MEETING:
 					MainActivity.addMeeting(mContext);
+					
 				case NotifiyType.AGREE_INVITE_ADD_MEETING:
 				case NotifiyType.REFUSE_ADD_MEETING:
 				case NotifiyType.REFUSE_INVITE_ADD_MEETING:
@@ -210,6 +206,7 @@ public class NotifySystemActivity extends BaseActivity {
 				case NotifiyType.TRIBE_KICK_OUT:
 					Intent tribeKickIntent = new Intent(mContext, TribeDetailActivity.class);
 					tribeKickIntent.putExtra("id", mNotifyList.get(position).room.id);
+					
 					startActivity(tribeKickIntent);
 					break;
 

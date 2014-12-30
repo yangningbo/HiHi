@@ -90,8 +90,6 @@ public class ShareManager implements OnClickListener {
 			break;
 		case R.id.grid_share_weibo:
 			mController.postShare(mActivity, SHARE_MEDIA.SINA, mShareListener);
-			// shareContentToDy("我爱你大百度", "请问你爱我吗", "http://www.baidu.com",
-			// DamiCommon.getLoginResult(mActivity).headsmall);
 			break;
 		case R.id.grid_share_guiren_dy:
 			callDyback.spreadDy();
@@ -289,18 +287,18 @@ public class ShareManager implements OnClickListener {
 		}
 	};
 
-	public void shareQQ(String content, String url) {
-		setShareContent(R.drawable.logo, "", content, url);
+	public void shareQQ(String content, String title, String url) {
+		setShareContent(R.drawable.logo, title, content, url);
 		mController.directShare(mActivity, SHARE_MEDIA.QQ, mShareListener);
 	}
 
-	public void shareWechat(String content, String url) {
-		setShareContent(R.drawable.logo, "", content, url);
+	public void shareWechat(String content, String title, String url) {
+		setShareContent(R.drawable.logo, title, content, url);
 		mController.directShare(mActivity, SHARE_MEDIA.WEIXIN, mShareListener);
 	}
 
-	public void shareWeibo(String content, String url) {
-		setShareContent(R.drawable.logo, "", content, url);
+	public void shareWeibo(String content, String title, String url) {
+		setShareContent(R.drawable.logo, title, content, url);
 		mController.postShare(mActivity, SHARE_MEDIA.SINA, mShareListener);
 	}
 

@@ -47,7 +47,7 @@
     <string name="sina_weibo_login">新浪微博登录</string>
     <string name="tencent_qq_login">腾讯QQ登录</string>
     <string name="look_aroud">随便看看</string>
-    <string name="one_word_prompt">中国第一精英匿名语聊平台</string>
+    <string name="one_word_prompt">讲后即焚移动会议专家</string>
 
     <string-array name="user_protocal_array">
         <item>一、相关定义</item>
@@ -746,7 +746,7 @@
     <string name="invite_wechat">微信邀请</string>
     <string name="invite_QQ">QQ邀请</string>
     <string name="invite_link">http://guirenhui.cn</string>
-    <string name="invite_str_1">我正在使用【贵人】，一款超爽体验的“讲后即焚 移动会议专家”APP，真心话，不冒险。您也赶紧用呗！</string>
+    <string name="invite_str_1">老友，最近很火的“讲后即焚移动会议专家”APP【贵人会】真心不错，您也来吧！【贵人会】      下载地址：</string>
     <string name="invite_str_2">老友，我正在使用【贵人】，它是一款精英匿名语聊平台，在这里，您可以自由表达，真实沟通，甩掉身份、阶层、地位、职业、亲疏关系等“名缰利锁”，真心话，不冒险。360公司CEO周鸿祎、乐视网CEO贾跃亭等大牛都在，您也赶紧来呗!贵人下载地址：http://guirenhui.cn</string>
 
     <!-- titlebar -->

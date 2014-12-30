@@ -328,9 +328,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			}
 			DamiCommon.setNetWorkState(isNetConnect);
 		} else if (ACTION_LOGIN_OUT.equals(action)) {
+			dragLayout.close();
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 			startActivityForResult(loginIntent, LOGIN_REQUEST);
-
 		} else if (LOGIN_SUCCESS_ACTION.equals(action)) {
 			bindUserView();
 			dragLayout.close();
