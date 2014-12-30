@@ -103,6 +103,7 @@ public class NotifyHelper {
 		init();
 		Logger.d(this, "isNeedNotify=" + isNeedNotify());
 		if (!isNeedNotify()) {
+			ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
 			return;
 		}
 		// if (!FeatureFunction.isAppOnForeground(mContext) && !isReceive) {

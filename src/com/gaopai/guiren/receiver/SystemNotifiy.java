@@ -306,7 +306,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 				notifiyVo.message.mIsShide = 1;
 				messageTable.updateShide(notifiyVo.message);
 				Intent shiedIntent = new Intent(ChatBaseActivity.ACTION_SHIED_MESSAGE);
-				shiedIntent.putExtra("tag", notifiyVo.message.tag);
+				shiedIntent.putExtra("message", notifiyVo.message);
 				mContext.sendBroadcast(shiedIntent);
 				return;
 

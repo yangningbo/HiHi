@@ -95,7 +95,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		initDragLayout();
 		mTabPager = (ViewPager) findViewById(R.id.vPager);
 		main_bottom = (LinearLayout) findViewById(R.id.main_bottom);
-		registerNetWorkMonitor();
 
 		layoutWelcome = ViewUtil.findViewById(this, R.id.layout_welcome);
 		ImageView view = (ImageView) findViewById(R.id.iv_back);
@@ -106,10 +105,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		view.startAnimation(welcomeAnimation);
 		showMainpage();
 	}
-
-	// @Override
-	// protected void registerReceiver(IntentFilter intentFilter) {
-	// }
 
 	private String getWelcomeStr() {
 		int i = (int) (Math.random() * 4);
@@ -289,8 +284,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		startActivity(intent);
 	}
 
-	private void registerNetWorkMonitor() {
-		IntentFilter filter = new IntentFilter();
+	@Override
+	protected void registerReceiver(IntentFilter filter) {
+		// TODO Auto-generated method stub
 		filter.addAction(ACTION_NETWORK_CHANGE);
 		// filter.addAction(EXIT_ACTION);
 		// filter.addAction(ACTION_REFRESH_NOTIFIY);
@@ -301,60 +297,55 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		// filter.addAction(ACTION_CALLBACK);
 		// filter.addAction(ACTION_REFRESH_FRIEND);
 		filter.addAction(ACTION_LOGIN_OUT);
-		// filter.addAction(LOGIN_SUCCESS_ACTION);
+		filter.addAction(LOGIN_SUCCESS_ACTION);
 		// filter.addAction(SYSTEM_EXIT);
 		filter.addAction(ACTION_SHOW_TOAST);
 		filter.addAction(ACTION_UPDATE_PROFILE);
-		// filter.addAction(ACTION_HIDE_NOTIFY);
-		registerReceiver(mReceiver, filter);
 	}
 
-	BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (action.equals(ACTION_NETWORK_CHANGE)) {
-				boolean isNetConnect = false;
-				ConnectivityManager connectivityManager = (ConnectivityManager) context
-						.getSystemService(Context.CONNECTIVITY_SERVICE);
+	@Override
+	protected void onReceive(Intent intent) {
+		String action = intent.getAction();
+		if (action.equals(ACTION_NETWORK_CHANGE)) {
+			boolean isNetConnect = false;
+			ConnectivityManager connectivityManager = (ConnectivityManager) mContext
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-				NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-				if (activeNetInfo != null) {
-					if (activeNetInfo.isConnected()) {
-						isNetConnect = true;
-						Toast.makeText(context,
-								getResources().getString(R.string.message_net_connect) + activeNetInfo.getTypeName(),
-								Toast.LENGTH_SHORT).show();
-					} else {
-						Toast.makeText(context,
-								getResources().getString(R.string.network_error) + " " + activeNetInfo.getTypeName(),
-								Toast.LENGTH_SHORT).show();
-					}
+			NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+			if (activeNetInfo != null) {
+				if (activeNetInfo.isConnected()) {
+					isNetConnect = true;
+					Toast.makeText(mContext,
+							getResources().getString(R.string.message_net_connect) + activeNetInfo.getTypeName(),
+							Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(context, getResources().getString(R.string.network_error), Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(mContext,
+							getResources().getString(R.string.network_error) + " " + activeNetInfo.getTypeName(),
+							Toast.LENGTH_SHORT).show();
 				}
-				DamiCommon.setNetWorkState(isNetConnect);
-			} else if (ACTION_LOGIN_OUT.equals(action)) {
-				Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-				startActivityForResult(loginIntent, LOGIN_REQUEST);
-
-			} else if (LOGIN_SUCCESS_ACTION.equals(action)) {
-				bindUserView();
-				dragLayout.close();
-				FeatureFunction.startService(MainActivity.this);
-				// refreshNotifyCount();
-				// refreshTribeCount();
-				// refreshMeetingCount();
-				// refreshMessageCount();
-			} else if (ACTION_SHOW_TOAST.equals(action)) {
-				String str = intent.getStringExtra("toast_msg");
-				showToast(str);
-			} else if (ACTION_UPDATE_PROFILE.equals(action)) {
-				bindUserView();
+			} else {
+				Toast.makeText(mContext, getResources().getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 			}
+			DamiCommon.setNetWorkState(isNetConnect);
+		} else if (ACTION_LOGIN_OUT.equals(action)) {
+			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+			startActivityForResult(loginIntent, LOGIN_REQUEST);
+
+		} else if (LOGIN_SUCCESS_ACTION.equals(action)) {
+			bindUserView();
+			dragLayout.close();
+			FeatureFunction.startService(MainActivity.this);
+			// refreshNotifyCount();
+			// refreshTribeCount();
+			// refreshMeetingCount();
+			// refreshMessageCount();
+		} else if (ACTION_SHOW_TOAST.equals(action)) {
+			String str = intent.getStringExtra("toast_msg");
+			showToast(str);
+		} else if (ACTION_UPDATE_PROFILE.equals(action)) {
+			bindUserView();
 		}
-	};
+	}
 
 	private boolean isIntialed = false;
 
@@ -481,7 +472,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		super.onDestroy();
 		MyVolley.getRequestQueue().cancelAll(this);
 		NotifyHelper.clearAllNotification(mContext);
-		unregisterReceiver(mReceiver);
 	}
 
 	@Override
@@ -732,18 +722,21 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		DamiCommon.saveLoginResult(context, user);
 		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}
+
 	public static void minusTribe(Context context) {
 		User user = DamiCommon.getLoginResult(context);
 		user.tribeCount = user.tribeCount - 1;
 		DamiCommon.saveLoginResult(context, user);
 		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}
+
 	public static void addMeeting(Context context) {
 		User user = DamiCommon.getLoginResult(context);
 		user.meetingCount = user.meetingCount + 1;
 		DamiCommon.saveLoginResult(context, user);
 		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}
+
 	public static void minusMeeting(Context context) {
 		User user = DamiCommon.getLoginResult(context);
 		user.meetingCount = user.meetingCount - 1;

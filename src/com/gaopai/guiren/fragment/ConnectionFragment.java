@@ -2,6 +2,7 @@ package com.gaopai.guiren.fragment;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +17,11 @@ import android.widget.ListView;
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.adapter.ConnectionAdapter;
 import com.gaopai.guiren.bean.TribeList;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
+import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -36,7 +39,6 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 	@ViewInject(id = R.id.chat_box_edit_keyword)
 	private EditText etComment;
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (mView == null) {
@@ -46,6 +48,7 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 		}
 		return mView;
 	}
+
 	private void initView() {
 		mListView.setPullLoadEnabled(true);
 		mListView.setPullRefreshEnabled(true);
@@ -70,11 +73,11 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 				getDynamicList(false);
 			}
 		});
-//		getDynamicList(false);
+		registerReceiver(MainActivity.LOGIN_SUCCESS_ACTION);
 	}
-	
-	
+
 	private boolean isInitialed = false;
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
@@ -127,5 +130,20 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 				mListView.onPullComplete();
 			}
 		});
+	}
+
+	@Override
+	protected void onReceive(Intent intent) {
+		// TODO Auto-generated method stub
+		if (intent != null) {
+			String action = intent.getAction();
+			if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
+				if (mAdapter != null) {
+					mAdapter.clear();
+					mAdapter.notifyDataSetChanged();
+					isInitialed = false;
+				}
+			}
+		}
 	}
 }

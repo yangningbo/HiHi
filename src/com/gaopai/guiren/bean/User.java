@@ -114,6 +114,7 @@ public class User implements Serializable {
 	public String weixin;
 
 	public int bigv;
+	public int iscontact;//1是通讯录 0不是通讯录
 
 	public List<SpreadBean> kuosanlist;
 	public List<ZanBean> zantaglist;

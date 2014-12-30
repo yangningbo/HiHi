@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity.chat;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -162,6 +163,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				MessageInfo messageInfo = messageInfos.get(position);
 				if (messageInfo.fileType == MessageType.LOCAL_ANONY_FALSE
 						|| messageInfo.fileType == MessageType.LOCAL_ANONY_TRUE) {
+					return;
+				}
+				if (messageInfo.mIsShide == MessageState.MESSAGE_SHIDE) {
 					return;
 				}
 				Intent intent = new Intent(ChatTribeActivity.this, ChatCommentsActivity.class);
@@ -407,7 +411,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else {
 			if ((!isAnony()) || (!hasIdentity)) {
 				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
-				msg.displayname =  User.getUserName(mLogin);
+				msg.displayname = User.getUserName(mLogin);
 				msg.headImgUrl = mLogin.headsmall;
 			} else {
 				msg.displayname = mIdentity.name;
@@ -550,11 +554,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			}
 		}
 	}
-	
+
 	private void deleteConverstion() {
 		ConversationHelper.deleteItemAndUpadte(mContext, mTribe.id);
 	}
-	
+
 	@Override
 	protected void onOtherChatBroadCastAction(Intent intent) {
 		// TODO Auto-generated method stub
@@ -595,19 +599,15 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			}
 
 		} else if (ACTION_SHIED_MESSAGE.equals(action)) {
-			String tag = intent.getStringExtra("tag");
-			if (!TextUtils.isEmpty(tag)) {
-				for (int i = 0; i < messageInfos.size(); i++) {
-					if (messageInfos.get(i).tag.equals(tag)) {
-						messageInfos.get(i).mIsShide = 1;
-						if (mAdapter != null) {
-							mAdapter.notifyDataSetChanged();
-						}
-						break;
-					}
-				}
+			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
+			if (messageInfo == null) {
+				return;
 			}
-
+			MessageInfo target = getTargetMessageInfo(messageInfo);
+			if (target != null) {
+				target.mIsShide = 1;
+				mAdapter.notifyDataSetChanged();
+			}
 		} else if (ACTION_FAVORITE_MESSAGE.equals(action)) {
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
 			if (messageInfo != null) {

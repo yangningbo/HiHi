@@ -41,7 +41,8 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 //		mTitleBar.setTitleText(user.realname);
 
 		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, user.uid), 0));
-
+		isChangeVoice = false;
+		setChangeVoiceView(isChangeVoice);
 		if (messageInfo != null) {
 			buildRetweetMessageInfo(messageInfo);
 			addSaveSendMessage(messageInfo);
@@ -148,7 +149,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 			return;
 		}
 		try {
-			if (msg.from.equals(DamiCommon.getUid(mContext))) {
+			if (msg.from.equals(DamiCommon.getUid(mContext)) || !msg.parentid.equals("0")) {
 				return;
 			}
 			addNewMessage(msg);

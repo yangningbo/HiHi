@@ -122,7 +122,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				}
 			}
 		});
-		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC, Intent.ACTION_SCREEN_OFF);
+		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC, Intent.ACTION_SCREEN_OFF, MainActivity.LOGIN_SUCCESS_ACTION);
 	}
 
 	private boolean isInitialed = false;
@@ -284,16 +284,20 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	@Override
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
-		Logger.d(this, "get Intent");
 		if (intent != null) {
 			String action = intent.getAction();
-			Logger.d(this, "get Intent " + action);
 			if (action.equals(DynamicHelper.ACTION_REFRESH_DYNAMIC)) {
 				String id = intent.getStringExtra("id");
-				Logger.d(this, "get Intent " + id);
 				mAdapter.deleteItem(id);
 			} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
 				mAdapter.stopPlayVoice();
+			} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
+				if (mAdapter != null) {
+					mAdapter.clear();
+					mAdapter.notifyDataSetChanged();
+					isInitialed = false;
+					mAdapter.updateUser();
+				}
 			}
 		}
 	}

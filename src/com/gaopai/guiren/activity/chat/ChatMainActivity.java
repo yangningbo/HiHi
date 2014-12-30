@@ -501,10 +501,10 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 		case R.id.ab_chat_text:
 			int imgaeId = R.drawable.icon_chat_title_mode_text;
-			if (mAdapter.getCurrentMode() == BaseChatAdapter.MODEL_VOICE) {
+			if (mAdapter.getCurrentMode() == BaseChatAdapter.MODE_VOICE) {
 				mAdapter.setCurrentMode(BaseChatAdapter.MODE_TEXT);
 			} else {
-				mAdapter.setCurrentMode(BaseChatAdapter.MODEL_VOICE);
+				mAdapter.setCurrentMode(BaseChatAdapter.MODE_VOICE);
 				imgaeId = R.drawable.icon_chat_title_voice_mode;
 			}
 			mAdapter.notifyDataSetChanged();

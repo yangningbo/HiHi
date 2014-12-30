@@ -61,6 +61,16 @@ public class DynamicAdapter extends BaseAdapter {
 		user = DamiCommon.getLoginResult(mContext);
 	}
 
+	public void updateUser() {
+		if (user == null) {
+			return;
+		}
+		user = DamiCommon.getLoginResult(mContext);
+		if (dynamicHelper != null) {
+			dynamicHelper.updateUser();
+		}
+	}
+
 	private DynamicHelper.DyCallback callback = new DyCallback() {
 
 		@Override
@@ -210,7 +220,7 @@ public class DynamicAdapter extends BaseAdapter {
 	public int getItemViewType(int position) {
 		return getDymaicLayoutType(mData.get(position).type);
 	}
-	
+
 	public static int getDymaicLayoutType(int type) {
 		switch (type) {
 		case DynamicHelper.TYPE_SPREAD_OTHER_DYNAMIC:
@@ -247,12 +257,12 @@ public class DynamicAdapter extends BaseAdapter {
 		mFragment.hideChatBox();
 		dynamicHelper.commentMessage(content, typeHolder);
 	}
-	
+
 	public void deleteItem(String id) {
 		if (mData == null) {
 			return;
 		}
-		if(TextUtils.isEmpty(id)) {
+		if (TextUtils.isEmpty(id)) {
 			return;
 		}
 		for (TypeHolder typeHolder : mData) {
@@ -263,7 +273,7 @@ public class DynamicAdapter extends BaseAdapter {
 			}
 		}
 	}
-	
+
 	public void stopPlayVoice() {
 		dynamicHelper.stopPlayVoice();
 	}

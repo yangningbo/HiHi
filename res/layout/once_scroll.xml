@@ -1,0 +1,9 @@
+<com.withparadox2.lvscrollpredict.oncescroll.OnceScroll xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:once="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/once_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+
+</com.withparadox2.lvscrollpredict.oncescroll.OnceScroll>

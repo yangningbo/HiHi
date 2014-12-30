@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.NotifySystemActivity;
 import com.gaopai.guiren.activity.WebActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
@@ -117,7 +118,7 @@ public class NotificationFragment extends BaseFragment {
 				return true;
 			}
 		});
-		registerReceiver(ACTION_MSG_NOTIFY);
+		registerReceiver(ACTION_MSG_NOTIFY, MainActivity.LOGIN_SUCCESS_ACTION);
 	}
 
 	private boolean isInitialed = false;
@@ -202,6 +203,11 @@ public class NotificationFragment extends BaseFragment {
 			if (action.equals(ACTION_MSG_NOTIFY)) {
 				Logger.d(this, "receive notify...");
 				getDataFromDb();
+			} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
+				if (mAdapter != null) {
+					mAdapter.clear();
+					isInitialed = false;
+				}
 			}
 		}
 	}

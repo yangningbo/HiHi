@@ -114,6 +114,13 @@ public class DynamicHelper {
 		});
 		mPlayerWrapper.setPlayCallback(new PlayCallback());
 	}
+	
+	public void updateUser() {
+		if (user == null) {
+			return;
+		}
+		user = DamiCommon.getLoginResult(mContext);
+	}
 
 	private void downVoiceSuccess(final MessageInfo msg) {
 		if (mPlayerWrapper.getMessageTag().equals(msg.tag)) {

@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
@@ -54,9 +55,9 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	private static final int TYPE_RIGHT = 0;
 	private static final int TYPE_LEFT = 1;
 
-	public final static int MODEL_VOICE = 0;
+	public final static int MODE_VOICE = 0;
 	public final static int MODE_TEXT = 1;
-	private int mCurrentMode = MODEL_VOICE;
+	private int mCurrentMode = MODE_VOICE;
 
 	private SpeexPlayerWrapper mPlayerWrapper;
 	// private int palyedPosition = -1;
@@ -156,7 +157,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 
 	private void bindView(final ViewHolder viewHolder, final MessageInfo messageInfo, final int position) {
 		final boolean isMyself = messageInfo.from.equals(mLogin.uid) ? true : false;
-		notHideViews(viewHolder, messageInfo.fileType);
+		notHideViews(viewHolder, messageInfo);
 		if (messageInfo.fileType == MessageType.LOCAL_ANONY_FALSE) {
 			viewHolder.tvChatTime.setText(R.string.tip_change_normal_voice_mode);
 			return;
@@ -164,6 +165,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			viewHolder.tvChatTime.setText(R.string.tip_change_weired_voice_mode);
 			return;
 		}
+
 		if (isMyself) {
 			View resendView = ((ViewHolderRight) viewHolder).ivResend;
 			if (MessageState.STATE_SEND_FAILED == messageInfo.sendState) {
@@ -174,10 +176,19 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			resendView.setTag(messageInfo);
 			resendView.setOnClickListener(resendClickListener);
 		}
+
 		onBindView(viewHolder, messageInfo);
 		displayTime(viewHolder.tvChatTime, position);
 
 		ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHead, R.drawable.default_header);
+
+		boolean isShide = messageInfo.mIsShide == MessageState.MESSAGE_SHIDE;
+		if (isShide) {
+			viewHolder.tvText.setText(mContext.getString(R.string.shide_msg_prompt));
+			viewHolder.tvText.setTextColor(mContext.getResources().getColor(R.color.red_dongtai_bg));
+			return;
+		}
+		viewHolder.tvText.setTextColor(mContext.getResources().getColor(R.color.general_text_black));
 
 		viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(
 				(android.widget.LinearLayout.LayoutParams) viewHolder.ivVoice.getLayoutParams(), messageInfo));
@@ -211,7 +222,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			viewHolder.layoutPicHolder.setOnClickListener(photoClickListener);
 			break;
 		case MessageType.VOICE:
-			if (mCurrentMode == MODEL_VOICE) {
+			if (mCurrentMode == MODE_VOICE) {
 				viewHolder.tvVoiceLength.setText(messageInfo.voiceTime + "''");
 				showWaitProgressBar(messageInfo, viewHolder);
 				viewHolder.layoutTextVoiceHolder.setOnClickListener(new OnClickListener() {
@@ -223,10 +234,10 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				});
 
 			} else {
-				notHideViews(viewHolder, MessageType.TEXT);
 				viewHolder.wiatProgressBar.setVisibility(View.GONE);
-				viewHolder.tvText.setText(messageInfo.content);
-				onBindView(viewHolder, messageInfo);
+				viewHolder.tvText.setText(messageInfo.content.length() == 0 ? mContext.getString(R.string.voice_scheme)
+						: messageInfo.content);
+//				onBindView(viewHolder, messageInfo);
 			}
 			AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
 			if (mPlayerWrapper.isPlay() && mPlayerWrapper.getMessageTag().equals(messageInfo.tag)) {
@@ -282,7 +293,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		}
 	}
 
-	private void notHideViews(ViewHolder viewHolder, int which) {
+	private void notHideViews(ViewHolder viewHolder, MessageInfo messageInfo) {
 		viewHolder.layoutPicHolder.setVisibility(View.GONE);
 
 		viewHolder.layoutTextVoiceHolder.setVisibility(View.GONE);
@@ -296,7 +307,15 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		viewHolder.msgInfoLayout.setVisibility(View.VISIBLE);
 		viewHolder.mCountLayout.setVisibility(View.VISIBLE);
 
-		switch (which) {
+		boolean isShide = messageInfo.mIsShide == MessageState.MESSAGE_SHIDE;
+		boolean isShowVoiceText = (messageInfo.fileType == MessageType.VOICE) && (mCurrentMode == MODE_TEXT);
+		if (isShide || isShowVoiceText) {
+			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
+			viewHolder.tvText.setVisibility(View.VISIBLE);
+			return;
+		}
+
+		switch (messageInfo.fileType) {
 		case MessageType.TEXT:
 			viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
 			viewHolder.tvText.setVisibility(View.VISIBLE);

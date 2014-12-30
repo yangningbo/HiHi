@@ -136,6 +136,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 		showDialog(getString(R.string.confirm_exit), null, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				
 				SharedPreferences preferences = mContext.getSharedPreferences(DamiCommon.LOGIN_SHARED, 0);
 				Editor editor = preferences.edit();
 				editor.remove(DamiCommon.LOGIN_RESULT);
@@ -144,6 +145,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 				DamiCommon.setToken("");
 				FeatureFunction.stopService(mContext);
 				sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_OUT));
+				sendBroadcast(new Intent(ACTION_FINISH));
 				SettingActivity.this.finish();
 				NotificationManager notificationManager = (NotificationManager) mContext
 						.getSystemService(Context.NOTIFICATION_SERVICE);

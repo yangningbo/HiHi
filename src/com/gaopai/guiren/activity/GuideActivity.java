@@ -26,6 +26,8 @@ import com.gaopai.guiren.adapter.FunctionPagerAdapter;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.ViewPager;
 import com.gaopai.guiren.view.ViewPager.OnPageChangeListener;
+import com.withparadox2.lvscrollpredict.oncescroll.OnceScroll;
+import com.withparadox2.lvscrollpredict.oncescroll.OnceScroll.Callback;
 
 /**
  * 展示引导图片界面
@@ -44,10 +46,17 @@ public class GuideActivity extends Activity implements OnPageChangeListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_guide);
-		imgArray = getResources().getStringArray(R.array.function_array);
-		initData();
-
+		setContentView(R.layout.once_scroll);
+		OnceScroll onceScroll = (OnceScroll) findViewById(R.id.once_scroll);
+		onceScroll.setCallback(new Callback() {
+			
+			@Override
+			public void onClick() {
+				goActivity();
+			}
+		});
+//		imgArray = getResources().getStringArray(R.array.function_array);
+//		initData();
 		saveGuideVersion();
 	}
 

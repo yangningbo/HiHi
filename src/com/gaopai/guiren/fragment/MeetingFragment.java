@@ -2,13 +2,9 @@ package com.gaopai.guiren.fragment;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,46 +64,31 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		}
 		return mView;
 	}
-
-	private void registerFilter() {
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(REFRESH_LIST_ACTION);
-		filter.addAction(TribeActivity.ACTION_KICK_TRIBE);
-		filter.addAction(MainActivity.LOGIN_SUCCESS_ACTION);
-		getActivity().registerReceiver(mReceiver, filter);
-	}
-
-	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (!TextUtils.isEmpty(action)) {
-				if (action.equals(REFRESH_LIST_ACTION)) {
-					getMeetingList(true, meetingType);
-				} else if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
-					String id = intent.getStringExtra("id");
-					if (!TextUtils.isEmpty(id)) {
-						for (int i = 0; i < mAdapter.mData.size(); i++) {
-							if (mAdapter.mData.get(i).id.equals(id)) {
-								mAdapter.mData.remove(i);
-								mAdapter.notifyDataSetChanged();
-								break;
-							}
+	
+	@Override
+	protected void onReceive(Intent intent) {
+		String action = intent.getAction();
+		if (!TextUtils.isEmpty(action)) {
+			if (action.equals(REFRESH_LIST_ACTION)) {
+				getMeetingList(true, meetingType);
+			} else if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
+				String id = intent.getStringExtra("id");
+				if (!TextUtils.isEmpty(id)) {
+					for (int i = 0; i < mAdapter.mData.size(); i++) {
+						if (mAdapter.mData.get(i).id.equals(id)) {
+							mAdapter.mData.remove(i);
+							mAdapter.notifyDataSetChanged();
+							break;
 						}
 					}
-				} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
-//					mLaunchBtn.setVisibility(View.VISIBLE);
-//					if (mCurrentType.equals(MY_MEETING)) {
-//						mContainer.clickrefresh();
-//					}
 				}
+			} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
+				getMeetingList(true, meetingType);
 			}
 		}
-	};
+	}
 
 	private void initView(View mView) {
-//		addButtonToTitleBar();
-//		mTitleBar.setTitleTextWithImage(getString(R.string.meeting_title), android.R.drawable.ic_menu_more);
 
 		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 		ViewGroup dropDownView = (ViewGroup) layoutInflater.inflate(R.layout.titlebar_popup_window, null);
@@ -118,8 +99,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		myMeetingBtn.setOnClickListener(clickListener);
 		onGoingMeetingBtn.setOnClickListener(clickListener);
 		pastMeetingBtn.setOnClickListener(clickListener);
-
-//		mTitleBar.setTitleTextDropDown(dropDownView);
 
 		meetingType = TYPE_ONGOING_MEETING;
 
@@ -161,6 +140,8 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		viewGroup = ViewUtil.findViewById(mView, R.id.layout_meeting_faxian);
 		tvOnGoingMeeting = (TextView) viewGroup.getChildAt(0);
 		viewGroup.setOnClickListener(this);
+		
+		registerReceiver(REFRESH_LIST_ACTION, MainActivity.LOGIN_SUCCESS_ACTION);
 	}
 
 	private class PopupWindowItemClickListener implements OnClickListener {

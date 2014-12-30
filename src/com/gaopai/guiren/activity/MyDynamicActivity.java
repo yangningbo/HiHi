@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.DynamicAdapter;
@@ -38,11 +39,13 @@ public class MyDynamicActivity extends BaseActivity {
 	private String TAG = DynamicFragment.class.getName();
 
 	private String fid;
+	private boolean isMyself;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		fid = getIntent().getStringExtra("uid");
+		isMyself = DamiCommon.getUid(mContext).equals(fid);
 		initTitleBar();
 		setAbContentView(R.layout.fragment_dynamic);
 		FinalActivity.initInjectedView(this);
@@ -50,7 +53,11 @@ public class MyDynamicActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		mTitleBar.setTitleText("我的动态");
+		if (isMyself) {
+			mTitleBar.setTitleText("我的动态");
+		} else {
+			mTitleBar.setTitleText("他的动态");
+		}
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
 		mListView.setPullLoadEnabled(true);

@@ -775,7 +775,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			
 			viewHolder.messageNameText.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 5));
 			if (position == 0) {
 				viewHolder.messageNameText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_comment, 0,
@@ -786,10 +785,10 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 
 			final MessageInfo commentInfo = messageInfos.get(position);
-			
+
 			final boolean isMyself = commentInfo.from.equals(mLogin.uid) ? true : false;
+			View resendView = viewHolder.resendImageView;
 			if (isMyself) {
-				View resendView = viewHolder.resendImageView;
 				if (MessageState.STATE_SEND_FAILED == commentInfo.sendState) {
 					resendView.setVisibility(View.VISIBLE);
 				} else {
@@ -806,6 +805,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				} else {
 					viewHolder.progressBar.setVisibility(View.GONE);
 				}
+			} else {
+				resendView.setVisibility(View.GONE);
 			}
 			viewHolder.messageNameText.setTag(position);
 			viewHolder.messageNameText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
@@ -1012,6 +1013,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 					if (data.data != null && data.data.size() > 0) {
 						isFull = data.pageInfo.hasMore == 0;// true not has more
 															// page
+						for (MessageInfo msg : data.data) {
+							msg.sendState = MessageState.STATE_SEND_SUCCESS;
+						}
 						messageInfos.addAll(data.data);
 						notifyDataSetChanged();
 						mListView.getRefreshableView().setSelection(data.data.size());
@@ -1034,7 +1038,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private AlphaAnimation alphaAnim = null;
 	private ObjectAnimator animator;
-
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub

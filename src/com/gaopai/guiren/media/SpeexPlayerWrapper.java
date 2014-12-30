@@ -43,7 +43,7 @@ public class SpeexPlayerWrapper {
 	}
 
 	public void start(MessageInfo messageInfo) {
-		if (mCurrentModel != BaseChatAdapter.MODEL_VOICE) {
+		if (mCurrentModel != BaseChatAdapter.MODE_VOICE) {
 			return;
 		}
 		this.messageInfo = messageInfo;
@@ -93,7 +93,7 @@ public class SpeexPlayerWrapper {
 		return messageInfo.tag;
 	}
 
-	private int mCurrentModel = BaseChatAdapter.MODEL_VOICE;
+	private int mCurrentModel = BaseChatAdapter.MODE_VOICE;
 
 	public void setCurrentMode(int mode) {
 		mCurrentModel = mode;

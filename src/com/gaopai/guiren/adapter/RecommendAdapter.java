@@ -33,7 +33,6 @@ public class RecommendAdapter<T> extends BaseAdapter {
 
 	private final LayoutInflater mInflater;
 	public List<T> mData = new ArrayList<T>();
-	public List<Boolean> mIsAddList = new ArrayList<Boolean>();
 	private Context mContext;
 	private int mType = 0;
 

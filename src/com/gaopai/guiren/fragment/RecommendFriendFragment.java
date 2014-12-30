@@ -91,8 +91,12 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 				final UserList data = (UserList) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
+						for (User user : data.data) {
+							if(user.bigv == 1 || user.iscontact == 1) {
+								mAdapter.choseSet.add(user.uid);
+							}
+						}
 						mAdapter.addAll(data.data);
-
 					}
 				} else {
 					otherCondition(data.state, getActivity());
