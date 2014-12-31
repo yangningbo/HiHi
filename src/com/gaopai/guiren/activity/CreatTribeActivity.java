@@ -144,7 +144,9 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 
 		btnCreat = (Button) findViewById(R.id.btn_creat);
 		btnCreat.setOnClickListener(this);
-
+		if (isEdit) {
+			btnCreat.setText(R.string.edit_tribe);
+		}
 		etInfo = (EditText) findViewById(R.id.et_tribe_info);
 		etTitle = (EditText) findViewById(R.id.et_tribe_title);
 		tvEditTags = ViewUtil.findViewById(this, R.id.tv_edit_tag);

@@ -629,10 +629,11 @@ public class DynamicHelper {
 				break;
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			convertView = buildErrorView();
 		}
-
+		if (convertView == null) {
+			convertView = buildErrorView();
+		}
 		return convertView;
 	}
 

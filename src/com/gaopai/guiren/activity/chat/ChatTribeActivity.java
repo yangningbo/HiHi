@@ -438,14 +438,16 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	@Override
-	protected void handleExtralSendSuccessConditon(SendMessageResult data, MessageInfo msg) {
+	protected void handleExtralSendResultConditon(SendMessageResult data, MessageInfo msg) {
 		if (data.state.code == DamiCommon.IDENTITY_INVALID_CODE) {
-			mIdentity = data.identity;
-			updateIdentity(mIdentity);
-			msg.displayname = mIdentity.name;
-			msg.heroid = mIdentity.id;
-			msg.headImgUrl = mIdentity.head;
-			modifyMessageState(msg);
+			if (data.identity != null) {
+				mIdentity = data.identity;
+				updateIdentity(mIdentity);
+				msg.displayname = mIdentity.name;
+				msg.heroid = mIdentity.id;
+				msg.headImgUrl = mIdentity.head;
+				modifyMessageState(msg);
+			}
 		}
 	}
 

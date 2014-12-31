@@ -71,9 +71,9 @@ public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
 //	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-	public static final String HOST = "http://192.168.1.239:8081/index.php/";
+//	public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
-	// public static final String HOST = "http://guirenhui.cn/index.php/";
+	 public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
 
@@ -296,7 +296,7 @@ public class DamiInfo implements Serializable {
 		}
 		params.put("typeorder", typeOrder);
 		params.put("page", String.valueOf(page));
-		params.put("pageSize", String.valueOf(LOAD_SIZE));
+		params.put("pageSize", String.valueOf(100));
 		request(Method.GET, QueryResult.class, params, 0, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
 	}
 

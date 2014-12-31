@@ -1,5 +1,8 @@
 package com.gaopai.guiren.activity.share;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -27,6 +30,7 @@ import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.support.FragmentHelper;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView;
@@ -42,8 +46,10 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 	private SimpleResponseListener listener;
 
 	private SimpleResponseListener getListListener;
-	
+
 	protected User mLogin;
+
+	protected SearchHolder searchHolder;
 
 	public interface OnBackListener {
 		public boolean onBack();
@@ -67,6 +73,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 			initView(view);
 			mListView.doPullRefreshing(true, 0);
 			mLogin = DamiCommon.getLoginResult(getActivity());
+			searchHolder = new SearchHolder();
 		} else {
 			((ViewGroup) view.getParent()).removeView(view);
 		}
@@ -94,7 +101,7 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		creatHeaderView(mListView.getRefreshableView());
 		mListView.getRefreshableView().setVerticalScrollBarEnabled(false);
 		mListView.getRefreshableView().setHeaderDividersEnabled(true);
-		mListView.setPullRefreshEnabled(true);
+		mListView.setPullRefreshEnabled(false);
 		mListView.setPullLoadEnabled(false);
 		mListView.setScrollLoadEnabled(true);
 		mListView.setOnRefreshListener(new OnRefreshListener<IndexableListView>() {
@@ -130,27 +137,85 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 	}
-	
+
 	protected String searchText = "";
+
 	public void searchUser(String text) {
-		searchText = text;
+		searchHolder.searchText = text;
+		searchHolder.isSearchMode = true;
+		searchHolder.mSearchUserList.clear();
+		searchHolder.isFullSearch = true;
 		mListView.doPullRefreshing(true, 0);
+	}
+
+	public void backToUserList() {
+		searchHolder.isSearchMode = false;
+		searchHolder.searchText = "";
+		mAdapter.getFilter().filter("");
 	}
 
 	protected void creatHeaderView(ListView listView) {
 	}
-	
-	public static class SearchHolder {
-		public int page;
-		public boolean isFull;
+
+	public class SearchHolder {
+		public int searchListPage = 1;
+		public int listPage = 1;
+		public boolean isFullSearch = false;
+		public boolean isFullList = false;
+		public boolean isSearchMode = false;
+		public String searchText = "";
+		public List<User> mSearchUserList = new ArrayList<User>();
+
+		public void addData(UserList data) {
+			if (isSearchMode) {
+				mSearchUserList.addAll(data.data);
+				mAdapter.sortData(mSearchUserList);
+			} else {
+				mAdapter.addAndSort(data.data);
+			}
+
+			if (data.pageInfo != null) {
+				if (isSearchMode) {
+					isFullSearch = (data.pageInfo.hasMore == 0);
+					if (!isFullSearch) {
+						searchListPage++;
+					}
+					mListView.setHasMoreData(!isFullSearch);
+				} else {
+					isFullList = (data.pageInfo.hasMore == 0);
+					if (!isFullList) {
+						listPage++;
+					}
+					mListView.setHasMoreData(!isFullList);
+				}
+			}
+		}
+		
+		public void setIsFull() {
+			if (isSearchMode) {
+				mListView.setHasMoreData(!isFullSearch);
+			} else {
+				mListView.setHasMoreData(!isFullList);
+			}
+		}
+
+		public int getPage() {
+			if (isSearchMode) {
+				return searchListPage;
+			} else {
+				return listPage;
+			}
+		}
 	}
+
 	protected int page = 1;
 	protected boolean isFull = false;
+
 	protected class MyListener extends SimpleResponseListener {
 
 		private boolean isRefresh;
 
-		public MyListener(Context context,boolean isRefresh) {
+		public MyListener(Context context, boolean isRefresh) {
 			super(context);
 			this.isRefresh = isRefresh;
 		}
@@ -160,18 +225,12 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 			// TODO Auto-generated method stub
 			final UserList data = (UserList) o;
 			if (data.state != null && data.state.code == 0) {
+				mListView.setHasMoreData(false);
 				if (data.data != null && data.data.size() > 0) {
-					if (isRefresh) {
-						mAdapter.clear();
-					}
-					mAdapter.addAndSort(data.data);
-					if (data.pageInfo != null) {
-						isFull = (data.pageInfo.hasMore == 0);
-						if (!isFull) {
-							page++;
-						}
-					}
-					mListView.setHasMoreData(!isFull);
+					// if (isRefresh) {
+					// mAdapter.clear();
+					// }
+					searchHolder.addData(data);
 				}
 			} else {
 				otherCondition(data.state, getActivity());
@@ -181,21 +240,12 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		@Override
 		public void onFinish() {
 			mListView.onPullComplete();
-			mListView.setHasMoreData(!isFull);
+			searchHolder.setIsFull();
 		}
 
 	}
 
 	protected void getUserList(final boolean isRefresh) {
-		if (isRefresh) {
-			page = 1;
-			mAdapter.clear();
-			isFull = false;
-		}
-		if (isFull) {
-			mListView.setHasMoreData(!isFull);
-			return;
-		}
 	}
 
 	void showDialog(final User user) {

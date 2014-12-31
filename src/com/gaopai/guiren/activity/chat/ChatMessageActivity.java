@@ -152,7 +152,9 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 			if (msg.from.equals(DamiCommon.getUid(mContext)) || !msg.parentid.equals("0")) {
 				return;
 			}
-			addNewMessage(msg);
+			if (msg.from.equals(user.uid)) {
+				addNewMessage(msg);
+			}
 		} catch (Exception e) {
 
 		}

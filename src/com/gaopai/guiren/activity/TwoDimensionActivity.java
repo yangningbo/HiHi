@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
@@ -45,7 +46,13 @@ public class TwoDimensionActivity extends BaseActivity {
 		if (qrHolder.type == 1) {
 			mTitleBar.setTitleText("圈子二维码");
 		} else {
-			mTitleBar.setTitleText("我的二维码");
+			if (qrHolder.user != null) {
+				if (qrHolder.user.uid.equals(DamiCommon.getUid(mContext))) {
+					mTitleBar.setTitleText("我的二维码");
+				} else {
+					mTitleBar.setTitleText("TA的二维码");
+				}
+			}
 		}
 		tvUserName = ViewUtil.findViewById(this, R.id.tv_user_name);
 		tvUserInfo = ViewUtil.findViewById(this, R.id.tv_user_info);

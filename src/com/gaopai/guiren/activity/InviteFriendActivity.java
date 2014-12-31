@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.net.BaseNetBean;
@@ -62,7 +63,7 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 					REQUEST_CONTACT);
 			break;
 		case R.id.tv_invite_qq:
-			sm.shareQQ(getShareInfo() + shareStr, getShareTitle(),  shareStr);
+			sm.shareQQ(getShareInfo() + shareStr, getShareTitle(), shareStr);
 			break;
 		case R.id.tv_invite_wechat:
 			sm.shareWechat(getShareInfo() + shareStr, getShareTitle(), shareStr);
@@ -127,8 +128,8 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 	private String getShareInfo() {
 		return getString(R.string.invite_str_2);
 	}
-	
+
 	private String getShareTitle() {
-		return getString(R.string.one_word_prompt);
+		return DamiCommon.getLoginResult(mContext).realname + "的贵人会邀请";
 	}
 }

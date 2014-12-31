@@ -223,13 +223,15 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			meetingType = TYPE_ONGOING_MEETING;
 			tvPastMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
 			tvOnGoingMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
-			getMeetingList(true, meetingType);
+			mListView.doPullRefreshing(true, 0);
+//			getMeetingList(true, meetingType);
 			break;
 		case R.id.layout_meeting_past:
 			meetingType = TYPE_PAST_MEETING;
 			tvOnGoingMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
 			tvPastMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
-			getMeetingList(true, meetingType);
+			mListView.doPullRefreshing(true, 0);
+//			getMeetingList(true, meetingType);
 			break;
 		default:
 			super.onClick(v);

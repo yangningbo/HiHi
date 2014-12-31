@@ -59,7 +59,8 @@ public class ImageLoaderUtil {
 				.cacheInMemory(true).cacheOnDisk(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 
 		options_normal = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.default_header)
-				.showImageOnLoading(R.drawable.default_header).showImageOnFail(R.drawable.default_header).resetViewBeforeLoading(false)
+				.showImageOnLoading(R.drawable.default_header).showImageOnFail(R.drawable.default_header)
+				.resetViewBeforeLoading(false)
 				// 设置图片在下载前是否重置，复位
 				.cacheInMemory(true).cacheOnDisk(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 		animateFirstListener = new AnimateFirstDisplayListener();
@@ -86,11 +87,23 @@ public class ImageLoaderUtil {
 		imageLoader.displayImage(url, imageView);
 	}
 
-
 	public static void displayImage(String url, ImageView imageView, int defultImage) {
 		if (!TextUtils.isEmpty(url)) {
-			 imageLoader.displayImage(url, imageView, options);
-//			Picasso.with(DamiApp.getInstance()).load(url).error(defultImage).placeholder(defultImage).into(imageView);
+			imageLoader.displayImage(url, imageView, options);
+			// Picasso.with(DamiApp.getInstance()).load(url).error(defultImage).placeholder(defultImage).into(imageView);
+		} else {
+			imageView.setImageResource(defultImage);
+		}
+	}
+
+	public static void displayImage(String url, ImageView imageView, int defultImage, boolean usePicasso) {
+		if (!TextUtils.isEmpty(url)) {
+			if (usePicasso) {
+				Picasso.with(DamiApp.getInstance()).load(url).error(defultImage).placeholder(defultImage)
+						.into(imageView);
+			} else {
+				imageLoader.displayImage(url, imageView, options);
+			}
 		} else {
 			imageView.setImageResource(defultImage);
 		}

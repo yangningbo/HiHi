@@ -68,8 +68,8 @@ public class ReverificationActivity extends BaseActivity {
 				final String email = etEmail.getText().toString();
 				final String weixin = etWeixin.getText().toString();
 				final String weibo = etWeibo.getText().toString();
-				if (TextUtils.isEmpty(name) || TextUtils.isEmpty(company) || TextUtils.isEmpty(industry)
-						|| TextUtils.isEmpty(job) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(email)) {
+				if (TextUtils.isEmpty(name.trim()) || TextUtils.isEmpty(company.trim()) || TextUtils.isEmpty(industry.trim())
+						|| TextUtils.isEmpty(job.trim()) || TextUtils.isEmpty(phone.trim()) || TextUtils.isEmpty(email.trim())) {
 					showToast(R.string.must_input_can_not_be_empty);
 					return;
 				}

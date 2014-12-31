@@ -104,11 +104,11 @@ public class NotificationAdapter extends BaseAdapter {
 		
 		switch (bean.type) {
 		case 100:
-			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader, R.drawable.default_header);
+			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader, R.drawable.default_header, true);
 			break;
 		case 200:
 		case 300:
-			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader, R.drawable.default_tribe);
+			ImageLoaderUtil.displayImage(bean.headurl, holder.ivHeader, R.drawable.default_tribe, true);
 			holder.ivTitleIcon.setVisibility(View.VISIBLE);
 			int drawable = (bean.type == 300) ? R.drawable.icon_notification_meeting
 					: R.drawable.icon_notification_tribe;

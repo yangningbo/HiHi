@@ -844,7 +844,7 @@
     <string name="from_meeting">来自会议</string>
     <string name="from_tribe">来自圈子</string>
     <!--  -->
-    <string name="please_finish_profile">请完善您的资料后在邀请朋友加入贵人</string>
+    <string name="please_finish_profile">请完善您的资料后再邀请朋友加入贵人</string>
     <string name="meeting_is_not_begin">会议还未开始</string>
     <string name="ellipsize">&#8230;</string>
     

@@ -98,7 +98,6 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 
 	private void bindView(GetVerifyResult.Data data) {
 		try {
-			requiredTotal = data.invite.totalnum;
 			setInviteNumText(data.invite.num);
 			int percent = data.base.iscomplete * 20 + data.invite.num * (80 / requiredTotal);
 			if (percent > 100) {

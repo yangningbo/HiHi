@@ -10,6 +10,8 @@ import u.aly.ba;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -96,6 +98,27 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 				ShareActivity.this.finish();
 			}
 		};
+		etSearch.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if (s.length() > 0) {
+					return;
+				}
+				BaseShareFragment fragment = (BaseShareFragment) getSupportFragmentManager().findFragmentById(
+						R.id.fl_fragment_holder);
+				if (fragment != null) {
+					fragment.backToUserList();
+				}
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
 		etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {

@@ -103,12 +103,9 @@ public class NotifyHelper {
 		init();
 		Logger.d(this, "isNeedNotify=" + isNeedNotify());
 		if (!isNeedNotify()) {
-			ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
+			saveChatMessage(messageInfo);
 			return;
 		}
-		// if (!FeatureFunction.isAppOnForeground(mContext) && !isReceive) {
-		// return;
-		// }
 		NotificationCompat.Builder builder = getNotificationBuilder();
 		String notifyMsgContent = "";
 		switch (messageInfo.fileType) {
@@ -147,32 +144,28 @@ public class NotifyHelper {
 		Logger.d(this, getCurrentChatId(mContext) + "  ==   " + messageInfo.conversion.toid);
 		if (messageInfo.type == 100) {// 单聊
 			if (isActivityTop(mContext, ".activity.chat.ChatMessageActivity")) {
-				if (getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
-					ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
-				} else {
-					ConversationHelper.saveToLastMsgList(messageInfo, mContext);
+				if (saveChatMessage(messageInfo)) {
+					return;
 				}
-				return;
+			} else {
+				ConversationHelper.saveToLastMsgList(messageInfo, mContext);
 			}
-			ConversationHelper.saveToLastMsgList(messageInfo, mContext);
 			if (poChat.getInt(SPConst.getTribeUserId(mContext, messageInfo.from), 0) == 1) {
 				return;
 			}
 			notificationManager.notify(NOTIFYID_PRIVATE, builder.build());
 		} else if (messageInfo.type == 200 || messageInfo.type == 300) {// 部落
+			if (!messageInfo.parentid.equals("0")) {// 如果是评论就不提醒
+				return;
+			}
 			if (isActivityTop(mContext, ".activity.chat.ChatTribeActivity")) {
-				if (getCurrentChatId(mContext).equals(messageInfo.conversion.toid)) {
-					ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
-				} else {
-					ConversationHelper.saveToLastMsgList(messageInfo, mContext);
+				if (saveChatMessage(messageInfo)) {
+					return;
 				}
-				return;
+			} else {
+				ConversationHelper.saveToLastMsgList(messageInfo, mContext);
 			}
-
-			if (!messageInfo.parentid.equals("0")) {
-				return;
-			}
-			ConversationHelper.saveToLastMsgList(messageInfo, mContext);
+			
 			if (poChat.getInt(SPConst.getTribeUserId(mContext, messageInfo.to), 0) == 1) {
 				return;
 			}
@@ -188,7 +181,16 @@ public class NotifyHelper {
 				notificationManager.notify(NOTIFYD_DAMI, builder.build());
 			}
 		}
+	}
 
+	private boolean saveChatMessage(MessageInfo messageInfo) {
+		boolean isMessageInCurrentChat = getCurrentChatId(mContext).equals(messageInfo.conversion.toid);
+		if (isMessageInCurrentChat) {
+			ConversationHelper.saveToLastMsgListReaded(messageInfo, mContext);
+		} else {
+			ConversationHelper.saveToLastMsgList(messageInfo, mContext);
+		}
+		return isMessageInCurrentChat;
 	}
 
 	public void notifySystemMessage(String msg, NotifiyVo notifiyVo) {

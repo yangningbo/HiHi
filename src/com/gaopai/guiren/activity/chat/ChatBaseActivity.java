@@ -253,12 +253,11 @@ public abstract class ChatBaseActivity extends BaseActivity {
 						updateNewMessage(messageInfo);
 						modifyMessageState(messageInfo);
 						return;
-					} else if (data.state.code == 1) {
-						sendFailed(msg);
 					} else {
+						sendFailed(msg);
+						handleExtralSendResultConditon(data, msg);
 						this.otherCondition(data.state, ChatBaseActivity.this);
 					}
-					handleExtralSendSuccessConditon(data, msg);
 				}
 			}
 
@@ -280,7 +279,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	}
 
 	// override by tribe chat activity
-	protected void handleExtralSendSuccessConditon(SendMessageResult data, MessageInfo msg) {
+	protected void handleExtralSendResultConditon(SendMessageResult data, MessageInfo msg) {
 	}
 
 	private void sendFailed(MessageInfo msg) {

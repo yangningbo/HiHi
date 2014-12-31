@@ -246,7 +246,6 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 			total = total + data.dynamic.size();
 
 		}
-
 		mAdapter.addAll(rowList);
 		if (total == 0) {
 			setEmptyListview();
