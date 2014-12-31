@@ -114,7 +114,7 @@ public class DynamicHelper {
 		});
 		mPlayerWrapper.setPlayCallback(new PlayCallback());
 	}
-	
+
 	public void updateUser() {
 		if (user == null) {
 			return;
@@ -912,6 +912,7 @@ public class DynamicHelper {
 		uid = typeBean.uid;
 		userInfo = typeBean.post;
 		if (typeBean.isanonymous == 1) {
+			Logger.d(this, "nick head=" + typeBean.defhead);
 			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader, R.drawable.default_header);
 			// viewHolder.tvUserName.setText(R.string.no_name);
 			// viewHolder.tvUserInfo.setText("");

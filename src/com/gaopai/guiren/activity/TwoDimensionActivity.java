@@ -124,7 +124,7 @@ public class TwoDimensionActivity extends BaseActivity {
 	private void bindTribeName(Tribe tribe) {
 		SpannableString name = new SpannableString(tribe.name);
 		MyTextUtils.setTextSize(name, 22);
-		MyTextUtils.setTextColor(name, getResources().getColor(R.color.general_text_black));
+		MyTextUtils.setTextColor(name, getResources().getColor(R.color.white));
 		tvUserName.setText(name);
 	}
 

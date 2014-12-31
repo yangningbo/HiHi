@@ -147,10 +147,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			tuid = data.toString().substring(data.toString().indexOf("//") + 2);
 		}
 		if (TextUtils.isEmpty(tuid)) {
+			this.finish();
 			return;
 		}
 		mUser = DamiCommon.getLoginResult(this);
 		isSelf = mUser.uid.equals(tuid);
+		
 		initComponent();
 		hideSomeViewsBasedOnUser();
 
@@ -268,10 +270,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		layoutHeader = ViewUtil.findViewById(this, R.id.layout_header_mvp);
 		if (isSelf) {
 			mTitleBar.setTitleText(getString(R.string.my_profile));
-			layoutHeader.setOnClickListener(this);
 		} else {
 			mTitleBar.setTitleText(getString(R.string.profile_other));
 		}
+		layoutHeader.setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.iv_profile_erweima).setOnClickListener(this);
 
 		tvUserInfo = (TextView) findViewById(R.id.tv_user_info);
@@ -871,7 +873,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivity(MyDynamicActivity.getIntent(mContext, tuid));
 			break;
 		case R.id.layout_header_mvp:
-			changeHeadImg();
+			if (isSelf) {
+				changeHeadImg();
+			} else {
+				mContext.startActivity(ShowImagesActivity.getIntent(mContext, tUser.headsmall, tUser.headlarge));
+			}
 			break;
 		default:
 			break;

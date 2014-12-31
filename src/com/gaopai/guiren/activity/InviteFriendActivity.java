@@ -116,8 +116,8 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 			Uri uri = Uri.parse("smsto:" + phoneNum);
 			Intent it = new Intent(Intent.ACTION_SENDTO, uri);
 			String shareStr = getString(R.string.invite_str_1);
-			if (!TextUtils.isEmpty(getShareInfo() + url)) {
-				shareStr = url;
+			if (!TextUtils.isEmpty(url)) {
+				shareStr = shareStr + url;
 			}
 			it.putExtra("sms_body", shareStr);
 			mContext.startActivity(it);

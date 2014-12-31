@@ -10,7 +10,7 @@ public class DBHelper extends SQLiteOpenHelper{
 	private SQLiteDatabase mDB = null;
 	private static DBHelper mInstance = null;
 	public static final String DataBaseName = "Dami.db";
-	public static final int DataBaseVersion = 10;
+	public static final int DataBaseVersion = 11;
 
 	public DBHelper(Context context, String name, CursorFactory factory,
 			int version) {
@@ -32,7 +32,6 @@ public class DBHelper extends SQLiteOpenHelper{
 		db.execSQL(PromptTable.getCreateTableSQLString());
 		db.execSQL(IdentityTable.getCreateTableSQLString());
 		db.execSQL(ConverseationTable.getCreateTableSQLString());
-		
 	}
 	
 	public synchronized static DBHelper getInstance(Context context){

@@ -106,7 +106,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		setAbContentView(R.layout.activity_tribe_detail);
 		addLoadingView();
 		showLoadingView();
-		
+
 		spo = new PreferenceOperateUtils(mContext, SPConst.SP_AVOID_DISTURB);
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 		tagWindowManager = new TagWindowManager(this, true, null);
@@ -160,9 +160,6 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		intent.putExtra(KEY_TRIBE_ID, tid);
 		return intent;
 	}
-	
-	
-	
 
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
@@ -181,7 +178,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
 				String id = intent.getStringExtra("id");
 				if (!TextUtils.isEmpty(id) && id.equals(mTribeID)) {
-//					deleteConverstion();
+					// deleteConverstion();
 					getTribeDetail();
 				}
 			} else if (action.equals(ACTION_AGREE_ADD_TRIBE)) {
@@ -193,13 +190,11 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
-
 	private void getTribeDetail() {
 		DamiInfo.getTribeDetail(mTribeID, new SimpleResponseListener(mContext) {
 
 			@Override
 			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
 				TribeInfoBean data = (TribeInfoBean) o;
 				if (data.state != null && data.state.code == 0) {
 					mTribe = data.data;
@@ -214,17 +209,16 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 					showErrorView();
 					this.otherCondition(data.state, TribeDetailActivity.this);
 				}
-
 			}
-			
+
 			@Override
 			public void onFailure(Object o) {
 				showErrorView();
 			}
-			
+
 		});
 	}
-	
+
 	private void showErrorView() {
 		showErrorView(new OnClickListener() {
 			@Override
@@ -302,13 +296,13 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				if (i == 7) {
 					gridView.removeViewAt(0);
 					holder.tvUserName.setText("查看其他" + (size - 7) + "人");
-					gridView.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID, isCreator),
-									REQUEST_ALL_TRIBE_USERS);
-						}
-					});
+//					gridView.setOnClickListener(new OnClickListener() {
+//						@Override
+//						public void onClick(View v) {
+//							startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID, isCreator),
+//									REQUEST_ALL_TRIBE_USERS);
+//						}
+//					});
 					mlUserLayout.addView(gridView);
 					return;
 				}

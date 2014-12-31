@@ -97,7 +97,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
-				if (view instanceof TextView) {
+				if (view instanceof TextView) { // the error view
 					return;
 				}
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();

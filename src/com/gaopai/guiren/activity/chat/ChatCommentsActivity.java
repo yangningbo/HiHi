@@ -532,6 +532,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		ivPhotoCover = (ImageView) view.findViewById(R.id.iv_chat_photo_cover);
 		layoutPic = view.findViewById(R.id.layout_msg_pic_holder);
 
+		progressbar = ViewUtil.findViewById(view, R.id.pb_chat_progress);
+
 		headImageView = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
 		nameTextView = (TextView) view.findViewById(R.id.tv_user_name);
 		layoutMsgContent = view.findViewById(R.id.layout_msg_text_voice_holder);
@@ -562,12 +564,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
 		viewCoverTop = view.findViewById(R.id.view_cover_top);
 
-		bindCommentCount();
+		bindCommentCountView();
 		bindZanCommentBorderView();
 		return view;
 	}
 
-	private void bindCommentCount() {
+	private void bindCommentCountView() {
 		commentCountText.setText(String.valueOf(messageInfo.commentCount));
 	}
 
@@ -602,6 +604,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		tvText.setVisibility(View.GONE);
 		tvVoiceLength.setVisibility(View.GONE);
 		ivVoice.setVisibility(View.GONE);
+		progressbar.setVisibility(View.GONE);
 		switch (which) {
 		case MessageType.TEXT:
 			layoutMsgContent.setVisibility(View.VISIBLE);
@@ -635,11 +638,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			ivVoice.setLayoutParams(getVoiceViewLengthParams((ViewGroup.LayoutParams) ivVoice.getLayoutParams(),
 					messageInfo));
 			layoutMsgContent.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					bindView();
 					speexPlayerWrapper.start(messageInfo);
 				}
 			});
@@ -660,12 +660,10 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			ivPhoto.getLayoutParams().width = width;
 			ivPhotoCover.getLayoutParams().height = height;
 			ivPhotoCover.getLayoutParams().width = width;
-			ImageLoaderUtil.displayImage(path, ivPhoto, R.drawable.default_pic);
 			if (path.startsWith("http://")) {
-				ImageLoaderUtil.displayImage(path, ivPhoto, R.drawable.default_pic);
-				ImageLoaderUtil.displayImageByProgress(path, ivPhoto, null, null);
+				ImageLoaderUtil.displayImageByProgress(path, ivPhoto, null, progressbar);
 			} else {
-				ImageLoaderUtil.displayImageByProgress("file://" + path, ivPhoto, null, null);
+				ImageLoaderUtil.displayImageByProgress("file://" + path, ivPhoto, null, progressbar);
 			}
 			ivPhoto.setTag(messageInfo);
 			ivPhoto.setOnClickListener(photoClickListener);
@@ -735,7 +733,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	};
 
-
 	class MyAdapter extends BaseAdapter {
 
 		@Override
@@ -776,6 +773,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
+		
 			viewHolder.messageNameText.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 5));
 			if (position == 0) {
 				viewHolder.messageNameText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_comment, 0,
@@ -786,6 +784,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 
 			final MessageInfo commentInfo = messageInfos.get(position);
+			
+			notHideViews(viewHolder, commentInfo.fileType);
 
 			final boolean isMyself = commentInfo.from.equals(mLogin.uid) ? true : false;
 			View resendView = viewHolder.resendImageView;
@@ -801,13 +801,14 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 						sendMessage(commentInfo);
 					}
 				});
-				if (MessageState.STATE_SENDING == commentInfo.sendState) {
-					viewHolder.progressBar.setVisibility(View.VISIBLE);
-				} else {
-					viewHolder.progressBar.setVisibility(View.GONE);
-				}
 			} else {
 				resendView.setVisibility(View.GONE);
+			}
+			
+			if (MessageState.STATE_SENDING == commentInfo.sendState) {
+				viewHolder.progressBar.setVisibility(View.VISIBLE);
+			} else {
+				viewHolder.progressBar.setVisibility(View.GONE);
 			}
 			viewHolder.messageNameText.setTag(position);
 			viewHolder.messageNameText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
@@ -826,7 +827,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			switch (commentInfo.fileType) {
 			case MessageType.TEXT:
 				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 2000));
-				notHideViews(viewHolder, MessageType.TEXT);
+				
 				if (commentInfo.mIsShide == 0) {// not hide
 					viewHolder.messageNameText.setText(MyTextUtils.getSpannableString(replyFromToText,
 							MyTextUtils.addHttpLinks(commentInfo.content)));
@@ -841,37 +842,31 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				}
 				viewHolder.messageNameText.setText(replyFromToText);
 
-				if (commentInfo.sendState == 2) {// now sending
-					notHideViews(viewHolder, MessageType.MAP);
-				} else {
-					if (mCurrentModel == VOICE_MODEL) {
-						notHideViews(viewHolder, MessageType.VOICE);
-						viewHolder.voiceImageView.setLayoutParams(getVoiceViewLengthParams(
-								viewHolder.voiceImageView.getLayoutParams(), commentInfo));
-						viewHolder.voiceTimeText.setText(commentInfo.voiceTime + "''");
-						viewHolder.voiceLayout.setTag(commentInfo);
-						viewHolder.voiceLayout.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								speexPlayerWrapper.start(commentInfo);
-							}
-						});
-						AnimationDrawable drawable = (AnimationDrawable) viewHolder.voiceImageView.getDrawable();
-						if (speexPlayerWrapper.isPlay() && commentInfo.tag.equals(speexPlayerWrapper.getMessageTag())) {
-							drawable.start();
-						} else {
-							drawable.stop();
-							drawable.selectDrawable(0);
+				if (mCurrentModel == VOICE_MODEL) {
+					viewHolder.voiceImageView.setLayoutParams(getVoiceViewLengthParams(
+							viewHolder.voiceImageView.getLayoutParams(), commentInfo));
+					viewHolder.voiceTimeText.setText(commentInfo.voiceTime + "''");
+					viewHolder.voiceLayout.setTag(commentInfo);
+					viewHolder.voiceLayout.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							speexPlayerWrapper.start(commentInfo);
 						}
+					});
+					AnimationDrawable drawable = (AnimationDrawable) viewHolder.voiceImageView.getDrawable();
+					if (speexPlayerWrapper.isPlay() && commentInfo.tag.equals(speexPlayerWrapper.getMessageTag())) {
+						drawable.start();
 					} else {
-						viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 1000));
-						notHideViews(viewHolder, MessageType.TEXT);
+						drawable.stop();
+						drawable.selectDrawable(0);
 					}
+				} else {
+					viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 1000));
+					notHideViews(viewHolder, MessageType.TEXT);
 				}
 				break;
 			case MessageType.PICTURE:
 				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 150));
-				notHideViews(viewHolder, MessageType.PICTURE);
 
 				int width = (int) (MyUtils.dip2px(mContext, commentInfo.imgWidth) * 0.7);
 				int height = (int) (MyUtils.dip2px(mContext, commentInfo.imgHeight) * 0.7);
@@ -929,7 +924,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				break;
 			}
 		}
-
 	}
 
 	static class ViewHolder {
@@ -1013,14 +1007,22 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				final ChatMessageBean data = (ChatMessageBean) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
-						isFull = data.pageInfo.hasMore == 0;// true not has more
-															// page
+
 						for (MessageInfo msg : data.data) {
 							msg.sendState = MessageState.STATE_SEND_SUCCESS;
 						}
 						messageInfos.addAll(data.data);
 						notifyDataSetChanged();
 						mListView.getRefreshableView().setSelection(data.data.size());
+
+						if (data.pageInfo != null) {
+							isFull = data.pageInfo.hasMore == 0;// true not has
+																// more
+							messageInfo.commentCount = data.pageInfo.total;
+							updateCommentCountToDb();
+							bindCommentCountView();
+							sendNotify();
+						}
 					} else {
 						isFull = true;
 					}
@@ -1189,11 +1191,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	protected MessageInfo buildMessage() {
 		MessageInfo msg = new MessageInfo();
-		if (isAnony()) {
-			msg.from = "-1";
-		} else {
-			msg.from = mLogin.uid;
-		}
+		// if (isAnony()) {
+		// msg.from = "-1";
+		// } else {
+		msg.from = mLogin.uid;
+		// }
 		msg.tag = UUID.randomUUID().toString();
 		msg.time = System.currentTimeMillis();
 		msg.readState = 1;
@@ -1240,26 +1242,29 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	// do not save comment to database
 	protected void addSaveSendMessage(MessageInfo msg) {
 		msg.sendState = MessageState.STATE_SENDING;
-		addSaveMessageInfo(msg);
-		bindCommentCount();
+		// addSaveMessageInfo(msg);
+		addMessageInfo(msg);
 		sendMessage(msg);
-		sendNotify();
+
 	}
 
 	// comment count has been updated in db before notify, so ignore it
 	protected void addNotifyMessage(MessageInfo msg) {
 		addMessageInfo(msg);
-		bindCommentCount();
+		bindCommentCountView();
 	}
 
 	protected void addMessageInfo(MessageInfo info) {
 		messageInfos.add(0, info);
-		messageInfo.commentCount++;
 		notifyDataSetChanged();
 	}
 
 	protected void addSaveMessageInfo(MessageInfo info) {
 		addMessageInfo(info);
+		updateCommentCountToDb();
+	}
+
+	protected void updateCommentCountToDb() {
 		msgHelper.updateCommentCountToDb(messageInfo);
 	}
 
@@ -1290,9 +1295,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 							String voice = FeatureFunction.generator(messageInfo.voiceUrl);
 							FeatureFunction.reNameFile(new File(msg.voiceUrl), voice);
 						}
-						// updateNewMessage(messageInfo);
+						ChatCommentsActivity.this.messageInfo.commentCount++;
+						updateCommentCountToDb();
+						bindCommentCountView();
+						sendNotify();
 						modifyMessageState(messageInfo);
-
 						return;
 					} else if (data.state.code == 1) {
 						sendFailed(msg);
@@ -1321,11 +1328,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private void sendFailed(MessageInfo msg) {
 		msg.sendState = MessageState.STATE_SEND_FAILED;
+		Logger.d(this, "send failde===========");
 		modifyMessageState(msg);
 	}
 
 	protected void modifyMessageState(MessageInfo messageInfo) {
-		for (int i = 0; i < messageInfos.size(); i++) {
+		for (int i = 0, count = messageInfos.size(); i < count; i++) {
+			Logger.d(this, "send failde=========" + i);
 			if (messageInfo.tag.equals(messageInfos.get(i).tag)) {
 				MessageInfo tempInfo = messageInfos.get(i);
 				tempInfo.sendState = messageInfo.sendState;
@@ -1340,6 +1349,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				tempInfo.displayname = messageInfo.displayname;
 				tempInfo.headImgUrl = messageInfo.headImgUrl;
 				tempInfo.isReadVoice = messageInfo.isReadVoice;
+				Logger.d(this, "send failde");
 				mAdapter.notifyDataSetChanged();
 				return;
 			}
@@ -1376,6 +1386,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				if (info.uid.equals(mLogin.uid)) {
 					zanCountBtn
 							.setImageDrawable(this.getResources().getDrawable(R.drawable.icon_msg_detail_zan_active));
+					break;
 				}
 			}
 		}
@@ -1399,7 +1410,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			if (zanBean.isanonymity == 1) {
 				spanUser.uid = "-1";
 			} else {
-				spanUser.uid = messageInfo.uid;
+				spanUser.uid = zanBean.uid;
 			}
 			spanUsers.add(spanUser);
 		}
@@ -1410,11 +1421,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		@Override
 		public void onStart() {
+			bindView();
 			mAdapter.notifyDataSetChanged();
 		}
 
 		@Override
 		public void onStop(boolean stopAutomatic) {
+			bindView();
 			mAdapter.notifyDataSetChanged();
 		}
 	}

@@ -1,6 +1,7 @@
 package com.gaopai.guiren.activity;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,8 @@ import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,6 +34,7 @@ import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.widget.photoview.PhotoView;
 import com.gaopai.guiren.widget.photoview.PhotoViewAttacher.OnViewTapListener;
@@ -82,6 +86,15 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.picture);
+	}
+
+	public static Intent getIntent(Context context, String imgSmall, String imgLarge) {
+		List<MessageInfo> messageInfos = new ArrayList<MessageInfo>();
+		messageInfos.add(ChatMsgHelper.creatPicMsg(imgSmall, imgLarge, ""));
+		Intent intent = new Intent(context, ShowImagesActivity.class);
+		intent.putExtra("msgList", (Serializable) messageInfos);
+		intent.putExtra("position", 0);
+		return intent;
 	}
 
 	private HashSet<ViewGroup> unRecycledViews = new HashSet<ViewGroup>();
