@@ -785,8 +785,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 			final MessageInfo commentInfo = messageInfos.get(position);
 			
+			
 			notHideViews(viewHolder, commentInfo.fileType);
-
+			
 			final boolean isMyself = commentInfo.from.equals(mLogin.uid) ? true : false;
 			View resendView = viewHolder.resendImageView;
 			if (isMyself) {
@@ -816,7 +817,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 			String fromId = commentInfo.isanonymity == 0 ? commentInfo.from : "-1";
 			String commenterId = commentInfo.reisanonymity == 0 ? commentInfo.commenterid : "-1";
-			if (!TextUtils.isEmpty(commentInfo.commenterid)) {
+			if (!TextUtils.isEmpty(commentInfo.commenterid) && !TextUtils.isEmpty(commentInfo.commentername)) {
 				replyFromToText = MyTextUtils.getSpannableString(
 						MyTextUtils.addSingleUserSpan(commentInfo.displayname, fromId), "回复",
 						MyTextUtils.addSingleUserSpan(commentInfo.commentername, commenterId), ":");

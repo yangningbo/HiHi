@@ -152,7 +152,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		}
 		mUser = DamiCommon.getLoginResult(this);
 		isSelf = mUser.uid.equals(tuid);
-		
+
 		initComponent();
 		hideSomeViewsBasedOnUser();
 
@@ -384,7 +384,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private void bindTopSectionView() {
 		bindHeadView();
 		bindUserName();
-		tvUserInfo.setText(tUser.company);
+		String str = TextUtils.isEmpty(tUser.company) ? (TextUtils.isEmpty(tUser.post) ? "" : tUser.post) : (TextUtils
+				.isEmpty(tUser.post) ? tUser.company : tUser.company + "/" + tUser.post);
+		tvUserInfo.setText(str);
 	}
 
 	private void bindHeadView() {

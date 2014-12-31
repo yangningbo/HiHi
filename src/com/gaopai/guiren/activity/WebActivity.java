@@ -84,6 +84,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 
 		mTitle = getIntent().getStringExtra(KEY_TITLE);
 		mReportUrl = getIntent().getStringExtra(KEY_URL);
+		mUrl = mReportUrl;
 		mType = getIntent().getIntExtra("type", 0);
 
 		if (TextUtils.isEmpty(mReportUrl)) {
@@ -273,7 +274,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.ab_share:
 			parseHtml(stringBuilder.toString());
-			if (mUrl == null) {
+			if (TextUtils.isEmpty(mUrl)) {
 				return;
 			}
 			if (mWebImage == null) {
@@ -287,7 +288,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 			}
 			
 			ShareManager shareManager = new ShareManager(this);
-			shareManager.shareWebLink(mWebTitle, mWebImage, mWebContent, mUrl);
+			shareManager.shareWebLink(mWebTitle, mWebImage.trim(), mWebContent, mUrl.trim());
 			shareManager.setDyCallback(new CallDyback() {
 				@Override
 				public void spreadDy() {
@@ -295,7 +296,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 					if (TextUtils.isEmpty(mUrl)) {
 						return;
 					}
-					DamiInfo.spreadDynamic(6, null, mWebTitle, mWebImage, mUrl, mWebContent,
+					DamiInfo.spreadDynamic(6, null, mWebTitle, mWebImage.trim(), mUrl.trim(), mWebContent,
 							new SimpleResponseListener(mContext) {
 
 								@Override

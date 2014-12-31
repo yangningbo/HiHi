@@ -173,7 +173,6 @@
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@id/layout_header_mvp"
                     android:ellipsize="end"
-                    android:singleLine="true"
                     android:textColor="@color/general_text_black"
                     android:textSize="15sp" />
             </RelativeLayout>
