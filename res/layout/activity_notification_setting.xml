@@ -115,7 +115,7 @@
         android:background="@drawable/selector_btn_general"
         android:drawableRight="@drawable/icon_switch_normal"
         android:padding="10dp"
-        android:text="大蜜汇报提醒" />
+        android:text="地歌网内容提醒" />
 
     <View
         android:layout_width="match_parent"

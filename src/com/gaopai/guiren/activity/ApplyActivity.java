@@ -29,9 +29,10 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 	private ProgressView pvJiaV;
 
 	private Button btnJiav;
+	private Button btnInvite;
 
 	private int requiredTotal = 20;
-	
+
 	private User mLogin;
 
 	@Override
@@ -48,7 +49,8 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 		MyTextUtils.changeToBold(tvRedPercent);
 
 		ViewUtil.findViewById(this, R.id.btn_fill_profile).setOnClickListener(this);
-		ViewUtil.findViewById(this, R.id.btn_invite_to_guiren).setOnClickListener(this);
+		btnInvite = ViewUtil.findViewById(this, R.id.btn_invite_to_guiren);
+		btnInvite.setOnClickListener(this);
 
 		btnJiav = ViewUtil.findViewById(this, R.id.btn_confirm);
 		btnJiav.setOnClickListener(this);
@@ -76,6 +78,7 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 					otherCondition(data.state, ApplyActivity.this);
 				}
 			}
+
 			@Override
 			public void onFailure(Object o) {
 				showErrorView();
@@ -94,23 +97,32 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void bindView(GetVerifyResult.Data data) {
-		requiredTotal = data.invite.totalnum;
-		setInviteNumText(data.invite.num);
-		int percent = data.base.iscomplete * 20 + data.invite.num * (80 / requiredTotal);
-		if (percent > 100) {
-			percent = 100;
-		}
-		pvJiaV.setProgress(percent);
-		tvRedPercent.setText(percent + "%");
-		if (percent == 100) {
-			if (mLogin.bigv == 0) {
-				btnJiav.setEnabled(true);
-			} else {
-				btnJiav.setEnabled(true);
-				btnJiav.setText(R.string.jiav_success);
-				btnJiav.setOnClickListener(null);
+		try {
+			requiredTotal = data.invite.totalnum;
+			setInviteNumText(data.invite.num);
+			int percent = data.base.iscomplete * 20 + data.invite.num * (80 / requiredTotal);
+			if (percent > 100) {
+				percent = 100;
 			}
+			pvJiaV.setProgress(percent);
+			if (data.base.iscomplete == 1) {
+				btnInvite.setEnabled(true);
+			} else {
+				btnInvite.setEnabled(false);
+			}
+			tvRedPercent.setText(percent + "%");
+			if (percent == 100) {
+				if (mLogin.bigv == 0) {
+					btnJiav.setEnabled(true);
+				} else {
+					btnJiav.setEnabled(true);
+					btnJiav.setText(R.string.jiav_success);
+					btnJiav.setOnClickListener(null);
+				}
+			}
+		} catch (NullPointerException e) {
 		}
+
 	}
 
 	private void setInviteNumText(int num) {
@@ -128,8 +140,9 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 				(text1 + num).length(), text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		tvInviteNum.setText(spString);
 	}
-	
+
 	public final static int REQUEST_VERIFY_PROFILE = 2;
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -194,6 +207,7 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 			public int totalnum;
 		}
 	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (resultCode == RESULT_OK) {

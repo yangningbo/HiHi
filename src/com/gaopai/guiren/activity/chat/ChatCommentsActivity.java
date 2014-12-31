@@ -62,8 +62,10 @@ import com.gaopai.guiren.bean.MsgZanListResult.ZanBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
+import com.gaopai.guiren.bean.net.IdentitityResult;
 import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
@@ -173,6 +175,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(INTENT_MESSAGE_KEY);
 		mTribe = (Tribe) getIntent().getSerializableExtra(INTENT_TRIBE_KEY);
 		mIdentity = (Identity) getIntent().getSerializableExtra(INTENT_IDENTITY_KEY);
+
 		mChatType = getIntent().getIntExtra(INTENT_CHATTYPE_KEY, 0);
 		isOnLooker = getIntent().getBooleanExtra(INTENT_SENCE_ONLOOK_KEY, false);
 		msgHelper = new ChatMsgDataHelper(mContext, callback, mTribe, mChatType);
@@ -192,6 +195,63 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		// updateVoicePlayModeState(isModeInCall);
 		isChangeVoice = isAnony();
 		setChangeVoiceView(isChangeVoice);
+		if (mIdentity == null) {
+			hasIdentity = false;
+			getIdentity();
+		}
+	}
+	
+	private boolean hasIdentity = true;
+	protected void getIdentity() {
+		if ((mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && (mTribe.role != 1)) || mChatType == ChatTribeActivity.CHAT_TYPE_TRIBE) {
+			SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
+			IdentityTable table = new IdentityTable(db);
+			Identity identity = table.query(mTribe.id);
+			if (identity == null || System.currentTimeMillis() - identity.updateTime > 24 * 60 * 60 * 1000) {
+				getIndetityByNet();
+			} else {
+				hasIdentity = true;
+				mIdentity = identity;
+			}
+		}
+	}
+	
+	/**
+	 * @update
+	 */
+	private void getIndetityByNet() {
+		DamiInfo.getIndetity(mTribe.id, new SimpleResponseListener(mContext) {
+			@Override
+			public void onSuccess(Object o) {
+				IdentitityResult data = (IdentitityResult) o;
+				if (data.state != null && data.state.code == 0) {
+					mIdentity = data.data;
+					insertIdentity();
+					hasIdentity = true;
+				} else {
+					hasIdentity = false;
+					showDialog(getString(R.string.identity_name), getString(R.string.refetch_nickname),
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									getIndetityByNet();
+								}
+							});
+				}
+			}
+		});
+	}
+	
+	public void insertIdentity() {
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
+		IdentityTable table = new IdentityTable(db);
+		Identity identity = table.query(mTribe.id);
+		if (identity == null) {
+			table.insert(mTribe.id, mIdentity);
+		} else {
+			table.update(mTribe.id, mIdentity);
+		}
 	}
 
 	private boolean isAnony() {
@@ -1208,7 +1268,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			msg.displayname = User.getUserName(mLogin);
 			msg.headImgUrl = mLogin.headsmall;
 		} else {
-			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0) {
+			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0 || mIdentity == null) {
 				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
 				msg.displayname = User.getUserName(mLogin);
 				msg.headImgUrl = mLogin.headsmall;

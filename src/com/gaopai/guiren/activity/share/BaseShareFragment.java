@@ -130,8 +130,19 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 	}
+	
+	protected String searchText = "";
+	public void searchUser(String text) {
+		searchText = text;
+		mListView.doPullRefreshing(true, 0);
+	}
 
 	protected void creatHeaderView(ListView listView) {
+	}
+	
+	public static class SearchHolder {
+		public int page;
+		public boolean isFull;
 	}
 	protected int page = 1;
 	protected boolean isFull = false;

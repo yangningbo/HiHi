@@ -46,9 +46,14 @@ public class ShareFollowersFragment extends BaseShareFragment {
 	protected void getUserList(boolean isRefresh) {
 		// TODO Auto-generated method stub
 		super.getUserList(isRefresh);
-		DamiInfo.getFansList(mLogin.uid, page, "", new MyListener(getActivity(), isRefresh));
+		DamiInfo.getFansList(mLogin.uid, page, searchText, new MyListener(getActivity(), isRefresh));
 	}
 
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		getShareActivity().setCurrentFragment(this);
+	}
 
 
 	@Override

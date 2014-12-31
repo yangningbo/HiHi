@@ -10,8 +10,10 @@ import u.aly.ba;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -19,8 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.ContactActivity;
 import com.gaopai.guiren.activity.share.BaseShareFragment.OnBackListener;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.User;
@@ -56,6 +60,8 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 	public MessageInfo messageInfo;
 	public String tribeId;
 
+	private BaseShareFragment currentFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -72,6 +78,10 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 				ShareFollowersFragment.class);
 	}
 
+	public void setCurrentFragment(BaseShareFragment baseFragment) {
+		this.currentFragment = baseFragment;
+	}
+
 	public boolean isShare() {
 		return !(messageInfo == null);
 	}
@@ -86,6 +96,23 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 				ShareActivity.this.finish();
 			}
 		};
+		etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					if (etSearch.getText().length() == 0) {
+						ShareActivity.this.showToast(getString(R.string.input_can_not_be_empty));
+						return true;
+					}
+					BaseShareFragment fragment = (BaseShareFragment) getSupportFragmentManager().findFragmentById(
+							R.id.fl_fragment_holder);
+					if (fragment != null) {
+						fragment.searchUser(etSearch.getText().toString());
+					}
+					return true;
+				}
+				return false;
+			}
+		});
 	}
 
 	public void setTitleText(int text) {

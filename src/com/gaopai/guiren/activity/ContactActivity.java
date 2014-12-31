@@ -253,6 +253,7 @@ public class ContactActivity extends BaseActivity {
 	private boolean isFullSearch = false;
 	private boolean isFullList = false;
 
+	
 	class MyListener extends SimpleResponseListener {
 
 		public MyListener(Context context) {

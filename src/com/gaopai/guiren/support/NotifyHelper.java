@@ -73,15 +73,15 @@ public class NotifyHelper {
 	}
 
 	public boolean isPlayRingtone() {
-		return po.getInt(SPConst.KEY_NOTIFY_PLAY_RINGTONES, 0) == 1;
+		return po.getInt(SPConst.KEY_NOTIFY_PLAY_RINGTONES, 1) == 1;
 	}
 
 	public boolean isVibrate() {
-		return po.getInt(SPConst.KEY_NOTIFY_VIBRATE, 0) == 1;
+		return po.getInt(SPConst.KEY_NOTIFY_VIBRATE, 1) == 1;
 	}
 
 	public boolean isDamiNotify() {
-		return po.getInt(SPConst.KEY_NOTIFY_DAMI, 0) == 1;
+		return po.getInt(SPConst.KEY_NOTIFY_DAMI, 1) == 1;
 	}
 
 	public static void saveNotificationTime(Context context, long time) {

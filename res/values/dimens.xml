@@ -65,8 +65,8 @@
     <dimen name="slide_item_text_size">16sp</dimen>
     
     <dimen name="notification_item_base_padding">10dp</dimen>
-    <dimen name="notification_item_dot_size">18dp</dimen>
-    <dimen name="notification_item_dot_radius">8dp</dimen>
+    <dimen name="notification_item_dot_size">20dp</dimen>
+    <dimen name="notification_item_dot_radius">10dp</dimen>
     
     <dimen name="tribe_detail_thick_divider">2px</dimen>
     <dimen name="tribe_detail_btn_radius">0dp</dimen>

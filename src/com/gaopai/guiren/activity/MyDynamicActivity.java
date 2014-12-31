@@ -56,7 +56,7 @@ public class MyDynamicActivity extends BaseActivity {
 		if (isMyself) {
 			mTitleBar.setTitleText("我的动态");
 		} else {
-			mTitleBar.setTitleText("他的动态");
+			mTitleBar.setTitleText("TA的动态");
 		}
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
