@@ -16,6 +16,8 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 //认证界面
@@ -26,6 +28,11 @@ public class ReverificationActivity extends BaseActivity {
 	private TextView etIndustry;
 	private EditText etJob;
 	private Button btnVerificaion;
+
+	private EditText etPhone;
+	private EditText etEmail;
+	private EditText etWeixin;
+	private EditText etWeibo;
 
 	private User mUser = null;
 
@@ -43,29 +50,51 @@ public class ReverificationActivity extends BaseActivity {
 		etCompany = (EditText) findViewById(R.id.et_company);
 		etIndustry = (TextView) findViewById(R.id.et_industry);
 		etJob = (EditText) findViewById(R.id.et_job);
+
+		etPhone = ViewUtil.findViewById(this, R.id.et_phone);
+		etEmail = ViewUtil.findViewById(this, R.id.et_email);
+		etWeibo = ViewUtil.findViewById(this, R.id.et_weibo);
+		etWeixin = ViewUtil.findViewById(this, R.id.et_weixin);
+
 		btnVerificaion = (Button) findViewById(R.id.btn_verificaition);
 		btnVerificaion.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (TextUtils.isEmpty(etName.getText().toString()) || TextUtils.isEmpty(etCompany.getText().toString())
-						|| TextUtils.isEmpty(etIndustry.getText().toString())
-						|| TextUtils.isEmpty(etJob.getText().toString())) {
-					showToast(R.string.input_can_not_be_empty);
+				final String name = etName.getText().toString();
+				final String company = etCompany.getText().toString();
+				final String industry = etIndustry.getText().toString();
+				final String job = etJob.getText().toString();
+				final String phone = etPhone.getText().toString();
+				final String email = etEmail.getText().toString();
+				final String weixin = etWeixin.getText().toString();
+				final String weibo = etWeibo.getText().toString();
+				if (TextUtils.isEmpty(name) || TextUtils.isEmpty(company) || TextUtils.isEmpty(industry)
+						|| TextUtils.isEmpty(job) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(email)) {
+					showToast(R.string.must_input_can_not_be_empty);
 					return;
 				}
-				DamiInfo.reAuth(etIndustry.getText().toString(), etName.getText().toString(), etCompany.getText()
-						.toString(), etJob.getText().toString(), new SimpleResponseListener(mContext,
-						R.string.request_internet_now) {
+				if (!MyTextUtils.checkIsPhone(phone)) {
+					showToast(R.string.please_input_correct_mobile_num);
+					return;
+				}
+				if (!MyTextUtils.checkIsEmail(email)) {
+					showToast(R.string.please_input_correct_email);
+					return;
+				}
+				DamiInfo.reAuth(industry, name, company, job, email, weibo, weixin, phone, new SimpleResponseListener(
+						mContext, R.string.request_internet_now) {
 					@Override
 					public void onSuccess(Object o) {
 						BaseNetBean data = (BaseNetBean) o;
 						if (data.state != null && data.state.code == 0) {
-							mUser.realname = etName.getText().toString();
-							mUser.company = etCompany.getText().toString();
-							mUser.depa = etIndustry.getText().toString();
-							mUser.post = etJob.getText().toString();
+							mUser.realname = name;
+							mUser.company = company;
+							mUser.depa = industry;
+							mUser.post = job;
+							mUser.phone = phone;
+							mUser.email = email;
+							mUser.weixin = weixin;
+							mUser.weibo = weibo;
 							DamiCommon.saveLoginResult(mContext, mUser);
 							sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 							setResult(RESULT_OK);
@@ -82,6 +111,10 @@ public class ReverificationActivity extends BaseActivity {
 		etCompany.setText(mUser.company);
 		etIndustry.setText(mUser.depa);
 		etJob.setText(mUser.post);
+		etPhone.setText(mUser.phone);
+		etWeibo.setText(mUser.weibo);
+		etWeixin.setText(mUser.weixin);
+		etEmail.setText(mUser.email);
 		findViewById(R.id.layout_industry).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -6,14 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import u.aly.be;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -58,7 +55,6 @@ import com.gaopai.guiren.support.TagWindowManager.TagCallback;
 import com.gaopai.guiren.support.comment.CommentProfile;
 import com.gaopai.guiren.support.view.AgreeAnimWindow;
 import com.gaopai.guiren.support.view.HeadView;
-import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -66,7 +62,6 @@ import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.LineRelativeLayout;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.squareup.picasso.Picasso;
-import com.umeng.socialize.net.z;
 
 public class ProfileActivity extends BaseActivity implements OnClickListener {
 
@@ -403,10 +398,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		SpannableString name;
 		if (tUser.bigv == 1) {
-			name = new SpannableString(User.getSubUserName(tUser, mContext) + HeadView.MVP_NAME_STR);
+			name = new SpannableString(User.getUserName(tUser) + HeadView.MVP_NAME_STR);
 			HeadView.getMvpName(mContext, name);
 		} else {
-			name = new SpannableString(User.getSubUserName(tUser, mContext));
+			name = new SpannableString(User.getUserName(tUser));
 		}
 		MyTextUtils.setTextSize(name, 22);
 		MyTextUtils.setTextColor(name, getResources().getColor(R.color.general_text_black));
@@ -421,8 +416,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		tvUserName.setText(builder.append(name).append(meiliInfo).append(integra));
 	}
-	
-	
 
 	private void bindUserTags() {
 		// if (tagList != null && tagList.size() > 0) {
@@ -533,7 +526,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			removeTextDrawable(tvEmail);
 		} else if (TextUtils.isEmpty(mUser.email)) {
 			tvEmail.setText(R.string.no_right_see_email);
-			removeTextDrawable(tvEmail);
+			removeTextDrawableWithClick(tvEmail);
 		}
 
 		if (pc.phone == 0) {
@@ -541,7 +534,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			removeTextDrawable(tvPhone);
 		} else if (TextUtils.isEmpty(mUser.phone)) {
 			tvPhone.setText(R.string.no_right_see_phone);
-			removeTextDrawable(tvPhone);
+			removeTextDrawableWithClick(tvPhone);
 		}
 
 		if (pc.wechat == 0) {
@@ -549,7 +542,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			removeTextDrawable(tvWeixin);
 		} else if (TextUtils.isEmpty(mUser.weixin)) {
 			tvWeixin.setText(R.string.no_right_see_weixin);
-			removeTextDrawable(tvWeixin);
+			removeTextDrawableWithClick(tvWeixin);
 		}
 
 		if (pc.weibo == 0) {
@@ -557,7 +550,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			removeTextDrawable(tvWeibo);
 		} else if (TextUtils.isEmpty(mUser.weibo)) {
 			tvWeibo.setText(R.string.no_right_see_weibo);
-			removeTextDrawable(tvWeibo);
+			removeTextDrawableWithClick(tvWeibo);
 		}
 		// if (!isSelf) {
 		// removeTextDrawable(tvEmail);
@@ -581,6 +574,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 		textView.setCompoundDrawablePadding(0);
 		((ViewGroup) textView.getParent()).setOnClickListener(null);
+	}
+
+	private void removeTextDrawableWithClick(TextView textView) {
+		textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+		textView.setCompoundDrawablePadding(0);
 	}
 
 	private void bindBottomDynamicView() {
@@ -747,6 +745,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	public final static int REQUEST_CHANGE_PROFILE = 0;
+	public final static int REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE = 3;
 	public final static int REQUEST_COMMENT = 1;
 	public final static int REQUEST_VERIFY_PROFILE = 2;
 
@@ -790,6 +789,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.layout_profile_email:
 			if (!isSelf) {
+				if (TextUtils.isEmpty(mUser.email)) {
+					changeContact(ChangeProfileActivity.TYPE_EMAIL, mUser.email,
+							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					return;
+				}
 				sendEmail(tUser.email);
 			} else {
 				changeContact(ChangeProfileActivity.TYPE_EMAIL, tUser.email);
@@ -797,6 +801,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.layout_profile_phone_num:
 			if (!isSelf) {
+				if (TextUtils.isEmpty(mUser.phone)) {
+					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
+							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					return;
+				}
 				makePhonecall(tUser.phone);
 			} else {
 				changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
@@ -804,6 +813,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.layout_profile_weibo_num:
 			if (!isSelf) {
+				if (TextUtils.isEmpty(mUser.weibo)) {
+					changeContact(ChangeProfileActivity.TYPE_WEIBO, mUser.weibo,
+							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					return;
+				}
 				openWeibo();
 			} else {
 				changeContact(ChangeProfileActivity.TYPE_WEIBO, tUser.weibo);
@@ -811,6 +825,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.layout_profile_weixin_num:
 			if (!isSelf) {
+				if (TextUtils.isEmpty(mUser.weixin)) {
+					changeContact(ChangeProfileActivity.TYPE_WEIXIN, mUser.weixin,
+							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					return;
+				}
 				openWeixin();
 			} else {
 				changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);
@@ -892,15 +911,23 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void openWeibo() {
-		Intent intent = new Intent();
-		ComponentName cmp = new ComponentName("com.sina.weibo", "com.sina.weibo.EditActivity");
-		intent.setAction(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_LAUNCHER);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.setComponent(cmp);
-		try {
-			startActivityForResult(intent, 0);
-		} catch (Exception e) {
+		// Intent intent = new Intent();
+		// ComponentName cmp = new ComponentName("com.sina.weibo",
+		// "com.sina.weibo.EditActivity");
+		// intent.setAction(Intent.ACTION_MAIN);
+		// intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		// intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		// intent.setComponent(cmp);
+		// try {
+		// startActivityForResult(intent, 0);
+		// } catch (Exception e) {
+		// }
+		if (!TextUtils.isEmpty(tUser.weibo)) {
+			String url = "http://m.weibo.cn/n/" + tUser.weibo;
+			Intent intent = new Intent(this, WebActivity.class);
+			intent.putExtra("url", url);
+			intent.putExtra("type", 2);
+			startActivity(intent);
 		}
 	}
 
@@ -974,13 +1001,17 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void changeContact(int type, String text) {
+		changeContact(type, text, REQUEST_CHANGE_PROFILE);
+	}
+
+	private void changeContact(int type, String text, int request) {
 		if (TextUtils.isEmpty(text)) {
 			text = "";
 		}
 		Intent intent = new Intent(mContext, ChangeProfileActivity.class);
 		intent.putExtra(ChangeProfileActivity.KEY_TEXT, text);
 		intent.putExtra(ChangeProfileActivity.KEY_TYPE, type);
-		startActivityForResult(intent, REQUEST_CHANGE_PROFILE);
+		startActivityForResult(intent, request);
 	}
 
 	@Override
@@ -995,6 +1026,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				tvPhone.setText(tUser.phone);
 				tvWeixin.setText(tUser.weixin);
 				tvWeibo.setText(tUser.weibo);
+			}
+			if (requestCode == REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE) {
+				mUser = DamiCommon.getLoginResult(mContext);
+				getUserInfo();
 			}
 
 			if (requestCode == REQUEST_COMMENT) {
@@ -1019,8 +1054,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			if (requestCode == REQUEST_VERIFY_PROFILE) {
 				tUser = DamiCommon.getLoginResult(this);
 				bindProfileView();
+				bindContactView();
 				bindTopSectionView();
 			}
+
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.gaopai.guiren.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,20 +12,27 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
+import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.User;
@@ -35,6 +43,7 @@ import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
@@ -85,6 +94,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		initViews();
 		cameralHelper = new CameralHelper(this);
 		getTags();
+		showGuideDialog_chat(tvUseRealName);
 	}
 
 	@Override
@@ -352,5 +362,38 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 				SendDynamicMsgActivity.this.finish();
 			}
 		});
+	}
+
+	protected void showGuideDialog_chat(View targetView) {
+		boolean result = DamiApp.getInstance().getPou().getBoolean(SPConst.KEY_GUIDE_USE_REAL_NAME, true);
+		if (!result) {
+			return;
+		}
+		View mDialogView = View.inflate(this, R.layout.dialog_guide, null);
+		RelativeLayout rl = (RelativeLayout) mDialogView.findViewById(R.id.rl);
+		final Dialog dialog = new Dialog(this, R.style.dialog_middle);
+		dialog.setContentView(mDialogView);
+		dialog.setCancelable(false);
+		ImageView iv_tip1 = new ImageView(this);
+		iv_tip1.setImageResource(R.drawable.icon_guide_send_dynamic_realname);
+		rl.addView(iv_tip1);
+		getLocation(targetView, iv_tip1, 1);
+		Window dialogWindow = dialog.getWindow();
+		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+		lp.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+		lp.height = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
+		dialogWindow.setAttributes(lp);
+		dialog.setCanceledOnTouchOutside(true);
+		rl.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				dialog.dismiss();
+				return false;
+			}
+		});
+		dialog.show();
+		DamiApp.getInstance().getPou().setBoolean(SPConst.KEY_GUIDE_USE_REAL_NAME, false);
 	}
 }

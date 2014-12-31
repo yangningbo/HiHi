@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
@@ -50,6 +51,7 @@ import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.slide.DragLayout;
@@ -328,7 +330,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			}
 			DamiCommon.setNetWorkState(isNetConnect);
 		} else if (ACTION_LOGIN_OUT.equals(action)) {
-			dragLayout.close();
+			dragLayout.closeQuick();
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 			startActivityForResult(loginIntent, LOGIN_REQUEST);
 		} else if (LOGIN_SUCCESS_ACTION.equals(action)) {
@@ -564,11 +566,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	 */
 	private boolean startGuidePage() {
 		boolean isShowGudie = false;
-
-		SharedPreferences preferences = this.getSharedPreferences(DamiCommon.SHOWGUDIEVERSION, 0);
-		int version = preferences.getInt("app_version", 0);
-		// version = 0;
-		if (version != MyUtils.getVersionCode(this)) {
+		int result = DamiApp.getInstance().getPou().getInt(SPConst.KEY_GUIDE_START_PAGE, 0);
+		int version = FeatureFunction.getAppVersion(this);
+		if (result != version) {
 			Intent intent = new Intent();
 			intent.setClass(MainActivity.this, GuideActivity.class);
 			startActivityForResult(intent, SHOW_GUIDE_REQUEST);

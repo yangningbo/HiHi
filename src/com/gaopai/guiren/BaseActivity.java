@@ -15,18 +15,23 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -541,5 +546,71 @@ public class BaseActivity extends FragmentActivity {
 		}
 		mIsRegisterReceiver = false;
 	}
+	
+	/**
+	 * 
+	 * @param targetView
+	 * @param type
+	 *            1,右下 2 左下 3上
+	 * @return
+	 */
+	public int[] getLocation(final View targetView, final View myView,
+			final int type) {
+		final int[] arrs = new int[4];
+		ViewTreeObserver vto2 = targetView.getViewTreeObserver();
+
+		vto2.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+			@Override
+			public void onGlobalLayout() {
+				int arrs1[] = new int[2];
+				DisplayMetrics metrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(metrics);
+				int mWidth = metrics.widthPixels;
+				int mHeight = metrics.heightPixels;
+				targetView.getViewTreeObserver().removeGlobalOnLayoutListener(
+						this);
+				targetView.getLocationOnScreen(arrs1);
+				arrs[0] = arrs1[0];
+				arrs[1] = arrs1[1];
+				arrs[2] = targetView.getWidth();
+				arrs[3] = targetView.getMeasuredHeight();
+				ViewUtil.measure(myView);
+				if (type == 1) {
+					setLayout(myView, arrs[0] + 10, arrs[1] + 10);
+				} else if (type == 2) {
+					setLayout(myView, arrs[0] - myView.getMeasuredWidth()
+							+ arrs[2] / 2, arrs[1]);
+				} else if (type == 3) {
+
+					Log.d("CHEN", "mHeight ======" + mHeight
+							+ "     viewHeight===" + arrs[3]
+							+ "      myViewHeigth" + myView.getMeasuredHeight()
+							+ "   y==" + arrs[1]);
+					if (mHeight > 1280)
+						setLayout(myView, arrs[0],
+								arrs[1] - myView.getMeasuredHeight() - arrs[3]);
+					else {
+						setLayout(myView, arrs[0],
+								arrs[1] - myView.getMeasuredHeight());
+					}
+				}
+			}
+		});
+		return arrs;
+	}
+
+	/**
+	 * 设置控件所在的位置，并且不改变宽高， XY为绝对位置
+	 */
+	private void setLayout(View view, int x, int y) {
+		MarginLayoutParams margin = new MarginLayoutParams(
+				view.getLayoutParams());
+		margin.setMargins(x, y, 0, 0);
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+				margin);
+		view.setLayoutParams(layoutParams);
+	}
+
 
 }

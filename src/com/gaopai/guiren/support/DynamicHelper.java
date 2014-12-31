@@ -817,8 +817,7 @@ public class DynamicHelper {
 		}
 		switch (typeBean.type) {
 		case TYPE_SPREAD_LINK:
-			Logger.d(this, "image=" + jsonContent.image);
-			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1, R.drawable.logo);
+			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1, R.drawable.logo_help);
 			Picasso.with(mContext).load(jsonContent.image);
 			viewHolder.tvTitle1.setText(jsonContent.title);
 			viewHolder.tvInfo1.setText(jsonContent.desc);

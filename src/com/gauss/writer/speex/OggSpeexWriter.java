@@ -262,14 +262,17 @@ public class OggSpeexWriter extends AudioFileWriter {
 		int chksum;
 		byte[] header;
 		/* writes the OGG header page */
-		header = buildOggPageHeader((eos ? 4 : 0), granulepos, streamSerialNumber, pageCount++, packetCount, headerBuffer);
-		chksum = OggCrc.checksum(0, header, 0, header.length);
-		chksum = OggCrc.checksum(chksum, dataBuffer, 0, dataBufferPtr);
-		writeInt(header, 22, chksum);
-		out.write(header);
-		out.write(dataBuffer, 0, dataBufferPtr);
-		dataBufferPtr = 0;
-		headerBufferPtr = 0;
-		packetCount = 0;
+		try {
+			header = buildOggPageHeader((eos ? 4 : 0), granulepos, streamSerialNumber, pageCount++, packetCount, headerBuffer);
+			chksum = OggCrc.checksum(0, header, 0, header.length);
+			chksum = OggCrc.checksum(chksum, dataBuffer, 0, dataBufferPtr);
+			writeInt(header, 22, chksum);
+			out.write(header);
+			out.write(dataBuffer, 0, dataBufferPtr);
+			dataBufferPtr = 0;
+			headerBufferPtr = 0;
+			packetCount = 0;
+		} catch (Exception e) {
+		}
 	}
 }

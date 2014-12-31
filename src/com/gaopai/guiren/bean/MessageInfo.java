@@ -88,6 +88,9 @@ public class MessageInfo extends SNSMessage {
 	@Expose
 	public String role;
 	
+	public int isanonymity;//0实名  1匿名
+	public int reisanonymity;//0实名  1匿名
+	
 
 	public ConversationInnerBean conversion; 
 	

@@ -18,6 +18,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class ChangeProfileActivity extends BaseActivity {
@@ -61,7 +62,7 @@ public class ChangeProfileActivity extends BaseActivity {
 				switch (type) {
 				case TYPE_EMAIL:
 					email = etText.getText().toString();
-					if (!checkIsEmail(email)) {
+					if (!MyTextUtils.checkIsEmail(email)) {
 						showToast(R.string.please_input_correct_email);
 						return;
 					}
@@ -69,7 +70,7 @@ public class ChangeProfileActivity extends BaseActivity {
 					break;
 				case TYPE_PHONE:
 					phone = etText.getText().toString();
-					if (!checkIsPhone(phone)) {
+					if (!MyTextUtils.checkIsPhone(phone)) {
 						showToast(R.string.please_input_correct_mobile_num);
 						return;
 					}
@@ -109,6 +110,23 @@ public class ChangeProfileActivity extends BaseActivity {
 
 		etText = (EditText) findViewById(R.id.et_change_profile);
 		etText.setText(text);
+		switch (type) {
+		case TYPE_EMAIL:
+			etText.setHint("填写邮箱");
+			break;
+		case TYPE_PHONE:
+			etText.setHint("填写手机号码");
+			break;
+		case TYPE_WEIBO:
+			etText.setHint("填写微博");
+			break;
+		case TYPE_WEIXIN:
+			etText.setHint("填写微信号");
+			break;
+
+		default:
+			break;
+		}
 
 		if (etText != null) {
 			etText.setSelection(text.length());
@@ -122,13 +140,5 @@ public class ChangeProfileActivity extends BaseActivity {
 				etText.setText("");
 			}
 		});
-	}
-
-	private boolean checkIsPhone(String phone) {
-		return PhoneNumberUtils.isGlobalPhoneNumber(phone);
-	}
-
-	private boolean checkIsEmail(String email) {
-		return Patterns.EMAIL_ADDRESS.matcher(email).matches();
 	}
 }

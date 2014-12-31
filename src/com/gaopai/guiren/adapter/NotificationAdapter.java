@@ -115,7 +115,7 @@ public class NotificationAdapter extends BaseAdapter {
 			holder.ivTitleIcon.setImageResource(drawable);
 			break;
 		case -1:
-			holder.ivHeader.setImageResource(R.drawable.logo);
+			holder.ivHeader.setImageResource(R.drawable.logo_help);
 			break;
 
 		default:

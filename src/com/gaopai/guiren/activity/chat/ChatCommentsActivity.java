@@ -137,6 +137,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private String commenterid;
 	private String commenterName;
+	private int reisanonymity = 0;
 
 	public final static int VOICE_MODEL = 0;
 	public final static int TEXT_MODEL = 1;
@@ -365,6 +366,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				mVoiceSendBtn.setText(getString(R.string.comment_reply_info_colon) + messageInfos.get(pos).displayname);
 				commenterid = messageInfos.get(pos).from;
 				commenterName = messageInfos.get(pos).displayname;
+				reisanonymity = messageInfos.get(pos).isanonymity;
 			}
 		});
 	}
@@ -572,6 +574,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private void initialSendIdAndName() {
 		commenterid = "";
 		commenterName = "";
+		reisanonymity = 0;
 		mVoiceSendBtn.setText(mContext.getString(R.string.pressed_to_record));
 		mContentEdit.setHint(mContext.getString(R.string.input_message_hint));
 	}
@@ -732,8 +735,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	};
 
-	private final static int MAX_SECOND = 10;
-	private final static int MIN_SECOND = 2;
 
 	class MyAdapter extends BaseAdapter {
 
@@ -812,13 +813,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			viewHolder.messageNameText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			CharSequence replyFromToText;
 
-			if (!TextUtils.isEmpty(commentInfo.commenterid) && (Integer.valueOf(commentInfo.commenterid)) > 0) {
+			String fromId = commentInfo.isanonymity == 0 ? commentInfo.from : "-1";
+			String commenterId = commentInfo.reisanonymity == 0 ? commentInfo.commenterid : "-1";
+			if (!TextUtils.isEmpty(commentInfo.commenterid)) {
 				replyFromToText = MyTextUtils.getSpannableString(
-						MyTextUtils.addSingleUserSpan(commentInfo.displayname, commentInfo.from), "回复",
-						MyTextUtils.addSingleUserSpan(commentInfo.commentername, commentInfo.commenterid), ":");
+						MyTextUtils.addSingleUserSpan(commentInfo.displayname, fromId), "回复",
+						MyTextUtils.addSingleUserSpan(commentInfo.commentername, commenterId), ":");
 			} else {
 				replyFromToText = MyTextUtils.getSpannableString(
-						MyTextUtils.addSingleUserSpan(commentInfo.displayname, commentInfo.from), ":");
+						MyTextUtils.addSingleUserSpan(commentInfo.displayname, fromId), ":");
 			}
 			switch (commentInfo.fileType) {
 			case MessageType.TEXT:
@@ -902,7 +905,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		public void setCurrentModel(int model) {
 			mCurrentModel = model;
-			// playListener.setCurrentModel(model);
 		}
 
 		private void notHideViews(ViewHolder viewHolder, int which) {
@@ -1038,6 +1040,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private AlphaAnimation alphaAnim = null;
 	private ObjectAnimator animator;
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -1206,17 +1209,19 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
 				msg.displayname = User.getUserName(mLogin);
 				msg.headImgUrl = mLogin.headsmall;
+				msg.isanonymity = 0;
 			} else {
 				msg.displayname = mIdentity.name;
 				msg.headImgUrl = mIdentity.head;
 				msg.heroid = mIdentity.id;
+				msg.isanonymity = 1;
 			}
 		}
 		msg.type = mChatType;
 
 		msg.commenterid = commenterid;
 		msg.commentername = commenterName;
-
+		msg.reisanonymity = reisanonymity;
 		return msg;
 	}
 

@@ -297,6 +297,10 @@ public class DragLayout extends FrameLayout {
 	public void close() {
 		close(true);
 	}
+	
+	public void closeQuick() {
+		close(true);
+	}
 
 	public void close(boolean animate) {
 		if (animate) {

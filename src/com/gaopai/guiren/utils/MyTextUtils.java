@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.graphics.Bitmap;
+import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Layout;
@@ -23,6 +24,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -310,5 +312,13 @@ public class MyTextUtils {
 			}
 			return count;
 		}
+	}
+
+	public static boolean checkIsEmail(String email) {
+		return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+	}
+
+	public static boolean checkIsPhone(String phone) {
+		return PhoneNumberUtils.isGlobalPhoneNumber(phone);
 	}
 }

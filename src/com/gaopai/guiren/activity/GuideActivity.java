@@ -19,11 +19,14 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
 
+import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
+import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.R.drawable;
 import com.gaopai.guiren.adapter.FunctionPagerAdapter;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.view.ViewPager;
 import com.gaopai.guiren.view.ViewPager.OnPageChangeListener;
 import com.withparadox2.lvscrollpredict.oncescroll.OnceScroll;
@@ -65,11 +68,8 @@ public class GuideActivity extends Activity implements OnPageChangeListener {
 	 * 
 	 */
 	private void saveGuideVersion() {
-		SharedPreferences preferences = this.getSharedPreferences(
-				DamiCommon.SHOWGUDIEVERSION, 0);
-		Editor editor = preferences.edit();
-		editor.putInt("app_version", MyUtils.getVersionCode(mContext));
-		editor.commit();
+		int version = FeatureFunction.getAppVersion(this);
+		DamiApp.getInstance().getPou().setInt(SPConst.KEY_GUIDE_START_PAGE, version);
 	}
 
 	/**

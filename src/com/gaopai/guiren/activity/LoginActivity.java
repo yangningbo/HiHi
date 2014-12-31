@@ -31,13 +31,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
+import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.BaseInfo;
 import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.volley.IResponseListener;
 import com.tencent.connect.UserInfo;
@@ -100,14 +103,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		mTitleBar.setTitleText(R.string.login);
 		initComponent();
 	}
-	
-	
 
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
 	}
-
-
 
 	private void initComponent() {
 		mPreferences = this.getSharedPreferences(DamiCommon.REMENBER_SHARED, 0);
@@ -365,20 +364,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 						MessageTable table = new MessageTable(db);
 						if (data.data.roomids != null)
 							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
-						// if (data.data.auth == 0) {
-						//
-						// } else {
 						setResult(RESULT_OK);
 						sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-
-						if (DamiCommon.getInstallFirst(LoginActivity.this)) {
+						if (showRecomendPage()) {
+							DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
 							Intent intent = new Intent(LoginActivity.this, RecommendActivity.class);
 							startActivity(intent);
 						}
-
 						LoginActivity.this.finish();
-						// }
-
 					} else {
 						showToast(R.string.login_error);
 					}
@@ -417,6 +410,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			}
 		});
 
+	}
+
+	private boolean showRecomendPage() {
+		return DamiApp.getInstance().getPou().getBoolean(SPConst.getRecKey(mContext), true);
 	}
 
 	private String getContacts() {

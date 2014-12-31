@@ -91,12 +91,15 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 			mReportUrl = data.toString().substring(data.toString().indexOf("//") + 2);
 			mTitle = mReportUrl;
 		}
+
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(mTitle);
 		View view = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
 		view.setId(R.id.ab_share);
 		view.setOnClickListener(this);
-
+		if (mType == 2) {
+			mTitleBar.setVisibility(View.GONE);
+		}
 		mWebView = (WebView) findViewById(R.id.webview);
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		mWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
@@ -270,6 +273,19 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.ab_share:
 			parseHtml(stringBuilder.toString());
+			if (mUrl == null) {
+				return;
+			}
+			if (mWebImage == null) {
+				mWebImage = "";
+			}
+			if (mWebContent == null) {
+				mWebContent = getString(R.string.dige_info);
+			}
+			if (mWebTitle == null) {
+				mWebTitle = getString(R.string.dige);
+			}
+			
 			ShareManager shareManager = new ShareManager(this);
 			shareManager.shareWebLink(mWebTitle, mWebImage, mWebContent, mUrl);
 			shareManager.setDyCallback(new CallDyback() {

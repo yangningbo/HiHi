@@ -15,12 +15,9 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult.Case;
-import com.gaopai.guiren.activity.ApplyActivity.GetVerifyResult.Data;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.view.ProgressView;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -59,7 +56,6 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 
 		pvJiaV = (ProgressView) findViewById(R.id.tv_invite_num_1);
 		mLogin = DamiCommon.getLoginResult(mContext);
-		// getInviteUserNum();
 		getVerifyDetail();
 	}
 
@@ -132,13 +128,14 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 				(text1 + num).length(), text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		tvInviteNum.setText(spString);
 	}
-
+	
+	public final static int REQUEST_VERIFY_PROFILE = 2;
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_fill_profile:
-			startActivity(ReverificationActivity.class);
+			startActivityForResult(ReverificationActivity.class, REQUEST_VERIFY_PROFILE);
 			break;
 		case R.id.btn_invite_to_guiren:
 			if (bean.base.iscomplete == 0) {
@@ -171,38 +168,6 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-	// "data": {
-	// "base": { //认证资料
-	// "iscomplete": 0, //是否完成，0没有完成，1完成
-	// "case": {
-	// "realname": 1, //真实姓名是否填写，0没有填写，1填写
-	// "company": 1, //公司是否填写，0没有填写，1填写
-	// "depa": 0, //部门是否填写，0没有填写，1填写
-	// "post": 1 //职位/职业是否填写，0没有填写，1填写
-	// }
-	// },
-	// "invite": { //邀请好友数据
-	// "num": "0", //已完成的邀请数据
-	// "totalnum": 20 //需邀请的用户总数
-	// }
-	// },
-
-	// "data": {
-	// "base": {
-	// "iscomplete": 0,
-	// "item": {
-	// "result": "等待审核",
-	// "realname": 1,
-	// "company": 1,
-	// "depa": 0,
-	// "post": 1
-	// }
-	// },
-	// "invite": {
-	// "num": "0",
-	// "totalnum": 20
-	// }
-	// },
 	public static class GetVerifyResult extends BaseNetBean {
 		public Data data;
 
@@ -227,6 +192,14 @@ public class ApplyActivity extends BaseActivity implements OnClickListener {
 		public static class Invite {
 			public int num;
 			public int totalnum;
+		}
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		if (resultCode == RESULT_OK) {
+			if (requestCode == REQUEST_VERIFY_PROFILE) {
+				getVerifyDetail();
+			}
 		}
 	}
 }

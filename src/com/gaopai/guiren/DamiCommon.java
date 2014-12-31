@@ -505,15 +505,15 @@ public class DamiCommon {
 			break;
 
 		case 2:
-			sampleRate = 9600;
+			sampleRate = 15000;
 			break;
 
 		case 3:
-			sampleRate = 9800;
+			sampleRate = 14000;
 			break;
 
 		case 4:
-			sampleRate = 10000;
+			sampleRate = 13000;
 			break;
 
 		case 5:

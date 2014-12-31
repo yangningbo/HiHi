@@ -203,15 +203,6 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 						if (data.state != null && data.state.code == 0) {
 							flowLayout.setVisibility(View.GONE);
 							bindSearchView(data.data);
-							if (data.pageInfo != null) {
-								mListView.setScrollLoadEnabled(true);
-								isFull = (data.pageInfo.hasMore == 0);
-								if (!isFull) {
-									page++;
-								}
-							} else {
-								mListView.setScrollLoadEnabled(false);
-							}
 						} else {
 							otherCondition(data.state, SearchActivity.this);
 						}

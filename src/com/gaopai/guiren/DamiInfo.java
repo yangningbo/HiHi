@@ -70,8 +70,8 @@ import com.gaopai.guiren.volley.UIHelperUtil;
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
-//	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-	 public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+//	public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
 	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
@@ -275,8 +275,6 @@ public class DamiInfo implements Serializable {
 		params.put("tid", id);
 		request(Method.GET, TribeInfoBean.class, params, TribeInfoBean.TYPE_TRIBE_INFO, listener, LOGIN_TYPE_NEED_LOGIN);
 	}
-
-
 
 	/**
 	 * 查询
@@ -609,6 +607,8 @@ public class DamiInfo implements Serializable {
 		bundle.add("to", messageInfo.to);
 		bundle.add("from", messageInfo.from);
 		bundle.add("fileType", String.valueOf(messageInfo.fileType));
+		bundle.add("isanonymity", String.valueOf(messageInfo.isanonymity));
+		bundle.add("reisanonymity", String.valueOf(messageInfo.reisanonymity));
 
 		if (!TextUtils.isEmpty(messageInfo.content)) {
 			bundle.add("content", messageInfo.content);
@@ -1693,8 +1693,21 @@ public class DamiInfo implements Serializable {
 	// depa true string 部门
 	// post true string 职位
 
-	public static void reAuth(String depa, String realname, String company, String post, IResponseListener listener) {
+	public static void reAuth(String depa, String realname, String company, String post, String email, String weibo,
+			String weixin, String phone, IResponseListener listener) {
 		Parameters bundle = new Parameters();
+		if (!TextUtils.isEmpty(email)) {
+			bundle.add("email", email);
+		}
+		if (!TextUtils.isEmpty(weibo)) {
+			bundle.add("weibo", weibo);
+		}
+		if (!TextUtils.isEmpty(weixin)) {
+			bundle.add("weixin", weixin);
+		}
+		if (!TextUtils.isEmpty(phone)) {
+			bundle.add("phone", phone);
+		}
 		bundle.add("depa", depa);
 		bundle.add("realname", realname);
 		bundle.add("company", company);
@@ -2382,7 +2395,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/batFollow";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BatFollowResult.class, listener);
 	}
-	
+
 	/**
 	 * 获取系统默认标签
 	 * 

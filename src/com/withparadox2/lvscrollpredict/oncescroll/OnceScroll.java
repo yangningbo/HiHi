@@ -1,12 +1,8 @@
 package com.withparadox2.lvscrollpredict.oncescroll;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -23,10 +19,19 @@ import android.widget.Toast;
 
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.utils.Logger;
-import com.withparadox2.lvscrollpredict.oncescroll.anim.AnimBase;
 import com.withparadox2.lvscrollpredict.oncescroll.anim.AnimView;
 
 public class OnceScroll extends ViewGroup {
+
+	public static interface Callback {
+		public void onClick();
+	}
+
+	private Callback callback;
+
+	public void setCallback(Callback callback) {
+		this.callback = callback;
+	}
 
 	public OnceScroll(Context context) {
 		super(context);
@@ -43,16 +48,6 @@ public class OnceScroll extends ViewGroup {
 		init();
 	}
 
-	public static interface Callback {
-		public void onClick();
-	}
-
-	private Callback callback;
-
-	public void setCallback(Callback callback) {
-		this.callback = callback;
-	}
-
 	private void init() {
 		gestureDetector = new GestureDetector(getContext(), new MyGestureListener());
 		this.setLongClickable(true);
@@ -63,6 +58,7 @@ public class OnceScroll extends ViewGroup {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -104,7 +100,6 @@ public class OnceScroll extends ViewGroup {
 
 		@Override
 		public boolean onDown(MotionEvent e) {
-			// TODO Auto-generated method stub
 			return true;
 		}
 
@@ -126,7 +121,6 @@ public class OnceScroll extends ViewGroup {
 		public boolean onSingleTapUp(MotionEvent e) {
 			Rect enterRect = new Rect(s4EnterApp.getLeft(), s4EnterApp.getTop(), s4EnterApp.getRight(),
 					s4EnterApp.getBottom());
-			Logger.d(this, enterRect + "   " + (int) e.getX() + "  y=" + (int) e.getY());
 			if (enterRect.contains((int) e.getX(), (int) e.getY())) {
 				if (callback != null) {
 					callback.onClick();
@@ -194,17 +188,16 @@ public class OnceScroll extends ViewGroup {
 		dot4 = creatView(R.drawable.icon_dot);
 		dot5 = creatView(R.drawable.icon_dot);
 		dot6 = creatView(R.drawable.icon_dot);
-		
 		s1Paper = creatView(R.drawable.stage1_paper);
 		s1Zixun = creatView(R.drawable.stage1_master_info);
 		s1Shangji = creatView(R.drawable.stage1_economic_in_hand);
-		
+
 		// stage2
 		s2Earth = creatView(R.drawable.stage2_earth);
 		s2Moon = creatView(R.drawable.stage2_moon);
 		s2InfoRenmai = creatView(R.drawable.stage2_remai);
 		s2InfoTribehasme = creatView(R.drawable.stage2_tribe_has_me);
-		
+
 		s2HeadJiayueting = creatView(R.drawable.stage2_head_jiayueting);
 		s2HeadZhouhongyi = creatView(R.drawable.stage2_head_zhouhongyi);
 		s2HeadFengxin = creatView(R.drawable.stage2_head_fengxing);
@@ -230,9 +223,9 @@ public class OnceScroll extends ViewGroup {
 		s3Stu2 = creatView(R.drawable.stage3_student_2);
 
 		// stage4
-		s4Circle = creatView(R.drawable.stage_general_circle);
 		s4HeadPart = creatView(R.drawable.stage4_head_part);
 		s4HeadFull = creatView(R.drawable.stage4_head_full);
+		s4Circle = creatView(R.drawable.stage_general_circle);
 		s4EnterApp = creatView(R.drawable.stage4_enter_app);
 		s4InfoContact = creatView(R.drawable.stage4_info_use_fake_voice);
 		s4InfoDisapper = creatView(R.drawable.stage4_info_disappear_after_talk);
@@ -243,8 +236,6 @@ public class OnceScroll extends ViewGroup {
 		// TODO Auto-generated method stub
 		super.onFinishInflate();
 	}
-
-	private List<AnimBase> gTitleAnims = new ArrayList<AnimBase>();
 
 	private AnimView gTitle;
 	private AnimView dot1;
@@ -312,38 +303,38 @@ public class OnceScroll extends ViewGroup {
 			measureChild(view, widthMeasureSpec, heightMeasureSpec);
 		}
 		isMeasured = true;
-		gTitle.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.14f), getH(0.08f));
-		gTitle.addScaleAnim(getSH(0f), getSH(0.2f), 0.6f, 1f);
+		gTitle.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.11f), getH(0.08f));
+		gTitle.addScaleAnim(getSH(0f), getSH(0.2f), 0.8f, 1f);
 		gTitle.addRotateAnim(getSH(0f), getSH(0.2f), 0.f, 360f);
 		gTitle.addRotateAnim(getSH(0.2f), getSH(0.6f), 0.f, 0.f);
 
-		// �볡
+		// 入场
 		dot1.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.2f), getH(0.7f));
 		dot2.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.3f), getH(0.8f));
-		// ���
+		// 过渡
 		dot1.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.7f), getH(0.3f));
 		dot2.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.8f), getH(0.2f));
-		// ����
+		// 出场
 		dot1.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.3f), getH(-0.2f));
 		dot2.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.2f), getH(-0.3f));
 
-		// �볡
+		// 入场
 		dot3.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.2f), getH(0.7f));
 		dot4.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.3f), getH(0.8f));
-		// ���
+		// 过渡
 		dot3.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.7f), getH(0.3f));
 		dot4.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.8f), getH(0.2f));
-		// ����
+		// 出场
 		dot3.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.3f), getH(-0.2f));
 		dot4.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.2f), getH(-0.3f));
 
-		// �볡
+		// 入场
 		dot5.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.2f), getH(0.7f));
 		dot6.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.3f), getH(0.8f));
-		// ���
+		// 过渡
 		dot5.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.7f), getH(0.3f));
 		dot6.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.8f), getH(0.2f));
-		// ����
+		// 出场
 		dot5.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.3f), getH(-0.2f));
 		dot6.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.2f), getH(-0.3f));
 
@@ -359,7 +350,7 @@ public class OnceScroll extends ViewGroup {
 		s1Shangji.addScaleAnim(getSH(0.f), getSH(0.2f), 1.f, 0.2f);
 
 		s2Earth.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.9f), getH(0.5f));
-		s2Earth.addScaleAnim(getSH(0.f), getSH(0.2f), 0.2f, 1f);
+		s2Earth.addScaleAnim(getSH(0.f), getSH(0.2f), 0.3f, 1f);
 		// stage 2
 		s2Earth.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(0.5f), getH(-0.2f));
 		s2Earth.addScaleAnim(getSH(0.f), getSH(0.2f), 1.0f, 0f);
@@ -372,36 +363,36 @@ public class OnceScroll extends ViewGroup {
 		s2InfoRenmai.addTrAnim(getSH(0f), getSH(0.2f), offCX(-84), getW(1.5f), offCY(-108), getH(-1.2f));
 
 		// scroll to top
-		s2HeadJiayueting.addTrAnimBL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(17), getH(1.5f), offCY(-57));
-		s2HeadZhouhongyi.addTrAnimTL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(57.5f), getH(1.5f), offCY(-52.5f));
-		s2HeadFengxin.addTrAnimTL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(45.5f), getH(1.5f), offCY(59f));
-		s2HeadLiyu.addTrAnimBR(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(-60f), getH(1.5f), offCY(-2.5f));
-		s2HeadTaoran.addTrAnimTR(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(-69f), getH(1.5f), offCY(33f));
-		s2HeadZhangtao.addTrAnimBR(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(84f), getH(1.5f), offCY(-157.5f));
+		s2HeadJiayueting.addTrAnimBL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(17), getH(0.3f), offCY(-57));
+		s2HeadZhouhongyi.addTrAnimTL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(57.5f), getH(0.5f), offCY(-52.5f));
+		s2HeadFengxin.addTrAnimTL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(45.5f), getH(1.2f), offCY(59f));
+		s2HeadLiyu.addTrAnimBR(getSH(0.0f), getSH(0.2f), getW(-0.5f), offCX(-60f), getH(0.2f), offCY(-2.5f));
+		s2HeadTaoran.addTrAnimTR(getSH(0.0f), getSH(0.2f), getW(-0.5f), offCX(-69f), getH(0.8f), offCY(33f));
+		s2HeadZhangtao.addTrAnimBR(getSH(0.0f), getSH(0.2f), getW(0.5f), offCX(84f), getH(-0.5f), offCY(-157.5f));
 
-		s2NameJiayueting.addTrAnimBL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(58), getH(1.5f), offCY(-72.5f));
-		s2NameZhouhongyi.addTrAnimBL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(101), getH(1.5f), offCY(12.5f));
-		s2NameLiyu.addTrAnimTR(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(-82), getH(1.5f), offCY(0));
-		s2NameTaoran.addTrAnimTR(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(-53.5f), getH(1.5f), offCY(76.5f));
-		s2NameFengxin.addTrAnimTL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(73f), getH(1.5f), offCY(86f));
-		s2NameZhangtao.addTrAnimBR(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(90f), getH(1.5f), offCY(-130));
+		s2NameJiayueting.addTrAnimBL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(58), getH(0.3f), offCY(-72.5f));
+		s2NameZhouhongyi.addTrAnimBL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(101), getH(0.5f), offCY(12.5f));
+		s2NameLiyu.addTrAnimTR(getSH(0.0f), getSH(0.2f), getW(-0.5f), offCX(-82), getH(0.2f), offCY(0));
+		s2NameTaoran.addTrAnimTR(getSH(0.0f), getSH(0.2f), getW(-0.5f), offCX(-53.5f), getH(0.8f), offCY(76.5f));
+		s2NameFengxin.addTrAnimTL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(73f), getH(1.2f), offCY(86f));
+		s2NameZhangtao.addTrAnimBR(getSH(0.0f), getSH(0.2f), getW(0.5f), offCX(90f), getH(-0.5f), offCY(-130));
 
 		s2Moon.addTrAnimTL(getSH(0.0f), getSH(0.2f), getW(0.5f), offCX(82.5f), getH(-1.5f), offCY(-176.5f));
 
 		// scroll to bottom
-		s2HeadJiayueting.addTrAnimBL(getSH(0.0f), getSH(0.2f), offCX(17), getW(1.5f), offCY(-57), getH(1.5f));
-		s2HeadZhouhongyi.addTrAnimTL(getSH(0.0f), getSH(0.2f), offCX(57.5f), getW(1.5f), offCY(-52.5f), getH(1.5f));
-		s2HeadFengxin.addTrAnimTL(getSH(0.0f), getSH(0.2f), offCX(45.5f), getW(1.5f), offCY(59f), getH(1.5f));
-		s2HeadLiyu.addTrAnimBR(getSH(0.0f), getSH(0.2f), offCX(-60f), getW(1.5f), offCY(-2.5f), getH(1.5f));
-		s2HeadTaoran.addTrAnimTR(getSH(0.0f), getSH(0.2f), offCX(-69f), getW(1.5f), offCY(33f), getH(1.5f));
-		s2HeadZhangtao.addTrAnimBR(getSH(0.0f), getSH(0.2f), offCX(84f), getW(1.5f), offCY(-157.5f), getH(1.5f));
+		s2HeadJiayueting.addTrAnimBL(getSH(0.0f), getSH(0.2f), offCX(17), getW(1.5f), offCY(-57), getH(0.3f));
+		s2HeadZhouhongyi.addTrAnimTL(getSH(0.0f), getSH(0.2f), offCX(57.5f), getW(1.5f), offCY(-52.5f), getH(0.5f));
+		s2HeadFengxin.addTrAnimTL(getSH(0.0f), getSH(0.2f), offCX(45.5f), getW(1.5f), offCY(59f), getH(1.2f));
+		s2HeadLiyu.addTrAnimBR(getSH(0.0f), getSH(0.2f), offCX(-60f), getW(-0.5f), offCY(-2.5f), getH(0.2f));
+		s2HeadTaoran.addTrAnimTR(getSH(0.0f), getSH(0.2f), offCX(-69f), getW(-0.5f), offCY(33f), getH(0.8f));
+		s2HeadZhangtao.addTrAnimBR(getSH(0.0f), getSH(0.2f), offCX(84f), getW(0.5f), offCY(-157.5f), getH(-0.5f));
 
-		s2NameJiayueting.addTrAnimBL(getSH(0.0f), getSH(0.2f), offCX(58), getW(1.5f), offCY(-72.5f), getH(1.5f));
-		s2NameZhouhongyi.addTrAnimBL(getSH(0.0f), getSH(0.2f), offCX(101), getW(1.5f), offCY(12.5f), getH(1.5f));
-		s2NameLiyu.addTrAnimTR(getSH(0.0f), getSH(0.2f), offCX(-82), getW(1.5f), offCY(0), getH(1.5f));
-		s2NameTaoran.addTrAnimTR(getSH(0.0f), getSH(0.2f), offCX(-53.5f), getW(1.5f), offCY(76.5f), getH(1.5f));
-		s2NameFengxin.addTrAnimTL(getSH(0.0f), getSH(0.2f), offCX(73f), getW(1.5f), offCY(86f), getH(1.5f));
-		s2NameZhangtao.addTrAnimBR(getSH(0.0f), getSH(0.2f), offCX(90f), getW(1.5f), offCY(-130), getH(1.5f));
+		s2NameJiayueting.addTrAnimBL(getSH(0.0f), getSH(0.2f), offCX(58), getW(1.5f), offCY(-72.5f), getH(0.3f));
+		s2NameZhouhongyi.addTrAnimBL(getSH(0.0f), getSH(0.2f), offCX(101), getW(1.5f), offCY(12.5f), getH(0.5f));
+		s2NameLiyu.addTrAnimTR(getSH(0.0f), getSH(0.2f), offCX(-82), getW(-0.5f), offCY(0), getH(0.2f));
+		s2NameTaoran.addTrAnimTR(getSH(0.0f), getSH(0.2f), offCX(-53.5f), getW(-0.5f), offCY(76.5f), getH(0.8f));
+		s2NameFengxin.addTrAnimTL(getSH(0.0f), getSH(0.2f), offCX(73f), getW(1.5f), offCY(86f), getH(1.2f));
+		s2NameZhangtao.addTrAnimBR(getSH(0.0f), getSH(0.2f), offCX(90f), getW(0.5f), offCY(-130), getH(-0.5f));
 
 		s2Moon.addTrAnimTL(getSH(0.0f), getSH(0.2f), offCX(82.5f), getW(0.5f), offCY(-176.5f), getH(-1.5f));
 
@@ -440,8 +431,8 @@ public class OnceScroll extends ViewGroup {
 		s4HeadFull.addScaleAnim(getSH(0.0f), getSH(0.2f), 0f, 0.20f);
 		s4Circle.addTrAnim(getSH(0.0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.2f), getH(0.9f));
 		/**
-		 * ����������ת��һ�𣬹�Ҫ�ѱ任������view���е㣬����ƫ������ offy =
-		 * -h/2*sin(16)^2, offx = -h/2*sin(16)cos(16)
+		 * 由于缩放旋转在一起，故要把变换点设在view的中点，计算偏移如下 offy = -h/2*sin(16)^2, offx =
+		 * -h/2*sin(16)cos(16)
 		 */
 		s4HeadFull.addTrAnim(getSH(0f), getSH(0.2f), getW(0.5f), offCX(-29.14f), getH(0.9f), offCY(-8.35f));
 		s4HeadFull.addScaleAnim(getSH(0.0f), getSH(0.2f), 0.20f, 1f);
@@ -453,9 +444,9 @@ public class OnceScroll extends ViewGroup {
 		s4HeadPart.addAlphaAnim(getSH(0.15f), getSH(0.2f), 0, 1);
 		s4HeadPart.addAlphaAnim(getSH(0.0f), getSH(0.15f), 0, 0);
 
-		s4EnterApp.addTrAnim(getSH(0.0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.2f), getH(0.8f));
+		s4EnterApp.addTrAnim(getSH(0.0f), getSH(0.2f), getW(0.5f), getW(0.5f), getH(1.2f), getH(0.9f));
 
-		s4InfoDisapper.addTrAnim(getSH(0.0f), getSH(0.2f), getW(-0.5f), offCX(0f), getH(1.2f), offCY(115f));
+		s4InfoDisapper.addTrAnim(getSH(0.0f), getSH(0.2f), getW(-0.5f), offCX(0f), getH(1.2f), offCY(125f));
 		s4InfoContact.addTrAnimBL(getSH(0.0f), getSH(0.2f), getW(1.5f), offCX(45f), getH(-1.2f), offCY(-110.5f));
 
 		s4Circle.addTrAnim(getSH(0f), getSH(0.15f), getW(0.5f), getW(0.5f), getH(0.9f), getH(0.6f));
@@ -495,7 +486,7 @@ public class OnceScroll extends ViewGroup {
 		s2NameZhangtao.setAnimation(creatTranslateAnimationX(1.2f, 500));
 
 		/**
-		 * ��ת���ĵľ���Ҫ��view�����Ͻ�����
+		 * 旋转中心的距离要从view的左上角算起
 		 */
 		s2Moon.layoutTL(offCX(82.5f), offCY(-176.5f));
 		s2Moon.setAnimation(creatMoonRotageAnimation(1080, 0, dip2px(-82.5f), dip2px(176.5f)));
@@ -515,7 +506,7 @@ public class OnceScroll extends ViewGroup {
 		s3Info2.setAnimation(creatTranslateAnimationY(1.2f, 300));
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@SuppressLint("NewApi")
 	private void animStage4() {
 		s4HeadFull.setPivotX(s4HeadFull.getMeasuredWidth() / 2);
 		s4HeadFull.setPivotY(s4HeadFull.getMeasuredHeight() / 2);
@@ -523,13 +514,13 @@ public class OnceScroll extends ViewGroup {
 		s4HeadPart.layoutCR(offCX(45), offCY(-24));
 		s4HeadPart.setAnimation(creatAlphaAnimation(0, 1, 300));
 
-		s4InfoDisapper.layoutCR(offCX(0f), offCY(115f));
+		s4InfoDisapper.layoutCR(offCX(0f), offCY(125f));
 		s4InfoDisapper.setAnimation(creatTranslateAnimationY(1.2f, 300));
 
 		s4InfoContact.layoutBL(offCX(45f), offCY(-110.5f));
 		s4InfoContact.setAnimation(creatTranslateAnimationX(-1.2f, 200));
 
-		s4EnterApp.layoutCR(offCX(0f), (int) getH(0.8f));
+		s4EnterApp.layoutCR(offCX(0f), (int) getH(0.9f));
 		s4EnterApp.setAnimation(creatTranslateAnimationY(1.2f, 400));
 	}
 
@@ -628,6 +619,9 @@ public class OnceScroll extends ViewGroup {
 
 		if (yTotal < 0) {
 			yTotal = 0;
+		}
+		if (yTotal > getSH(0.2f) * 3) {
+			yTotal = getSH(0.2f) * 3;
 		}
 		int stage = (int) (yTotal / getSH(0.2f));
 		switch (stage) {
@@ -753,7 +747,6 @@ public class OnceScroll extends ViewGroup {
 			if (isAnim4 && (yTotalTemp3 < getH(0.02f))) {
 				isAnim4 = false;
 			}
-
 			if (isAnim4) {
 				s4HeadFull.layout(yTotalTemp3, 3, 6);
 				s4HeadPart.layout(yTotalTemp3);

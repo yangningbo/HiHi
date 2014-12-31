@@ -246,7 +246,7 @@ public class NotifyHelper {
 	private NotificationCompat.Builder getNotificationBuilder() {
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext);
-		builder.setSmallIcon(R.drawable.logo);
+		builder.setSmallIcon(R.drawable.logo_help);
 		builder.setWhen(System.currentTimeMillis());// 设置时间发生时间
 		builder.setContentTitle(mContext.getString(R.string.has_new_notification));
 
