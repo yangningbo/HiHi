@@ -177,7 +177,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 	private void register(String phone, String password, String code) {
 		
-		SimpleResponseListener listener = new SimpleResponseListener(mContext) {
+		SimpleResponseListener listener = new SimpleResponseListener(mContext, R.string.request_internet_now) {
 
 			@Override
 			public void onSuccess(Object o) {

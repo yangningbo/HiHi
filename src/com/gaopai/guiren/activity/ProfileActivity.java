@@ -520,10 +520,31 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvPhone.setText(tUser.phone);
 		tvWeixin.setText(tUser.weixin);
 		tvWeibo.setText(tUser.weibo);
-		// if (!(isSelf || isBeenFollowed())) {
+
 		if (isSelf) {
 			return;
 		}
+
+		if (!isSelf && isFollowEachOther()) {
+			if (TextUtils.isEmpty(mUser.email)) {
+				tvEmail.setText(R.string.no_right_see_email);
+				removeTextDrawableWithClick(tvEmail);
+			}
+			if (TextUtils.isEmpty(mUser.phone)) {
+				tvPhone.setText(R.string.no_right_see_phone);
+				removeTextDrawableWithClick(tvPhone);
+			}
+			if (TextUtils.isEmpty(mUser.phone)) {
+				tvPhone.setText(R.string.no_right_see_phone);
+				removeTextDrawableWithClick(tvPhone);
+			}
+			if (TextUtils.isEmpty(mUser.weixin)) {
+				tvWeixin.setText(R.string.no_right_see_weixin);
+				removeTextDrawableWithClick(tvWeixin);
+			}
+			return;
+		}
+
 		PrivacyConfig pc = tUser.privacyconfig;
 		if (pc.mail == 0) {
 			tvEmail.setText(R.string.you_are_not_allowed_to_see_profile);
@@ -556,12 +577,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			tvWeibo.setText(R.string.no_right_see_weibo);
 			removeTextDrawableWithClick(tvWeibo);
 		}
-		// if (!isSelf) {
-		// removeTextDrawable(tvEmail);
-		// removeTextDrawable(tvPhone);
-		// removeTextDrawable(tvWeixin);
-		// removeTextDrawable(tvWeibo);
-		// }
 	}
 
 	private void bindBottomView() {
@@ -767,6 +782,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			}
 		}
 
+		PrivacyConfig pc = tUser.privacyconfig;
 		switch (v.getId()) {
 		case R.id.ab_setting: {
 			startActivity(SettingActivity.class);
@@ -792,51 +808,92 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			startActivityForResult(ReverificationActivity.class, REQUEST_VERIFY_PROFILE);
 			break;
 		case R.id.layout_profile_email:
-			if (!isSelf) {
+			if (isSelf) {
+				changeContact(ChangeProfileActivity.TYPE_EMAIL, tUser.email);
+				return;
+			}
+			if (isFollowEachOther()) {
+				if (TextUtils.isEmpty(mUser.email)) {// edit your suck profile
+					changeContact(ChangeProfileActivity.TYPE_EMAIL, mUser.email,
+							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+				} else {
+					sendEmail(tUser.email);
+				}
+			} else {
+				if (pc.mail == 0) {
+					return;
+				}
 				if (TextUtils.isEmpty(mUser.email)) {
 					changeContact(ChangeProfileActivity.TYPE_EMAIL, mUser.email,
 							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
-					return;
 				}
-				sendEmail(tUser.email);
-			} else {
-				changeContact(ChangeProfileActivity.TYPE_EMAIL, tUser.email);
 			}
 			break;
 		case R.id.layout_profile_phone_num:
-			if (!isSelf) {
+			if (isSelf) {
+				changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
+				return;
+			}
+			if (isFollowEachOther()) {
+				if (TextUtils.isEmpty(mUser.phone)) {// edit your suck profile
+					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
+							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+				} else {
+					makePhonecall(tUser.phone);
+				}
+			} else {
+				if (pc.phone == 0) {
+					return;
+				}
 				if (TextUtils.isEmpty(mUser.phone)) {
 					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
 							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
-					return;
-				}
-				makePhonecall(tUser.phone);
-			} else {
-				changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
+				} 
 			}
 			break;
 		case R.id.layout_profile_weibo_num:
-			if (!isSelf) {
-				if (TextUtils.isEmpty(mUser.weibo)) {
+			if (isSelf) {
+				changeContact(ChangeProfileActivity.TYPE_WEIBO, tUser.weibo);
+				return;
+			}
+			if (isFollowEachOther()) {
+				if (TextUtils.isEmpty(mUser.weibo)) {// edit your suck profile
 					changeContact(ChangeProfileActivity.TYPE_WEIBO, mUser.weibo,
 							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+				} else {
+					openWeibo();
+				}
+			} else {
+				if (pc.weibo == 0) {
 					return;
 				}
-				openWeibo();
-			} else {
-				changeContact(ChangeProfileActivity.TYPE_WEIBO, tUser.weibo);
+				if (TextUtils.isEmpty(mUser.weibo)) {// edit your suck profile
+					changeContact(ChangeProfileActivity.TYPE_WEIBO, mUser.weibo,
+							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+				}
 			}
 			break;
 		case R.id.layout_profile_weixin_num:
-			if (!isSelf) {
-				if (TextUtils.isEmpty(mUser.weixin)) {
+			
+			if (isSelf) {
+				changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);
+				return;
+			}
+			if (isFollowEachOther()) {
+				if (TextUtils.isEmpty(mUser.weixin)) {// edit your suck profile
 					changeContact(ChangeProfileActivity.TYPE_WEIXIN, mUser.weixin,
 							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+				} else {
+					openWeixin();
+				}
+			} else {
+				if (pc.wechat == 0) {
 					return;
 				}
-				openWeixin();
-			} else {
-				changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);
+				if (TextUtils.isEmpty(mUser.weixin)) {// edit your suck profile
+					changeContact(ChangeProfileActivity.TYPE_WEIXIN, mUser.weixin,
+							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+				}
 			}
 			break;
 		case R.id.tv_reveal_all_tags:
@@ -984,6 +1041,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private boolean isBeenFollowed() {
 		return (tUser.isfollow == 2 || tUser.isfollow == 3);
+	}
+
+	private boolean isFollowEachOther() {
+		return tUser.isfollow == 3;
 	}
 
 	private void spreadUser() {
