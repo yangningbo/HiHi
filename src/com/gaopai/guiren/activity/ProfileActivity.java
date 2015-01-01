@@ -534,9 +534,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				tvPhone.setText(R.string.no_right_see_phone);
 				removeTextDrawableWithClick(tvPhone);
 			}
-			if (TextUtils.isEmpty(mUser.phone)) {
-				tvPhone.setText(R.string.no_right_see_phone);
-				removeTextDrawableWithClick(tvPhone);
+			if (TextUtils.isEmpty(mUser.weibo)) {
+				tvWeibo.setText(R.string.no_right_see_weibo);
+				removeTextDrawableWithClick(tvWeibo);
 			}
 			if (TextUtils.isEmpty(mUser.weixin)) {
 				tvWeixin.setText(R.string.no_right_see_weixin);
@@ -826,7 +826,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				if (TextUtils.isEmpty(mUser.email)) {
 					changeContact(ChangeProfileActivity.TYPE_EMAIL, mUser.email,
 							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					return;
 				}
+				sendEmail(tUser.email);
 			}
 			break;
 		case R.id.layout_profile_phone_num:
@@ -848,7 +850,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				if (TextUtils.isEmpty(mUser.phone)) {
 					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
 							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
-				} 
+					return;
+				}
+				makePhonecall(tUser.phone);
 			}
 			break;
 		case R.id.layout_profile_weibo_num:
@@ -870,7 +874,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				if (TextUtils.isEmpty(mUser.weibo)) {// edit your suck profile
 					changeContact(ChangeProfileActivity.TYPE_WEIBO, mUser.weibo,
 							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					return;
 				}
+				openWeibo();
 			}
 			break;
 		case R.id.layout_profile_weixin_num:
@@ -893,7 +899,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				if (TextUtils.isEmpty(mUser.weixin)) {// edit your suck profile
 					changeContact(ChangeProfileActivity.TYPE_WEIXIN, mUser.weixin,
 							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					return;
 				}
+				openWeixin();
 			}
 			break;
 		case R.id.tv_reveal_all_tags:

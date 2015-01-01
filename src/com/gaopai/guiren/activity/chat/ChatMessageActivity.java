@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.TextView;
 
 import com.gaopai.guiren.DamiCommon;
@@ -39,6 +40,15 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		mAdapter = new PrivateChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
 //		mTitleBar.setTitleText(user.realname);
+		if (viewChatText != null) {
+			viewChatText.setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					toggleVoice();
+					return true;
+				}
+			});
+		}
 
 		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, user.uid), 0));
 		isChangeVoice = false;

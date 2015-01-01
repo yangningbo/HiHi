@@ -2,6 +2,7 @@ package com.gaopai.guiren.fragment;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -50,11 +51,10 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 	private int meetingType;
 
 	public final static String REFRESH_LIST_ACTION = "com.gaopai.guiren.intent.action.REFRESH_LIST_ACTION";
-	
+
 	private TextView tvOnGoingMeeting;
 	private TextView tvPastMeeting;
 
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (mView == null) {
@@ -64,7 +64,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		}
 		return mView;
 	}
-	
+
 	@Override
 	protected void onReceive(Intent intent) {
 		String action = intent.getAction();
@@ -133,14 +133,14 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 			}
 		});
-		
+
 		ViewGroup viewGroup = ViewUtil.findViewById(mView, R.id.layout_meeting_past);
 		tvPastMeeting = (TextView) viewGroup.getChildAt(0);
 		viewGroup.setOnClickListener(this);
 		viewGroup = ViewUtil.findViewById(mView, R.id.layout_meeting_faxian);
 		tvOnGoingMeeting = (TextView) viewGroup.getChildAt(0);
 		viewGroup.setOnClickListener(this);
-		
+
 		registerReceiver(REFRESH_LIST_ACTION, MainActivity.LOGIN_SUCCESS_ACTION);
 	}
 
@@ -181,31 +181,44 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-		DamiInfo.getMeetingList(DamiCommon.getUid(act), meetingType, page, new SimpleResponseListener(getActivity()) {
-			@Override
-			public void onSuccess(Object o) {
-				final TribeList data = (TribeList) o;
-				if (data.state != null && data.state.code == 0) {
-					if (data.data != null && data.data.size() > 0) {
-						mAdapter.addAll(data.data);
-					}
-					if (data.pageInfo != null) {
-						isFull = (data.pageInfo.hasMore == 0);
-						if (!isFull) {
-							page++;
-						}
-					}
-					mListView.setHasMoreData(!isFull);
-				} else {
-					otherCondition(data.state, getActivity());
-				}
-			}
+		DamiInfo.getMeetingList(DamiCommon.getUid(act), meetingType, page, new MyResponseListener(getActivity(),
+				meetingType));
+	}
 
-			@Override
-			public void onFinish() {
-				mListView.onPullComplete();
+	public class MyResponseListener extends SimpleResponseListener {
+		private int type;
+
+		public MyResponseListener(Context context, int type) {
+			super(context);
+			this.type = type;
+		}
+
+		@Override
+		public void onSuccess(Object o) {
+			final TribeList data = (TribeList) o;
+			if (data.state != null && data.state.code == 0) {
+				if (data.data != null && data.data.size() > 0) {
+					if (type != meetingType) {
+						return;
+					}
+					mAdapter.addAll(data.data);
+				}
+				if (data.pageInfo != null) {
+					isFull = (data.pageInfo.hasMore == 0);
+					if (!isFull) {
+						page++;
+					}
+				}
+				mListView.setHasMoreData(!isFull);
+			} else {
+				otherCondition(data.state, getActivity());
 			}
-		});
+		}
+
+		@Override
+		public void onFinish() {
+			mListView.onPullComplete();
+		}
 	}
 
 	@Override
@@ -224,14 +237,14 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			tvPastMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
 			tvOnGoingMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
 			mListView.doPullRefreshing(true, 0);
-//			getMeetingList(true, meetingType);
+			// getMeetingList(true, meetingType);
 			break;
 		case R.id.layout_meeting_past:
 			meetingType = TYPE_PAST_MEETING;
 			tvOnGoingMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
 			tvPastMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
 			mListView.doPullRefreshing(true, 0);
-//			getMeetingList(true, meetingType);
+			// getMeetingList(true, meetingType);
 			break;
 		default:
 			super.onClick(v);

@@ -455,9 +455,13 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			if (mMeeting == null) {
 				return;
 			}
+
+			String strUrl = DamiInfo.HOST + DamiInfo.SHARE_MEETING + mMeeting.id;
 			ShareManager shareManager = new ShareManager(this);
-			shareManager.shareTribeLink(getString(R.string.share_meeting_title), mMeeting.content, DamiInfo.HOST
-					+ DamiInfo.SHARE_MEETING + mMeeting.id);
+			shareManager.shareTribeLink(DamiCommon.getLoginResult(mContext).realname + " 扩散了一个会议[" + mMeeting.name
+					+ "]",
+					"老友，我已经加入了会议[" + mMeeting.name + "],会议里边采用了讲后即焚机制保护您的安全，甩掉名缰利锁，讲真话，讲干货，真的很不错，您也来吧 " + strUrl,
+					strUrl);
 			shareManager.setDyCallback(new CallDyback() {
 				@Override
 				public void spreadDy() {

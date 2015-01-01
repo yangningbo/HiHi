@@ -69,7 +69,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		mContext = context;
 		mLogin = DamiCommon.getLoginResult(mContext);
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		options = new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnLoading(R.drawable.default_header)
+		options = new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnLoading(R.drawable.default_pic)
 				.cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 		mPlayerWrapper = playerWrapper;
 		mPlayerWrapper.setPlayCallback(new PlayCallback());

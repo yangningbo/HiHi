@@ -809,7 +809,7 @@ public class DamiInfo implements Serializable {
 		if (fileList != null) {
 			bundle.addPicture("fileList", fileList);
 		}
-		String url = SERVER + "/user/addDynamic";
+		String url = SERVER + "user/addDynamic";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, SendDynamicResult.class, listener);
 	}
 
@@ -845,7 +845,7 @@ public class DamiInfo implements Serializable {
 		bundle.add("image", image);
 		bundle.add("url", url);
 		bundle.add("desc", desc);
-		String url_ = SERVER + "/user/spread";
+		String url_ = SERVER + "user/spread";
 		request(url_, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
 

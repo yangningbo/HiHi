@@ -265,6 +265,8 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_call), Toast.LENGTH_SHORT).show();
 		}
 	}
+	
+	protected View viewChatText;
 
 	private void initTitleBarLocal() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
@@ -281,11 +283,11 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		}
 
 		imageId = R.drawable.icon_chat_title_voice_mode;
-		View view = mTitleBar.addRightImageView(imageId);
-		view.setId(R.id.ab_chat_text);
-		view.setOnClickListener(this);
+		viewChatText = mTitleBar.addRightImageView(imageId);
+		viewChatText.setId(R.id.ab_chat_text);
+		viewChatText.setOnClickListener(this);
 
-		view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
+		View view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
 		view.setId(R.id.ab_chat_more);
 		view.setOnClickListener(this);
 	}
@@ -518,6 +520,15 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		default:
 			break;
 		}
+	}
+	
+	protected void toggleVoice() {
+		if (isChangeVoice) {
+			showToast(R.string.change_normal_voice_mode);
+		} else {
+			showToast(R.string.change_weired_voice_mode);
+		}
+		isChangeVoice = !isChangeVoice;
 	}
 
 	private boolean isFull = false;

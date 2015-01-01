@@ -296,13 +296,17 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				if (i == 7) {
 					gridView.removeViewAt(0);
 					holder.tvUserName.setText("查看其他" + (size - 7) + "人");
-//					gridView.setOnClickListener(new OnClickListener() {
-//						@Override
-//						public void onClick(View v) {
-//							startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID, isCreator),
-//									REQUEST_ALL_TRIBE_USERS);
-//						}
-//					});
+					gridView.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (mTribe.isjoin == 0) {
+								showToast("您未加入，无法查看所有成员！");
+								return;
+							}
+							startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID, isCreator),
+									REQUEST_ALL_TRIBE_USERS);
+						}
+					});
 					mlUserLayout.addView(gridView);
 					return;
 				}
@@ -395,9 +399,10 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			if (mTribe == null) {
 				return;
 			}
+			String strUrl = DamiInfo.HOST + DamiInfo.SHARE_TRIBE + mTribeID;
 			ShareManager shareManager = new ShareManager(this);
-			shareManager.shareTribeLink(getString(R.string.share_tribe_title), mTribe.content, DamiInfo.HOST
-					+ DamiInfo.SHARE_TRIBE + mTribeID);
+			shareManager.shareTribeLink(DamiCommon.getLoginResult(mContext).realname + " 扩散了一个圈子[" + mTribe.name + "]",
+					"老友，我已经加入了圈子[" + mTribe.name + "],圈子里边采用了讲后即焚机制保护您的安全，甩掉名缰利锁，讲真话，讲干货，真的很不错，您也来吧 " + strUrl, strUrl);
 			shareManager.setDyCallback(new CallDyback() {
 				@Override
 				public void spreadDy() {
@@ -463,6 +468,10 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			startActivity(TwoDimensionActivity.getIntent(mContext, mTribe));
 			break;
 		case R.id.ml_tribe_users:
+			if (mTribe.isjoin == 0) {
+				showToast("您未加入，无法查看所有成员！");
+				return;
+			}
 			startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID, isCreator),
 					REQUEST_ALL_TRIBE_USERS);
 			break;
