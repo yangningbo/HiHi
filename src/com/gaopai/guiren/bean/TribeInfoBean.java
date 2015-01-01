@@ -23,7 +23,7 @@ public class TribeInfoBean implements Serializable, GsonObj {
 	public String getInterface() {
 		// TODO Auto-generated method stub
 		if (obj == TYPE_TRIBE_INFO) {
-			return "tribe/tribe/";
+			return "tribe/tribe";
 		} else {
 			return "meeting/detail";
 		}

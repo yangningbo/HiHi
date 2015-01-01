@@ -7,7 +7,7 @@
     <string name="pull_up_refresh_release_label">松开加载更多</string>
     <string name="pull_to_refresh_refreshing_label">正在加载…</string>
     <string name="xlistview_footer_hint_loadall">已加载全部</string>
-    <string name="voicealert">语音识别由云知声提供</string>
+    <string name="voicealert">语音识别由科大讯飞提供</string>
     <string name="app_name">贵人会</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>

@@ -35,7 +35,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		user = (User) getIntent().getSerializableExtra(KEY_USER);
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		super.onCreate(savedInstanceState);
-
+		chatAddChangeVoiceLayout.setVisibility(View.GONE);
 		mAdapter = new PrivateChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
 //		mTitleBar.setTitleText(user.realname);
@@ -170,8 +170,11 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ab_chat_more:
+			if (user == null) {
+				return;
+			}
 			Intent intent = new Intent(this, PrivacyChatSettingActivity.class);
-			intent.putExtra(PrivacyChatSettingActivity.KEY_UID, user.uid);
+			intent.putExtra(PrivacyChatSettingActivity.KEY_UID, user);
 			startActivity(intent);
 			break;
 

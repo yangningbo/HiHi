@@ -15,9 +15,9 @@ public class RecommendAddResult extends BaseNetBean implements GsonObj{
 	public String getInterface() {
 		// TODO Auto-generated method stub
 		if(obj == TYPE_ADD_FRIEND) {
-			return "/user/requestfriend";
+			return "user/requestfriend";
 		} else if(obj == TYPE_ADD_TRIBE) {
-			return "/tribe/requesttribe";
+			return "tribe/requesttribe";
 		}
 		return null;
 	}

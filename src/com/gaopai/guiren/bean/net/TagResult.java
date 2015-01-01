@@ -16,7 +16,7 @@ public class TagResult extends BaseNetBean implements GsonObj {
 
 	@Override
 	public String getInterface() {
-		return "index/getTag/";
+		return "index/getTag";
 	}
 
 	@Override

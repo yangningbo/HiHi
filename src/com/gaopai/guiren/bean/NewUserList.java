@@ -21,11 +21,11 @@ public class NewUserList implements GsonObj{
 	public String getInterface() {
 		// TODO Auto-generated method stub
 		if(obj == TYPE_NEW_FRIEND) {
-			return "/user/newFriend";
+			return "user/newFriend";
 		} else if(obj == TYPE_RECOMMEND_FRIEND) {
-			return "/user/getSysRecFriend";
+			return "user/getSysRecFriend";
 		}
-		return "/user/getSysRecFriend";
+		return "user/getSysRecFriend";
 	}
 
 	@Override

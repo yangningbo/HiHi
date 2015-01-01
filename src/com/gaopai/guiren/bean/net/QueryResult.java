@@ -17,7 +17,7 @@ public class QueryResult extends BaseNetBean implements GsonObj {
 	@Override
 	public String getInterface() {
 		// TODO Auto-generated method stub
-		return "index/query/";
+		return "index/query";
 	}
 	
 	@Override

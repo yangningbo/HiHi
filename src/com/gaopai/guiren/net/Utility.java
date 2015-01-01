@@ -101,6 +101,7 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MD5;
 
 /**
@@ -315,7 +316,7 @@ public class Utility {
 
 		if (loginType == 1) {
 			params.add("uid", DamiCommon.getUid(DamiApp.getInstance()));
-//			params.add("uid", "1");
+			// params.add("uid", "1");
 		} else if (loginType == 2) {
 			if (!TextUtils.isEmpty(DamiCommon.getUid(DamiApp.getInstance()))) {
 				params.add("uid", DamiCommon.getUid(DamiApp.getInstance()));
@@ -342,8 +343,11 @@ public class Utility {
 			str = str + keys[i] + params.getValue(keys[i]);
 		}
 		str += DamiInfo.PRIVATE_KEY;
+		Logger.d("====", "待签名字符串=" + str);
 		String appsign = new MD5().get32MD5Str(str);
+		Logger.d("====", "签名后符串=" + appsign);
 		params.add("sig", appsign);
+
 		rlt = openUrl(url, method, params, fileList);
 		return rlt;
 	}

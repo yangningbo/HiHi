@@ -19,7 +19,7 @@ public class VerificationResult extends BaseNetBean implements GsonObj{
 	@Override
 	public String getInterface() {
 		// TODO Auto-generated method stub
-		return "index/getSmsCode/";
+		return "index/getSmsCode";
 	}
 
 

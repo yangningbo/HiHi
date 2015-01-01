@@ -19,11 +19,11 @@ public class SimpleStateBean implements Serializable, GsonObj {
 	public String getInterface() {
 		// TODO Auto-generated method stub
 		if (obj == TYPE_JOIN_MEETING_BY_PASSWORD) {
-			return "/meeting/joinMeetingByPasswd";
+			return "meeting/joinMeetingByPasswd";
 		} else if (obj == TYPE_DEAL_ADD_USER) {
-			return "/user/chargeFriendRequest";
+			return "user/chargeFriendRequest";
 		} else if (obj == TYPE_SET_NOT_PUSH) {
-			return "/user/acceptPush";
+			return "user/acceptPush";
 		}
 		return null;
 	}

@@ -9,17 +9,22 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.support.MessageHelper;
 import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
+import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
+import com.gaopai.guiren.utils.ViewUtil;
 
 public class PrivacyChatSettingActivity extends BaseActivity implements OnClickListener {
 	private TextView tvReport;
 	private TextView tvClearMsg;
 	private TextView tvAvoidDisturb;
 
-	private String uid;
+	private ImageView ivHeader;
+
+	private User user;
 	public final static String KEY_UID = "uid";
 
 	private PreferenceOperateUtils po;
@@ -32,7 +37,7 @@ public class PrivacyChatSettingActivity extends BaseActivity implements OnClickL
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_privacy_chat_setting);
-		uid = getIntent().getStringExtra(KEY_UID);
+		user = (User) getIntent().getSerializableExtra(KEY_UID);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.private_chat_setting);
 
@@ -46,6 +51,10 @@ public class PrivacyChatSettingActivity extends BaseActivity implements OnClickL
 		tvClearMsg.setOnClickListener(this);
 		tvReport = (TextView) findViewById(R.id.tv_report);
 		tvReport.setOnClickListener(this);
+		ivHeader = ViewUtil.findViewById(this, R.id.iv_header);
+		ivHeader.setOnClickListener(this);
+
+		ImageLoaderUtil.displayImage(user.headsmall, ivHeader, R.drawable.default_header);
 		bindView();
 	}
 
@@ -54,22 +63,25 @@ public class PrivacyChatSettingActivity extends BaseActivity implements OnClickL
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.tv_avoid_disturb: {
-			int set = po.getInt(SPConst.getTribeUserId(mContext, uid), 0);
-			po.setInt(SPConst.getTribeUserId(mContext, uid), 1 - set);
+			int set = po.getInt(SPConst.getTribeUserId(mContext, user.uid), 0);
+			po.setInt(SPConst.getTribeUserId(mContext, user.uid), 1 - set);
 			setSwitchState(tvAvoidDisturb, 1 - set);
 			break;
 		}
 		case R.id.tv_clear_local_msg:
-			MessageHelper.clearChatCache(mContext, uid, 100, deleteCallback);
+			MessageHelper.clearChatCache(mContext, user.uid, 100, deleteCallback);
 			break;
 		case R.id.tv_report:
-			startActivity(ReportPeopleActivity.getIntent(mContext, uid));
+			startActivity(ReportPeopleActivity.getIntent(mContext, user.uid));
+			break;
+		case R.id.iv_header:
+			startActivity(ProfileActivity.getIntent(mContext, user.uid));
 			break;
 		default:
 			break;
 		}
 	}
-	
+
 	private DeleteCallback deleteCallback = new DeleteCallback() {
 		@Override
 		public void onStart() {
@@ -84,7 +96,7 @@ public class PrivacyChatSettingActivity extends BaseActivity implements OnClickL
 	};
 
 	private void bindView() {
-		int set = po.getInt(SPConst.getTribeUserId(mContext, uid), 0);
+		int set = po.getInt(SPConst.getTribeUserId(mContext, user.uid), 0);
 		setSwitchState(tvAvoidDisturb, set);
 	}
 
