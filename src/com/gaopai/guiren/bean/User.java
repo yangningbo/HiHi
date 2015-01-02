@@ -222,4 +222,9 @@ public class User implements Serializable {
 		}
 		return name;
 	}
+	
+	public static String getUserInfo(User tUser) {
+		 return TextUtils.isEmpty(tUser.company) ? (TextUtils.isEmpty(tUser.post) ? "" : tUser.post) : (TextUtils
+					.isEmpty(tUser.post) ? tUser.company : tUser.company + "/" + tUser.post);
+	}
 }

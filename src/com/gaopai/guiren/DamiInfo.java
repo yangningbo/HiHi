@@ -245,10 +245,7 @@ public class DamiInfo implements Serializable {
 		request(Method.GET, TribeList.class, params, 1, listener, 1);
 	}
 
-	public static void getRecommendFriendList(IResponseListener listener) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		request(Method.GET, UserList.class, params, UserList.TYPE_RECOMMEND, listener, LOGIN_TYPE_NEED_LOGIN);
-	}
+
 
 	/**
 	 * 获取会议详情
@@ -2405,6 +2402,12 @@ public class DamiInfo implements Serializable {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("num", "9");
 		request(Method.GET, TagResult.class, params, 0, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
+	}
+	
+	public static void getRecommendFriendList(IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		String url = SERVER + "user/recommendfriend";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
 
 }

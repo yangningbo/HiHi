@@ -384,9 +384,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	private void bindTopSectionView() {
 		bindHeadView();
 		bindUserName();
-		String str = TextUtils.isEmpty(tUser.company) ? (TextUtils.isEmpty(tUser.post) ? "" : tUser.post) : (TextUtils
-				.isEmpty(tUser.post) ? tUser.company : tUser.company + "/" + tUser.post);
-		tvUserInfo.setText(str);
+		tvUserInfo.setText(User.getUserInfo(tUser));
 	}
 
 	private void bindHeadView() {

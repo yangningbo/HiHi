@@ -37,11 +37,12 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGE);
 		super.onCreate(savedInstanceState);
 		chatAddChangeVoiceLayout.setVisibility(View.GONE);
+		viewChatText.setVisibility(View.GONE);
 		mAdapter = new PrivateChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
 //		mTitleBar.setTitleText(user.realname);
-		if (viewChatText != null) {
-			viewChatText.setOnLongClickListener(new OnLongClickListener() {
+		if (mAddBtn != null) {
+			mAddBtn.setOnLongClickListener(new OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View v) {
 					toggleVoice();

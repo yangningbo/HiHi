@@ -299,6 +299,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 					tempInfo.imgWidth = messageInfo.imgWidth;
 					tempInfo.imgHeight = messageInfo.imgHeight;
 					tempInfo.voiceUrl = messageInfo.voiceUrl;
+					tempInfo.content = messageInfo.content;
 					tempInfo.readState = messageInfo.readState;
 					tempInfo.time = messageInfo.time;
 					tempInfo.displayname = messageInfo.displayname;

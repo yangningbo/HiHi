@@ -68,7 +68,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	private LinearLayout chatAddGallaryLayout;
 	protected LinearLayout chatAddChangeVoiceLayout;
 	private Button mVoiceSendBtn;
-	private ImageView mAddBtn;
+	protected ImageView mAddBtn;
 	private ImageView mVoiceModeImage;
 	private EditText mContentEdit;
 	private Button mSwitchVoiceTextBtn;

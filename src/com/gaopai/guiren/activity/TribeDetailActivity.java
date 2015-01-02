@@ -299,7 +299,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 					gridView.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							if (mTribe.isjoin == 0) {
+							if (mTribe.type == 2 && mTribe.isjoin == 0) {
 								showToast("您未加入，无法查看所有成员！");
 								return;
 							}
@@ -311,7 +311,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 					return;
 				}
 
-				gridView.setOnClickListener(gridClickListener);
+				// gridView.setOnClickListener(gridClickListener);
 				// gridView.setOnLongClickListener(gridLongClickListener);
 				Member member = members.get(i);
 				holder.tvUserName.setText(member.realname);
@@ -468,7 +468,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			startActivity(TwoDimensionActivity.getIntent(mContext, mTribe));
 			break;
 		case R.id.ml_tribe_users:
-			if (mTribe.isjoin == 0) {
+			if (mTribe.type == 2 && mTribe.isjoin == 0) {
 				showToast("您未加入，无法查看所有成员！");
 				return;
 			}

@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.TribeActivity;
+import com.gaopai.guiren.adapter.BaseChatAdapter;
 import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
@@ -72,6 +74,7 @@ import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
+import com.gaopai.guiren.receiver.PushChatMessage;
 import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.chat.ChatBoxManager;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
@@ -93,6 +96,7 @@ import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.widget.emotion.EmotionPicker;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
  * 消息详情界面，包括查看评论以及回复评论等功能
@@ -154,6 +158,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	public final static int MSG_VOICE_TEXT_MSG = 11007;
 
 	private boolean isOnLooker = false;
+	private DisplayImageOptions options;
 
 	protected SpeexPlayerWrapper speexPlayerWrapper;
 
@@ -200,10 +205,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			getIdentity();
 		}
 	}
-	
+
 	private boolean hasIdentity = true;
+
 	protected void getIdentity() {
-		if ((mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && (mTribe.role != 1)) || mChatType == ChatTribeActivity.CHAT_TYPE_TRIBE) {
+		if ((mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && (mTribe.role != 1))
+				|| mChatType == ChatTribeActivity.CHAT_TYPE_TRIBE) {
 			SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
 			IdentityTable table = new IdentityTable(db);
 			Identity identity = table.query(mTribe.id);
@@ -215,7 +222,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		}
 	}
-	
+
 	/**
 	 * @update
 	 */
@@ -242,7 +249,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		});
 	}
-	
+
 	public void insertIdentity() {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
 		IdentityTable table = new IdentityTable(db);
@@ -287,6 +294,10 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			if (msg != null && msg.parentid.equals(messageInfo.id)) {
 				addNotifyMessage(msg);
 			}
+		} else if (PushChatMessage.ACTION_SEND_STATE.equals(intent.getAction())) {
+			Log.d(TAG, "receiver:" + PushChatMessage.ACTION_SEND_STATE);
+			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
+			modifyMessageState(messageInfo);
 		} else if (intent.getAction().equals(ChatBaseActivity.ACTION_CHANGE_VOICE)) {
 			isChangeVoice = isAnony();
 			setChangeVoiceView(isChangeVoice);
@@ -301,10 +312,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
+	View viewChatText;
+
 	protected void initComponent() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.message_detail);
-
+		int imageId = R.drawable.icon_chat_title_voice_mode;
+		viewChatText = mTitleBar.addRightImageView(imageId);
+		viewChatText.setId(R.id.ab_chat_text);
+		viewChatText.setOnClickListener(this);
 		if (isOnLooker) {
 			ViewUtil.findViewById(this, R.id.chat_box).setVisibility(View.GONE);
 		} else {
@@ -429,6 +445,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				reisanonymity = messageInfos.get(pos).isanonymity;
 			}
 		});
+		options = new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnLoading(R.drawable.default_pic)
+				.cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 	}
 
 	/**
@@ -694,6 +712,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			tvText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			break;
 		case MessageType.VOICE:
+			if (mCurrentModel == MODE_TEXT) {
+				notHideViews(MessageType.TEXT);
+				tvText.setText(messageInfo.content);
+				break;
+			}
 			tvVoiceLength.setText(messageInfo.voiceTime + "''");
 			ivVoice.setLayoutParams(getVoiceViewLengthParams((ViewGroup.LayoutParams) ivVoice.getLayoutParams(),
 					messageInfo));
@@ -833,7 +856,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-		
 			viewHolder.messageNameText.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 5));
 			if (position == 0) {
 				viewHolder.messageNameText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_comment, 0,
@@ -844,10 +866,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 
 			final MessageInfo commentInfo = messageInfos.get(position);
-			
-			
+
 			notHideViews(viewHolder, commentInfo.fileType);
-			
+
 			final boolean isMyself = commentInfo.from.equals(mLogin.uid) ? true : false;
 			View resendView = viewHolder.resendImageView;
 			if (isMyself) {
@@ -865,7 +886,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			} else {
 				resendView.setVisibility(View.GONE);
 			}
-			
+
 			if (MessageState.STATE_SENDING == commentInfo.sendState) {
 				viewHolder.progressBar.setVisibility(View.VISIBLE);
 			} else {
@@ -888,7 +909,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			switch (commentInfo.fileType) {
 			case MessageType.TEXT:
 				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 2000));
-				
+
 				if (commentInfo.mIsShide == 0) {// not hide
 					viewHolder.messageNameText.setText(MyTextUtils.getSpannableString(replyFromToText,
 							MyTextUtils.addHttpLinks(commentInfo.content)));
@@ -898,10 +919,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				break;
 			case MessageType.VOICE:
 				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 150));
-				if (mCurrentModel == TEXT_MODEL) {
-					replyFromToText = replyFromToText + commentInfo.content;
-				}
 				viewHolder.messageNameText.setText(replyFromToText);
+				if (mCurrentModel == TEXT_MODEL) {
+					viewHolder.messageNameText.setText(MyTextUtils.getSpannableString(replyFromToText,
+							commentInfo.content));
+				}
 
 				if (mCurrentModel == VOICE_MODEL) {
 					viewHolder.voiceImageView.setLayoutParams(getVoiceViewLengthParams(
@@ -937,9 +959,10 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder.messageNameText.setText(replyFromToText);
 				final String path = commentInfo.imgUrlS;
 				if (path.startsWith("http://")) {
-					ImageLoaderUtil.displayImageByProgress(path, viewHolder.picImageView, null, viewHolder.progressBar);
+					ImageLoaderUtil.displayImageByProgress(path, viewHolder.picImageView, options,
+							viewHolder.progressBar);
 				} else {
-					ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.picImageView, null,
+					ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.picImageView, options,
 							viewHolder.progressBar);
 				}
 				viewHolder.picImageView.setOnClickListener(new OnClickListener() {
@@ -957,10 +980,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				break;
 			}
 			return convertView;
-		}
-
-		public void setCurrentModel(int model) {
-			mCurrentModel = model;
 		}
 
 		private void notHideViews(ViewHolder viewHolder, int which) {
@@ -1104,6 +1123,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private AlphaAnimation alphaAnim = null;
 	private ObjectAnimator animator;
 
+	public final static int MODE_VOICE = 0;
+	public final static int MODE_TEXT = 1;
+
+	public void setCurrentModel(int model) {
+		mCurrentModel = model;
+	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -1149,6 +1175,18 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			isChangeVoice = !isChangeVoice;
 			setChangeVoiceView(isChangeVoice);
 			boxManager.hideAddGrid();
+			break;
+		case R.id.ab_chat_text:
+			int imgaeId = R.drawable.icon_chat_title_mode_text;
+			if (mCurrentModel == BaseChatAdapter.MODE_VOICE) {
+				setCurrentModel(BaseChatAdapter.MODE_TEXT);
+			} else {
+				setCurrentModel(BaseChatAdapter.MODE_VOICE);
+				imgaeId = R.drawable.icon_chat_title_voice_mode;
+			}
+			bindView();
+			mAdapter.notifyDataSetChanged();
+			((ImageView) v).setImageResource(imgaeId);
 			break;
 		case R.id.send_text_btn:
 			boxManager.hideAll();
@@ -1403,6 +1441,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				tempInfo.imgUrlS = messageInfo.imgUrlS;
 				tempInfo.imgUrlL = messageInfo.imgUrlL;
 				tempInfo.imgWidth = messageInfo.imgWidth;
+				tempInfo.content = messageInfo.content;
 				tempInfo.imgHeight = messageInfo.imgHeight;
 				tempInfo.voiceUrl = messageInfo.voiceUrl;
 				tempInfo.readState = messageInfo.readState;

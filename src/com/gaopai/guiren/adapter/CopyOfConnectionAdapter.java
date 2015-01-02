@@ -112,7 +112,7 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 			viewHolder.tvFancyCount = (TextView) convertView.findViewById(R.id.tv_user_fancy_count);
 			viewHolder.layoutHeader = (HeadView) convertView.findViewById(R.id.layout_header_mvp);
 			viewHolder.tvUserName.setText(User.getUserName(user));
-			viewHolder.tvUserInfo.setText(user.post);
+			viewHolder.tvUserInfo.setText(User.getUserInfo(user));
 			
 			viewHolder.layoutHeader.setImage(user.headsmall);
 			viewHolder.layoutHeader.setMVP(user.bigv == 1);
