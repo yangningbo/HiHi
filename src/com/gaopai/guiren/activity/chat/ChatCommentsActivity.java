@@ -1592,7 +1592,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.cancel_zan))) {
 			msgHelper.zanMessage(msgInfo, isAnony() ? 1 : 0);
 		} else if (result.equals(getString(R.string.retrweet))) {
-			msgHelper.goToRetrweet(msgInfo);
+//			msgHelper.goToRetrweet(msgInfo);
+			msgHelper.spreadToDy(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {
 			msgHelper.showReportDialog(msgInfo);
 		} else if (result.equals(getString(R.string.favorite))) {

@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.TribeAdapter;
@@ -36,6 +37,7 @@ public class ShareTribeFragment extends BaseShareFragment {
 		if (view == null) {
 			view = inflater.inflate(R.layout.general_pulltorefresh_listview, null);
 			initView(view);
+			mLogin = DamiCommon.getLoginResult(getActivity());
 			mListView.doPullRefreshing(true, 0);
 		} else {
 			((ViewGroup) view.getParent()).removeView(view);

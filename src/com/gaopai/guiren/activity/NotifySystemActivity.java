@@ -322,13 +322,13 @@ public class NotifySystemActivity extends BaseActivity {
 		listView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+			public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 				showMutiDialog("", new String[] { getString(R.string.delete) }, new DialogInterface.OnClickListener() {
 
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick(DialogInterface dialog, int which1) {
 						// TODO Auto-generated method stub
-						NotifiyVo notify = adapter.mData.get(which);
+						NotifiyVo notify = adapter.mData.get(position);
 						SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
 						NotifyTable table = new NotifyTable(dbDatabase);
 						NotifyUserTable userTable = new NotifyUserTable(dbDatabase);
@@ -347,7 +347,7 @@ public class NotifySystemActivity extends BaseActivity {
 						}
 
 						table.deleteByID(notify);
-						adapter.mData.remove(which);
+						adapter.mData.remove(position);
 						adapter.notifyDataSetChanged();
 					}
 				});

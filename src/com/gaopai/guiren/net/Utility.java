@@ -343,9 +343,7 @@ public class Utility {
 			str = str + keys[i] + params.getValue(keys[i]);
 		}
 		str += DamiInfo.PRIVATE_KEY;
-		Logger.d("====", "待签名字符串=" + str);
 		String appsign = new MD5().get32MD5Str(str);
-		Logger.d("====", "签名后符串=" + appsign);
 		params.add("sig", appsign);
 
 		rlt = openUrl(url, method, params, fileList);
@@ -399,7 +397,7 @@ public class Utility {
 				request = get;
 
 			} else if (method.equals("POST")) {
-				Log.e("Json_url", url + "?" + encodeUrl(params));
+				Logger.e("Json_url", url + "?" + encodeUrl(params));
 				HttpPost post = new HttpPost(url);
 				byte[] data = null;
 				bos = new ByteArrayOutputStream(1024 * 50);
@@ -460,7 +458,7 @@ public class Utility {
 			}
 			// parse content stream from response
 			result = read(response);
-			Log.d("Json_Result", "======>" + result);
+			Logger.d("Json_Result", "======>" + result);
 			return result;
 		} catch (IOException e) {
 			// Log.e("e.getClass()", e.getClass().toString());
