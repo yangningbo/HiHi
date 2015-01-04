@@ -95,7 +95,7 @@ public class TribeMemberActivity extends BaseActivity {
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false);
 		mListView.setPullLoadEnabled(false);
-		mListView.setScrollLoadEnabled(false);
+		mListView.setScrollLoadEnabled(true);
 
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
@@ -130,12 +130,10 @@ public class TribeMemberActivity extends BaseActivity {
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
 						mAdapter.addAll(data.data);
+						page++;
 					}
-					if (data.pageInfo != null) {
-						isFull = (data.pageInfo.hasMore == 0);
-						if (!isFull) {
-							page++;
-						}
+					if (data.data == null || data.data.size() < 20) {
+						isFull = true;
 					}
 					mListView.setHasMoreData(!isFull);
 				} else {

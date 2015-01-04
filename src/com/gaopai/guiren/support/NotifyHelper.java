@@ -102,6 +102,7 @@ public class NotifyHelper {
 	public void notifyChatMessage(MessageInfo messageInfo) {
 		init();
 		Logger.d(this, "isNeedNotify=" + isNeedNotify());
+		
 		if (!isNeedNotify()) {
 			saveChatMessage(messageInfo);
 			return;

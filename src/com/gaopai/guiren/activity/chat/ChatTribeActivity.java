@@ -90,7 +90,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		isOnLooker = getIntent().getBooleanExtra(KEY_IS_ONLOOKER, false);
 		super.onCreate(savedInstanceState);
 		msgHelper = new ChatMsgDataHelper(mContext, callback, mTribe, mChatType);
-		// mTribeId = getIntent().getStringExtra(KEY_TRIBE_ID)
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
 		updateTribe();
 		if (!isOnLooker) {

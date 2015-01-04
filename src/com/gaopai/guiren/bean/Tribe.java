@@ -115,7 +115,6 @@ public class Tribe implements Serializable {
 		public String company;
 		@Expose
 		public String post;
-
 	}
 
 }

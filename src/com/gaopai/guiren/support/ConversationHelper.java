@@ -37,6 +37,7 @@ public class ConversationHelper {
 		ConversationInnerBean bean = messageInfo.conversion;
 		ConverseationTable table = new ConverseationTable(dbDatabase);
 		ConversationBean conversation = table.queryByID(bean.toid);
+
 		if (conversation != null) {
 			if (messageInfo.fileType == MessageType.VOICE) {
 				conversation.localtype = 1;

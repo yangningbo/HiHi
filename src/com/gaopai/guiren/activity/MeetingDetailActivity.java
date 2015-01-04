@@ -849,7 +849,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			setAlarm(view);
 			view.setOnClickListener(this);
 			break;
-		case 2:// 会议嘉宾或者部落自发申请实名用户
+		case 3:// 会议嘉宾或者部落自发申请实名用户
 			viewGroup = (ViewGroup) mInflater.inflate(R.layout.grid_meeting_more_jiabing, null);
 			view = viewGroup.findViewById(R.id.btn_hide_grid);
 			view.setOnClickListener(this);
@@ -874,7 +874,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			setAvoidDisturb(view);
 			view.setOnClickListener(this);
 			break;
-		case 3:// 会议主持人
+		case 2:// 会议主持人
 			viewGroup = (ViewGroup) mInflater.inflate(R.layout.grid_meeting_more_zhuchiren, null);
 			view = viewGroup.findViewById(R.id.btn_hide_grid);
 			view.setOnClickListener(this);

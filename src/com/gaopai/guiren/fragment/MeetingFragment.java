@@ -202,7 +202,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 						return;
 					}
 					mAdapter.addAll(data.data);
-				}
+				} 
 				if (data.pageInfo != null) {
 					isFull = (data.pageInfo.hasMore == 0);
 					if (!isFull) {
