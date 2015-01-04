@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 public class ChatBoxManager {
 	private EditText mContentEdit;
@@ -29,6 +30,15 @@ public class ChatBoxManager {
 		mChatGridLayout = chatGridLayout;
 		mContext = context;
 		mVoiceSendBtn = voiceSendBtn;
+	}
+	
+	private Callback mCallback;
+	public static interface Callback {
+		public void onShowKeyBoard();
+	}
+	
+	public void setCallback(Callback callback) {
+		mCallback = callback;
 	}
 
 	public ChatBoxManager(Activity context, EditText editText, EmotionPicker emotionPicker, Button emotionBtn) {
@@ -73,6 +83,9 @@ public class ChatBoxManager {
 	public void editClick() {
 		hideAddGrid();
 		hideEmotion();
+		if (mCallback != null) {
+			mCallback.onShowKeyBoard();
+		}
 	}
 
 	public void showAddGrid() {
@@ -101,6 +114,9 @@ public class ChatBoxManager {
 		InputMethodManager imm = (InputMethodManager) mContentEdit.getContext().getSystemService(
 				Context.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+		if (mCallback != null) {
+			mCallback.onShowKeyBoard();
+		}
 	}
 
 	public void switchTextVoice() {

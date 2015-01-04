@@ -3,6 +3,7 @@ package com.gaopai.guiren.activity.chat;
 import java.io.File;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,7 +30,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.adapter.BaseChatAdapter;
@@ -45,6 +45,7 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexRecorderWrapper;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.chat.ChatBoxManager;
+import com.gaopai.guiren.support.chat.ChatBoxManager.Callback;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -265,7 +266,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			Toast.makeText(mContext, mContext.getString(R.string.switch_to_mode_in_call), Toast.LENGTH_SHORT).show();
 		}
 	}
-	
+
 	protected View viewChatText;
 
 	private void initTitleBarLocal() {
@@ -377,9 +378,19 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 		boxManager = new ChatBoxManager(this, mContentEdit, mSwitchVoiceTextBtn, mEmotionPicker, chatGridLayout,
 				mEmotionBtn, mVoiceSendBtn);
+		boxManager.setCallback(new Callback() {
+			@Override
+			public void onShowKeyBoard() {
+				if (messageInfos != null) {
+					mListView.getRefreshableView().setSelection(messageInfos.size() - 1);
+				}
+			}
+		});
 
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
 		mListView.getRefreshableView().setDivider(null);
+
+		mListView.getRefreshableView().setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 
 		mListView.setPullRefreshEnabled(true); // 下拉刷新，启用
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
@@ -443,12 +454,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			return false;
 		}
 	};
-
-	public void showSoftKeyboard() {
-		InputMethodManager imm = (InputMethodManager) mContentEdit.getContext().getSystemService(
-				Context.INPUT_METHOD_SERVICE);
-		imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
-	}
 
 	protected boolean isChangeVoice = true;
 
@@ -521,7 +526,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			break;
 		}
 	}
-	
+
 	protected void toggleVoice() {
 		if (isChangeVoice) {
 			showToast(R.string.change_normal_voice_mode);
