@@ -40,9 +40,9 @@
         android:id="@+id/fl_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
         android:layout_alignLeft="@id/layout_dy_name_info_holder"
-        android:layout_below="@id/tv_content" >
+        android:layout_below="@id/tv_content"
+        android:clickable="false" >
     </com.gaopai.guiren.view.FlowLayout>
 
     <com.gaopai.guiren.view.MyGridLayout
@@ -51,8 +51,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/layout_dy_name_info_holder"
         android:layout_below="@id/fl_tags"
-        android:padding="5dp"
+        android:layout_marginTop="5dp"
         custom:columns="3"
+        custom:grid_gap="5dp"
         custom:is_square="true" />
 
     <TextView

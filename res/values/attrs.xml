@@ -28,6 +28,7 @@
     <declare-styleable name="MyGridLayout">
         <attr name="columns" format="integer"></attr>
         <attr name="is_square" format="boolean"></attr>
+        <attr name="grid_gap" format="dimension"></attr>
     </declare-styleable>
     <declare-styleable name="TasFlowLayout">
         <attr name="tag_columns" format="integer"></attr>

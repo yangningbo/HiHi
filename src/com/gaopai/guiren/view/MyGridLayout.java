@@ -14,6 +14,10 @@ public class MyGridLayout extends ViewGroup {
 
 	private int mColumns;
 	private boolean isSquare = false;
+	/**
+	 * make sure child views has equal gaps between each other.
+	 */
+	private int gridGap;
 
 	public MyGridLayout(Context context) {
 		this(context, null);
@@ -28,6 +32,7 @@ public class MyGridLayout extends ViewGroup {
 		super(context, attrs, defStyle);
 		TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.MyGridLayout, defStyle, 0);
 		mColumns = typedArray.getInt(R.styleable.MyGridLayout_columns, 3);
+		gridGap = typedArray.getDimensionPixelSize(R.styleable.MyGridLayout_grid_gap, 0);
 		isSquare = typedArray.getBoolean(R.styleable.MyGridLayout_is_square, false);
 		typedArray.recycle();
 	}
@@ -41,25 +46,29 @@ public class MyGridLayout extends ViewGroup {
 		int width = MeasureSpec.getSize(widthMeasureSpec);
 		int height = MeasureSpec.getSize(heightMeasureSpec);
 
-		int childWidthSpec = MeasureSpec.makeMeasureSpec((width - getPaddingLeft() - getPaddingRight()) / mColumns,
-				MeasureSpec.EXACTLY);
+		int childWidthSpec = MeasureSpec.makeMeasureSpec((width - getPaddingLeft() - getPaddingRight() - mColumns
+				* gridGap)
+				/ mColumns, MeasureSpec.EXACTLY);
 
 		int childHeightSpec;
 		if (isSquare) {
 			childHeightSpec = childWidthSpec;
 		} else {
-//			childHeightSpec = MeasureSpec.makeMeasureSpec(LayoutParams.WRAP_CONTENT, MeasureSpec.AT_MOST);
-			childHeightSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingBottom() + getPaddingTop(), LayoutParams.WRAP_CONTENT);
+			childHeightSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingBottom() + getPaddingTop(),
+					LayoutParams.WRAP_CONTENT);
 		}
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
 			child.measure(childWidthSpec, childHeightSpec);
 		}
+
+		int rows = (childCount - 1) / mColumns + 1;
 		if (childCount > 0) {
-			height = ((childCount - 1) / mColumns + 1) * getChildAt(0).getMeasuredHeight();
+			height = rows * getChildAt(0).getMeasuredHeight();
 		}
-		heightMeasureSpec = MeasureSpec.makeMeasureSpec(height + getPaddingBottom() + getPaddingTop(),
-				MeasureSpec.EXACTLY);
+
+		heightMeasureSpec = MeasureSpec.makeMeasureSpec(height + getPaddingBottom() + getPaddingTop() + (rows - 1)
+				* gridGap, MeasureSpec.EXACTLY);
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 
@@ -80,25 +89,15 @@ public class MyGridLayout extends ViewGroup {
 			childWidth = child.getMeasuredWidth();
 			row = i / mColumns;
 			column = i % mColumns;
-			child.layout(column * childWidth + paddingLeft, row * childHeight + paddingTop, (column + 1) * childWidth
-					+ paddingLeft, (row + 1) * childHeight + paddingTop);
+			child.layout(column * childWidth + paddingLeft + (column - 1) * gridGap, row * childHeight + paddingTop
+					+ (row - 1) * gridGap, (column + 1) * childWidth + paddingLeft + (column - 1) * gridGap, (row + 1)
+					* childHeight + (row - 1) * gridGap + paddingTop);
 		}
 
 	}
 
-	// private OnClickListener mItemListener;
-	//
-	// public void setOnItemClickListener(OnClickListener clickListener) {
-	// mItemListener = clickListener;
-	// for (int i = 0; i < getChildCount(); i++) {
-	// View v = getChildAt(i);
-	// v.setOnClickListener(clickListener);
-	// }
-	// }
-
 	@Override
 	public void addView(View child) {
-		// TODO Auto-generated method stub
 		super.addView(child);
 	}
 

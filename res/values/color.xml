@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="transparent_cover">#25000000</color>
+    
     <color name="content_gray_text_color">#6F6F6F</color>
     <color name="content_gray_time_color">#AFAFAF</color>
     <color name="black">#000000</color>
@@ -67,11 +69,9 @@
     <color name="dy_user_info">#B1B1B1</color>
     <color name="dy_blue">#2FB2E2</color>
     <color name="divider">#C5C4C4</color>
-    
     <color name="setting_background">#F1F0F5</color>
     <color name="setting_tv_gray">#A5A5A5</color>
     <color name="setting_btn_red">#E73542</color>
-    
     <color name="slide_background">#232a30</color>
     <color name="slide_item_divider">#5a5a5a</color>
     <color name="slide_item_text_color">#a8a7a7</color>
@@ -79,28 +79,18 @@
     <color name="slide_divider_top">#646464</color>
     <color name="slide_item_background_normal">#19232b</color>
     <color name="slide_item_background_active">#0b1721</color>
-    
     <color name="notification_dot_red">#df0000</color>
-    
     <color name="profile_background">#F1F0F5</color>
     <color name="profile_name">#306DAB</color>
     <color name="profile_renmai_topbar">#F7F7F7</color>
-
     <color name="profile_text_gray">#9A9A9A</color>
     <color name="profile_vertical_divider">#B2B2B2</color>
-    
     <color name="profile_bottom_bar">#6E6F70</color>
-    
-
     <color name="connection_linkfy">#306DAB</color>
     <color name="connection_item_background">#ECECEC</color>
-    
-    
     <color name="tribe_detail_horizon_line">#C8C8C8</color>
     <color name="tribe_detail_text_gray">#8D8D8E</color>
-    
     <color name="general_text_blue">#306DAB</color>
-        
     <color name="general_btn_yellow_normal">#FFC600</color>
     <color name="general_btn_yellow_active">#D6A600</color>
     <color name="general_btn_green_normal">#00CCCB</color>
@@ -113,26 +103,18 @@
     <color name="general_btn_gray_active">#AAAAAA</color>
     <color name="general_btn_light_red_normal">#E87C60</color>
     <color name="general_btn_light_red_active">#FF4D3D</color>
-    
     <color name="dynamic_horizon_divider">#C9C8C8</color>
-    
     <color name="erweima_blue">#2FB2E2</color>
-
     <color name="general_horizon_divider">#ECECEC</color>
     <color name="general_background">#EFEEF4</color>
     <color name="general_text_black">#59595B</color>
     <color name="general_text_gray">#B1B1B1</color>
-    
     <color name="general_background_gray">#ECECEC</color>
-    
     <color name="general_border_normal">#A9A8A8</color>
     <color name="general_border_active">#2FB2E2</color>
     <color name="general_blue">#2FB2E2</color>
     <color name="general_btn_press_blue">#2FB2E2</color>
-    
-    
     <color name="general_light_gray">#ECECEC</color>
-    
     <color name="jiav_progressbar_dot">#F39C12</color>
     <color name="jiav_progressbar_forground">#F1C40F</color>
     <color name="jiav_progressbar_background">#FCFEFE</color>
@@ -142,17 +124,13 @@
     <color name="jiav_btn_blue">#319EE6</color>
     <color name="jiav_text_num_light_black">#8B8A8A</color>
     <color name="jiav_text_num_highlight">#E87C60</color>
-    
+
     <!-- share window -->
     <color name="share_background">#F0EFEF</color>
     <color name="share_text">#808080</color>
-    
     <color name="titlebar_background">#F7F7F7</color>
     <color name="titlebar_divider">#666565</color>
-    
     <color name="general_divider_in_white">#CFCDCD</color>
-    
     <color name="chat_background">#EBEAF1</color>
-    
-    
+
 </resources>

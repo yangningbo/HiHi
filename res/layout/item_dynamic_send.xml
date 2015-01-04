@@ -39,10 +39,11 @@
         android:id="@+id/dynamic_pics_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/fl_tags"
-        android:padding="5dp"
         custom:columns="3"
+        custom:grid_gap="5dp"
         custom:is_square="true" />
 
     <TextView

@@ -19,7 +19,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,7 +26,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -38,7 +36,6 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
-import com.gaopai.guiren.activity.SendDynamicMsgActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.WebActivity;
@@ -58,6 +55,7 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
+import com.gaopai.guiren.support.view.CoverImageView;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
@@ -1114,14 +1112,14 @@ public class DynamicHelper {
 	}
 
 	private ImageView getImageView(String url) {
-		ImageView imageView = new ImageView(mContext);
+		ImageView imageView = new CoverImageView(mContext);
 		ImageLoaderUtil.displayImage(url, imageView, R.drawable.default_pic);
 		android.view.ViewGroup.LayoutParams lp = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		imageView.setLayoutParams(lp);
 		imageView.setScaleType(ScaleType.FIT_XY);
-		int padding = MyUtils.dip2px(mContext, 5);
-		imageView.setPadding(padding, padding, padding, padding);
+//		int padding = MyUtils.dip2px(mContext, 5);
+//		imageView.setPadding(padding, padding, padding, padding);
 		return imageView;
 	}
 
