@@ -852,5 +852,7 @@
     <string name="weixin_num">微信号码</string>
     <string name="name">姓名</string>
     <string name="must_input_can_not_be_empty">必填内容不能为空</string>
+    
+    <string name="no_right_see_members">"您未加入，无法查看其他成员！"</string>
 
 </resources>

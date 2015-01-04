@@ -658,7 +658,7 @@ public class DynamicHelper {
 		if (convertView == null) {
 			convertView = buildErrorView();
 		}
-		Logger.time(this, "getView");
+		Logger.time(this, "type=" + typeBean.type + "  getView");
 		return convertView;
 	}
 

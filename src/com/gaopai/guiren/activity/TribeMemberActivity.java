@@ -131,6 +131,13 @@ public class TribeMemberActivity extends BaseActivity {
 					if (data.data != null && data.data.size() > 0) {
 						mAdapter.addAll(data.data);
 					}
+					if (data.pageInfo != null) {
+						isFull = (data.pageInfo.hasMore == 0);
+						if (!isFull) {
+							page++;
+						}
+					}
+					mListView.setHasMoreData(!isFull);
 				} else {
 					otherCondition(data.state, TribeMemberActivity.this);
 				}
@@ -139,6 +146,7 @@ public class TribeMemberActivity extends BaseActivity {
 			@Override
 			public void onFinish() {
 				mListView.onPullComplete();
+				mListView.setHasMoreData(!isFull);
 			}
 		};
 		mListView.doPullRefreshing(true, 0);
@@ -165,19 +173,18 @@ public class TribeMemberActivity extends BaseActivity {
 			mListView.setHasMoreData(!isFull);
 			return;
 		}
-
 		switch (type) {
 		case TYPE_TRIBE_USER:
-			DamiInfo.getTribeUserList(mTribeID, listener);
+			DamiInfo.getTribeUserList(mTribeID, page, listener);
 			break;
 		case TYPE_MEETING_HOST:
-			DamiInfo.gethostsList(mTribeID, listener);
+			DamiInfo.gethostsList(mTribeID, page, listener);
 			break;
 		case TYPE_MEETING_GUEST:
-			DamiInfo.getguestsList(mTribeID, listener);
+			DamiInfo.getguestsList(mTribeID, page, listener);
 			break;
 		case TYPE_MEETING_USER:
-			DamiInfo.getMeetingUserList(mTribeID, listener);
+			DamiInfo.getMeetingUserList(mTribeID, page, listener);
 			break;
 		default:
 			break;

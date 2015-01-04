@@ -280,6 +280,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
 		intentFilter.addAction(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE);
+		intentFilter.addAction(NotifyChatMessage.ACTION_CHANGE_VOICE_CONTENT);
 		intentFilter.addAction(ChatBaseActivity.ACTION_CHANGE_VOICE);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		super.registerReceiver(intentFilter);
@@ -298,6 +299,23 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			Log.d(TAG, "receiver:" + PushChatMessage.ACTION_SEND_STATE);
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
 			modifyMessageState(messageInfo);
+		} else if (NotifyChatMessage.ACTION_CHANGE_VOICE_CONTENT.equals(intent.getAction())) {
+			final MessageInfo temp = (MessageInfo) intent
+					.getSerializableExtra(NotifyChatMessage.EXTRAS_NOTIFY_CHAT_MESSAGE);
+			if (temp.parentid.equals("0")) {
+				if (temp.id.equals(messageInfo.id)) {
+					messageInfo.content = temp.content;
+					bindView();
+				}
+			} else {
+				for (MessageInfo comment : messageInfos) {
+					if (comment.id.equals(temp.id)) {
+						comment.content = temp.content;
+						mAdapter.notifyDataSetChanged();
+						break;
+					}
+				}
+			}
 		} else if (intent.getAction().equals(ChatBaseActivity.ACTION_CHANGE_VOICE)) {
 			isChangeVoice = isAnony();
 			setChangeVoiceView(isChangeVoice);
@@ -1592,7 +1610,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		} else if (result.equals(getString(R.string.zan)) || result.equals(getString(R.string.cancel_zan))) {
 			msgHelper.zanMessage(msgInfo, isAnony() ? 1 : 0);
 		} else if (result.equals(getString(R.string.retrweet))) {
-//			msgHelper.goToRetrweet(msgInfo);
+			// msgHelper.goToRetrweet(msgInfo);
 			msgHelper.spreadToDy(msgInfo);
 		} else if (result.equals(getString(R.string.report))) {
 			msgHelper.showReportDialog(msgInfo);

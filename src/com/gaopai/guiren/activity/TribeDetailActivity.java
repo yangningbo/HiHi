@@ -251,7 +251,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	protected boolean isUserRealIdentity() {
-		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0;
+		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 1) == 0;
 	}
 
 	private void bindBottomButtons() {
@@ -432,7 +432,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			MessageHelper.clearChatCache(mContext, mTribeID, 200, deleteCallback);
 			break;
 		case R.id.tv_user_real_identity:
-			int sp = spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribeID), 0);
+			int sp = spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribeID), 1);
 			changeSwitch(tvUseRealIdentity, sp == 1);
 			spoAnony.setInt(SPConst.getSingleSpId(mContext, mTribeID), 1 - sp);
 			if (sp == 0) {
@@ -469,7 +469,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.ml_tribe_users:
 			if (mTribe.type == 2 && mTribe.isjoin == 0) {
-				showToast("您未加入，无法查看所有成员！");
+				showToast(getString(R.string.no_right_see_members));
 				return;
 			}
 			startActivityForResult(TribeMemberActivity.getIntent(mContext, mTribeID, isCreator),

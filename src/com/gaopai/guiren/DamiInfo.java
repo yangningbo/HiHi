@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.R.integer;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.ViewDebug.IntToString;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONException;
@@ -1913,10 +1915,10 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void getTribeUserList(String tid, IResponseListener listener) {
+	public static void getTribeUserList(String tid, int page, IResponseListener listener) {
 		Parameters bundle = new Parameters();
-		// bundle.add("page", String.valueOf(page));
-		// bundle.add("pageSize", String.valueOf(LOAD_SIZE));
+		bundle.add("page", String.valueOf(page));
+		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
 		bundle.add("tid", tid);
 
 		String url = SERVER + "tribe/tribeUserList";
@@ -1931,10 +1933,11 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void getMeetingUserList(String id, IResponseListener listener) {
+	public static void getMeetingUserList(String id, int page, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("meetingid", id);
-
+		bundle.add("page", String.valueOf(page));
+		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
 		String url = SERVER + "meeting/meetingUserList";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
@@ -1947,10 +1950,11 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void gethostsList(String id, IResponseListener listener) {
+	public static void gethostsList(String id, int page, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("meetingid", id);
-
+		bundle.add("page", String.valueOf(page));
+		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
 		String url = SERVER + "meeting/gethosts";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
@@ -1963,9 +1967,11 @@ public class DamiInfo implements Serializable {
 	 * @return
 	 * @throws DamiException
 	 */
-	public static void getguestsList(String id, IResponseListener listener) {
+	public static void getguestsList(String id, int page, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		bundle.add("meetingid", id);
+		bundle.add("page", String.valueOf(page));
+		bundle.add("pageSize", String.valueOf(LOAD_SIZE));
 
 		String url = SERVER + "meeting/getguests";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);

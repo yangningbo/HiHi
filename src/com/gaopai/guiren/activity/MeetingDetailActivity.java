@@ -352,15 +352,27 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.tv_meeting_guest: {
+			if (mMeeting.type == 2 && mMeeting.isjoin == 0) {
+				showToast(getString(R.string.no_right_see_members));
+				return;
+			}
 			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_GUEST);
 			break;
 		}
 
 		case R.id.tv_meeting_host: {
+			if (mMeeting.type == 2 && mMeeting.isjoin == 0) {
+				showToast(getString(R.string.no_right_see_members));
+				return;
+			}
 			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_HOST);
 			break;
 		}
 		case R.id.tv_meeting_join_in: {
+			if (mMeeting.type == 2 && mMeeting.isjoin == 0) {
+				showToast(getString(R.string.no_right_see_members));
+				return;
+			}
 			goToMemberActivity(TribeMemberActivity.TYPE_MEETING_USER);
 			break;
 		}
@@ -675,7 +687,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void changeUseRealName(View v) {
-		int level = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeetingID), 0);
+		int level;
+		if (mMeeting.role != 0) {
+			level = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeeting.id), 0);
+		} else {
+			level = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeeting.id), 1);
+		}
 		spoAnony.setInt(SPConst.getSingleSpId(mContext, mMeetingID), 1 - level);
 		if (level == 0) {
 			showToast(R.string.switch_use_anony_name_mode);
@@ -687,7 +704,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void setUseRealName(View v) {
-		int anony = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeetingID), 0);
+		int anony;
+		if (mMeeting.role != 0) {
+			anony = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeeting.id), 0);
+		} else {
+			anony = spoAnony.getInt(SPConst.getSingleSpId(mContext, mMeeting.id), 1);
+		}
 		setSwitchState(v, anony);
 		if (anony == 0) {
 			setViewText(v, R.string.user_anony_name);

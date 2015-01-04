@@ -372,12 +372,10 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		@Override
 		public void unFavoriteMessage(MessageInfo msg) {
 			mAdapter.notifyDataSetChanged();
-			Logger.d(this, "favoritecount===" + msg.favoriteCount);
 		}
 
 		@Override
 		public void favoriteMessage(MessageInfo msg) {
-			Logger.d(this, msg.isfavorite + "   =======");
 			mAdapter.notifyDataSetChanged();
 		}
 
@@ -405,7 +403,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		msg.title = mTribe.name;
 		msg.to = mTribe.id;
 		msg.parentid = "0";
-		if (mChatType == CHAT_TYPE_MEETING && mTribe.role != 0) {
+		if (mChatType == CHAT_TYPE_MEETING && mTribe.role != 0) {//必须实名
 			msg.displayname = mLogin.realname;
 			msg.headImgUrl = mLogin.headsmall;
 		} else {
@@ -425,7 +423,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	private boolean isAnony() {
-		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
+		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 1) == 1;
 	}
 
 	private void buildConversation(MessageInfo msg) {
