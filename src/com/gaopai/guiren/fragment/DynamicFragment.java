@@ -104,6 +104,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				mAdapter.viewDynamicDetail((TypeHolder) mAdapter.getItem(pos));
 			}
 		});
+		mListView.getRefreshableView().setRecyclerListener(mAdapter.getRecyleListener());
 		ViewUtil.findViewById(view, R.id.send_text_btn).setOnClickListener(this);
 		Button emotionBtn = ViewUtil.findViewById(view, R.id.emotion_btn);
 		emotionBtn.setOnClickListener(this);
@@ -122,7 +123,8 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				}
 			}
 		});
-		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC, Intent.ACTION_SCREEN_OFF, MainActivity.LOGIN_SUCCESS_ACTION);
+		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC, Intent.ACTION_SCREEN_OFF,
+				MainActivity.LOGIN_SUCCESS_ACTION);
 	}
 
 	private boolean isInitialed = false;
@@ -301,7 +303,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();

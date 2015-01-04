@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.AbsListView.RecyclerListener;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -67,6 +68,7 @@ import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.WeiboTextUrlSpan;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
+import com.gaopai.guiren.view.MyGridView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.squareup.picasso.Picasso;
 
@@ -222,6 +224,31 @@ public class DynamicHelper {
 		public void onStop(boolean stopAutomatic) {
 			callback.onVoiceStop();
 		}
+	}
+
+	public RecyclerListener getRecyleListener() {
+		RecyclerListener recyclerListener = new RecyclerListener() {
+			@Override
+			public void onMovedToScrapHeap(View view) {
+				if (!(view.getTag() instanceof ViewHolderCommon)) {
+					return;
+				}
+				ViewHolderCommon viewHolder = (ViewHolderCommon) view.getTag();
+				viewHolder.ivHeader.setImageDrawable(null);
+				if (viewHolder instanceof ViewHolderSendDynamic) {
+					MyGridLayout gridLayout = ((ViewHolderSendDynamic) viewHolder).gridLayout;
+					for (int i = 0; i < 9; i++) {
+						((ImageView) gridLayout.getChildAt(i)).setImageDrawable(null);
+					}
+				} else if (viewHolder instanceof ViewHolderSpreadLink) {
+					((ViewHolderSpreadLink) viewHolder).ivHeader1.setImageDrawable(null);
+				} else if (viewHolder instanceof ViewHolderSpreadMsg) {
+					((ViewHolderSpreadMsg) viewHolder).ivHeader1.setImageDrawable(null);
+					((ViewHolderSpreadMsg) viewHolder).ivPic.setImageDrawable(null);
+				}
+			}
+		};
+		return recyclerListener;
 	}
 
 	public void zanMessage(final TypeHolder typeBean) {
@@ -591,8 +618,7 @@ public class DynamicHelper {
 	}
 
 	public View getView(View convertView, TypeHolder typeBean) {
-		// TODO Auto-generated method stub
-		// DynamicBean.TypeHolder typeBean = mData.get(position);
+		Logger.startCountTime();
 		try {
 			switch (typeBean.type) {
 
@@ -632,6 +658,7 @@ public class DynamicHelper {
 		if (convertView == null) {
 			convertView = buildErrorView();
 		}
+		Logger.time(this, "getView");
 		return convertView;
 	}
 
@@ -1074,10 +1101,14 @@ public class DynamicHelper {
 			viewHolder.tvContent.setText(jsonContent.content);
 		}
 
-		viewHolder.gridLayout.removeAllViews();
-		if (jsonContent.pic != null) {
-			buidImageViews(viewHolder.gridLayout, jsonContent.pic);
+		viewHolder.tvContent.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		if (typeBean.type == TYPE_SPREAD_OTHER_DYNAMIC) {
+			viewHolder.tvContent.setVisibility(View.VISIBLE);
+			viewHolder.tvContent.setText(MyTextUtils.getSpannableString(
+					MyTextUtils.addSingleUserSpan(jsonContent.realname, jsonContent.uid), "说：" + jsonContent.content));
 		}
+
+		buidImageViews(viewHolder.gridLayout, jsonContent.pic);
 		viewHolder.flTags.removeAllViews();
 		viewHolder.flTags.setVisibility(View.GONE);
 		if (!TextUtils.isEmpty(typeBean.tag)) {
@@ -1096,31 +1127,25 @@ public class DynamicHelper {
 	public final static int KEY_PHOTO_CLICK_POSITION = 96;
 
 	private void buidImageViews(MyGridLayout gridLayout, List<PicBean> pics) {
-		// TODO Auto-generated method stub
-		gridLayout.removeAllViews();
-		int i = 0;
-		for (PicBean bean : pics) {
-			ImageView imageView = getImageView(bean.imgUrlS);
-			// imageView.setTag(ChatMsgHelper.creatPicMsg(bean.imgUrlS,
-			// bean.imgUrlL, ""));
-			imageView.setTag(pics);
-			imageView.setTag(R.id.dy_photo_position, i);
-			imageView.setOnClickListener(photoClickListener);
-			gridLayout.addView(imageView);
-			i++;
+		int count;
+		if (pics == null) {
+			count = 0;
+		} else {
+			count = pics.size();
 		}
-	}
+		for (int i = 0; i < 9; i++) {
+			ImageView imageView = (ImageView) gridLayout.getChildAt(i);
+			if (i < count) {
+				imageView.setVisibility(View.VISIBLE);
+				ImageLoaderUtil.displayImage(pics.get(i).imgUrlS, imageView, R.drawable.default_pic);
+				imageView.setTag(pics);
+				imageView.setTag(R.id.dy_photo_position, i);
+				imageView.setOnClickListener(photoClickListener);
+			} else {
+				imageView.setVisibility(View.GONE);
+			}
 
-	private ImageView getImageView(String url) {
-		ImageView imageView = new CoverImageView(mContext);
-		ImageLoaderUtil.displayImage(url, imageView, R.drawable.default_pic);
-		android.view.ViewGroup.LayoutParams lp = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
-				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-		imageView.setLayoutParams(lp);
-		imageView.setScaleType(ScaleType.FIT_XY);
-//		int padding = MyUtils.dip2px(mContext, 5);
-//		imageView.setPadding(padding, padding, padding, padding);
-		return imageView;
+		}
 	}
 
 	public void setCommentHolder(TypeHolder typeBean) {

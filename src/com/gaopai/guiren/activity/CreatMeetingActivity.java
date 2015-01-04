@@ -44,6 +44,7 @@ import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.ImageCrop;
+import com.gaopai.guiren.support.TextLimitWatcher;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -121,7 +122,6 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			}
 		});
 	}
-	
 
 	private void bindView() {
 		// TODO Auto-generated method stub
@@ -184,13 +184,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		ivHeader = (ImageView) findViewById(R.id.iv_meeeting_header);
 
 		tvNumLimit = ViewUtil.findViewById(this, R.id.tv_num_limit);
-
-		etContent.addTextChangedListener(ViewUtil.creatNumLimitWatcher(etContent, 500, new OnTextChangedListener() {
-			@Override
-			public void onTextChanged(Editable s) {
-				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
-			}
-		}));
+		etContent.addTextChangedListener(new TextLimitWatcher(tvNumLimit, 500));
 	}
 
 	@Override
@@ -346,8 +340,8 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		final String end = tvEndTime.getText().toString();
 		Tribe tempTribe = new Tribe();
 		tempTribe.content = info;
-		tempTribe.start = DateUtil.getTimeStamp(start)/1000;
-		tempTribe.end = DateUtil.getTimeStamp(end)/1000;
+		tempTribe.start = DateUtil.getTimeStamp(start) / 1000;
+		tempTribe.end = DateUtil.getTimeStamp(end) / 1000;
 		tempTribe.name = title;
 		tempTribe.logosmall = mFilePath;
 		Intent intent = new Intent(mContext, MeetingDetailActivity.class);
@@ -436,7 +430,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		};
-		//jumiao tells me that php can only decode second, so let it be second
+		// jumiao tells me that php can only decode second, so let it be second
 		if (isEdit) {
 			DamiInfo.editMeeting(mMeeting.id, title, mFilePath, String.valueOf(mPrivacy), info, startl, endl, password,
 					listener);

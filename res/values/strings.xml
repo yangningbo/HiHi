@@ -173,7 +173,6 @@
     <string name="cancel_block_success">取消成功</string>
     <string name="cancel_block_failed">取消失败</string>
     <string name="copyright">Copyright © 2014 Guiren.All Rights Reserved</string>
-    <string name="power_by">powered by 西竹科技</string>
     <string name="ok">确定</string>
     <string name="toast_sdcard_mounted">SD卡拔出，不能使用某些功能!</string>
     <string name="toast_sdcard_available">SD卡存储空间不足!</string>

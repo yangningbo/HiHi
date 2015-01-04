@@ -32,7 +32,6 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.User;
@@ -41,6 +40,7 @@ import com.gaopai.guiren.bean.net.TagResult;
 import com.gaopai.guiren.net.MorePicture;
 import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.TagWindowManager;
+import com.gaopai.guiren.support.TextLimitWatcher;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -64,10 +64,8 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private ImageButton btnPhoto;
 	private MyGridLayout picGrid;
 
-	private List<TagBean> recTagList = new ArrayList<TagBean>();
 	private TextView tvUseRealName;
 	private int isHideName = 0;
-	private boolean isSending = false;
 
 	private CameralHelper cameralHelper;
 
@@ -113,7 +111,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		etTags.setFilters(MyTextUtils.tagEditFilters);
 		tvWordNumLimit = (TextView) findViewById(R.id.tv_num_limit);
 		etDynamicMsg = (EditText) findViewById(R.id.et_dynamic_msg);
-		etDynamicMsg.addTextChangedListener(numLimitWatcher);
+		etDynamicMsg.addTextChangedListener(new TextLimitWatcher(tvWordNumLimit, 500));
 
 		btnPhoto = (ImageButton) findViewById(R.id.btn_camera);
 		btnPhoto.setOnClickListener(this);
@@ -122,21 +120,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		tvUseRealName = ViewUtil.findViewById(this, R.id.tv_send_dy_realname);
 		tvUseRealName.setOnClickListener(this);
 	}
-
-	private TextWatcher numLimitWatcher = new TextWatcher() {
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
-		}
-
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-		}
-
-		@Override
-		public void afterTextChanged(Editable s) {
-			tvWordNumLimit.setText("还能输入" + (500 - s.length()) + "字");
-		}
-	};
 
 	private void getTags() {
 		DamiInfo.getTags(new SimpleResponseListener(mContext) {
@@ -202,7 +185,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			showToast(R.string.input_can_not_be_empty);
 			return;
 		}
-		isSending = true;
 
 		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, isHideName, tags, new SimpleResponseListener(
 				mContext, R.string.send_now) {
@@ -229,7 +211,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			public void onFinish() {
 				// TODO Auto-generated method stub
 				super.onFinish();
-				isSending = false;
 			}
 		});
 	}
@@ -239,8 +220,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		int count = flowLayout.getChildCount();
 		for (int j = 0; j < count; j++) {
 			tagList.add(TagWindowManager.getText((ViewGroup) flowLayout.getChildAt(j)));
-			// tagList.add(((TextView) ((ViewGroup)
-			// flowLayout.getChildAt(j)).getChildAt(1)).getText().toString());
 		}
 		return tagList;
 	}
@@ -289,7 +268,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	private OnClickListener tagDeleteClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			flowLayout.removeView((View) v.getParent());
 		}
 	};

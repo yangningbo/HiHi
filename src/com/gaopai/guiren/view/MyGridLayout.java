@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.utils.Logger;
-import com.gaopai.guiren.utils.MyUtils;
 
 public class MyGridLayout extends ViewGroup {
 
@@ -57,13 +55,18 @@ public class MyGridLayout extends ViewGroup {
 			childHeightSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingBottom() + getPaddingTop(),
 					LayoutParams.WRAP_CONTENT);
 		}
+
+		int visibleCount = 0;
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
+			if (child.getVisibility() == View.VISIBLE) {
+				visibleCount++;
+			}
 			child.measure(childWidthSpec, childHeightSpec);
 		}
 
-		int rows = (childCount - 1) / mColumns + 1;
-		if (childCount > 0) {
+		int rows = (visibleCount - 1) / mColumns + 1;
+		if (visibleCount > 0) {
 			height = rows * getChildAt(0).getMeasuredHeight();
 		}
 
@@ -85,6 +88,9 @@ public class MyGridLayout extends ViewGroup {
 		int paddingTop = getPaddingTop();
 		for (int i = 0; i < childCount; i++) {
 			View child = getChildAt(i);
+			if (child.getVisibility() != View.VISIBLE) {
+				return;
+			}
 			childHeight = child.getMeasuredHeight();
 			childWidth = child.getMeasuredWidth();
 			row = i / mColumns;

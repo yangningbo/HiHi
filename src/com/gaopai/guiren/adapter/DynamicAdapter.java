@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView.RecyclerListener;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -49,16 +50,23 @@ public class DynamicAdapter extends BaseAdapter {
 		mContext = fragment.getActivity();
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_LIST);
-		dynamicHelper.setCallback(callback);
-		user = DamiCommon.getLoginResult(mContext);
+		init();
 	}
 
 	public DynamicAdapter(Activity activity) {
 		mContext = activity;
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_MY_LIST);
+		init();
+	}
+
+	private void init() {
 		dynamicHelper.setCallback(callback);
 		user = DamiCommon.getLoginResult(mContext);
+	}
+
+	public RecyclerListener getRecyleListener() {
+		return dynamicHelper.getRecyleListener();
 	}
 
 	public void updateUser() {

@@ -54,7 +54,53 @@
         android:layout_marginTop="5dp"
         custom:columns="3"
         custom:grid_gap="5dp"
-        custom:is_square="true" />
+        custom:is_square="true" >
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <com.gaopai.guiren.support.view.CoverImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+    </com.gaopai.guiren.view.MyGridLayout>
 
     <TextView
         android:id="@+id/tv_date_info"

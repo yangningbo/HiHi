@@ -31,6 +31,7 @@ import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.support.TagWindowManager.TagCallback;
+import com.gaopai.guiren.support.TextLimitWatcher;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.ViewUtil.OnTextChangedListener;
@@ -165,13 +166,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 		layoutTags = ViewUtil.findViewById(this, R.id.layout_tags);
 		showPasswordView();
 
-		etInfo.addTextChangedListener(ViewUtil.creatNumLimitWatcher(etInfo, 500, new OnTextChangedListener() {
-			@Override
-			public void onTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-				tvNumLimit.setText("还能输入" + (500 - s.length()) + "字");
-			}
-		}));
+		etInfo.addTextChangedListener(new TextLimitWatcher(tvNumLimit, 500));
 	}
 
 	@Override

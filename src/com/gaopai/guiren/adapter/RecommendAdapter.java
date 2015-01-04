@@ -139,7 +139,7 @@ public class RecommendAdapter<T> extends BaseAdapter {
 			holder.layoutHeader.setImage(user.headsmall);
 			holder.layoutHeader.setMVP(user.bigv == 1);
 			holder.tvUserName.setText(user.realname);
-			holder.tvRecommend.setText(user.reason);
+			holder.tvRecommend.setText(User.getUserInfo(user));
 			holder.btnAdd.setOnClickListener(mAddClickListener);
 			holder.btnAdd.setTag(user);
 			if (choseSet.contains(user.uid)) {

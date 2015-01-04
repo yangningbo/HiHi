@@ -10,11 +10,8 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Patterns;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,7 +21,6 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.net.RegisterResult;
 import com.gaopai.guiren.bean.net.VerificationResult;
-import com.gaopai.guiren.bean.net.RegisterResult.RegisterBean;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -37,12 +33,11 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private EditText etPassword;
 	private TextView tvSelectCountry;
 	private TextView tvRequestVeryficaion;
-	
-	private Button btnEye;
 
+	private Button btnEye;
 	private Handler mHandler;
 	private String countryCode = "86";
-	
+
 	public final static int TYPE_REGISTER = 0;
 	public final static int TYPE_FORGET_PASSWORD = 1;
 	public final static String KEY_TYPE = "type";
@@ -57,12 +52,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		mTitleBar.setTitleText(getString(R.string.register));
 		type = getIntent().getIntExtra(KEY_TYPE, 0);
 		initView();
-		// changeViewByStage();
 		mHandler = new Handler(getMainLooper()) {
 
 			@Override
 			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
 				if (msg.what == 0) {
 					setCountDownText(msg.arg1);
 				} else {
@@ -84,10 +77,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		tvSelectCountry = ViewUtil.findViewById(this, R.id.tv_select_country);
 		tvSelectCountry.setOnClickListener(this);
 		tvRequestVeryficaion = ViewUtil.findViewById(this, R.id.tv_request_veryfication);
-		
+
 		btnEye = ViewUtil.findViewById(this, R.id.btn_pswd_eye);
 		btnEye.setOnClickListener(this);
-		
+
 		if (type == TYPE_REGISTER) {
 			btnConfirm.setText(R.string.confirm_register);
 			mTitleBar.setTitleText(R.string.register);
@@ -97,9 +90,8 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-
 	private boolean isCountDown = false;
-	
+
 	private void setCountDownText(int num) {
 		String text1 = "没收到短信？";
 		String text2 = "秒后重新获取";
@@ -107,12 +99,12 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		SpannableString spString = new SpannableString(text);
 		spString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.general_text_gray)), 0,
 				text1.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-		spString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.general_blue)),
-				text1.length(), (text1 + num).length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-		spString.setSpan(new AbsoluteSizeSpan(20, true),
-				text1.length(), (text1 + num).length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-		spString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.general_text_gray)), (text1 + num).length(),
-				text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		spString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.general_blue)), text1.length(),
+				(text1 + num).length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		spString.setSpan(new AbsoluteSizeSpan(20, true), text1.length(), (text1 + num).length(),
+				Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+		spString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.general_text_gray)),
+				(text1 + num).length(), text.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		tvRequestVeryficaion.setText(spString);
 	}
 
@@ -135,6 +127,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			}
 		}
 	}
+
 	private void sendMessage(int what, int time) {
 		Message message = mHandler.obtainMessage();
 		message.what = what;
@@ -143,7 +136,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void getSmsCode(String phone, String countryCode) {
-		
+
 		DamiInfo.getSmsCode(phone, countryCode, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
@@ -160,7 +153,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		});
 		startCount();
 	}
-	
+
 	private void startCount() {
 		isCountDown = true;
 		btnSendVeryfication.setEnabled(false);
@@ -168,7 +161,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		setCountDownText(60);
 		new Thread(new CountDownRunnable()).start();
 	}
-	
+
 	private void endCount() {
 		isCountDown = false;
 		btnSendVeryfication.setEnabled(true);
@@ -176,9 +169,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void register(String phone, String password, String code) {
-		
 		SimpleResponseListener listener = new SimpleResponseListener(mContext, R.string.request_internet_now) {
-
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
@@ -214,19 +205,15 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			tvSelectCountry.setText(name);
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		isCountDown = false;
 	}
 
-	private void moveEditTextCursor(EditText editText) {
-		editText.setSelection(editText.length());
-	}
-
 	private boolean isShowPswd = true;
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
