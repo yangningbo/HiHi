@@ -260,10 +260,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-//	private boolean isAnony() {
-//		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
-//		
-//	}
+	// private boolean isAnony() {
+	// return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) ==
+	// 1;
+	//
+	// }
 	private boolean isAnony() {
 		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role > 0) {
 			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
@@ -1327,22 +1328,33 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		msg.title = mTribe.name;
 		msg.to = mTribe.id;
 		msg.parentid = messageInfo.id;
-		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
+//		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
+//			msg.displayname = User.getUserName(mLogin);
+//			msg.headImgUrl = mLogin.headsmall;
+//		} else {
+//			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0 || mIdentity == null) {
+//				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
+//				msg.displayname = User.getUserName(mLogin);
+//				msg.headImgUrl = mLogin.headsmall;
+//				msg.isanonymity = 0;
+//			} else {
+//				msg.displayname = mIdentity.name;
+//				msg.headImgUrl = mIdentity.head;
+//				msg.heroid = mIdentity.id;
+//				msg.isanonymity = 1;
+//			}
+//		}
+		if(isAnony() && mIdentity!=null) {
+			msg.displayname = mIdentity.name;
+			msg.headImgUrl = mIdentity.head;
+			msg.heroid = mIdentity.id;
+			msg.isanonymity = 1;
+		} else {
 			msg.displayname = User.getUserName(mLogin);
 			msg.headImgUrl = mLogin.headsmall;
-		} else {
-			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0 || mIdentity == null) {
-				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
-				msg.displayname = User.getUserName(mLogin);
-				msg.headImgUrl = mLogin.headsmall;
-				msg.isanonymity = 0;
-			} else {
-				msg.displayname = mIdentity.name;
-				msg.headImgUrl = mIdentity.head;
-				msg.heroid = mIdentity.id;
-				msg.isanonymity = 1;
-			}
+			msg.isanonymity = 0;
 		}
+		
 		msg.type = mChatType;
 
 		msg.commenterid = commenterid;
@@ -1352,14 +1364,21 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private String getName() {
-		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
-			return User.getUserName(mLogin);
+		// if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role
+		// != 0) {
+		// return User.getUserName(mLogin);
+		// } else {
+		// if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) ==
+		// 0) {
+		// return User.getUserName(mLogin);
+		// } else {
+		// return mIdentity.name;
+		// }
+		// }
+		if (isAnony() && mIdentity != null) {
+			return mIdentity.name;
 		} else {
-			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0) {
-				return User.getUserName(mLogin);
-			} else {
-				return mIdentity.name;
-			}
+			return User.getUserName(mLogin);
 		}
 	}
 

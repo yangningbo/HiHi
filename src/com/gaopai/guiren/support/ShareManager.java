@@ -195,6 +195,10 @@ public class ShareManager implements OnClickListener {
 		setShareContent(image, title, content, url);
 		showShareWindow(mActivity);
 	}
+	public void shareWebLink(String title, int image, String content, String url) {
+		setShareContent(image, title, content, url);
+		showShareWindow(mActivity);
+	}
 
 	// public void shareContentRecommend(String title, String url) {
 	// String content = title + " : " + url;

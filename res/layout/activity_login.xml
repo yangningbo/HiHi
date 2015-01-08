@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:contentDescription="@string/desc"
         android:src="@drawable/login_logo" />
 
@@ -23,7 +23,7 @@
         style="@style/general_edittext"
         android:layout_width="match_parent"
         android:layout_below="@id/logo"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:background="@color/white"
         android:hint="@string/please_input_phone"
         android:singleLine="true" />

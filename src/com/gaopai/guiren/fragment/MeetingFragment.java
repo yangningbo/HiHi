@@ -40,9 +40,9 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private MeetingAdapter mAdapter;
 
-	private View onGoingMeetingBtn;
-	private View pastMeetingBtn;
-	private View myMeetingBtn;
+//	private View onGoingMeetingBtn;
+//	private View pastMeetingBtn;
+//	private View myMeetingBtn;
 
 	public static final int TYPE_ONGOING_MEETING = 1;
 	public static final int TYPE_PAST_MEETING = 2;
@@ -54,6 +54,8 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private TextView tvOnGoingMeeting;
 	private TextView tvPastMeeting;
+	
+	private boolean intialFlag = true;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,15 +92,15 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private void initView(View mView) {
 
-		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-		ViewGroup dropDownView = (ViewGroup) layoutInflater.inflate(R.layout.titlebar_popup_window, null);
-		PopupWindowItemClickListener clickListener = new PopupWindowItemClickListener();
-		myMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_my_meeting);
-		onGoingMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_ongoing_meeting);
-		pastMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_past_meeting);
-		myMeetingBtn.setOnClickListener(clickListener);
-		onGoingMeetingBtn.setOnClickListener(clickListener);
-		pastMeetingBtn.setOnClickListener(clickListener);
+//		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+//		ViewGroup dropDownView = (ViewGroup) layoutInflater.inflate(R.layout.titlebar_popup_window, null);
+//		PopupWindowItemClickListener clickListener = new PopupWindowItemClickListener();
+//		myMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_my_meeting);
+//		onGoingMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_ongoing_meeting);
+//		pastMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_past_meeting);
+//		myMeetingBtn.setOnClickListener(clickListener);
+//		onGoingMeetingBtn.setOnClickListener(clickListener);
+//		pastMeetingBtn.setOnClickListener(clickListener);
 
 		meetingType = TYPE_ONGOING_MEETING;
 
@@ -144,29 +146,28 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		registerReceiver(REFRESH_LIST_ACTION, MainActivity.LOGIN_SUCCESS_ACTION);
 	}
 
-	private class PopupWindowItemClickListener implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			mTitleBar.closeWindow();
-			switch (v.getId()) {
-			case R.id.title_popup_text_ongoing_meeting:
-				meetingType = TYPE_ONGOING_MEETING;
-				break;
-			case R.id.title_popup_text_my_meeting:
-				meetingType = TYPE_MY_MEETING;
-				break;
-			case R.id.title_popup_text_past_meeting:
-				meetingType = TYPE_PAST_MEETING;
-				break;
-			default:
-				break;
-			}
-			getMeetingList(true, meetingType);
-		}
-
-	}
+//	private class PopupWindowItemClickListener implements OnClickListener {
+//
+//		@Override
+//		public void onClick(View v) {
+//			// TODO Auto-generated method stub
+//			mTitleBar.closeWindow();
+//			switch (v.getId()) {
+//			case R.id.title_popup_text_ongoing_meeting:
+//				meetingType = TYPE_ONGOING_MEETING;
+//				break;
+//			case R.id.title_popup_text_my_meeting:
+//				meetingType = TYPE_MY_MEETING;
+//				break;
+//			case R.id.title_popup_text_past_meeting:
+//				meetingType = TYPE_PAST_MEETING;
+//				break;
+//			default:
+//				break;
+//			}
+//			getMeetingList(true, meetingType);
+//		}
+//	}
 
 	private int page = 1;
 	private boolean isFull = false;
@@ -197,12 +198,17 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		public void onSuccess(Object o) {
 			final TribeList data = (TribeList) o;
 			if (data.state != null && data.state.code == 0) {
+				if (type != meetingType) {
+					return;
+				}
 				if (data.data != null && data.data.size() > 0) {
-					if (type != meetingType) {
-						return;
-					}
 					mAdapter.addAll(data.data);
-				} 
+				} else {
+					if (intialFlag) {
+						switchPage(TYPE_PAST_MEETING);
+						intialFlag = false;
+					}
+				}
 				if (data.pageInfo != null) {
 					isFull = (data.pageInfo.hasMore == 0);
 					if (!isFull) {
@@ -233,23 +239,28 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			return;
 		}
 		case R.id.layout_meeting_faxian:
-			meetingType = TYPE_ONGOING_MEETING;
-			tvPastMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
-			tvOnGoingMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
-			mListView.doPullRefreshing(true, 0);
-			// getMeetingList(true, meetingType);
+			switchPage(TYPE_ONGOING_MEETING);
 			break;
 		case R.id.layout_meeting_past:
-			meetingType = TYPE_PAST_MEETING;
-			tvOnGoingMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
-			tvPastMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
-			mListView.doPullRefreshing(true, 0);
-			// getMeetingList(true, meetingType);
+			switchPage(TYPE_PAST_MEETING);
 			break;
 		default:
 			super.onClick(v);
 		}
-
+	}
+	
+	private void switchPage(int type) {
+		if (type == TYPE_ONGOING_MEETING) {
+			meetingType = TYPE_ONGOING_MEETING;
+			tvPastMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
+			tvOnGoingMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
+			mListView.doPullRefreshing(true, 0);
+		} else {
+			meetingType = TYPE_PAST_MEETING;
+			tvOnGoingMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
+			tvPastMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
+			mListView.doPullRefreshing(true, 0);
+		}
 	}
 
 }

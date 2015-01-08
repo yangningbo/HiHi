@@ -55,6 +55,7 @@ import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
+import com.gaopai.guiren.utils.UpdateManager;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.slide.DragLayout;
 import com.gaopai.guiren.view.slide.DragLayout.DragListener;
@@ -507,6 +508,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		changeBg(index);
 	}
 
+	private void checkUpdate() {
+		if (DamiCommon.verifyNetwork(mContext)) { // 检查版本更新
+			UpdateManager.getUpdateManager().checkAppUpdate(this, false);
+		}
+	}
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -531,6 +538,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 					dragLayout.close();
 					FeatureFunction.startService(MainActivity.this);
 					initPage();
+					checkUpdate();
 					return;
 				} else {
 					String str;
@@ -607,6 +615,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				initPage();
 				bindUserView();
 				dragLayout.close();
+				checkUpdate();
 				FeatureFunction.startService(mContext);
 			} else if (resultCode == UNLOGIN_REQUEST) {
 				FeatureFunction.startService(mContext);

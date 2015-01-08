@@ -90,6 +90,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		if (TextUtils.isEmpty(mReportUrl)) {
 			Uri data = getIntent().getData();
 			mReportUrl = data.toString().substring(data.toString().indexOf("//") + 2);
+			mUrl = mReportUrl;
 			mTitle = mReportUrl;
 		}
 
@@ -170,7 +171,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 				if (mProgressDialog == null || !mProgressDialog.isShowing()) {
 					showProgressDialog(mContext.getString(R.string.add_more_loading));
 				}
-				Logger.d(this, "=========");
+				Logger.d(this, "url=" + url);
 				mUrl = url;
 				return super.shouldOverrideUrlLoading(view, url);
 			}
@@ -197,9 +198,32 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 				} else {
 					mForwardBtn.setEnabled(false);
 				}
+
 				stringBuilder = new StringBuilder();
-				view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
-						+ "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+				view.loadUrl("javascript:"
+						+ "(function(){"
+						+ "var shareImg, shareTitle, shareContent;"
+						+
+						// get image
+						"var imgs = document.getElementsByTagName('img');"
+						+ "for(var i=0, count=imgs.length; i < count; i++) {"
+						+ "var img = imgs[i];"
+						+ "if(img.clientWidth > 120) {"
+						+ "shareImg = img.src;"
+						+ "window.local_obj.showSource(img.src);"
+						+ "}"
+						+ "};"
+						+
+						// get title
+						"var url = window.location.href;" + "if(url.indexOf('www.diggg.com.cn/news-newsd') >= 0) {"
+						+ "shareTitle = document.getElementsByTagName('h1')[0].innerHTML;"
+						+ "var cHolder = document.getElementById('cont-ifr');"
+						+ "shareContent = cHolder.children[1].innerHTML;" + "} else {"
+						+ "shareTitle = document.getElementsByTagName('title')[0].innerHTML;" + "}"
+						+ "window.local_obj.showResult(shareImg, shareTitle, shareContent);" + "})();");
+				// view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
+				// +
+				// "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
 				super.onPageFinished(view, url);
 			}
 
@@ -248,10 +272,39 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 	StringBuilder stringBuilder = new StringBuilder();
 
 	final class InJavaScriptLocalObj {
-		@JavascriptInterface  
+		@JavascriptInterface
 		public void showSource(String html) {
 			stringBuilder.append(html);
 			Log.d("HTML", html);
+		}
+
+		@JavascriptInterface
+		public void showToast(String html) {
+			WebActivity.this.showToast(html);
+		}
+
+		@JavascriptInterface
+		public void showLog(String html) {
+			Logger.d(this, "img=" + html);
+		}
+
+		@JavascriptInterface
+		public void showResult(String img, String title, String content) {
+			mWebImage = "";
+			mWebContent = "";
+			mWebTitle = "";
+			if (!TextUtils.isEmpty(img) && !img.equals("undefined")) {
+				mWebImage = img;
+				Logger.d(this, "img=" + img);
+			}
+			if (!TextUtils.isEmpty(title) && !title.equals("undefined")) {
+				mWebTitle = title;
+				Logger.d(this, "title=" + title);
+			}
+			if (!TextUtils.isEmpty(content) && !content.equals("undefined")) {
+				mWebContent = content.replace("\n", "").replace("\r", "").replaceAll("\\s*", "").replace("地歌网讯", "");
+				Logger.d(this, "content=" + mWebContent);
+			}
 		}
 	}
 
@@ -273,22 +326,16 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 		case R.id.ab_share:
-			parseHtml(stringBuilder.toString());
 			if (TextUtils.isEmpty(mUrl)) {
 				return;
 			}
-			if (mWebImage == null) {
-				mWebImage = "";
-			}
-			if (mWebContent == null) {
-				mWebContent = getString(R.string.dige_info);
-			}
-			if (mWebTitle == null) {
-				mWebTitle = getString(R.string.dige);
-			}
-			
+
 			ShareManager shareManager = new ShareManager(this);
-			shareManager.shareWebLink(mWebTitle, mWebImage.trim(), mWebContent, mUrl.trim());
+			if (TextUtils.isEmpty(mWebImage.trim())) {
+				shareManager.shareWebLink(mWebTitle, R.drawable.logo_help, mWebContent, mUrl.trim());
+			} else {
+				shareManager.shareWebLink(mWebTitle, mWebImage.trim(), mWebContent, mUrl.trim());
+			}
 			shareManager.setDyCallback(new CallDyback() {
 				@Override
 				public void spreadDy() {
@@ -296,8 +343,8 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 					if (TextUtils.isEmpty(mUrl)) {
 						return;
 					}
-					DamiInfo.spreadDynamic(6, null, mWebTitle, mWebImage.trim(), mUrl.trim(), mWebContent,
-							new SimpleResponseListener(mContext) {
+					DamiInfo.spreadDynamic(6, null, mWebTitle.trim(), mWebImage.trim(), mUrl.trim(),
+							mWebContent.trim(), new SimpleResponseListener(mContext) {
 
 								@Override
 								public void onSuccess(Object o) {
@@ -323,20 +370,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-	private String mWebTitle;
-	private String mWebImage;
-	private String mWebContent;
-
-	private void parseHtml(String html) {
-		Document document = Jsoup.parse(html);
-		Element element = document.getElementsByClass("info-ifr").first();
-		if (element != null) {
-			mWebTitle = element.select("h1").html();
-			mWebImage = element.select("img").attr("src");
-			mWebContent = document.select("title").html();
-		}
-		Logger.d(this, "===============" + mWebTitle);
-		Logger.d(this, "===============" + mWebImage);
-		Logger.d(this, "===============" + mWebContent);
-	}
+	private String mWebTitle = "";
+	private String mWebImage = "";
+	private String mWebContent = "";
 }

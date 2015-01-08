@@ -25,7 +25,6 @@
         <TextView
             android:id="@+id/tv_user_name"
             style="@style/dynamic_item_title_name" />
-
     </LinearLayout>
 
     <RelativeLayout
@@ -42,15 +41,17 @@
             android:id="@+id/iv_header1"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:scaleType="centerCrop"
             android:layout_marginRight="@dimen/general_header_padding"
             android:contentDescription="@string/desc"
+            android:scaleType="centerCrop"
             android:src="@drawable/default_header" />
 
         <TextView
             android:id="@+id/tv_title1"
             style="@style/dynamic_item_title_name"
-            android:layout_toRightOf="@id/iv_header1"/>
+            android:layout_toRightOf="@id/iv_header1"
+            android:ellipsize="end"
+            android:maxLines="2" />
 
         <TextView
             android:id="@+id/tv_info1"
@@ -58,7 +59,9 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_title1"
             android:layout_below="@id/tv_title1"
-            android:layout_marginTop="@dimen/general_info_margin_top"/>
+            android:layout_marginTop="@dimen/general_info_margin_top"
+            android:ellipsize="end"
+            android:maxLines="2" />
     </RelativeLayout>
 
     <ImageView
