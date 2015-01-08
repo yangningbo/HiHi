@@ -1,6 +1,5 @@
 package com.gaopai.guiren.activity.chat;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -17,39 +16,32 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
-import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Toast;
 
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.AddReasonActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
-import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.adapter.TribeChatAdapter;
 import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
-import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
-import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.IdentitityResult;
 import com.gaopai.guiren.bean.net.SendMessageResult;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.IdentityTable;
 import com.gaopai.guiren.db.MessageTable;
-import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.receiver.NotifyChatMessage;
 import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.ConversationHelper;
@@ -403,20 +395,20 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		msg.title = mTribe.name;
 		msg.to = mTribe.id;
 		msg.parentid = "0";
-		if (mChatType == CHAT_TYPE_MEETING && mTribe.role > 0) {// 必须实名
-			msg.displayname = mLogin.realname;
+		// if (mChatType == CHAT_TYPE_MEETING && mTribe.role > 0) {// 必须实名
+		// msg.displayname = mLogin.realname;
+		// msg.headImgUrl = mLogin.headsmall;
+		// } else {
+		if ((!isAnony()) || (!hasIdentity)) {
+			Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
+			msg.displayname = User.getUserName(mLogin);
 			msg.headImgUrl = mLogin.headsmall;
 		} else {
-			if ((!isAnony()) || (!hasIdentity)) {
-				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
-				msg.displayname = User.getUserName(mLogin);
-				msg.headImgUrl = mLogin.headsmall;
-			} else {
-				msg.displayname = mIdentity.name;
-				msg.headImgUrl = mIdentity.head;
-				msg.heroid = mIdentity.id;
-			}
+			msg.displayname = mIdentity.name;
+			msg.headImgUrl = mIdentity.head;
+			msg.heroid = mIdentity.id;
 		}
+		// }
 		msg.type = mChatType;
 		buildConversation(msg);
 		return msg;
@@ -458,7 +450,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
 			IdentityTable table = new IdentityTable(db);
 			Identity identity = table.query(mTribe.id);
-			if (identity == null || System.currentTimeMillis() - identity.updateTime > 24 * 60 * 60 * 1000) {
+			if (identity == null || System.currentTimeMillis() - identity.updateTime > 24 * 60 * 60 * 1000
+					|| TextUtils.isEmpty(identity.name)) {
 				getIndetityByNet();
 			} else {
 				if (identity != null && TextUtils.isEmpty(identity.name)) {
@@ -518,17 +511,34 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 					}
 				}
 				hasIdentity = false;
-				showDialog(getString(R.string.identity_name), getString(R.string.refetch_nickname),
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								// TODO Auto-generated method stub
-								getIndetityByNet();
-							}
-						});
+				showGetIdentityDialog();
 			}
 		});
+	}
+
+	private void showGetIdentityDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.identity_name);
+		builder.setMessage(getString(R.string.refetch_nickname));
+		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				getIndetityByNet();
+			}
+		});
+		builder.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				ChatTribeActivity.this.finish();
+			}
+		});
+		Dialog dialog = builder.create();
+		dialog.setCancelable(false);
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.show();
 	}
 
 	public void insertIdentity() {

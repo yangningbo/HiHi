@@ -129,7 +129,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		}
 	}
 
-	private void initComponent() {
+	protected void initComponent() {
 		// TODO Auto-generated method stub
 		mLogin = DamiCommon.getLoginResult(mContext);
 		speexRecorder = new SpeexRecorderWrapper(this);
@@ -269,7 +269,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 	protected View viewChatText;
 
-	private void initTitleBarLocal() {
+	protected void initTitleBarLocal() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		setTitleText();
 		voiceModeToast = (LinearLayout) findViewById(R.id.voiceModeToast);
@@ -551,11 +551,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		mContentEdit.setHint(mContext.getString(R.string.input_message_hint));
 		mContentEdit.setText("");
 	}
-
-	// protected void changeToComment() {
-	// mVoiceSendBtn.setText(mContext.getString(R.string.pressed_to_comment));
-	// mContentEdit.setHint(mContext.getString(R.string.input_message_comment_hint));
-	// }
 
 	private SpeexRecorderWrapper speexRecorder;
 	private MediaUIHeper.RecordCallback recordCallback = new MediaUIHeper.RecordCallback() {

@@ -210,7 +210,6 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 						+ "var img = imgs[i];"
 						+ "if(img.clientWidth > 120) {"
 						+ "shareImg = img.src;"
-						+ "window.local_obj.showSource(img.src);"
 						+ "}"
 						+ "};"
 						+
@@ -272,21 +271,6 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 	StringBuilder stringBuilder = new StringBuilder();
 
 	final class InJavaScriptLocalObj {
-		@JavascriptInterface
-		public void showSource(String html) {
-			stringBuilder.append(html);
-			Log.d("HTML", html);
-		}
-
-		@JavascriptInterface
-		public void showToast(String html) {
-			WebActivity.this.showToast(html);
-		}
-
-		@JavascriptInterface
-		public void showLog(String html) {
-			Logger.d(this, "img=" + html);
-		}
 
 		@JavascriptInterface
 		public void showResult(String img, String title, String content) {

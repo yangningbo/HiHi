@@ -67,7 +67,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	public static final String KEY_MESSAGE = "message";
 	public static String currentChatId = "";
 
-	private CameralHelper cameralHelper;
+	protected CameralHelper cameralHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

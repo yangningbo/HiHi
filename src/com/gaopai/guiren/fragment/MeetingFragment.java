@@ -166,7 +166,17 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 				}
 				if (data.data != null && data.data.size() > 0) {
 					mAdapter.addAll(data.data);
-				} 
+				} else {
+					if (intialFlag) {
+						mListView.onPullComplete();
+						mListView.post(new Runnable() {
+							@Override
+							public void run() {
+								switchPage(TYPE_PAST_MEETING);
+							}
+						});
+					}
+				}
 				if (data.pageInfo != null) {
 					isFull = (data.pageInfo.hasMore == 0);
 					if (!isFull) {
@@ -175,11 +185,8 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 				}
 				mListView.setHasMoreData(!isFull);
 				
-				if (intialFlag) {
-					mListView.onPullComplete();
-					switchPage(TYPE_PAST_MEETING);
-					intialFlag = false;
-				}
+			
+				intialFlag = false;
 			} else {
 				otherCondition(data.state, getActivity());
 			}

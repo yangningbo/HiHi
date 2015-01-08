@@ -302,7 +302,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		viewHolder.ivVoice.setVisibility(View.GONE);
 		viewHolder.wiatProgressBar.setVisibility(View.GONE);
 		viewHolder.tvUserName.setVisibility(View.VISIBLE);
-		viewHolder.tvUserName.setVisibility(View.VISIBLE);
 		viewHolder.ivHead.setVisibility(View.VISIBLE);
 		viewHolder.msgInfoLayout.setVisibility(View.VISIBLE);
 		viewHolder.mCountLayout.setVisibility(View.VISIBLE);
@@ -331,7 +330,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		case MessageType.LOCAL_ANONY_FALSE:
 		case MessageType.LOCAL_ANONY_TRUE:
 			viewHolder.msgInfoLayout.setVisibility(View.GONE);
-			viewHolder.tvUserName.setVisibility(View.GONE);
 			viewHolder.tvUserName.setVisibility(View.GONE);
 			viewHolder.ivHead.setVisibility(View.GONE);
 			viewHolder.mCountLayout.setVisibility(View.GONE);

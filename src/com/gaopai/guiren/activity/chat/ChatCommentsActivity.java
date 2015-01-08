@@ -620,6 +620,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		commentCountText = (TextView) view.findViewById(R.id.chat_comment_count);
 		likeCountText = (TextView) view.findViewById(R.id.chat_zan_count);
+		likeCountText.setText(String.valueOf(messageInfo.agreeCount));
+		
 		favouriteCountText = (TextView) view.findViewById(R.id.chat_favourite_count);
 		favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
 
