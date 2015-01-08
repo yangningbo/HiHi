@@ -19,11 +19,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView.RecyclerListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.AbsListView.RecyclerListener;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
@@ -56,7 +55,6 @@ import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper.OnDownLoadCallback;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
-import com.gaopai.guiren.support.view.CoverImageView;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
@@ -68,7 +66,6 @@ import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.utils.WeiboTextUrlSpan;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.MyGridLayout;
-import com.gaopai.guiren.view.MyGridView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.squareup.picasso.Picasso;
 
@@ -1098,14 +1095,15 @@ public class DynamicHelper {
 			viewHolder.tvContent.setVisibility(View.GONE);
 		} else {
 			viewHolder.tvContent.setVisibility(View.VISIBLE);
-			viewHolder.tvContent.setText(jsonContent.content);
+			viewHolder.tvContent.setText(MyTextUtils.addHttpLinks(jsonContent.content));
 		}
 
 		viewHolder.tvContent.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		if (typeBean.type == TYPE_SPREAD_OTHER_DYNAMIC) {
 			viewHolder.tvContent.setVisibility(View.VISIBLE);
 			viewHolder.tvContent.setText(MyTextUtils.getSpannableString(
-					MyTextUtils.addSingleUserSpan(jsonContent.realname, jsonContent.uid), "说：" + jsonContent.content));
+					MyTextUtils.addSingleUserSpan(jsonContent.realname, jsonContent.uid),
+					MyTextUtils.addHttpLinks("说：" + jsonContent.content)));
 		}
 
 		buidImageViews(viewHolder.gridLayout, jsonContent.pic);
@@ -1176,17 +1174,17 @@ public class DynamicHelper {
 		return mContext.getString(R.string.no_name);
 	}
 
-	public Spannable getCommentString(CommentBean commentBean) {
+	public CharSequence getCommentString(CommentBean commentBean) {
 		makeCommentNotNull(commentBean);
 		if (commentBean.toid != null && (!commentBean.toid.equals("0"))) {
-			return MyTextUtils.addEmotions(MyTextUtils.getSpannableString(
+			return MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), "回复",
 					MyTextUtils.addSingleUserSpan(commentBean.toname, commentBean.toid), ":",
-					MyTextUtils.addEmotions(commentBean.content.content)));
+					MyTextUtils.addHttpLinks(commentBean.content.content));
 		} else {
-			return MyTextUtils.addEmotions(MyTextUtils.getSpannableString(
+			return MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), ":",
-					MyTextUtils.addEmotions(commentBean.content.content)));
+					MyTextUtils.addHttpLinks(commentBean.content.content));
 		}
 	}
 

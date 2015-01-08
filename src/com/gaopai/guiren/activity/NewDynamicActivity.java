@@ -26,6 +26,7 @@ import com.gaopai.guiren.bean.dynamic.NewDynamicBean.TypeHolder;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -138,7 +139,7 @@ public class NewDynamicActivity extends BaseActivity {
 			} else {
 				holder.tvContent.setVisibility(View.VISIBLE);
 				if (!TextUtils.isEmpty(jsonContent.content)) {
-					holder.tvContent.setText(jsonContent.content);
+					holder.tvContent.setText(MyTextUtils.addHttpLinks(jsonContent.content));
 				} else {
 					bindText(jsonContent, holder.tvContent);
 				}

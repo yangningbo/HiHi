@@ -63,7 +63,7 @@ public class MyTextUtils {
 		addEmotions(result);
 		return result;
 	}
-
+	
 	public static Spannable addEmotions(CharSequence value) {
 		return addEmotions(new SpannableString(value));
 	}

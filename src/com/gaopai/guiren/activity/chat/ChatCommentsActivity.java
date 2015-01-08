@@ -114,7 +114,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected User mLogin;
 	protected Identity mIdentity;
 	protected int mChatType = 0;
-	protected String mNewUrl = "";
 
 	private ImageView ivVoice, ivPhoto, ivPhotoCover, headImageView;
 	private View layoutPic;
@@ -261,8 +260,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
+//	private boolean isAnony() {
+//		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
+//		
+//	}
 	private boolean isAnony() {
-		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
+		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role > 0) {
+			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
+		} else {
+			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 1) == 1;
+		}
 	}
 
 	protected void setChangeVoiceView(boolean isChangeVoice) {

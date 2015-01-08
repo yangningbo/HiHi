@@ -67,7 +67,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	public static final String KEY_CHAT_TYPE = "chat_type";
 	public static final String KEY_TRIBE = "tribe";
-	public static final String KEY_TRIBE_ID = "tribe_id";
 	public static final String KEY_IS_ONLOOKER = "onlooker";
 
 	private String mTribeId;
@@ -91,7 +90,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		msgHelper = new ChatMsgDataHelper(mContext, callback, mTribe, mChatType);
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
-		updateTribe();
+		if (mTribe.role == -1) {
+			updateTribe();
+		}
 		if (!isOnLooker) {
 			getIdentity();
 		}
@@ -402,7 +403,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		msg.title = mTribe.name;
 		msg.to = mTribe.id;
 		msg.parentid = "0";
-		if (mChatType == CHAT_TYPE_MEETING && mTribe.role != 0) {//必须实名
+		if (mChatType == CHAT_TYPE_MEETING && mTribe.role > 0) {// 必须实名
 			msg.displayname = mLogin.realname;
 			msg.headImgUrl = mLogin.headsmall;
 		} else {
@@ -422,7 +423,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	private boolean isAnony() {
-		return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 1) == 1;
+		if (mChatType == CHAT_TYPE_MEETING && mTribe.role > 0) {
+			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
+		} else {
+			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 1) == 1;
+		}
 	}
 
 	private void buildConversation(MessageInfo msg) {
@@ -456,6 +461,10 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			if (identity == null || System.currentTimeMillis() - identity.updateTime > 24 * 60 * 60 * 1000) {
 				getIndetityByNet();
 			} else {
+				if (identity != null && TextUtils.isEmpty(identity.name)) {
+					getIndetityByNet();
+					return;
+				}
 				hasIdentity = true;
 				mIdentity = identity;
 			}
@@ -501,21 +510,23 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			public void onSuccess(Object o) {
 				IdentitityResult data = (IdentitityResult) o;
 				if (data.state != null && data.state.code == 0) {
-					mIdentity = data.data;
-					insertIdentity();
-					hasIdentity = true;
-				} else {
-					hasIdentity = false;
-					showDialog(getString(R.string.identity_name), getString(R.string.refetch_nickname),
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									// TODO Auto-generated method stub
-									getIndetityByNet();
-								}
-							});
+					if (data.data != null && !TextUtils.isEmpty(data.data.name)) {
+						mIdentity = data.data;
+						insertIdentity();
+						hasIdentity = true;
+						return;
+					}
 				}
+				hasIdentity = false;
+				showDialog(getString(R.string.identity_name), getString(R.string.refetch_nickname),
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								getIndetityByNet();
+							}
+						});
 			}
 		});
 	}

@@ -88,7 +88,7 @@ public class NotificationFragment extends BaseFragment {
 					Tribe tribe = new Tribe();
 					tribe.name = conversationBean.name;
 					tribe.id = conversationBean.toid;
-					tribe.role = 0;
+					tribe.role = -1;
 					intent.setClass(getActivity(), ChatTribeActivity.class);
 					intent.putExtra(ChatTribeActivity.KEY_TRIBE, tribe);
 					intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, conversationBean.type);

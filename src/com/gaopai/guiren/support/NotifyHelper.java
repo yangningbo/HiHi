@@ -17,6 +17,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.NotifySystemActivity;
 import com.gaopai.guiren.activity.WebActivity;
+import com.gaopai.guiren.activity.chat.ChatMainActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -102,7 +103,7 @@ public class NotifyHelper {
 	public void notifyChatMessage(MessageInfo messageInfo) {
 		init();
 		Logger.d(this, "isNeedNotify=" + isNeedNotify());
-		
+
 		if (!isNeedNotify()) {
 			saveChatMessage(messageInfo);
 			return;
@@ -166,7 +167,7 @@ public class NotifyHelper {
 			} else {
 				ConversationHelper.saveToLastMsgList(messageInfo, mContext);
 			}
-			
+
 			if (poChat.getInt(SPConst.getTribeUserId(mContext, messageInfo.to), 0) == 1) {
 				return;
 			}
@@ -223,24 +224,29 @@ public class NotifyHelper {
 
 		Intent intent;
 		if (messageInfo.type == 100) {
-			intent = new Intent(mContext, ChatMessageActivity.class);
+			intent = new Intent(mContext, MainActivity.class);
 			User user = new User();
 			user.uid = messageInfo.from;
 			user.realname = messageInfo.displayname;
 			user.headsmall = messageInfo.headImgUrl;
 			intent.putExtra(ChatMessageActivity.KEY_USER, user);
-		} else if (messageInfo.type == -2) {
+			intent.setAction(MainActivity.ACTION_CHAT_PRIVATE);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		} else if (messageInfo.type == -2) {//dige news
 			intent = WebActivity.getIntent(mContext, messageInfo.url, messageInfo.conversion.name);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		} else {
-			intent = new Intent(mContext, ChatTribeActivity.class);
+			intent = new Intent(mContext, MainActivity.class);
 			Tribe tribe = new Tribe();
 			tribe.id = messageInfo.to;
 			tribe.name = messageInfo.title;
 			tribe.type = messageInfo.type;
 			intent.putExtra(ChatTribeActivity.KEY_TRIBE, tribe);
 			intent.putExtra(ChatTribeActivity.KEY_CHAT_TYPE, messageInfo.type);
+			intent.setAction(MainActivity.ACTION_CHAT_TRIBE);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		}
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, messageInfo.to.hashCode(), intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return contentIntent;

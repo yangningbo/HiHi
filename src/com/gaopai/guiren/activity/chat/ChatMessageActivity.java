@@ -40,7 +40,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		viewChatText.setVisibility(View.GONE);
 		mAdapter = new PrivateChatAdapter(mContext, speexPlayerWrapper, messageInfos);
 		super.initAdapter(mAdapter);
-//		mTitleBar.setTitleText(user.realname);
+		// mTitleBar.setTitleText(user.realname);
 		if (mAddBtn != null) {
 			mAddBtn.setOnLongClickListener(new OnLongClickListener() {
 				@Override
@@ -59,7 +59,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 			addSaveSendMessage(messageInfo);
 		}
 	}
-	
+
 	public static Intent getIntent(Context context, String uid, String name, String headsmall) {
 		User user = new User();
 		user.uid = uid;
@@ -69,13 +69,13 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		intent.putExtra(ChatMessageActivity.KEY_USER, user);
 		return intent;
 	}
-	
+
 	public static Intent getIntent(Context context, User user) {
 		Intent intent = new Intent(context, ChatMessageActivity.class);
 		intent.putExtra(ChatMessageActivity.KEY_USER, user);
 		return intent;
 	}
-	
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -86,8 +86,6 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 		NotifyHelper.clearMsgNotification(mContext, 100);
 		ConversationHelper.resetCountAndRefresh(mContext, user.uid);
 	}
-	
-
 
 	@Override
 	protected void setTitleText() {
@@ -160,7 +158,7 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 			return;
 		}
 		try {
-			if (msg.from.equals(DamiCommon.getUid(mContext)) || !msg.parentid.equals("0")) {
+			if (msg.from.equals(DamiCommon.getUid(mContext)) || !msg.parentid.equals("0") || msg.type != 100) {
 				return;
 			}
 			if (msg.from.equals(user.uid)) {
@@ -193,7 +191,6 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 
 		super.onClick(v);
 	}
-
 
 	@Override
 	protected boolean isAvoidDisturb() {

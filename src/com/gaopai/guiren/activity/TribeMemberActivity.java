@@ -229,7 +229,6 @@ public class TribeMemberActivity extends BaseActivity {
 				if (((User) getItem(i)).uid.equals(id)) {
 					list.remove(getItem(i));
 					notifyDataSetChanged();
-
 					return;
 				}
 			}

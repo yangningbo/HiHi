@@ -37,6 +37,8 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.chat.ChatMessageActivity;
+import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.adapter.CustomFragmentPagerAdapter;
 import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.bean.User;
@@ -85,6 +87,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	public static final String ACTION_LOGIN_OUT = "com.guiren.intent.action.ACTION_LOGIN_OUT";
 	public static final String ACTION_UPDATE_PROFILE = "com.guiren.intent.action.ACTION_UPDATE_PROFILE";
 	public final static String LOGIN_SUCCESS_ACTION = "com.guiren.intent.action.LOGIN_SUCCESS_ACTION";
+
+	// notification action
+	public static final String ACTION_CHAT_PRIVATE = "com.guiren.intent.action.ACTION_CHAT_PRIVATE";
+	public static final String ACTION_CHAT_TRIBE = "com.guiren.intent.action.ACTION_CHAT_TRIBE";
 
 	private View layoutWelcome;
 
@@ -318,7 +324,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			boolean isNetConnect = false;
 			ConnectivityManager connectivityManager = (ConnectivityManager) mContext
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
-
 			NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
 			if (activeNetInfo != null) {
 				if (activeNetInfo.isConnected()) {
@@ -343,15 +348,23 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			bindUserView();
 			dragLayout.close();
 			FeatureFunction.startService(MainActivity.this);
-			// refreshNotifyCount();
-			// refreshTribeCount();
-			// refreshMeetingCount();
-			// refreshMessageCount();
 		} else if (ACTION_SHOW_TOAST.equals(action)) {
 			String str = intent.getStringExtra("toast_msg");
 			showToast(str);
 		} else if (ACTION_UPDATE_PROFILE.equals(action)) {
 			bindUserView();
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		String action = intent.getAction();
+		if (ACTION_CHAT_PRIVATE.equals(action)) {
+			intent.setClass(mContext, ChatMessageActivity.class);
+			mContext.startActivity(intent);
+		} else if (ACTION_CHAT_TRIBE.equals(action)) {
+			intent.setClass(mContext, ChatTribeActivity.class);
+			mContext.startActivity(intent);
 		}
 	}
 
