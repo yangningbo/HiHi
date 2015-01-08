@@ -1,5 +1,7 @@
 package com.gaopai.guiren.activity;
 
+import java.util.UUID;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -29,6 +31,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
+import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.User;
@@ -699,6 +702,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		} else {
 			showToast(R.string.switch_use_real_name_mode);
 		}
+		ChatTribeActivity.insertTipMessageToDb(mContext, level == 0, DamiCommon.getLoginResult(mContext), mMeeting);
 		sendBroadcast(new Intent(ChatBaseActivity.ACTION_CHANGE_VOICE));
 		setUseRealName(v);
 	}

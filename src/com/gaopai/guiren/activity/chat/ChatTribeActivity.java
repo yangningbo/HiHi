@@ -414,6 +414,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		return msg;
 	}
 
+
+
 	private boolean isAnony() {
 		if (mChatType == CHAT_TYPE_MEETING && mTribe.role > 0) {
 			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
@@ -720,6 +722,29 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		}
 	}
 
+	public static void insertTipMessageToDb(Context context, boolean isAnony, User user, Tribe tribe) {
+		MessageInfo messageInfo = buidTipMessage(user, tribe);
+		if (isAnony) {
+			messageInfo.fileType = MessageType.LOCAL_ANONY_TRUE;
+		} else {
+			messageInfo.fileType = MessageType.LOCAL_ANONY_FALSE;
+		}
+		SQLiteDatabase db = DBHelper.getInstance(context).getWritableDatabase();
+		MessageTable table = new MessageTable(db);
+		table.insert(messageInfo);
+	}
+	
+	public static MessageInfo buidTipMessage(User user, Tribe tribe) {
+		MessageInfo msg = new MessageInfo();
+		msg.from = user.uid;
+		msg.tag = UUID.randomUUID().toString();
+		msg.time = System.currentTimeMillis();
+		msg.to = tribe.id;
+		msg.parentid = "0";
+		msg.type = 200;
+		return msg;
+	}
+
 	private void insertTipMessage(boolean isAnony) {
 		MessageInfo messageInfo = buildMessage();
 		if (isAnony) {
@@ -727,9 +752,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else {
 			messageInfo.fileType = MessageType.LOCAL_ANONY_FALSE;
 		}
-		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
-		MessageTable table = new MessageTable(db);
-		table.insert(messageInfo);
+//		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
+//		MessageTable table = new MessageTable(db);
+//		table.insert(messageInfo);
 		messageInfos.add(messageInfo);
 		mAdapter.notifyDataSetChanged();
 		scrollToBottom();

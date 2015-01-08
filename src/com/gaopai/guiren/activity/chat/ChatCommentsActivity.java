@@ -223,17 +223,34 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 					hasIdentity = true;
 				} else {
 					hasIdentity = false;
-					showDialog(getString(R.string.identity_name), getString(R.string.refetch_nickname),
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									// TODO Auto-generated method stub
-									getIndetityByNet();
-								}
-							});
+					showGetIdentityDialog();
 				}
 			}
 		});
+	}
+	private void showGetIdentityDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.identity_name);
+		builder.setMessage(getString(R.string.refetch_nickname));
+		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				getIndetityByNet();
+			}
+		});
+		builder.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				ChatCommentsActivity.this.finish();
+			}
+		});
+		Dialog dialog = builder.create();
+		dialog.setCancelable(false);
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.show();
 	}
 
 	public void insertIdentity() {

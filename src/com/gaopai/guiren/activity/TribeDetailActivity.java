@@ -440,6 +440,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			} else {
 				showToast(R.string.switch_use_real_name_mode);
 			}
+			ChatTribeActivity.insertTipMessageToDb(mContext, sp == 0, DamiCommon.getLoginResult(mContext), mTribe);
 			sendBroadcast(new Intent(ChatBaseActivity.ACTION_CHANGE_VOICE));
 			break;
 		case R.id.tv_deal_apply: {
