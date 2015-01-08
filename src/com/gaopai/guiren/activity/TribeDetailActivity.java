@@ -496,7 +496,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void deleteConverstion() {
-		ConversationHelper.deleteItemAndUpadte(mContext, mTribeID);
+//		ConversationHelper.deleteItemAndUpadte(mContext, mTribeID);
+		ConversationHelper.deleteChatItemAndUpadte(mContext, mTribe.id, false);
 	}
 
 	private DeleteCallback deleteCallback = new DeleteCallback() {

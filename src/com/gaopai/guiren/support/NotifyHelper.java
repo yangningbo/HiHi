@@ -210,10 +210,10 @@ public class NotifyHelper {
 		NotificationCompat.Builder builder = getNotificationBuilder();
 		builder.setContentTitle(mContext.getString(R.string.has_new_notification));
 		builder.setContentText(msg);
-		Intent intent = new Intent(mContext, NotifySystemActivity.class);
+		Intent intent = new Intent(mContext, MainActivity.class);
 		intent.putExtra("notify", true);
-		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP
-				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.setAction(MainActivity.ACTION_NOTIFY_SYSTEM);
 		PendingIntent contentIntent = PendingIntent.getActivity(mContext, NOTIFYD_SYSTEM, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(contentIntent);

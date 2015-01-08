@@ -36,6 +36,7 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.widget.photoview.PhotoView;
 import com.gaopai.guiren.widget.photoview.PhotoViewAttacher.OnViewTapListener;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -52,6 +53,8 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 
 	private List<MessageInfo> list = new ArrayList<MessageInfo>();
 	private int position;
+	@ViewInject(id = R.id.tv_pic_index)
+	private TextView tvPicInd;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,12 +76,14 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 				}
 			}
 		}
+		updatePos(position + 1);
 		pager.setAdapter(new ImagePagerAdapter());
 		pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
 				super.onPageSelected(position);
 				ShowImagesActivity.this.position = position;
+				updatePos(position + 1);
 			}
 		});
 		pager.setOffscreenPageLimit(1);
@@ -86,6 +91,11 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.picture);
+		mTitleBar.setVisibility(View.GONE);
+	}
+
+	private void updatePos(int position) {
+		tvPicInd.setText(position + "/" + list.size());
 	}
 
 	public static Intent getIntent(Context context, String imgSmall, String imgLarge) {
@@ -124,7 +134,6 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 		@Override
 		public Object instantiateItem(ViewGroup view, int position) {
 			View contentView = inflater.inflate(R.layout.item_photoview, view, false);
-
 			handlePage(position, contentView, true);
 
 			((ViewPager) view).addView(contentView, 0);
@@ -155,6 +164,7 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void handlePage(int position, View contentView, boolean fromInstantiateItem) {
+		Logger.d(this, "pos=" + position);
 		final PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
 		imageView.setVisibility(View.INVISIBLE);
 		final ProgressBar wait = (ProgressBar) contentView.findViewById(R.id.wait);
@@ -171,7 +181,6 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 		}
 
 		ImageLoaderUtil.displayImage(url, imageView, new ImageLoadingListener() {
-
 			@Override
 			public void onLoadingStarted(String imageUri, View view) {
 				readError.setVisibility(View.INVISIBLE);

@@ -221,7 +221,8 @@ public class SystemNotifiy extends AbstractNotifiy {
 			case NotifiyType.MEETING_KICK_OUT:
 				msg = mContext.getString(R.string.you_have_been_kick_out_meeting);
 				identityTable.delete(notifiyVo.room.id);
-				ConversationHelper.deleteItemAndUpadte(mContext, notifiyVo.room.id);
+//				ConversationHelper.deleteItemAndUpadte(mContext, notifiyVo.room.id);
+				ConversationHelper.deleteChatItemAndUpadte(mContext,  notifiyVo.room.id, false);
 				Intent kickMeetingIntent = new Intent(TribeActivity.ACTION_KICK_TRIBE);
 				kickMeetingIntent.putExtra("id", notifiyVo.room.id);
 				mContext.sendBroadcast(kickMeetingIntent);

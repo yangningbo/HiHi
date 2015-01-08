@@ -633,8 +633,9 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void deleteConverstion() {
-		ConversationHelper.deleteItem(mContext, mMeetingID);
-		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+//		ConversationHelper.deleteItem(mContext, mMeetingID);
+//		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		ConversationHelper.deleteChatItemAndUpadte(mContext, mMeetingID, false);
 	}
 
 	private void applyWithReason(int type) {

@@ -169,12 +169,12 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 				} else {
 					if (intialFlag) {
 						mListView.onPullComplete();
-						mListView.post(new Runnable() {
+						mListView.postDelayed(new Runnable() {
 							@Override
 							public void run() {
 								switchPage(TYPE_PAST_MEETING);
 							}
-						});
+						}, 800);
 					}
 				}
 				if (data.pageInfo != null) {

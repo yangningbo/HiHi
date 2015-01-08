@@ -577,7 +577,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	private void deleteConverstion() {
-		ConversationHelper.deleteItemAndUpadte(mContext, mTribe.id);
+//		ConversationHelper.deleteItemAndUpadte(mContext, mTribe.id);
+		ConversationHelper.deleteChatItemAndUpadte(mContext, mTribe.id, false);
 	}
 
 	@Override

@@ -159,12 +159,35 @@ public class ConversationHelper {
 	public static boolean deleteItem(Context context, String id) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
 		ConverseationTable table = new ConverseationTable(dbDatabase);
-		MessageTable messageTable = new MessageTable(dbDatabase);
-		messageTable.deleteRecord(id);
+//		MessageTable messageTable = new MessageTable(dbDatabase);
+//		messageTable.deleteRecord(id);
+		return table.delete(id);
+	}
+	
+	public static boolean deleteChatItem(Context context, final String id, final boolean isPrivate) {
+		SQLiteDatabase dbDatabase = DBHelper.getInstance(context).getWritableDatabase();
+		ConverseationTable table = new ConverseationTable(dbDatabase);
+		final MessageTable messageTable = new MessageTable(dbDatabase);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				if (isPrivate) {
+					messageTable.deleteUser(id);
+				} else {
+					messageTable.deleteTribe(id);
+				}
+			}
+		}).start();
+		
 		return table.delete(id);
 	}
 	public static void deleteItemAndUpadte(Context context, String id) {
 		if (deleteItem(context, id)) {
+			context.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		}
+	}
+	public static void deleteChatItemAndUpadte(Context context, String id, boolean isPrivate) {
+		if (deleteChatItem(context, id, isPrivate)) {
 			context.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 		}
 	}

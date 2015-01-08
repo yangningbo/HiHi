@@ -92,12 +92,16 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	// notification action
 	public static final String ACTION_CHAT_PRIVATE = "com.guiren.intent.action.ACTION_CHAT_PRIVATE";
 	public static final String ACTION_CHAT_TRIBE = "com.guiren.intent.action.ACTION_CHAT_TRIBE";
+	public static final String ACTION_NOTIFY_SYSTEM = "com.guiren.intent.action.ACTION_NOTIFY_SYSTEM";
 
 	private View layoutWelcome;
+	
+	private Intent notifyItent;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		notifyItent = getIntent();
 		setContentView(R.layout.activity_main);
 		addTitleBar();
 		initTitleBarLocal();
@@ -346,6 +350,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 			startActivityForResult(loginIntent, LOGIN_REQUEST);
 		} else if (LOGIN_SUCCESS_ACTION.equals(action)) {
+			onNewIntent(notifyItent);
 			bindUserView();
 			dragLayout.close();
 			FeatureFunction.startService(MainActivity.this);
@@ -359,12 +364,18 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void onNewIntent(Intent intent) {
+		if (intent == null) {
+			return;
+		}
 		String action = intent.getAction();
 		if (ACTION_CHAT_PRIVATE.equals(action)) {
 			intent.setClass(mContext, ChatMessageActivity.class);
 			mContext.startActivity(intent);
 		} else if (ACTION_CHAT_TRIBE.equals(action)) {
 			intent.setClass(mContext, ChatTribeActivity.class);
+			mContext.startActivity(intent);
+		} else if (ACTION_NOTIFY_SYSTEM.equals(action)) {
+			intent.setClass(mContext, NotifySystemActivity.class);
 			mContext.startActivity(intent);
 		}
 	}
@@ -534,6 +545,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 						if (data.data.roomids != null)
 							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
 					}
+					onNewIntent(notifyItent);
 					bindUserView();
 					dragLayout.close();
 					FeatureFunction.startService(MainActivity.this);
@@ -613,6 +625,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				return;
 			} else if (resultCode == RESULT_OK) {
 				initPage();
+				onNewIntent(notifyItent);
 				bindUserView();
 				dragLayout.close();
 				checkUpdate();

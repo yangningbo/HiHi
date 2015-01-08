@@ -111,7 +111,13 @@ public class NotificationFragment extends BaseFragment {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								ConversationHelper.deleteItem(act, conversationBean.toid);
+								if (conversationBean.type == 100) {
+									ConversationHelper.deleteChatItem(act, conversationBean.toid, true);
+								} else if (conversationBean.type == 200 || conversationBean.type == 300) {
+									ConversationHelper.deleteChatItem(act, conversationBean.toid, false);
+								} else {
+									ConversationHelper.deleteItem(act, conversationBean.toid);
+								}
 								getDataFromDb();
 							}
 						});
