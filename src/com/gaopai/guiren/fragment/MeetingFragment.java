@@ -40,10 +40,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private MeetingAdapter mAdapter;
 
-//	private View onGoingMeetingBtn;
-//	private View pastMeetingBtn;
-//	private View myMeetingBtn;
-
 	public static final int TYPE_ONGOING_MEETING = 1;
 	public static final int TYPE_PAST_MEETING = 2;
 	public static final int TYPE_MY_MEETING = 3;
@@ -92,16 +88,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private void initView(View mView) {
 
-//		LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-//		ViewGroup dropDownView = (ViewGroup) layoutInflater.inflate(R.layout.titlebar_popup_window, null);
-//		PopupWindowItemClickListener clickListener = new PopupWindowItemClickListener();
-//		myMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_my_meeting);
-//		onGoingMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_ongoing_meeting);
-//		pastMeetingBtn = dropDownView.findViewById(R.id.title_popup_text_past_meeting);
-//		myMeetingBtn.setOnClickListener(clickListener);
-//		onGoingMeetingBtn.setOnClickListener(clickListener);
-//		pastMeetingBtn.setOnClickListener(clickListener);
-
 		meetingType = TYPE_ONGOING_MEETING;
 
 		mListView.setPullRefreshEnabled(true); // 下拉刷新
@@ -146,29 +132,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		registerReceiver(REFRESH_LIST_ACTION, MainActivity.LOGIN_SUCCESS_ACTION);
 	}
 
-//	private class PopupWindowItemClickListener implements OnClickListener {
-//
-//		@Override
-//		public void onClick(View v) {
-//			// TODO Auto-generated method stub
-//			mTitleBar.closeWindow();
-//			switch (v.getId()) {
-//			case R.id.title_popup_text_ongoing_meeting:
-//				meetingType = TYPE_ONGOING_MEETING;
-//				break;
-//			case R.id.title_popup_text_my_meeting:
-//				meetingType = TYPE_MY_MEETING;
-//				break;
-//			case R.id.title_popup_text_past_meeting:
-//				meetingType = TYPE_PAST_MEETING;
-//				break;
-//			default:
-//				break;
-//			}
-//			getMeetingList(true, meetingType);
-//		}
-//	}
-
 	private int page = 1;
 	private boolean isFull = false;
 
@@ -203,12 +166,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 				}
 				if (data.data != null && data.data.size() > 0) {
 					mAdapter.addAll(data.data);
-				} else {
-					if (intialFlag) {
-						switchPage(TYPE_PAST_MEETING);
-						intialFlag = false;
-					}
-				}
+				} 
 				if (data.pageInfo != null) {
 					isFull = (data.pageInfo.hasMore == 0);
 					if (!isFull) {
@@ -216,6 +174,12 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 					}
 				}
 				mListView.setHasMoreData(!isFull);
+				
+				if (intialFlag) {
+					mListView.onPullComplete();
+					switchPage(TYPE_PAST_MEETING);
+					intialFlag = false;
+				}
 			} else {
 				otherCondition(data.state, getActivity());
 			}

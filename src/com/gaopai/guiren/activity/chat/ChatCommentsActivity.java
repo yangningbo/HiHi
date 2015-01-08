@@ -107,7 +107,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	public static final String INTENT_CHATTYPE_KEY = "chattype_key";
 	public static final String INTENT_USER_KEY = "user_key";
 	public static final String INTENT_IDENTITY_KEY = "identity_key";
-	public static final String INTENT_NEWURL_KEY = "newurl_key";
 	public static final String INTENT_SENCE_ONLOOK_KEY = "onlook_key";
 	private MessageInfo messageInfo;
 	private Tribe mTribe;
@@ -147,14 +146,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	public final static int VOICE_MODEL = 0;
 	public final static int TEXT_MODEL = 1;
 	private int mCurrentModel = VOICE_MODEL;
-
-	public final static int MSG_DELETE_MSG = 11001;
-	public final static int MSG_DOWNLOAD_MSG = 11002;
-	public final static int MSG_SEND_MSG = 11003;
-	public final static int MSG_FAVORITE_MSG = 11004;
-	public final static int MSG_REPORT_MSG = 11005;
-	public final static int MSG_REMOVE_MSG = 11006;
-	public final static int MSG_VOICE_TEXT_MSG = 11007;
 
 	private boolean isOnLooker = false;
 	private DisplayImageOptions options;
@@ -196,16 +187,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		getZanList();
 		initVoicePlayMode();
 		spoAnony = new PreferenceOperateUtils(mContext, SPConst.SP_ANONY);
-		// updateVoicePlayModeState(isModeInCall);
 		isChangeVoice = isAnony();
 		setChangeVoiceView(isChangeVoice);
-		if (mIdentity == null) {
+		if (mIdentity == null && !isOnLooker) {
 			hasIdentity = false;
 			getIdentity();
 		}
 	}
 
-	private boolean hasIdentity = true;
+	private boolean hasIdentity = false;
 
 	protected void getIdentity() {
 		if ((mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && (mTribe.role != 1))
@@ -222,9 +212,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	/**
-	 * @update
-	 */
 	private void getIndetityByNet() {
 		DamiInfo.getIndetity(mTribe.id, new SimpleResponseListener(mContext) {
 			@Override
@@ -260,11 +247,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
-	// private boolean isAnony() {
-	// return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) ==
-	// 1;
-	//
-	// }
 	private boolean isAnony() {
 		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role > 0) {
 			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
@@ -475,12 +457,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				.cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 	}
 
-	/**
-	 * 下载成功后修改消息状态，更新数据库并播放声音
-	 * 
-	 * @param msg
-	 * @param type
-	 */
 	private void downVoiceSuccess(final MessageInfo msg) {
 		SQLiteDatabase dbDatabase = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable messageTable = new MessageTable(dbDatabase);
@@ -1316,11 +1292,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	protected MessageInfo buildMessage() {
 		MessageInfo msg = new MessageInfo();
-		// if (isAnony()) {
-		// msg.from = "-1";
-		// } else {
 		msg.from = mLogin.uid;
-		// }
 		msg.tag = UUID.randomUUID().toString();
 		msg.time = System.currentTimeMillis();
 		msg.readState = 1;
@@ -1328,23 +1300,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		msg.title = mTribe.name;
 		msg.to = mTribe.id;
 		msg.parentid = messageInfo.id;
-//		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role != 0) {
-//			msg.displayname = User.getUserName(mLogin);
-//			msg.headImgUrl = mLogin.headsmall;
-//		} else {
-//			if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 0 || mIdentity == null) {
-//				Logger.d(this, "id=" + spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0));
-//				msg.displayname = User.getUserName(mLogin);
-//				msg.headImgUrl = mLogin.headsmall;
-//				msg.isanonymity = 0;
-//			} else {
-//				msg.displayname = mIdentity.name;
-//				msg.headImgUrl = mIdentity.head;
-//				msg.heroid = mIdentity.id;
-//				msg.isanonymity = 1;
-//			}
-//		}
-		if(isAnony() && mIdentity!=null) {
+		if (isAnony() && mIdentity != null) {
 			msg.displayname = mIdentity.name;
 			msg.headImgUrl = mIdentity.head;
 			msg.heroid = mIdentity.id;
@@ -1354,7 +1310,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			msg.headImgUrl = mLogin.headsmall;
 			msg.isanonymity = 0;
 		}
-		
+
 		msg.type = mChatType;
 
 		msg.commenterid = commenterid;
@@ -1364,17 +1320,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private String getName() {
-		// if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role
-		// != 0) {
-		// return User.getUserName(mLogin);
-		// } else {
-		// if (spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) ==
-		// 0) {
-		// return User.getUserName(mLogin);
-		// } else {
-		// return mIdentity.name;
-		// }
-		// }
 		if (isAnony() && mIdentity != null) {
 			return mIdentity.name;
 		} else {
