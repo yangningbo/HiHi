@@ -702,7 +702,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		} else {
 			showToast(R.string.switch_use_real_name_mode);
 		}
-		ChatTribeActivity.insertTipMessageToDb(mContext, level == 0, DamiCommon.getLoginResult(mContext), mMeeting);
+		ChatTribeActivity
+				.insertTipMessageToDb(mContext, level == 0, DamiCommon.getLoginResult(mContext), mMeeting, 300);
 		sendBroadcast(new Intent(ChatBaseActivity.ACTION_CHANGE_VOICE));
 		setUseRealName(v);
 	}
