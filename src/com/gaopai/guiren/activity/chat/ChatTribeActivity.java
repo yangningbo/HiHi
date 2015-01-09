@@ -248,7 +248,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			initMessage(mTribe.id, mChatType);
 			if (mAdapter.getCount() == 0) {
 				if (!isOnLooker) {
-					insertTipMessage(isAnony());
+					addAndInsertMessage(isAnony());
 				}
 				loadMessage(mTribe.id, mChatType);
 			}
@@ -698,7 +698,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (action.equals(ACTION_CHANGE_VOICE)) {
 			isChangeVoice = isAnony();
 			setChangeVoiceView(isChangeVoice);
-			insertTipMessage(isChangeVoice);
+			//have inserted msg to db when sending broadcast, so just add it to list
+			addTipMessageToList(isChangeVoice);
 		} else if (action.equals(ActionHolder.ACTION_QUIT_MEETING)) {
 			String id = intent.getStringExtra("tid");
 			if (id.equals(mTribe.id)) {
@@ -744,20 +745,25 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		msg.type = type;
 		return msg;
 	}
-
-	private void insertTipMessage(boolean isAnony) {
+	
+	private void addAndInsertMessage(boolean isAnony) {
+		MessageInfo msgInfo = addTipMessageToList(isAnony);
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
+		MessageTable table = new MessageTable(db);
+		table.insert(msgInfo);
+	}
+	
+	private MessageInfo addTipMessageToList(boolean isAnony) {
 		MessageInfo messageInfo = buildMessage();
 		if (isAnony) {
 			messageInfo.fileType = MessageType.LOCAL_ANONY_TRUE;
 		} else {
 			messageInfo.fileType = MessageType.LOCAL_ANONY_FALSE;
 		}
-		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
-		MessageTable table = new MessageTable(db);
-		table.insert(messageInfo);
 		messageInfos.add(messageInfo);
 		mAdapter.notifyDataSetChanged();
 		scrollToBottom();
+		return messageInfo;
 	}
 
 	private void updateMessgaeItem(MessageInfo messageInfo2) {

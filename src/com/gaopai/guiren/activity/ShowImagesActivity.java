@@ -61,8 +61,8 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_showimages);
-		mContext = this;
 		FinalActivity.initInjectedView(this);
+		mContext = this;
 
 		position = getIntent().getIntExtra("position", 0);
 		List<MessageInfo> msgList = (List<MessageInfo>) getIntent().getSerializableExtra("msgList");
@@ -75,6 +75,9 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 					}
 				}
 			}
+		}
+		if (list.size() == 1) {
+			tvPicInd.setVisibility(View.GONE);
 		}
 		updatePos(position + 1);
 		pager.setAdapter(new ImagePagerAdapter());

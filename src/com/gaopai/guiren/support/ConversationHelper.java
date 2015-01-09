@@ -13,6 +13,7 @@ import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.db.ConverseationTable;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
+import com.gaopai.guiren.db.NotifyTable;
 import com.gaopai.guiren.fragment.NotificationFragment;
 
 public class ConversationHelper {

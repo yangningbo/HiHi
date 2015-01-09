@@ -40,7 +40,9 @@
         <TextView
             android:id="@+id/tv_title1"
             style="@style/dynamic_item_title_name"
-            android:layout_toRightOf="@id/iv_header1" />
+            android:layout_toRightOf="@id/iv_header1"
+            android:ellipsize="end"
+            android:maxLines="2" />
 
         <TextView
             android:id="@+id/tv_info1"
@@ -48,7 +50,9 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_title1"
             android:layout_below="@id/tv_title1"
-            android:layout_marginTop="@dimen/general_info_margin_top" />
+            android:layout_marginTop="@dimen/general_info_margin_top"
+            android:ellipsize="end"
+            android:maxLines="2" />
     </RelativeLayout>
 
     <ImageView

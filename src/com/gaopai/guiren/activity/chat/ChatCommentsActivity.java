@@ -1446,11 +1446,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				MessageInfo tempInfo = messageInfos.get(i);
 				tempInfo.sendState = messageInfo.sendState;
 				tempInfo.id = messageInfo.id;
+				/**
+				 * Avoid updating picture location after sending success, it
+				 * may lead to a new http request. Just save the information
+				 * into database and fetch from Internet next time.
+				 */
 				tempInfo.imgUrlS = messageInfo.imgUrlS;
 				tempInfo.imgUrlL = messageInfo.imgUrlL;
 				tempInfo.imgWidth = messageInfo.imgWidth;
-				tempInfo.content = messageInfo.content;
 				tempInfo.imgHeight = messageInfo.imgHeight;
+				tempInfo.content = messageInfo.content;
 				tempInfo.voiceUrl = messageInfo.voiceUrl;
 				tempInfo.readState = messageInfo.readState;
 				tempInfo.time = messageInfo.time;

@@ -220,9 +220,8 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 						+ "shareContent = cHolder.children[1].innerHTML;" + "} else {"
 						+ "shareTitle = document.getElementsByTagName('title')[0].innerHTML;" + "}"
 						+ "window.local_obj.showResult(shareImg, shareTitle, shareContent);" + "})();");
-				// view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
-				// +
-				// "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+				view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
+						+ "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
 				super.onPageFinished(view, url);
 			}
 
@@ -271,6 +270,11 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 	StringBuilder stringBuilder = new StringBuilder();
 
 	final class InJavaScriptLocalObj {
+		
+		@JavascriptInterface
+		public void showSource(String html) {
+			Logger.d(this, html);
+		}
 
 		@JavascriptInterface
 		public void showResult(String img, String title, String content) {
@@ -286,7 +290,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 				Logger.d(this, "title=" + title);
 			}
 			if (!TextUtils.isEmpty(content) && !content.equals("undefined")) {
-				mWebContent = content.replace("\n", "").replace("\r", "").replaceAll("\\s*", "").replace("地歌网讯", "");
+				mWebContent = content.replace("\n", "").replace("\r", "").replaceAll("\\s*", "").replace("地歌网讯", "").replaceAll("【<span.*span>】", "");
 				Logger.d(this, "content=" + mWebContent);
 			}
 		}

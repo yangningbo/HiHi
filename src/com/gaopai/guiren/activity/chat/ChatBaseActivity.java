@@ -231,8 +231,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		addSaveSendMessage(msg);
 	}
 
-
-
 	private void sendMessage(final MessageInfo msg) {
 		Log.d(TAG, "send voice change file name" + msg.time);
 		msg.sendState = MessageState.STATE_SENDING;
@@ -294,10 +292,15 @@ public abstract class ChatBaseActivity extends BaseActivity {
 					MessageInfo tempInfo = messageInfos.get(i);
 					tempInfo.sendState = messageInfo.sendState;
 					tempInfo.id = messageInfo.id;
-					tempInfo.imgUrlS = messageInfo.imgUrlS;
-					tempInfo.imgUrlL = messageInfo.imgUrlL;
-					tempInfo.imgWidth = messageInfo.imgWidth;
-					tempInfo.imgHeight = messageInfo.imgHeight;
+					/**
+					 * Avoid updating picture location after sending success, it
+					 * may lead to a new http request. Just save the information
+					 * into database and fetch from Internet next time.
+					 */
+					 tempInfo.imgUrlS = messageInfo.imgUrlS;
+					 tempInfo.imgUrlL = messageInfo.imgUrlL;
+					 tempInfo.imgWidth = messageInfo.imgWidth;
+					 tempInfo.imgHeight = messageInfo.imgHeight;
 					tempInfo.voiceUrl = messageInfo.voiceUrl;
 					tempInfo.content = messageInfo.content;
 					tempInfo.readState = messageInfo.readState;

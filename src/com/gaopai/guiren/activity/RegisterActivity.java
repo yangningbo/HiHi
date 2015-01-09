@@ -150,6 +150,18 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 					otherCondition(data.state, RegisterActivity.this);
 				}
 			}
+
+			@Override
+			public void onFailure(Object o) {
+				endCount();
+				super.onFailure(o);
+			}
+
+			@Override
+			public void onTimeOut() {
+				endCount();
+				super.onTimeOut();
+			}
 		});
 		startCount();
 	}

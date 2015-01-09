@@ -351,7 +351,7 @@ public class MessageTable {
 								+ "='" + toId + "'" + " AND " + COLUMN_LOGIN_ID
 								+ "='"
 								+ DamiCommon.getUid(DamiApp.getInstance())
-								+ "'", null);
+								+ "'" +" AND " + COLUMN_TYPE +" = " + "100", null);
 			}
 			return true;
 		} catch (Exception e) {

@@ -55,14 +55,12 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				Log.d(TAG, "pulldown");
-				// TODO Auto-generated method stub
+				getUserList();
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
-				Log.d(TAG, "pull up to");
+				getUserList();
 			}
 		});
 
@@ -78,7 +76,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 				startActivity(ProfileActivity.getIntent(act, uid));
 			}
 		});
-		getUserList();
+		mListView.doPullRefreshing(true, 0);
 	}
 
 	private void getUserList() {
