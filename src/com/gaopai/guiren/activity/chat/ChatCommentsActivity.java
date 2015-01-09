@@ -1358,6 +1358,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	// comment count has been updated in db before notify, so ignore it
 	protected void addNotifyMessage(MessageInfo msg) {
 		addMessageInfo(msg);
+		messageInfo.commentCount = messageInfo.commentCount + 1;
 		bindCommentCountView();
 	}
 

@@ -15,9 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
-import com.gaopai.guiren.activity.NotifySystemActivity;
 import com.gaopai.guiren.activity.WebActivity;
-import com.gaopai.guiren.activity.chat.ChatMainActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -26,15 +24,24 @@ import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.fragment.NotificationFragment;
-import com.gaopai.guiren.receiver.ChatMessageNotifiy;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 
 public class NotifyHelper {
-	// private
 
-	public static final long NOTIFICATION_INTERVAL = 5000; // 通知震动时间间隔
+	/**
+	 * Helper class to manage notify system. There are two kinds of
+	 * notification, one is for chat message, another is for system message.
+	 * 
+	 * We build both notifications based on the global settings to determine
+	 * whether to play ringtone or vibrate. Then use indivual's setting to
+	 * determine whether to notify or not.
+	 * 
+	 * In order to bring user a better experience, a notification interval of 5
+	 * seconds is under consideration.
+	 */
+	public static final long NOTIFICATION_INTERVAL = 5000;
 
 	public static final int NOTIFYID_PRIVATE = 10000080;
 	public static final int NOTIFYID_TRIBE = 10000081;
@@ -103,11 +110,16 @@ public class NotifyHelper {
 	public void notifyChatMessage(MessageInfo messageInfo) {
 		init();
 		Logger.d(this, "isNeedNotify=" + isNeedNotify());
+		// don't save comment, or notify it as a message
+		if (!messageInfo.parentid.equals("0")) {
+			return;
+		}
 
 		if (!isNeedNotify()) {
 			saveChatMessage(messageInfo);
 			return;
 		}
+
 		NotificationCompat.Builder builder = getNotificationBuilder();
 		String notifyMsgContent = "";
 		switch (messageInfo.fileType) {
@@ -139,12 +151,12 @@ public class NotifyHelper {
 				notifyMsgContent = messageInfo.content;
 			}
 		}
-
 		builder.setContentTitle(notifyMsgTitle);
 		builder.setContentText(notifyMsgContent);
 		builder.setContentIntent(getChatIntent(messageInfo));
 		Logger.d(this, getCurrentChatId(mContext) + "  ==   " + messageInfo.conversion.toid);
-		if (messageInfo.type == 100) {// 单聊
+
+		if (messageInfo.type == 100) {// private chat
 			if (isActivityTop(mContext, ".activity.chat.ChatMessageActivity")) {
 				if (saveChatMessage(messageInfo)) {
 					return;
@@ -156,11 +168,9 @@ public class NotifyHelper {
 				return;
 			}
 			notificationManager.notify(NOTIFYID_PRIVATE, builder.build());
-		} else if (messageInfo.type == 200 || messageInfo.type == 300) {// 部落
-			if (!messageInfo.parentid.equals("0")) {// 如果是评论就不提醒
-				return;
-			}
+		} else if (messageInfo.type == 200 || messageInfo.type == 300) {
 			if (isActivityTop(mContext, ".activity.chat.ChatTribeActivity")) {
+				// stop notifying if we are in the target chat room now
 				if (saveChatMessage(messageInfo)) {
 					return;
 				}
@@ -168,6 +178,7 @@ public class NotifyHelper {
 				ConversationHelper.saveToLastMsgList(messageInfo, mContext);
 			}
 
+			// told not to notify
 			if (poChat.getInt(SPConst.getTribeUserId(mContext, messageInfo.to), 0) == 1) {
 				return;
 			}
@@ -177,7 +188,7 @@ public class NotifyHelper {
 			} else {
 				notificationManager.notify(NOTIFYID_MEETING, builder.build());
 			}
-		} else if (messageInfo.type == -2) {
+		} else if (messageInfo.type == -2) {// dige news
 			ConversationHelper.saveToLastMsgList(messageInfo, mContext);
 			if (isDamiNotify()) {
 				notificationManager.notify(NOTIFYD_DAMI, builder.build());
@@ -197,16 +208,16 @@ public class NotifyHelper {
 
 	public void notifySystemMessage(String msg, NotifiyVo notifiyVo) {
 		init();
-		if (!isNeedNotify()) {
-			return;
-		}
 		if (isActivityTop(mContext, ".activity.NotifySystemActivity")) {
 			ConversationHelper.saveToLastMsgList(notifiyVo, mContext, true);
 			return;
+		} else {
+			ConversationHelper.saveToLastMsgList(notifiyVo, mContext, false);
 		}
-		ConversationHelper.saveToLastMsgList(notifiyVo, mContext, false);
 		mContext.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
-
+		if (!isNeedNotify()) {
+			return;
+		}
 		NotificationCompat.Builder builder = getNotificationBuilder();
 		builder.setContentTitle(mContext.getString(R.string.has_new_notification));
 		builder.setContentText(msg);
@@ -232,7 +243,7 @@ public class NotifyHelper {
 			intent.putExtra(ChatMessageActivity.KEY_USER, user);
 			intent.setAction(MainActivity.ACTION_CHAT_PRIVATE);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		} else if (messageInfo.type == -2) {//dige news
+		} else if (messageInfo.type == -2) {// dige news
 			intent = WebActivity.getIntent(mContext, messageInfo.url, messageInfo.conversion.name);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		} else {
@@ -269,6 +280,7 @@ public class NotifyHelper {
 			}
 			Logger.d(this, "isPlayRingtone=" + isPlayRingtone());
 			if (isPlayRingtone()) {
+				NotifyHelper.saveNotificationTime(mContext, System.currentTimeMillis());
 				notifyDefault |= Notification.DEFAULT_SOUND;
 			}
 		}

@@ -285,7 +285,6 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 				}
 			}
 		});
-
 	}
 
 	@Override

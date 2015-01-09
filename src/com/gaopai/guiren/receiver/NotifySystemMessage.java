@@ -64,7 +64,7 @@ public class NotifySystemMessage implements NotifyMessage {
 			this.systemNotifiy.notifiy(notifiyVo);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Log.i(TAG, "notityMessage()", e);
+			Log.i(TAG, "notitySystemMessage()", e);
 		}
 	}
 }

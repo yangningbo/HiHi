@@ -927,8 +927,6 @@ public class DynamicHelper {
 		viewHolder.lineZan.setVisibility(View.GONE);
 		viewHolder.lineSpread.setVisibility(View.GONE);
 
-		ImageLoaderUtil.displayImage(typeBean.s_path, viewHolder.ivHeader, R.drawable.default_header);
-
 		// viewHolder.tvUserName.setText(typeBean.realname);
 		// viewHolder.tvUserInfo.setText(typeBean.post);
 		userName = typeBean.realname;
@@ -942,6 +940,8 @@ public class DynamicHelper {
 			userInfo = "";
 			uid = "-1";
 			userName = getString(R.string.no_name);
+		} else {
+			ImageLoaderUtil.displayImage(typeBean.s_path, viewHolder.ivHeader, R.drawable.default_header);
 		}
 
 		if (type == TYPE_SEND_DYNAMIC) {
@@ -967,8 +967,8 @@ public class DynamicHelper {
 			viewHolder.tvDateInfo.setText(DateUtil.getCreateTime(Long.valueOf(typeBean.time)));
 		}
 
-		// take care of detail activity, so put it here, not in the scope of
-		// type SpreadMsg
+		// take care of dynamic detail activity, so put it here, not in the
+		// scope of type SpreadMsg
 		if (typeBean.type == TYPE_SPREAD_MSG) {
 			addMsgFromInfo(viewHolder.tvDateInfo, typeBean.jsoncontent);
 		}
@@ -1177,14 +1177,12 @@ public class DynamicHelper {
 	public CharSequence getCommentString(CommentBean commentBean) {
 		makeCommentNotNull(commentBean);
 		if (commentBean.toid != null && (!commentBean.toid.equals("0"))) {
-			return MyTextUtils.getSpannableString(
-					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), "回复",
-					MyTextUtils.addSingleUserSpan(commentBean.toname, commentBean.toid), ":",
+			return MyTextUtils.getSpannableString(MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid),
+					"回复", MyTextUtils.addSingleUserSpan(commentBean.toname, commentBean.toid), ":",
 					MyTextUtils.addHttpLinks(commentBean.content.content));
 		} else {
-			return MyTextUtils.getSpannableString(
-					MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid), ":",
-					MyTextUtils.addHttpLinks(commentBean.content.content));
+			return MyTextUtils.getSpannableString(MyTextUtils.addSingleUserSpan(commentBean.uname, commentBean.uid),
+					":", MyTextUtils.addHttpLinks(commentBean.content.content));
 		}
 	}
 

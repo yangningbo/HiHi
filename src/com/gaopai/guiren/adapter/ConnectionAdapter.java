@@ -66,6 +66,13 @@ public class ConnectionAdapter extends BaseAdapter {
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mLogin = DamiCommon.getLoginResult(mContext);
 	}
+	
+	public void updateUser() {
+		if (mLogin == null) {
+			return;
+		}
+		mLogin = DamiCommon.getLoginResult(mContext);
+	}
 
 	public void addAll(List<TypeHolder> o) {
 		mData.addAll(o);
@@ -221,7 +228,7 @@ public class ConnectionAdapter extends BaseAdapter {
 			break;
 		case TYPE_SOMEONE_JOIN_MY_TRIBE:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
-					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了您的部落",
+					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了您的圈子",
 					MyTextUtils.addSingleTribeSpan("「" + content.roomname + "」", content.roomid)));
 			break;
 		case TYPE_SOMEONE_FOLLOW_ME:

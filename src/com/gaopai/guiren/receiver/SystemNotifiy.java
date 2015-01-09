@@ -258,7 +258,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 						}
 					}
 				}
-
+				Logger.d(this, "f========comment");
 				break;
 			case NotifiyType.RECEIVE_REPORT_MSG:
 				msg = mContext.getString(R.string.receive_report_msg);
@@ -537,6 +537,8 @@ public class SystemNotifiy extends AbstractNotifiy {
 			// Intent(HomeTab.REFRESH_NOTIFY_ACTION));
 			// mContext.sendBroadcast(new
 			// Intent(MainActivity.ACTION_UPDATE_NOTIFY_SESSION_COUNT));
+			
+			Logger.d(this, "f========notifySystemMessage");
 			mNotifyHelper.notifySystemMessage(msg, notifiyVo);
 		}
 	}

@@ -31,12 +31,13 @@ public class ChatBoxManager {
 		mContext = context;
 		mVoiceSendBtn = voiceSendBtn;
 	}
-	
+
 	private Callback mCallback;
+
 	public static interface Callback {
 		public void onShowKeyBoard();
 	}
-	
+
 	public void setCallback(Callback callback) {
 		mCallback = callback;
 	}
@@ -64,6 +65,7 @@ public class ChatBoxManager {
 			showSoftKeyboard();
 		} else {
 			showEmotion();
+			hideAddGrid();
 			hideSoftKeyboard();
 		}
 	}
@@ -96,7 +98,7 @@ public class ChatBoxManager {
 	}
 
 	public void hideAddGrid() {
-		if (mChatGridLayout.getVisibility() == View.VISIBLE) {
+		if (mChatGridLayout != null && mChatGridLayout.getVisibility() == View.VISIBLE) {
 			mChatGridLayout.hide(mContext);
 		}
 	}
@@ -129,7 +131,7 @@ public class ChatBoxManager {
 			switchToText(true);
 		}
 	}
-	
+
 	public void hideEmotionShowKeyboard() {
 		hideEmotion();
 		showSoftKeyboard();

@@ -4,13 +4,10 @@ import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -19,9 +16,7 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.adapter.ConnectionAdapter;
-import com.gaopai.guiren.bean.TribeList;
 import com.gaopai.guiren.bean.dynamic.ConnectionBean;
-import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
@@ -62,14 +57,11 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				Log.d(TAG, "pulldown");
 				getDynamicList(true);
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub
-				Log.d(TAG, "pull up to");
 				getDynamicList(false);
 			}
 		});
@@ -140,7 +132,7 @@ public class ConnectionFragment extends BaseFragment implements OnClickListener 
 			if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
 				if (mAdapter != null) {
 					mAdapter.clear();
-					mAdapter.notifyDataSetChanged();
+					mAdapter.updateUser();
 					isInitialed = false;
 				}
 			}

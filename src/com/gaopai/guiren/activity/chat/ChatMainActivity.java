@@ -3,8 +3,8 @@ package com.gaopai.guiren.activity.chat;
 import java.io.File;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -16,12 +16,12 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -287,7 +287,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		viewChatText = mTitleBar.addRightImageView(imageId);
 		viewChatText.setId(R.id.ab_chat_text);
 		viewChatText.setOnClickListener(this);
-
 		View view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
 		view.setId(R.id.ab_chat_more);
 		view.setOnClickListener(this);

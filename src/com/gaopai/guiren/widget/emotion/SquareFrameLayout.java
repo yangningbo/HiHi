@@ -35,4 +35,6 @@ public class SquareFrameLayout extends FrameLayout {
         heightMeasureSpec = widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
+    
+    
 }

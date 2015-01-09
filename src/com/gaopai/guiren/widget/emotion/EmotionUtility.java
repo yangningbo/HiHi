@@ -11,8 +11,7 @@ import android.view.Display;
 public class EmotionUtility {
 	public static int getAppHeight(Activity paramActivity) {
 		Rect localRect = new Rect();
-		paramActivity.getWindow().getDecorView()
-				.getWindowVisibleDisplayFrame(localRect);
+		paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
 		return localRect.height();
 	}
 
@@ -25,16 +24,13 @@ public class EmotionUtility {
 
 	public static int getStatusBarHeight(Activity paramActivity) {
 		Rect localRect = new Rect();
-		paramActivity.getWindow().getDecorView()
-				.getWindowVisibleDisplayFrame(localRect);
+		paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
 		return localRect.top;
-
 	}
 
 	public static int getKeyboardHeight(Activity paramActivity) {
 
-		int height = EmotionUtility.getScreenHeight(paramActivity)
-				- EmotionUtility.getStatusBarHeight(paramActivity)
+		int height = EmotionUtility.getScreenHeight(paramActivity) - EmotionUtility.getStatusBarHeight(paramActivity)
 				- EmotionUtility.getAppHeight(paramActivity);
 		if (height == 0) {
 			height = EmotionUtility.getDefaultSoftKeyBoardHeight();
