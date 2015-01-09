@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,17 +23,17 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.CommentBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.DySingleBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
-import com.gaopai.guiren.fragment.DynamicFragment;
+import com.gaopai.guiren.fragment.DynamicFragment.BackPressedListener;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.support.chat.ChatBoxManager;
-import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.support.view.CustomEditText;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
-import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.widget.emotion.EmotionPicker;
 
@@ -43,7 +41,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 	private PullToRefreshListView mListView;
 	private View headerView;
 	private TextView tvZan;
-	private EditText etContent;
+	private CustomEditText etContent;
 	private View chatBox;
 	private ChatBoxManager chaBoxManager;
 
@@ -77,13 +75,13 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		}
 		getDynamicDetail();
 	}
-	
+
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
 		super.registerReceiver(intentFilter);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 	}
-	
+
 	public static Intent getIntent(Context context, String sid) {
 		Intent intent = new Intent(context, DynamicDetailActivity.class);
 		intent.putExtra(KEY_SID, sid);
@@ -165,7 +163,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 						initComponent();
 					} else {
 						typeBean = data.data;
-//						 getHeaderView();
+						// getHeaderView();
 						dynamicHelper.buildCommonView(
 								(com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon) headerView.getTag(),
 								typeBean);
@@ -189,7 +187,17 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 
 	private void initComponent() {
 		// TODO Auto-generated method stub
-		etContent = (EditText) findViewById(R.id.chat_box_edit_keyword);
+		etContent = (CustomEditText) findViewById(R.id.chat_box_edit_keyword);
+		etContent.setBackPressedListener(new BackPressedListener() {
+			@Override
+			public boolean onBack() {
+				if (chatBox.getVisibility() == View.VISIBLE) {
+					hideChatBox();
+					return true;
+				}
+				return false;
+			}
+		});
 		chatBox = findViewById(R.id.chat_box);
 		ViewUtil.findViewById(this, R.id.send_text_btn).setOnClickListener(this);
 		Button emotionBtn = ViewUtil.findViewById(this, R.id.emotion_btn);
@@ -198,6 +206,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		EmotionPicker emotionPicker = ViewUtil.findViewById(this, R.id.emotion_picker);
 		emotionPicker.setEditText(this, null, etContent);
 		chaBoxManager = new ChatBoxManager(this, etContent, emotionPicker, emotionBtn);
+		ViewUtil.findViewById(this, R.id.send_text_btn).setOnClickListener(this);
 
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
 		mListView.setPullRefreshEnabled(true);
@@ -319,6 +328,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	public void hideChatBox() {
+		chaBoxManager.hideEmotion();
 		chatBox.setVisibility(View.GONE);
 	}
 
@@ -348,13 +358,16 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			String teString = etContent.getText().toString();
 			commentMessage(teString);
 			break;
+		case R.id.chat_box_btn_switch_voice_text:
+			hideChatBox();
+			break;
 
 		default:
 			break;
 		}
 
 	}
-	
+
 	@Override
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
@@ -365,7 +378,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();

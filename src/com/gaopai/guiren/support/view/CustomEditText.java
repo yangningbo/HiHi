@@ -36,6 +36,7 @@ public class CustomEditText extends EditText {
 		// TODO Auto-generated method stub
 		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP
 				&& (backPressedListener != null)) {
+			Logger.d(this, "back preIme");
 			if (this.getVisibility() == View.VISIBLE) {
 				hideSoftKeyboard(this);
 				backPressedListener.onBack();

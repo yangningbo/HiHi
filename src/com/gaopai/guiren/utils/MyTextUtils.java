@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.graphics.Bitmap;
+import android.net.rtp.RtpStream;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -63,7 +64,7 @@ public class MyTextUtils {
 		addEmotions(result);
 		return result;
 	}
-	
+
 	public static Spannable addEmotions(CharSequence value) {
 		return addEmotions(new SpannableString(value));
 	}
@@ -266,39 +267,11 @@ public class MyTextUtils {
 		public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 			if (isEdit) {
 				int destCount = dest.toString().length() + getChineseCount(dest.toString());
-				int sourceCount = source.toString().length() + getChineseCount(source.toString());
+//				int sourceCount = source.toString().length() + getChineseCount(source.toString());
 				return source.toString().subSequence(0, getLimitStr(source.toString(), MAX_EN - destCount));
 			} else {
-
 				return source.toString().subSequence(0, getLimitStr(source.toString(), MAX_EN));
 			}
-		}
-
-		private int getLimitStr(String str, int desiredLen) {
-			int length = str.length();
-			int resultLen = 0;
-			int tempLen = 0;
-			for (int i = 0; i < length; i++) {
-				char c = str.charAt(i);
-				if (isChinese(c)) {
-					if (tempLen + 2 > desiredLen) {
-						return resultLen;
-					}
-					tempLen += 2;
-					resultLen += 1;
-				} else {
-					if (tempLen + 1 > desiredLen) {
-						return resultLen;
-					}
-					tempLen += 1;
-					resultLen += 1;
-				}
-			}
-			return resultLen;
-		}
-
-		private boolean isChinese(char c) {
-			return '\u4e00' <= c && c <= '\u9fa5';
 		}
 
 		private int getChineseCount(String str) {
@@ -312,6 +285,54 @@ public class MyTextUtils {
 			}
 			return count;
 		}
+	}
+	
+	public static boolean isChinese(char c) {
+		return '\u4e00' <= c && c <= '\u9fa5';
+	}
+	
+	public static int getLimitStr(String str, int desiredLen) {
+		int length = str.length();
+		int resultLen = 0;
+		int tempLen = 0;
+		for (int i = 0; i < length; i++) {
+			char c = str.charAt(i);
+			if (isChinese(c)) {
+				if (tempLen + 2 > desiredLen) {
+					return resultLen;
+				}
+				tempLen += 2;
+				resultLen += 1;
+			} else {
+				if (tempLen + 1 > desiredLen) {
+					return resultLen;
+				}
+				tempLen += 1;
+				resultLen += 1;
+			}
+		}
+		return resultLen;
+	}
+
+	public static String getSubString(String paramString, int len) {
+		return paramString.substring(0, getLimitStr(paramString, 2*len));
+	}
+
+	public static int length(String paramString) {
+		int i = 0;
+		for (int j = 0; j < paramString.length(); j++) {
+			if (!paramString.substring(j, j + 1).matches("[Α-￥]")) {
+				i += 2;
+			} else {
+				i++;
+			}
+		}
+		if (i % 2 > 0) {
+			i = 1 + i / 2;
+		} else {
+			i = i / 2;
+		}
+		return i;
 	}
 
 	public static boolean checkIsEmail(String email) {

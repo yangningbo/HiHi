@@ -132,7 +132,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		if (isOnLooker) {
 			setUpForOnLooker();
 		}
-		mAdapter = new TribeChatAdapter(mContext, speexPlayerWrapper, messageInfos);
+		mAdapter = new TribeChatAdapter(mContext, speexPlayerWrapper, messageInfos, isOnLooker);
 		super.initAdapter(mAdapter);
 		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0));
 

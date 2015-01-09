@@ -22,16 +22,16 @@ public class DynamicLayout extends RelativeLayout {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		Logger.startCountTime();
+//		Logger.startCountTime();
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		Logger.time(this, "onMeasure");
+//		Logger.time(this, "onMeasure");
 	}
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-		Logger.startCountTime();
+//		Logger.startCountTime();
 		super.onLayout(changed, l, t, r, b);
-		Logger.time(this, "onLayout");
+//		Logger.time(this, "onLayout");
 	}
 
 }

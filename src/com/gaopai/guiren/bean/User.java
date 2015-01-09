@@ -10,6 +10,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
 import com.gaopai.guiren.bean.dynamic.NewDynamicBean.PicBean;
+import com.gaopai.guiren.utils.MyTextUtils;
 import com.google.gson.annotations.Expose;
 
 public class User implements Serializable {
@@ -210,15 +211,11 @@ public class User implements Serializable {
 		return "";
 	}
 
-	public static String getSubUserName(User user, Context context) {
-		return getSubUserName(user, context, 6);
-	}
-
 	public static String getSubUserName(User user, Context context, int len) {
 		int maxLen = len;
 		String name = User.getUserName(user);
-		if (name.length() > maxLen) {
-			return name.substring(0, maxLen) + context.getString(R.string.ellipsize);
+		if (MyTextUtils.length(name) > maxLen) {
+			return MyTextUtils.getSubString(name, maxLen) + context.getString(R.string.ellipsize);
 		}
 		return name;
 	}

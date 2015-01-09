@@ -398,8 +398,6 @@
     <string name="reason1">理由</string>
     <string name="has_report">举报了</string>
     <string name="have_a_word">的发言</string>
-    <string name="my_followers">我关注的人</string>
-    <string name="my_fans">关注我的人</string>
     <string name="send_invite">发送邀请</string>
     <string name="has_invite">已邀请</string>
     <string name="send_invite_success">成功发送邀请</string>
@@ -852,5 +850,10 @@
     <string name="must_input_can_not_be_empty">必填内容不能为空</string>
     
     <string name="no_right_see_members">"您未加入，无法查看其他成员！"</string>
-
+    
+    <string name="my_fans">我的粉丝</string>
+    <string name="my_follow">我的关注</string>
+    <string name="his_fans">TA的粉丝</string>
+    <string name="his_follow">TA的关注</string>
+    
 </resources>

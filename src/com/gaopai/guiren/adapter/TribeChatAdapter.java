@@ -3,30 +3,22 @@ package com.gaopai.guiren.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.Button;
-import android.widget.PopupWindow;
 
 import com.gaopai.guiren.BaseActivity;
-import com.gaopai.guiren.DamiCommon;
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
-import com.gaopai.guiren.utils.Logger;
-import com.gaopai.guiren.utils.MyUtils;
-import com.gaopai.guiren.utils.ViewUtil;
-import com.umeng.socialize.net.t;
 
 public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickListener {
+	private boolean isOnLooker = false;
 
-	public TribeChatAdapter(Context context, SpeexPlayerWrapper playerWrapper, List<MessageInfo> messageInfos) {
+	public TribeChatAdapter(Context context, SpeexPlayerWrapper playerWrapper, List<MessageInfo> messageInfos, boolean isOnLooker) {
 		super(context, playerWrapper, messageInfos);
+		this.isOnLooker = isOnLooker;
 	}
 
 	@Override
@@ -59,7 +51,9 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 	private View.OnLongClickListener showMoreWindowClickListener = new View.OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
-			showActionWindow(v);
+			if (!isOnLooker) {
+				showActionWindow(v);
+			}
 			return true;
 		}
 	};

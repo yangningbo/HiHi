@@ -55,14 +55,16 @@ public class ChatBoxManager {
 
 	public void showEmotion() {
 		mEmotionPicker.show(mContext);
-		mEmotionBtn.setBackgroundResource(R.drawable.chatting_biaoqing_btn_enable);
+		mEmotionBtn.setBackgroundResource(R.drawable.chatting_setmode_keyboard_btn_normal);
 	}
 
 	public void emotionClick() {
 		if (mEmotionPicker.getVisibility() == View.VISIBLE) {
 			hideEmotion();
+			showSoftKeyboard();
 		} else {
 			showEmotion();
+			hideSoftKeyboard();
 		}
 	}
 
@@ -126,6 +128,11 @@ public class ChatBoxManager {
 		} else {
 			switchToText(true);
 		}
+	}
+	
+	public void hideEmotionShowKeyboard() {
+		hideEmotion();
+		showSoftKeyboard();
 	}
 
 	public void switchToVoice() {

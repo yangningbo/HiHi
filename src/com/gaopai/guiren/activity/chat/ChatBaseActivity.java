@@ -292,6 +292,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 					MessageInfo tempInfo = messageInfos.get(i);
 					tempInfo.sendState = messageInfo.sendState;
 					tempInfo.id = messageInfo.id;
+					tempInfo.time = messageInfo.time;
 					/**
 					 * Avoid updating picture location after sending success, it
 					 * may lead to a new http request. Just save the information

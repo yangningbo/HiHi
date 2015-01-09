@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
@@ -50,7 +51,7 @@ public class ContactActivity extends BaseActivity {
 	private String uid;
 	private boolean isNewChat = false;// if true, clicking item lead to chat
 										// interface
-
+	private boolean isMyself = false;
 	private PullToRefreshIndexableListView mListView;
 	private CopyOfConnectionAdapter mAdapter;
 	private SingleIndexScroller indexScroller;
@@ -67,14 +68,23 @@ public class ContactActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		type = getIntent().getIntExtra(KEY_TYPE, TYPE_FANS);
 		uid = getIntent().getStringExtra(KEY_UID);
+		isMyself = DamiCommon.getUid(mContext).equals(uid);
 		isNewChat = getIntent().getBooleanExtra(KEY_NEWCHAT, false);
 		initTitleBar();
 		setAbContentView(R.layout.activity_contact_list);
 
 		if (type == TYPE_FANS) {
-			mTitleBar.setTitleText(getString(R.string.fans));
+			if (isMyself) {
+				mTitleBar.setTitleText(getString(R.string.my_fans));
+			} else {
+				mTitleBar.setTitleText(getString(R.string.his_fans));
+			}
 		} else {
-			mTitleBar.setTitleText(getString(R.string.follow));
+			if (isMyself) {
+				mTitleBar.setTitleText(getString(R.string.my_follow));
+			} else {
+				mTitleBar.setTitleText(getString(R.string.his_follow));
+			}
 		}
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 

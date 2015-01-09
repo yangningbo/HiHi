@@ -139,10 +139,10 @@ public class TwoDimensionActivity extends BaseActivity {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		SpannableString name;
 		if (tUser.bigv == 1) {
-			name = new SpannableString(User.getSubUserName(tUser, mContext, 3) + HeadView.MVP_NAME_STR);
+			name = new SpannableString(User.getSubUserName(tUser, mContext, 4) + HeadView.MVP_NAME_STR);
 			HeadView.getMvpName(mContext, name);
 		} else {
-			name = new SpannableString(User.getSubUserName(tUser, mContext, 3));
+			name = new SpannableString(User.getSubUserName(tUser, mContext, 4));
 		}
 		MyTextUtils.setTextSize(name, 20);
 		MyTextUtils.setTextColor(name, getResources().getColor(R.color.white));

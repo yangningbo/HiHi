@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	public static final String ACTION_NOTIFY_SYSTEM = "com.guiren.intent.action.ACTION_NOTIFY_SYSTEM";
 
 	private View layoutWelcome;
-	
+
 	private Intent notifyItent;
 
 	@Override
@@ -737,6 +737,10 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Logger.d(this, "back pressed");
+			if (backPressedListener != null && backPressedListener.onBack()) {
+				return true;
+			}
 			moveTaskToBack(false);
 			return true;
 		}

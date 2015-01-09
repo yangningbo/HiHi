@@ -22,10 +22,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.Socket;
@@ -89,6 +91,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -459,6 +462,7 @@ public class Utility {
 			// parse content stream from response
 			result = read(response);
 			Logger.d("Json_Result", "======>" + result);
+//			writeErrorLog(new Throwable(result));
 			return result;
 		} catch (IOException e) {
 			// Log.e("e.getClass()", e.getClass().toString());
@@ -481,6 +485,50 @@ public class Utility {
 			}
 		}
 		return null;
+	}
+
+	private static final String LOG_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Dami/log/";
+
+	protected static void writeErrorLog(Throwable ex) {
+		String info = null;
+		ByteArrayOutputStream baos = null;
+		PrintStream printStream = null;
+		try {
+			baos = new ByteArrayOutputStream();
+			printStream = new PrintStream(baos);
+			ex.printStackTrace(printStream);
+			byte[] data = baos.toByteArray();
+			info = new String(data);
+			data = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (printStream != null) {
+					printStream.close();
+				}
+				if (baos != null) {
+					baos.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		File dir = new File(LOG_DIR);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		File file = new File(dir, "dongtai" + System.currentTimeMillis() + ".txt");
+		try {
+			FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+			fileOutputStream.write(info.getBytes());
+			fileOutputStream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public static HttpClient getNewHttpClient(long timeout) {

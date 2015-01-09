@@ -112,6 +112,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		EmotionPicker emotionPicker = ViewUtil.findViewById(view, R.id.emotion_picker);
 		emotionPicker.setEditText(getActivity(), null, etComment);
 		chaBoxManager = new ChatBoxManager(getActivity(), etComment, emotionPicker, emotionBtn);
+		ViewUtil.findViewById(view, R.id.chat_box_btn_switch_voice_text).setOnClickListener(this);
 		etComment.setBackPressedListener(onBackPressedListener);
 		etComment.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
@@ -154,6 +155,9 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			}
 			String teString = etComment.getText().toString();
 			mAdapter.commentMessage(teString, (TypeHolder) etComment.getTag());
+			break;
+		case R.id.chat_box_btn_switch_voice_text:
+			hideChatBox();
 			break;
 
 		default:
@@ -219,6 +223,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	}
 
 	public void hideChatBox() {
+		chaBoxManager.hideEmotion();
 		chatBox.setVisibility(View.GONE);
 		etComment.setText("");
 		hideSoftKeyboard(etComment);
