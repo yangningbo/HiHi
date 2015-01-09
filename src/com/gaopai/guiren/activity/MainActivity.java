@@ -182,6 +182,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onDrag(float percent) {
+				 ((DynamicFragment) page2).hideChatBox();
 			}
 		});
 

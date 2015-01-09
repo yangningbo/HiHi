@@ -1,6 +1,9 @@
 package com.gaopai.guiren.activity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,16 +14,22 @@ import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -167,8 +176,19 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void handlePage(int position, View contentView, boolean fromInstantiateItem) {
-		Logger.d(this, "pos=" + position);
 		final PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
+		imageView.setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				showMutiDialog(null, new String[] { "保存" }, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						saveImageView(imageView);
+					}
+				});
+				return true;
+			}
+		});
 		imageView.setVisibility(View.INVISIBLE);
 		final ProgressBar wait = (ProgressBar) contentView.findViewById(R.id.wait);
 		final TextView readError = (TextView) contentView.findViewById(R.id.error);
@@ -276,6 +296,54 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
+	private void saveImageView(ImageView imageView) {
+		Drawable drawable = imageView.getDrawable();
+		if (drawable == null || !(drawable instanceof BitmapDrawable)) {
+			return;
+		}
+		BitmapDrawable d = (BitmapDrawable) drawable;
+		final Bitmap bitmap = d.getBitmap();
+		if (bitmap == null) {
+			return;
+		}
+		final String savePath = DamiApp.downloadPath + "savePic/" + System.currentTimeMillis() + ".png";
+		File directory = new File(savePath).getParentFile();
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+		boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+		if (!sdCardExist) {
+			showToast(R.string.cant_save_sdcard);
+			return;
+		}
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				FileOutputStream fileOutputStream = null;
+				try {
+					fileOutputStream = new FileOutputStream(savePath);
+					bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+						@Override
+						public void run() {
+							showToast(getResources().getString(R.string.has_save_to_address) + savePath);
+						}
+					});
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						if (fileOutputStream != null) {
+							fileOutputStream.close();
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+	}
+
 	private void savePic(String url) {
 		final String savePath = DamiApp.downloadPath + url.substring(url.lastIndexOf("/") + 1, url.length());
 		File saveFile = new File(savePath);
@@ -293,7 +361,6 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 			}
 			FinalHttp fh = new FinalHttp();
 			fh.download(url, savePath, new AjaxCallBack<File>() {
-
 				@Override
 				public void onFailure(Throwable t, int errorNo, String strMsg) {
 					// TODO Auto-generated method stub

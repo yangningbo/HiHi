@@ -223,6 +223,9 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	}
 
 	public void hideChatBox() {
+		if (chatBox.getVisibility() == View.GONE) {
+			return;
+		}
 		chaBoxManager.hideEmotion();
 		chatBox.setVisibility(View.GONE);
 		etComment.setText("");

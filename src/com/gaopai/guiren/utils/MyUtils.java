@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,11 +25,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.gaopai.guiren.FeatureFunction;
+import com.squareup.picasso.Picasso;
 
 public class MyUtils {
 
@@ -348,7 +349,6 @@ public class MyUtils {
 		File file = new File(FeatureFunction.getExternalCacheDir(context), "voice");
 		if (!file.exists()) {
 			file.mkdirs();
-			Logger.d("======", "===");
 		}
 		return file;
 	}
@@ -369,7 +369,7 @@ public class MyUtils {
 		} else {
 			File[] files = file.listFiles();
 			if (files == null) {
-				file.delete();
+				// file.delete();
 				return;
 			}
 			for (int i = 0; i < files.length; i++) {
@@ -381,9 +381,35 @@ public class MyUtils {
 					deleteFolder(files[i]);
 				}
 			}
-			file.delete();
+			// file.delete();
 		}
-
 	}
 
+	public static String getCacheSize(Context context) {
+		int mb = 0;
+		int kb = 0;
+		long size = getFolderSize(FeatureFunction.getExternalCacheDir(context).getAbsolutePath());
+		kb = (int) (size / 1024);
+		mb = kb / 1024;
+		DecimalFormat decimalFormat=new DecimalFormat("0.00");
+		return decimalFormat.format(mb + (kb - mb * 1024)/1024f);
+	}
+
+	public static long getFolderSize(String dir) {
+		File file = new File(dir);
+		long size = 0;
+		if (!file.exists()) {
+			return 0;
+		}
+		if (file.isFile())
+			return file.length();
+		else {
+			String[] arrFileName = file.list();
+			for (int i = 0; i < arrFileName.length; i++) {
+				size += getFolderSize(dir + "/" + arrFileName[i]);
+			}
+		}
+
+		return size;
+	}
 }

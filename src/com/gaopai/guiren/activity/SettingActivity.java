@@ -12,16 +12,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.UpdateManager;
 import com.gaopai.guiren.utils.ViewUtil;
 
 public class SettingActivity extends BaseActivity implements OnClickListener {
+
+	private TextView tvCacheSize;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,17 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 		ViewUtil.findViewById(this, R.id.tv_about_us).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_help).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_send_prise).setOnClickListener(this);
+		tvCacheSize = ViewUtil.findViewById(this, R.id.tv_cache_size);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Message message = new Message();
+				message.what = 2;
+				message.obj = MyUtils.getCacheSize(mContext);
+				mHandler.sendMessage(message);
+			}
+		}).start();
 	}
 
 	@Override
@@ -75,8 +90,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.tv_check_update:
 			if (DamiCommon.verifyNetwork(mContext)) { // 检查版本更新
-				UpdateManager.getUpdateManager().checkAppUpdate(
-						SettingActivity.this, true);
+				UpdateManager.getUpdateManager().checkAppUpdate(SettingActivity.this, true);
 			}
 			break;
 		case R.id.tv_help:
@@ -102,17 +116,16 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 	}
-	
+
 	private void giveHaoping() {
-		Uri uri = Uri.parse("market://details?id="+ getPackageName());
-		Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+		Uri uri = Uri.parse("market://details?id=" + getPackageName());
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		try {
 			mContext.startActivity(intent);
 		} catch (Exception e) {
 		}
 	}
-
 
 	private Handler mHandler = new Handler() {
 		@Override
@@ -124,19 +137,23 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 				break;
 			case 1:
 				removeProgressDialog();
+				tvCacheSize.setText("0.00Mb");
+				showToast(R.string.clear_cache_success);
 				break;
+			case 2:
+				tvCacheSize.setText(msg.obj + "Mb");
 			default:
 				break;
 			}
 			super.handleMessage(msg);
 		}
 	};
-	
+
 	private void showExitDialog() {
 		showDialog(getString(R.string.confirm_exit), null, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				
+
 				SharedPreferences preferences = mContext.getSharedPreferences(DamiCommon.LOGIN_SHARED, 0);
 				Editor editor = preferences.edit();
 				editor.remove(DamiCommon.LOGIN_RESULT);

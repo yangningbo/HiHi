@@ -27,10 +27,23 @@
             android:layout_height="1px"
             android:background="@color/divider" />
 
-        <TextView
+        <LinearLayout
             android:id="@+id/tv_clear_cache"
-            style="@style/setting_text"
-            android:text="@string/clear_cache" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                style="@style/setting_text"
+                android:layout_width="wrap_content"
+                android:drawableRight="@drawable/transparent"
+                android:text="@string/clear_cache" />
+
+            <TextView
+                android:id="@+id/tv_cache_size"
+                style="@style/setting_text"
+                android:drawablePadding="10dp"
+                android:gravity="right" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -107,8 +120,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:gravity="center_vertical" >
 
         <Button
             android:id="@+id/btn_login_out"
