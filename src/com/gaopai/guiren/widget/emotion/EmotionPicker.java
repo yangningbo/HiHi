@@ -10,11 +10,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.utils.WeiboTextUrlSpan;
 
 public class EmotionPicker extends LinearLayout {
 	private int mPickerHeight;
@@ -34,192 +38,196 @@ public class EmotionPicker extends LinearLayout {
 	private ViewPager viewPager;
 	private EmotionParser emotionParser;
 
+	private ImageView centerPoint;
+	private ImageView leftPoint;
+	private ImageView rightPoint;
 
 	public EmotionPicker(Context paramContext, AttributeSet paramAttributeSet) {
-        super(paramContext, paramAttributeSet);
+		super(paramContext, paramAttributeSet);
 		// TODO Auto-generated constructor stub
-        this.mInflater = LayoutInflater.from(paramContext);
-        View view = this.mInflater.inflate(R.layout.chat_emotion_layout, null);
-        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new SmileyPagerAdapter());
-        emotionParser = new EmotionParser(paramContext);
-//
-//        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                super.onPageSelected(position);
-//                switch (position) {
-//                    case 0:
-//                        leftPoint.getDrawable().setLevel(1);
-//                        
-//                        rightPoint.getDrawable().setLevel(0);
-//                        break;
-//                    case 1:
-//                        leftPoint.getDrawable().setLevel(0);
-//                        
-//                        rightPoint.getDrawable().setLevel(1);
-//                        break;
-//                   
-//
-//                }
-//            }
-//        });
-        addView(view);
+		this.mInflater = LayoutInflater.from(paramContext);
+		View view = this.mInflater.inflate(R.layout.chat_emotion_layout, null);
+		viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+		viewPager.setAdapter(new SmileyPagerAdapter());
+		emotionParser = new EmotionParser(paramContext);
+		leftPoint = (ImageView) view.findViewById(R.id.left_point);
+		centerPoint = (ImageView) view.findViewById(R.id.center_point);
+		rightPoint = (ImageView) view.findViewById(R.id.right_point);
+		viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				super.onPageSelected(position);
+				switch (position) {
+				case 0:
+					leftPoint.getDrawable().setLevel(1);
+					centerPoint.getDrawable().setLevel(0);
+					rightPoint.getDrawable().setLevel(0);
+					break;
+				case 1:
+					leftPoint.getDrawable().setLevel(0);
+					centerPoint.getDrawable().setLevel(1);
+					rightPoint.getDrawable().setLevel(0);
+					break;
+				case 2:
+					leftPoint.getDrawable().setLevel(0);
+					centerPoint.getDrawable().setLevel(0);
+					rightPoint.getDrawable().setLevel(1);
+					break;
+				}
+			}
+		});
+		addView(view);
 	}
-	
-    public void setEditText(Activity activity, ViewGroup rootLayout, EditText paramEditText) {
-        this.mEditText = paramEditText;
-        this.activity = activity;
-    }
 
-    public void show(Activity paramActivity) {
-//        this.mPickerHeight = FeatureFunction.dip2px(getContext(), 200);
-        this.mPickerHeight = EmotionUtility.getKeyboardHeight(paramActivity);
-        hideSoftInput(this.mEditText);
-        getLayoutParams().height = this.mPickerHeight;
-        setVisibility(View.VISIBLE);
-    }
-    
-   public void hideSoftInput(View paramEditText) {
-        ((InputMethodManager) DamiApp.getInstance().getSystemService("input_method"))
-                .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
-    }
+	public void setEditText(Activity activity, ViewGroup rootLayout, EditText paramEditText) {
+		this.mEditText = paramEditText;
+		this.activity = activity;
+	}
 
-    public void hide(Activity paramActivity) {
-        setVisibility(View.GONE);
-//        paramActivity.getWindow()
-//                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+	public void show(Activity paramActivity) {
+		// this.mPickerHeight = FeatureFunction.dip2px(getContext(), 200);
+		this.mPickerHeight = EmotionUtility.getKeyboardHeight(paramActivity);
+		hideSoftInput(this.mEditText);
+		getLayoutParams().height = this.mPickerHeight;
+		setVisibility(View.VISIBLE);
+	}
 
-    }
-	 private class SmileyPagerAdapter extends PagerAdapter {
+	public void hideSoftInput(View paramEditText) {
+		((InputMethodManager) DamiApp.getInstance().getSystemService("input_method")).hideSoftInputFromWindow(
+				paramEditText.getWindowToken(), 0);
+	}
 
-	        @Override
-	        public void destroyItem(ViewGroup container, int position, Object object) {
-	            View view = (View) object;
-	            container.removeView(view);
+	public void hide(Activity paramActivity) {
+		setVisibility(View.GONE);
+	}
 
-	        }
+	private class SmileyPagerAdapter extends PagerAdapter {
 
-	        @Override
-	        public Object instantiateItem(ViewGroup container, int position) {
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			View view = (View) object;
+			container.removeView(view);
 
-	            View view = activity.getLayoutInflater()
-	                    .inflate(R.layout.chat_emotion_gridview, container, false);
+		}
 
-	            GridView gridView = (GridView) view.findViewById(R.id.emotion_grid);
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
 
-	            gridView.setAdapter(new SmileyAdapter(activity, position));
-	            container.addView(view, 0,
-	                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-	                            ViewGroup.LayoutParams.MATCH_PARENT));
+			View view = activity.getLayoutInflater().inflate(R.layout.chat_emotion_gridview, container, false);
 
-	            return view;
-	        }
+			GridView gridView = (GridView) view.findViewById(R.id.emotion_grid);
 
-	        @Override
-	        public void setPrimaryItem(ViewGroup container, int position, Object object) {
-	            super.setPrimaryItem(container, position, object);
+			gridView.setAdapter(new SmileyAdapter(activity, position));
+			container.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+					ViewGroup.LayoutParams.MATCH_PARENT));
 
+			return view;
+		}
 
-	        }
+		@Override
+		public void setPrimaryItem(ViewGroup container, int position, Object object) {
+			super.setPrimaryItem(container, position, object);
 
-	        @Override
-	        public int getCount() {
-	            return 1;
-	        }
+		}
 
-	        @Override
-	        public boolean isViewFromObject(View view, Object object) {
-	            return view.equals(object);
-	        }
-	    }
-	 
-	 private final class SmileyAdapter extends BaseAdapter {
+		@Override
+		public int getCount() {
+			return 3;
+		}
 
-	        private LayoutInflater mInflater;
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return view.equals(object);
+		}
+	}
 
-	        private List<String> keys;
+	private final class SmileyAdapter extends BaseAdapter {
 
-	        private Map<String, Bitmap> bitmapMap;
+		private LayoutInflater mInflater;
 
-	        private int emotionPosition;
+		private List<String> keys;
 
-	        private int count;
+		private Map<String, Bitmap> bitmapMap;
 
-	        public SmileyAdapter(Context context, int emotionPosition) {
-	            this.emotionPosition = emotionPosition;
-	            this.mInflater = LayoutInflater.from(context);
-	            this.keys = new ArrayList<String>();
-	            Set<String> keySet;
-	            switch (emotionPosition) {
-	                case EmotionMap.GENERAL_EMOTION_POSITION:
-	                    keySet = EmotionManager.getInstance().getEmotionsPics().keySet();
-	                    keys.addAll(keySet);
-	                    bitmapMap = EmotionManager.getInstance().getEmotionsPics();
-	                    count = bitmapMap.size();
-	                    break;
-	                case EmotionMap.HUAHUA_EMOTION_POSITION:
-	                    keySet = EmotionManager.getInstance().getHuahuaPics().keySet();
-	                    keys.addAll(keySet);
-	                    bitmapMap = EmotionManager.getInstance().getHuahuaPics();
-	                    count = bitmapMap.size();
-	                    break;
-	                default:
-	                    throw new IllegalArgumentException("emotion position is invalid");
-	            }
-	        }
+		private int emotionPosition;
 
-	        private void bindView(final int position, View contentView) {
-	            ImageView imageView = ((ImageView) contentView.findViewById(R.id.smiley_item));
-	            TextView textView = (TextView) contentView.findViewById(R.id.smiley_text_item);
-	            if (emotionPosition != EmotionMap.EMOJI_EMOTION_POSITION) {
-	                imageView.setVisibility(View.VISIBLE);
-	                textView.setVisibility(View.INVISIBLE);
-	                imageView.setImageBitmap(bitmapMap.get(keys.get(position)));
+		private int count;
 
-	            } else {
-	                imageView.setVisibility(View.INVISIBLE);
-	                textView.setVisibility(View.VISIBLE);
-	                textView.setText(keys.get(position));
-	            }
+		public SmileyAdapter(Context context, int emotionPosition) {
+			this.emotionPosition = emotionPosition;
+			this.mInflater = LayoutInflater.from(context);
+			this.keys = new ArrayList<String>();
+			Set<String> keySet = EmotionManager.getInstance().getEmotionsPics(emotionPosition).keySet();
+			keys.addAll(keySet);
+			bitmapMap = EmotionManager.getInstance().getEmotionsPics(emotionPosition);
+			count = bitmapMap.size();
+		}
 
-	            contentView.setOnClickListener(new OnClickListener() {
-	                @Override
-	                public void onClick(View v) {
-	                    String ori = mEditText.getText().toString();
-	                    int index = mEditText.getSelectionStart();
-	                    StringBuilder stringBuilder = new StringBuilder(ori);
-	                    stringBuilder.insert(index, keys.get(position));
-	                    mEditText.setText(EmotionParser.replaceContent(stringBuilder.toString()));
-	                   // mEditText.setText(emotionParser.replaceEdit(mEditText, text))
-	                    mEditText.setSelection(index + keys.get(position).length());
-	                }
-	            });
-	        }
+		private void bindView(final int position, View contentView) {
+			ImageView imageView = ((ImageView) contentView.findViewById(R.id.smiley_item));
+			TextView textView = (TextView) contentView.findViewById(R.id.smiley_text_item);
+			imageView.setVisibility(View.VISIBLE);
+			textView.setVisibility(View.INVISIBLE);
+			imageView.setImageBitmap(bitmapMap.get(keys.get(position)));
 
-	        @Override
-			public int getCount() {
-	            return count;
-	        }
+			contentView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					int index = mEditText.getSelectionStart();
+					if (keys.get(position).equals("[删除]")) {
+						if (index == 0) {
+							return;
+						}
+						SpannableString spannableString = new SpannableString(mEditText.getText());
+						ImageSpan[] imageSpans = spannableString.getSpans(0, spannableString.length(), ImageSpan.class);
+						
+						for (int i = 0; i < imageSpans.length; i++) {
+							ImageSpan imageSpan = imageSpans[i];
+							int start = spannableString.getSpanStart(imageSpan);
+							int end = spannableString.getSpanEnd(imageSpan);
+							if (index == end) {
+								spannableString.removeSpan(imageSpan);
+								mEditText.setText(mEditText.getText().delete(start, end));
+								mEditText.setSelection(start);
+								return;
+							}
+						}
+						
+						mEditText.setText(mEditText.getText().delete(index - 1, index));
+						mEditText.setSelection(index - 1);
+						return;
+					}
+					String ori = mEditText.getText().toString();
+					StringBuilder stringBuilder = new StringBuilder(ori);
+					stringBuilder.insert(index, keys.get(position));
+					mEditText.setText(EmotionParser.replaceContent(stringBuilder.toString()));
+					mEditText.setSelection(index + keys.get(position).length());
+				}
+			});
+		}
 
-	        @Override
-			public Object getItem(int paramInt) {
-	            return null;
-	        }
+		@Override
+		public int getCount() {
+			return count;
+		}
 
-	        @Override
-			public long getItemId(int paramInt) {
-	            return 0L;
-	        }
+		@Override
+		public Object getItem(int paramInt) {
+			return null;
+		}
 
-	        @Override
-			public View getView(int paramInt, View paramView, ViewGroup paramViewGroup) {
-	            if (paramView == null) {
-	                paramView = this.mInflater
-	                        .inflate(R.layout.chat_emotion_item, null);
-	            }
-	            bindView(paramInt, paramView);
-	            return paramView;
-	        }
-	    }
+		@Override
+		public long getItemId(int paramInt) {
+			return 0L;
+		}
+
+		@Override
+		public View getView(int paramInt, View paramView, ViewGroup paramViewGroup) {
+			if (paramView == null) {
+				paramView = this.mInflater.inflate(R.layout.chat_emotion_item, null);
+			}
+			bindView(paramInt, paramView);
+			return paramView;
+		}
+	}
 }

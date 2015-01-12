@@ -75,7 +75,7 @@ public class MyTextUtils {
 			int k = matcher.start();
 			int m = matcher.end();
 			if (m - k < 8) {
-				Map<String, Bitmap> map = EmotionManager.getInstance().getEmotionsPics();
+				Map<String, Bitmap> map = EmotionManager.getInstance().getAllEmotionsPics();
 				Bitmap bitmap = map.get(matcher.group());
 				if (bitmap != null) {
 					bitmap = Bitmap.createScaledBitmap(bitmap, EmotionManager.dip2px(20), EmotionManager.dip2px(20),
