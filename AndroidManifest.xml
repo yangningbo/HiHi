@@ -185,14 +185,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.chat.ChatTribeActivity"
-            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.gaopai.guiren.activity.chat.ChatMessageActivity"
-            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.gaopai.guiren.activity.FriendsActivity"
             android:screenOrientation="portrait" />
@@ -270,7 +270,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.WebActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

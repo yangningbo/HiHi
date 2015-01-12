@@ -33,6 +33,8 @@ public class SpeexPlayerWrapper {
 	private MessageInfo messageInfo;
 	private Context context;
 
+	private xzAudioTrack audioTrack;
+
 	public SpeexPlayerWrapper(Context context) {
 		this.context = context;
 	}
@@ -55,10 +57,17 @@ public class SpeexPlayerWrapper {
 				return;
 			}
 		}
+		if (audioTrack != null && audioTrack.isPlay()) {
+			audioTrack.stop();
+			if (messageInfo.voiceUrl.equals(url)) {
+				return;
+			}
+		}
 		url = messageInfo.voiceUrl;
 		String fileName = null;
 		if (!url.contains("AUDIO_")) {
-			fileName = FeatureFunction.generator(url);
+			// fileName = FeatureFunction.generator(url);
+			fileName = FeatureFunction.getAudioName(url);
 		} else {
 			fileName = url;
 		}
@@ -70,8 +79,13 @@ public class SpeexPlayerWrapper {
 				return;
 			}
 		} else {
-			speexPlayer = new SpeexPlayer(file.getAbsolutePath(), messageInfo.samplerate);
-			speexPlayer.startPlay(playCallback);
+			if (isPcm(fileName)) {
+				audioTrack = new xzAudioTrack(messageInfo.samplerate, playCallback);
+				audioTrack.start(file.getAbsolutePath());
+			} else {
+				speexPlayer = new SpeexPlayer(file.getAbsolutePath(), messageInfo.samplerate);
+				speexPlayer.startPlay(playCallback);
+			}
 			return;
 		}
 
@@ -79,13 +93,26 @@ public class SpeexPlayerWrapper {
 			Toast.makeText(context, "没有文件...", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		speexPlayer = new SpeexPlayer(url, messageInfo.samplerate);
-		speexPlayer.startPlay(playCallback);
+
+		if (isPcm(url)) {
+			audioTrack = new xzAudioTrack(messageInfo.samplerate, playCallback);
+			audioTrack.start(url);
+		} else {
+			speexPlayer = new SpeexPlayer(url, messageInfo.samplerate);
+			speexPlayer.startPlay(playCallback);
+		}
+	}
+
+	public boolean isPcm(String fileName) {
+		return fileName.contains("pcm");
 	}
 
 	public void stop() {
 		if (speexPlayer != null && speexPlayer.isPlay()) {
 			speexPlayer.stop();
+		}
+		if (audioTrack != null && audioTrack.isPlay()) {
+			audioTrack.stop();
 		}
 	}
 
@@ -104,10 +131,15 @@ public class SpeexPlayerWrapper {
 	}
 
 	public boolean isPlay() {
+		boolean speex = false;
+		boolean pcm = false;
 		if (speexPlayer != null) {
-			return speexPlayer.isPlay();
+			speex = speexPlayer.isPlay();
 		}
-		return false;
+		if (audioTrack != null) {
+			pcm = audioTrack.isPlay();
+		}
+		return speex || pcm;
 	}
 
 	public static interface OnDownLoadCallback {
@@ -128,7 +160,8 @@ public class SpeexPlayerWrapper {
 		}
 		mDownVoiceList.add(msg.voiceUrl);
 		File voicePath = MyUtils.getAudioPath(context);
-		String tag = FeatureFunction.generator(msg.voiceUrl);
+//		String tag = FeatureFunction.generator(msg.voiceUrl);
+		String tag = FeatureFunction.getAudioName(msg.voiceUrl);
 		String tagName = new File(voicePath, tag).getAbsolutePath();
 		HttpGet get = new HttpGet(msg.voiceUrl);
 		Logger.d(this, "the voice url=" + msg.voiceUrl);

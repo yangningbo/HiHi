@@ -54,8 +54,7 @@ public class FeatureFunction {
 	 * @return true if SD card is mounted
 	 */
 	public static boolean checkSDCard() {
-		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED))
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 			return true;
 		else
 			return false;
@@ -70,23 +69,18 @@ public class FeatureFunction {
 			if (Math.abs(duration) < ONE_MINUTE * 5) {
 				return context.getString(R.string.just_now);
 			} else {
-				return getDateString(context, date,
-						currentDate.getYear() != date.getYear());
+				return getDateString(context, date, currentDate.getYear() != date.getYear());
 			}
 		}
 
 		if (duration >= ONE_DAY) {
-			return getDateString(context, date,
-					currentDate.getYear() != date.getYear());
+			return getDateString(context, date, currentDate.getYear() != date.getYear());
 		} else if (duration >= ONE_HOUR) {
-			return duration / ONE_HOUR + context.getString(R.string.hour)
-					+ context.getString(R.string.before);
+			return duration / ONE_HOUR + context.getString(R.string.hour) + context.getString(R.string.before);
 		} else if (duration >= ONE_MINUTE) {
-			return duration / ONE_MINUTE + context.getString(R.string.minutes)
-					+ context.getString(R.string.before);
+			return duration / ONE_MINUTE + context.getString(R.string.minutes) + context.getString(R.string.before);
 		} else {
-			return duration + context.getString(R.string.second)
-					+ context.getString(R.string.before);
+			return duration + context.getString(R.string.second) + context.getString(R.string.before);
 		}
 	}
 
@@ -102,21 +96,18 @@ public class FeatureFunction {
 		}
 	}
 
-	public static String getDateString(Context context, Date date,
-			boolean withYearString) {
+	public static String getDateString(Context context, Date date, boolean withYearString) {
 		String time = "";
 		if (withYearString) {
 			time += (date.getYear() + 1900) + context.getString(R.string.year);
 		}
 
-		return time + (date.getMonth() + 1) + context.getString(R.string.month)
-				+ date.getDate() + context.getString(R.string.day);
+		return time + (date.getMonth() + 1) + context.getString(R.string.month) + date.getDate()
+				+ context.getString(R.string.day);
 	}
 
-	public static int chineseCompare(String chineseString1,
-			String chineseString2) {
-		return Collator.getInstance(Locale.CHINESE).compare(chineseString1,
-				chineseString2);
+	public static int chineseCompare(String chineseString1, String chineseString2) {
+		return Collator.getInstance(Locale.CHINESE).compare(chineseString1, chineseString2);
 	}
 
 	public static boolean createWholePermissionFolder(String path) {
@@ -150,26 +141,21 @@ public class FeatureFunction {
 
 	public static String saveTempBitmap(Bitmap bitmap, String fileName) {
 		if (bitmap == null || fileName == null || fileName.length() == 0) {
-			Log.i(TAG, "saveTempBitmap(), illegal param, bitmap = " + bitmap
-					+ "filename = " + fileName);
+			Log.i(TAG, "saveTempBitmap(), illegal param, bitmap = " + bitmap + "filename = " + fileName);
 			return "";
 		}
 
-		createWholePermissionFolder(Environment.getExternalStorageDirectory()
-				+ PUB_TEMP_DIRECTORY);
-		File bitmapFile = new File(Environment.getExternalStorageDirectory()
-				+ PUB_TEMP_DIRECTORY, fileName);
+		createWholePermissionFolder(Environment.getExternalStorageDirectory() + PUB_TEMP_DIRECTORY);
+		File bitmapFile = new File(Environment.getExternalStorageDirectory() + PUB_TEMP_DIRECTORY, fileName);
 		FileOutputStream bitmapWriter;
 		String retPath = "";
 		try {
 			bitmapWriter = new FileOutputStream(bitmapFile);
 			if (bitmap.compress(Bitmap.CompressFormat.JPEG, 75, bitmapWriter)) {
-				Log.d("TAG", "Save picture successfully! file name = "
-						+ PUB_TEMP_DIRECTORY + fileName);
+				Log.d("TAG", "Save picture successfully! file name = " + PUB_TEMP_DIRECTORY + fileName);
 				bitmapWriter.flush();
 				bitmapWriter.close();
-				retPath = Environment.getExternalStorageDirectory()
-						+ PUB_TEMP_DIRECTORY + fileName;
+				retPath = Environment.getExternalStorageDirectory() + PUB_TEMP_DIRECTORY + fileName;
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -181,7 +167,7 @@ public class FeatureFunction {
 
 		return retPath;
 	}
-	
+
 	public static Bitmap scalePicture(String filename) {
 		Bitmap bitmap = null;
 		try {
@@ -341,24 +327,24 @@ public class FeatureFunction {
 
 		return strDate;
 	}
-	
+
 	public static String getGeneralTime(long time) {
 		String strDate = "";
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date curDate = new Date(time);// 获取当前时间
 		strDate = formatter.format(curDate);
-		
+
 		return strDate;
 	}
 
-//	public static String getNoYearTime(long time) {
-//		String strDate = "";
-//		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
-//		Date curDate = new Date(time);// 获取当前时间
-//		strDate = formatter.format(curDate);
-//
-//		return strDate;
-//	}
+	// public static String getNoYearTime(long time) {
+	// String strDate = "";
+	// SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm");
+	// Date curDate = new Date(time);// 获取当前时间
+	// strDate = formatter.format(curDate);
+	//
+	// return strDate;
+	// }
 
 	public static String getFormatTime(String time) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/M/d HH:mm:ss");
@@ -402,6 +388,15 @@ public class FeatureFunction {
 		return cacheKey;
 	}
 
+	// pcm or speex
+	public static String getAudioName(String key) {
+		if (key.contains("pcm")) {
+			return generator(key) + ".pcm";
+		} else {
+			return generator(key);
+		}
+	}
+
 	private static String bytesToHexString(byte[] bytes) {
 		// http://stackoverflow.com/questions/332079
 		StringBuilder sb = new StringBuilder();
@@ -434,8 +429,7 @@ public class FeatureFunction {
 
 	public static String getPhotoFileName() {
 		Date date = new Date(System.currentTimeMillis());
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"'IMG'_yyyyMMdd_HHmmss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("'IMG'_yyyyMMdd_HHmmss");
 		return dateFormat.format(date) + ".jpg";
 
 	}
@@ -475,7 +469,6 @@ public class FeatureFunction {
 		}
 	}
 
-
 	/**
 	 * 程序是否在前台运行
 	 * 
@@ -485,12 +478,10 @@ public class FeatureFunction {
 		// Returns a list of application processes that are running on the
 		// device
 
-		ActivityManager activityManager = (ActivityManager) context
-				.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		String packageName = context.getApplicationContext().getPackageName();
 
-		List<RunningAppProcessInfo> appProcesses = activityManager
-				.getRunningAppProcesses();
+		List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
 		if (appProcesses == null)
 			return false;
 
@@ -509,18 +500,15 @@ public class FeatureFunction {
 		if (null == uri) {
 			return null;
 		}
-		Cursor c = context.getContentResolver().query(uri, null, null, null,
-				null);
+		Cursor c = context.getContentResolver().query(uri, null, null, null, null);
 		String filePath = null;
 		if (null == c) {
-			throw new IllegalArgumentException("Query on " + uri
-					+ " returns null result.");
+			throw new IllegalArgumentException("Query on " + uri + " returns null result.");
 		}
 		try {
 			if ((c.getCount() != 1) || !c.moveToFirst()) {
 			} else {
-				filePath = c.getString(c
-						.getColumnIndexOrThrow(MediaColumns.DATA));
+				filePath = c.getString(c.getColumnIndexOrThrow(MediaColumns.DATA));
 			}
 		} finally {
 			c.close();
@@ -528,7 +516,6 @@ public class FeatureFunction {
 		return filePath;
 	}
 
-	
 	public static boolean isEmail(String strEmail) {
 
 		String strPattern = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,4}$";
@@ -576,16 +563,13 @@ public class FeatureFunction {
 	 */
 	public static boolean isServiceRunning(Context mContext, String className) {
 		boolean isRunning = false;
-		ActivityManager activityManager = (ActivityManager) mContext
-				.getSystemService(Context.ACTIVITY_SERVICE);
-		List<ActivityManager.RunningServiceInfo> serviceList = activityManager
-				.getRunningServices(30);
+		ActivityManager activityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningServiceInfo> serviceList = activityManager.getRunningServices(30);
 		if (!(serviceList.size() > 0)) {
 			return false;
 		}
 		for (int i = 0; i < serviceList.size(); i++) {
-			if (serviceList.get(i).service.getClassName().equals(
-					"com.getup.service." + className)) {
+			if (serviceList.get(i).service.getClassName().equals("com.getup.service." + className)) {
 				isRunning = true;
 				break;
 			}
@@ -624,10 +608,8 @@ public class FeatureFunction {
 	 * @return
 	 */
 	public static File getExternalCacheDir(Context context) {
-		final String cacheDir = "/Android/data/" + context.getPackageName()
-				+ "/cache/";
-		return new File(Environment.getExternalStorageDirectory().getPath()
-				+ cacheDir);
+		final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
+		return new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
 	}
 
 	/*
@@ -642,8 +624,7 @@ public class FeatureFunction {
 		String macSerial = null;
 		String str = "";
 		try {
-			Process pp = Runtime.getRuntime().exec(
-					"cat /sys/class/net/wlan0/address");
+			Process pp = Runtime.getRuntime().exec("cat /sys/class/net/wlan0/address");
 			InputStreamReader ir = new InputStreamReader(pp.getInputStream());
 			LineNumberReader input = new LineNumberReader(ir);
 
@@ -662,8 +643,7 @@ public class FeatureFunction {
 	}
 
 	public static String getDeviceID() {
-		TelephonyManager manager = (TelephonyManager) DamiApp.getInstance()
-				.getSystemService(Context.TELEPHONY_SERVICE);
+		TelephonyManager manager = (TelephonyManager) DamiApp.getInstance().getSystemService(Context.TELEPHONY_SERVICE);
 		String deviceID = manager.getDeviceId();
 		if (TextUtils.isEmpty(deviceID) || deviceID.equals("0000000000000")) {
 			deviceID = getMac();
@@ -685,11 +665,5 @@ public class FeatureFunction {
 		Intent intent = new Intent(context, SnsService.class);
 		context.stopService(intent);
 	}
-	
-	
-
-	
-
-
 
 }

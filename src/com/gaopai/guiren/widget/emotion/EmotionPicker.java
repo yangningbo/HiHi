@@ -87,8 +87,8 @@ public class EmotionPicker extends LinearLayout {
 
     public void hide(Activity paramActivity) {
         setVisibility(View.GONE);
-        paramActivity.getWindow()
-                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        paramActivity.getWindow()
+//                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
     }
 	 private class SmileyPagerAdapter extends PagerAdapter {

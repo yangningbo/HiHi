@@ -110,6 +110,7 @@ public class DynamicBean implements Serializable {
 		public String uid;
 		public String sid;
 		public String realname;
+		public int isanonymous;
 
 	}
 

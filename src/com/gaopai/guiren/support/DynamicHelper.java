@@ -905,19 +905,14 @@ public class DynamicHelper {
 		String userName = "", userInfo = "", spreadAction, uid;
 
 		if (mDyKind == DY_PROFILE) {
-			// viewHolder.tvAction.setVisibility(View.VISIBLE);
 			if (type == TYPE_SEND_DYNAMIC) {
-				// viewHolder.tvAction.setText("发布了一条新动态");
 				spreadAction = "发布了一条新动态";
 			} else {
-				// viewHolder.tvAction.setText(typeBean.title);
 				spreadAction = typeBean.title;
 			}
 			viewHolder.tvUserName.setText(parseProfileHeaderText(spreadAction));
 			viewHolder.btnDynamicAction.setVisibility(View.GONE);
 			viewHolder.tvDateInfo.setVisibility(View.GONE);
-			// viewHolder.tvUserName.setVisibility(View.GONE);
-			// viewHolder.tvUserInfo.setVisibility(View.GONE);
 			viewHolder.ivHeader.setVisibility(View.GONE);
 			viewHolder.layoutCoverTopBottomHolder.setVisibility(View.GONE);
 			return;
@@ -927,16 +922,11 @@ public class DynamicHelper {
 		viewHolder.lineZan.setVisibility(View.GONE);
 		viewHolder.lineSpread.setVisibility(View.GONE);
 
-		// viewHolder.tvUserName.setText(typeBean.realname);
-		// viewHolder.tvUserInfo.setText(typeBean.post);
 		userName = typeBean.realname;
 		uid = typeBean.uid;
 		userInfo = typeBean.post;
 		if (typeBean.isanonymous == 1) {
-			Logger.d(this, "nick head=" + typeBean.defhead);
 			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader, R.drawable.default_header);
-			// viewHolder.tvUserName.setText(R.string.no_name);
-			// viewHolder.tvUserInfo.setText("");
 			userInfo = "";
 			uid = "-1";
 			userName = getString(R.string.no_name);
@@ -945,11 +935,8 @@ public class DynamicHelper {
 		}
 
 		if (type == TYPE_SEND_DYNAMIC) {
-			// viewHolder.tvAction.setVisibility(View.GONE);
 			spreadAction = "";
 		} else {
-			// viewHolder.tvAction.setVisibility(View.VISIBLE);
-			// viewHolder.tvAction.setText(typeBean.title);
 			spreadAction = typeBean.title;
 		}
 
@@ -1101,6 +1088,14 @@ public class DynamicHelper {
 		viewHolder.tvContent.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		if (typeBean.type == TYPE_SPREAD_OTHER_DYNAMIC) {
 			viewHolder.tvContent.setVisibility(View.VISIBLE);
+			if (jsonContent.isanonymous == 1) {
+				jsonContent.realname = getString(R.string.no_name);
+				jsonContent.uid = "-1";
+			}
+
+			if (jsonContent.content == null) {
+				jsonContent.content = "";
+			}
 			viewHolder.tvContent.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(jsonContent.realname, jsonContent.uid),
 					MyTextUtils.addHttpLinks("说：" + jsonContent.content)));
