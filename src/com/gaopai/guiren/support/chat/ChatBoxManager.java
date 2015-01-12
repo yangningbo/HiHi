@@ -68,6 +68,9 @@ public class ChatBoxManager {
 			hideAddGrid();
 			hideSoftKeyboard();
 		}
+		if (mCallback != null) {
+			mCallback.onShowKeyBoard();
+		}
 	}
 
 	public void addGridClick() {

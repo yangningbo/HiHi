@@ -200,8 +200,8 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 				mHasLocalData = false;
 			}
 			if (tempList != null && tempList.size() != 0) {
-				mListView.getRefreshableView().setSelection(tempList.size());
 				mAdapter.addAll(tempList);
+				mListView.getRefreshableView().setSelection(tempList.size() - 1);
 			}
 			mListView.onPullComplete();
 		} else {
@@ -380,9 +380,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		boxManager.setCallback(new Callback() {
 			@Override
 			public void onShowKeyBoard() {
-				if (messageInfos != null) {
-					mListView.getRefreshableView().setSelection(messageInfos.size() - 1);
-				}
+				moveToBottom();
 			}
 		});
 
@@ -415,6 +413,12 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		// TODO Auto-generated method stub
 		super.onResume();
 		switchAvoidDisturb();
+	}
+
+	protected void moveToBottom() {
+		if (messageInfos != null) {
+			mListView.getRefreshableView().setSelection(messageInfos.size() - 1);
+		}
 	}
 
 	protected String getMessageMaxId() {
@@ -491,7 +495,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			boxManager.hideAddGrid();
 			break;
 		case R.id.send_text_btn:
-			boxManager.hideAll();
+			// boxManager.hideAll();
 			sendText(mContentEdit.getText().toString());
 			afterSendChnageState();
 			break;

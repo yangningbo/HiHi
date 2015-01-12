@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.gaopai.guiren.utils.DateUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.ILoadingLayout.State;
 
 /**
@@ -21,8 +22,7 @@ import com.gaopai.guiren.view.pulltorefresh.ILoadingLayout.State;
  * 
  * @param <T>
  */
-public abstract class PullToRefreshBase<T extends View> extends LinearLayout
-		implements IPullToRefresh<T> {
+public abstract class PullToRefreshBase<T extends View> extends LinearLayout implements IPullToRefresh<T> {
 
 	/**
 	 * 定义了下拉刷新和上拉加载更多的接口。
@@ -153,15 +153,13 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 		addHeaderAndFooter(context);
 
 		// 得到Header的高度，这个高度需要用这种方式得到，在onLayout方法里面得到的高度始终是0
-		getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
-					@Override
-					public void onGlobalLayout() {
-						refreshLoadingViewsSize();
-						getViewTreeObserver()
-								.removeGlobalOnLayoutListener(this);
-					}
-				});
+		getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				refreshLoadingViewsSize();
+				getViewTreeObserver().removeGlobalOnLayoutListener(this);
+			}
+		});
 	}
 
 	/**
@@ -170,10 +168,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	private void refreshLoadingViewsSize() {
 		// 得到header和footer的内容高度，它将会作为拖动刷新的一个临界值，如果拖动距离大于这个高度
 		// 然后再松开手，就会触发刷新操作
-		int headerHeight = (null != mHeaderLayout) ? mHeaderLayout
-				.getContentSize() : 0;
-		int footerHeight = (null != mFooterLayout) ? mFooterLayout
-				.getContentSize() : 0;
+		int headerHeight = (null != mHeaderLayout) ? mHeaderLayout.getContentSize() : 0;
+		int footerHeight = (null != mFooterLayout) ? mFooterLayout.getContentSize() : 0;
 
 		if (headerHeight < 0) {
 			headerHeight = 0;
@@ -188,10 +184,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 
 		// 这里得到Header和Footer的高度，设置的padding的top和bottom就应该是header和footer的高度
 		// 因为header和footer是完全看不见的
-		headerHeight = (null != mHeaderLayout) ? mHeaderLayout
-				.getMeasuredHeight() : 0;
-		footerHeight = (null != mFooterLayout) ? mFooterLayout
-				.getMeasuredHeight() : 0;
+		headerHeight = (null != mHeaderLayout) ? mHeaderLayout.getMeasuredHeight() : 0;
+		footerHeight = (null != mFooterLayout) ? mFooterLayout.getMeasuredHeight() : 0;
 		if (0 == footerHeight) {
 			footerHeight = mFooterHeight;
 		}
@@ -232,8 +226,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	@Override
 	public void setOrientation(int orientation) {
 		if (LinearLayout.VERTICAL != orientation) {
-			throw new IllegalArgumentException(
-					"This class only supports VERTICAL orientation.");
+			throw new IllegalArgumentException("This class only supports VERTICAL orientation.");
 		}
 
 		// Only support vertical orientation
@@ -251,8 +244,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 		}
 
 		final int action = event.getAction();
-		if (action == MotionEvent.ACTION_CANCEL
-				|| action == MotionEvent.ACTION_UP) {
+		if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
 			mIsHandledTouchEvent = false;
 			return false;
 		}
@@ -333,16 +325,14 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 				// 当第一个显示出来时
 				if (isReadyForPullDown()) {
 					// 调用刷新
-					if (mPullRefreshEnabled
-							&& (mPullDownState == State.RELEASE_TO_REFRESH)) {
+					if (mPullRefreshEnabled && (mPullDownState == State.RELEASE_TO_REFRESH)) {
 						startRefreshing();
 						handled = true;
 					}
 					resetHeaderLayout();
 				} else if (isReadyForPullUp()) {
 					// 加载更多
-					if (isPullLoadEnabled()
-							&& (mPullUpState == State.RELEASE_TO_REFRESH)) {
+					if (isPullLoadEnabled() && (mPullUpState == State.RELEASE_TO_REFRESH)) {
 						startLoading();
 						handled = true;
 					}
@@ -470,8 +460,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	 * @param delayMillis
 	 *            延迟时间
 	 */
-	public void doPullRefreshing(final boolean smoothScroll,
-			final long delayMillis) {
+	public void doPullRefreshing(final boolean smoothScroll, final long delayMillis) {
 		postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -493,8 +482,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	 *            属性
 	 * @return View
 	 */
-	protected abstract T createRefreshableView(Context context,
-			AttributeSet attrs);
+	protected abstract T createRefreshableView(Context context, AttributeSet attrs);
 
 	/**
 	 * 判断刷新的View是否滑动到顶部
@@ -519,8 +507,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	 *            属性
 	 * @return LoadingLayout对象
 	 */
-	protected LoadingLayout createHeaderLoadingLayout(Context context,
-			AttributeSet attrs) {
+	protected LoadingLayout createHeaderLoadingLayout(Context context, AttributeSet attrs) {
 		return new HeaderLoadingLayout(context);
 	}
 
@@ -533,8 +520,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	 *            属性
 	 * @return LoadingLayout对象
 	 */
-	protected LoadingLayout createFooterLoadingLayout(Context context,
-			AttributeSet attrs) {
+	protected LoadingLayout createFooterLoadingLayout(Context context, AttributeSet attrs) {
 		return new FooterLoadingLayout(context);
 	}
 
@@ -557,8 +543,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	 */
 	protected void refreshRefreshableViewSize(int width, int height) {
 		if (null != mRefreshableViewWrapper) {
-			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mRefreshableViewWrapper
-					.getLayoutParams();
+			LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mRefreshableViewWrapper.getLayoutParams();
 			if (lp.height != height) {
 				lp.height = height;
 				mRefreshableViewWrapper.requestLayout();
@@ -586,8 +571,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 		// 这样做的原因是，如果此是它的height是MATCH_PARENT，那么footer得到的高度就是0，所以，我们先设置高度很小
 		// 我们就可以得到header和footer的正常高度，当onSizeChanged后，Refresh view的高度又会变为正常。
 		height = 10;
-		addView(mRefreshableViewWrapper, new LinearLayout.LayoutParams(width,
-				height));
+		addView(mRefreshableViewWrapper, new LinearLayout.LayoutParams(width, height));
 	}
 
 	/**
@@ -597,8 +581,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	 *            context
 	 */
 	protected void addHeaderAndFooter(Context context) {
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT,
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.WRAP_CONTENT);
 
 		final LoadingLayout headerLayout = mHeaderLayout;
@@ -865,8 +848,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 	 * @param delayMillis
 	 *            延迟时间，0代表不延迟
 	 */
-	private void smoothScrollTo(int newScrollValue, long duration,
-			long delayMillis) {
+	private void smoothScrollTo(int newScrollValue, long duration, long delayMillis) {
 		if (null != mSmoothScrollRunnable) {
 			mSmoothScrollRunnable.stop();
 		}
@@ -874,8 +856,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 		int oldScrollValue = this.getScrollYValue();
 		boolean post = (oldScrollValue != newScrollValue);
 		if (post) {
-			mSmoothScrollRunnable = new SmoothScrollRunnable(oldScrollValue,
-					newScrollValue, duration);
+			mSmoothScrollRunnable = new SmoothScrollRunnable(oldScrollValue, newScrollValue, duration);
 		}
 
 		if (post) {
@@ -969,14 +950,11 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 				 * small rounding errors
 				 */
 				final long oneSecond = 1000; // SUPPRESS CHECKSTYLE
-				long normalizedTime = (oneSecond * (System.currentTimeMillis() - mStartTime))
-						/ mDuration;
-				normalizedTime = Math.max(Math.min(normalizedTime, oneSecond),
-						0);
+				long normalizedTime = (oneSecond * (System.currentTimeMillis() - mStartTime)) / mDuration;
+				normalizedTime = Math.max(Math.min(normalizedTime, oneSecond), 0);
 
 				final int deltaY = Math.round((mScrollFromY - mScrollToY)
-						* mInterpolator.getInterpolation(normalizedTime
-								/ (float) oneSecond));
+						* mInterpolator.getInterpolation(normalizedTime / (float) oneSecond));
 				mCurrentY = mScrollFromY - deltaY;
 
 				setScrollTo(0, mCurrentY);

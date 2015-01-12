@@ -349,7 +349,6 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		NotifyHelper.setCurrentChatId(mContext, "");
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if (pm.isScreenOn()) {
 			stopPlayVoice();

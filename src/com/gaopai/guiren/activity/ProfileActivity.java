@@ -1152,7 +1152,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		});
 	}
 
-	// store tags in remote computer
+	// store tags in server
 	private void addRemoteTags(String tags) {
 		Logger.d(this, tags);
 		DamiInfo.updateUserTag(tuid, tags, new SimpleResponseListener(mContext, R.string.request_internet_now) {

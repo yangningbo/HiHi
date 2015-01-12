@@ -10,14 +10,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.ILoadingLayout.State;
 
 /**
  * 这个类实现了ListView下拉刷新，上加载更多和滑到底部自动加载
  * 
  */
-public class PullToRefreshListView extends PullToRefreshBase<ListView>
-		implements OnScrollListener {
+public class PullToRefreshListView extends PullToRefreshBase<ListView> implements OnScrollListener {
 
 	/** ListView */
 	public ListView mListView;
@@ -58,8 +58,7 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 	 * @param defStyle
 	 *            defStyle
 	 */
-	public PullToRefreshListView(Context context, AttributeSet attrs,
-			int defStyle) {
+	public PullToRefreshListView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
 		setPullLoadEnabled(false);
@@ -70,13 +69,13 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 		ListView listView = new ListView(context);
 		mListView = listView;
 		mListView.setCacheColorHint(0);
-//		mListView.setDivider(null);
+		// mListView.setDivider(null);
 		mListView.setFadingEdgeLength(0);
 		mListView.setHeaderDividersEnabled(false);
 		mListView.setFooterDividersEnabled(false);
-		
-//		mListView.setSelector(context.getResources().getDrawable(
-//				R.color.transparent));
+
+		// mListView.setSelector(context.getResources().getDrawable(
+		// R.color.transparent));
 		listView.setOnScrollListener(this);
 
 		return listView;
@@ -160,7 +159,7 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 			}
 		}
 	}
-	
+
 	@Override
 	public LoadingLayout getFooterLoadingLayout() {
 		if (isScrollLoadEnabled()) {
@@ -173,8 +172,7 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		if (isScrollLoadEnabled() && hasMoreData()) {
-			if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
-					|| scrollState == OnScrollListener.SCROLL_STATE_FLING) {
+			if (scrollState == OnScrollListener.SCROLL_STATE_IDLE || scrollState == OnScrollListener.SCROLL_STATE_FLING) {
 				if (isReadyForPullUp()) {
 					startLoading();
 				}
@@ -187,17 +185,14 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 	}
 
 	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 		if (null != mScrollListener) {
-			mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount,
-					totalItemCount);
+			mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
 		}
 	}
 
 	@Override
-	protected LoadingLayout createHeaderLoadingLayout(Context context,
-			AttributeSet attrs) {
+	protected LoadingLayout createHeaderLoadingLayout(Context context, AttributeSet attrs) {
 		return new HeaderLoadingLayout(context);
 	}
 
@@ -207,8 +202,7 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 	 * @return true表示还有更多数据
 	 */
 	private boolean hasMoreData() {
-		if ((null != mLoadMoreFooterLayout)
-				&& (mLoadMoreFooterLayout.getState() == State.NO_MORE_DATA)) {
+		if ((null != mLoadMoreFooterLayout) && (mLoadMoreFooterLayout.getState() == State.NO_MORE_DATA)) {
 			return false;
 		}
 
@@ -227,12 +221,11 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 			return true;
 		}
 
-		int mostTop = (mListView.getChildCount() > 0) ? mListView.getChildAt(0)
-				.getTop() : 0;
-		if (mostTop >= 0) {
+		int mostTop = (mListView.getChildCount() > 0) ? mListView
+				.getChildAt(0).getTop() : 0;
+		if (mostTop >= 0 && mListView.getFirstVisiblePosition() == 0) {
 			return true;
 		}
-
 		return false;
 	}
 
@@ -258,8 +251,7 @@ public class PullToRefreshListView extends PullToRefreshBase<ListView>
 		 * for it and rely on the inner condition which checks getBottom().
 		 */
 		if (lastVisiblePosition >= lastItemPosition - 1) {
-			final int childIndex = lastVisiblePosition
-					- mListView.getFirstVisiblePosition();
+			final int childIndex = lastVisiblePosition - mListView.getFirstVisiblePosition();
 			final int childCount = mListView.getChildCount();
 			final int index = Math.min(childIndex, childCount - 1);
 			final View lastVisibleChild = mListView.getChildAt(index);

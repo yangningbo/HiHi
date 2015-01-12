@@ -212,8 +212,17 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		super.onResume();
 		checkHasDraft(mTribe.id);
 		NotifyHelper.setCurrentChatId(mContext, mTribe.id);
+		Logger.d(this, mTribe.id + "  " + NotifyHelper.getCurrentChatId(mContext));
 		NotifyHelper.clearMsgNotification(mContext, mChatType);
 		ConversationHelper.resetCountAndRefresh(mContext, mTribe.id);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (NotifyHelper.getCurrentChatId(mContext).equals(mTribe.id)) {
+			NotifyHelper.setCurrentChatId(mContext, "");
+		}
 	}
 
 	// 通知过来的tribe没有role，发送消息时需要用到，所以这里尽快更新呀
@@ -577,7 +586,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	private void deleteConverstion() {
-//		ConversationHelper.deleteItemAndUpadte(mContext, mTribe.id);
+		// ConversationHelper.deleteItemAndUpadte(mContext, mTribe.id);
 		ConversationHelper.deleteChatItemAndUpadte(mContext, mTribe.id, false);
 	}
 
@@ -698,7 +707,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		} else if (action.equals(ACTION_CHANGE_VOICE)) {
 			isChangeVoice = isAnony();
 			setChangeVoiceView(isChangeVoice);
-			//have inserted msg to db when sending broadcast, so just add it to list
+			// have inserted msg to db when sending broadcast, so just add it to
+			// list
 			addTipMessageToList(isChangeVoice);
 		} else if (action.equals(ActionHolder.ACTION_QUIT_MEETING)) {
 			String id = intent.getStringExtra("tid");
@@ -745,14 +755,14 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		msg.type = type;
 		return msg;
 	}
-	
+
 	private void addAndInsertMessage(boolean isAnony) {
 		MessageInfo msgInfo = addTipMessageToList(isAnony);
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
 		table.insert(msgInfo);
 	}
-	
+
 	private MessageInfo addTipMessageToList(boolean isAnony) {
 		MessageInfo messageInfo = buildMessage();
 		if (isAnony) {

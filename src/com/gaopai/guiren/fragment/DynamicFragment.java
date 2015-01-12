@@ -118,10 +118,15 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
-					// got focus
 				} else {
 					hideChatBox();
 				}
+			}
+		});
+		etComment.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				chaBoxManager.editClick();
 			}
 		});
 		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC, Intent.ACTION_SCREEN_OFF,

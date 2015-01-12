@@ -88,6 +88,14 @@ public class ChatMessageActivity extends ChatMainActivity implements OnClickList
 	}
 
 	@Override
+	protected void onStop() {
+		super.onStop();
+		if (NotifyHelper.getCurrentChatId(mContext).equals(user.uid)) {
+			NotifyHelper.setCurrentChatId(mContext, "");
+		}
+	}
+
+	@Override
 	protected void setTitleText() {
 		// TODO Auto-generated method stub
 		TextView textView = mTitleBar.addLeftTextView(user.realname);

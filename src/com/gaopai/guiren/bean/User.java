@@ -8,8 +8,6 @@ import android.text.TextUtils;
 
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
-import com.gaopai.guiren.bean.dynamic.NewDynamicBean.JsonContent;
-import com.gaopai.guiren.bean.dynamic.NewDynamicBean.PicBean;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.google.gson.annotations.Expose;
 

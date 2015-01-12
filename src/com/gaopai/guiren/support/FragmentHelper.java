@@ -7,7 +7,6 @@ import android.view.View.OnKeyListener;
 import com.gaopai.guiren.activity.share.ShareFollowersFragment;
 
 public class FragmentHelper {
-	ShareFollowersFragment shareFollowersFragment = new ShareFollowersFragment();
 
 	public static Fragment replaceFragment(int holder, FragmentManager fragmentManager, Class clazz) {
 		Fragment fragment = null;

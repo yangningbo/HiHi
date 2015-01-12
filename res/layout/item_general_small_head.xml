@@ -35,35 +35,33 @@
         android:textColor="@color/one_word_prompt_color"
         android:textSize="16sp" />
 
-  
     <TextView
-        android:id="@+id/tv_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_title"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="50dp"
-        android:layout_toRightOf="@id/iv_header"
-        android:ellipsize="end"
-        android:textColor="@color/content_gray_color"
-        android:textSize="14sp" />
-    
-      <TextView
         android:id="@+id/tv_delete"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignBottom="@id/tv_info"
-        android:gravity="center"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
         android:background="@drawable/selector_tribe_detail_btn_green"
+        android:gravity="center"
         android:paddingBottom="2dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="2dp"
         android:text="@string/delete"
         android:textColor="@color/white"
-        android:textSize="13sp" />
-    
+        android:textSize="13sp"/>
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/iv_header"
+        android:ellipsize="end"
+        android:layout_toLeftOf="@id/tv_delete"
+        android:textColor="@color/content_gray_color"
+        android:textSize="14sp" />
 
 </RelativeLayout>
