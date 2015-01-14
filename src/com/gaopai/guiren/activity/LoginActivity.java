@@ -34,17 +34,23 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
-import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.BaseInfo;
 import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
+import com.gaopai.guiren.support.ShareManager;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.volley.IResponseListener;
+import com.gaopai.guiren.wxapi.WXEntryActivity;
+import com.gaopai.guiren.wxapi.WXEntryActivity.WxUserInfo;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQAuth;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -61,6 +67,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 	private Button btnQQLogin;
 	private Button btnWeiboLogin;
+	private Button btnWeixinLogin;
 
 	private EditText etUserName;
 	private EditText etPassword;
@@ -94,14 +101,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	public static final String LOGIN_TYPE_WEIBO = "sina";
 	public static final String LOGIN_TYPE_WEIXIN = "weixin";
 
+	private IWXAPI wxApi;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initShare();
+		// initShare();
+		Logger.d(this, "taskid = " + this.getTaskId());
 		initTitleBar();
 		setAbContentView(R.layout.activity_login);
 		mTitleBar.setTitleText(R.string.login);
 		initComponent();
+		handleWxLogin(getIntent());
 	}
 
 	@Override
@@ -113,9 +124,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 		btnQQLogin = (Button) findViewById(R.id.btn_qq_login);
 		btnWeiboLogin = (Button) findViewById(R.id.btn_weibo_login);
+		btnWeixinLogin = (Button) findViewById(R.id.btn_weixin_login);
 
 		btnQQLogin.setOnClickListener(this);
 		btnWeiboLogin.setOnClickListener(this);
+		btnWeixinLogin.setOnClickListener(this);
 
 		etUserName = (EditText) findViewById(R.id.et_username);
 		etPassword = (EditText) findViewById(R.id.et_password);
@@ -157,6 +170,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 				return;
 			}
 			getQQLogin();
+			// getWeixinLogin();
+			break;
+		case R.id.btn_weixin_login:
+			if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
+				showToast(R.string.network_error);
+				return;
+			}
+			getWeixinLogin();
 			break;
 
 		case R.id.tv_forget_password:
@@ -174,6 +195,22 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			break;
 		default:
 			break;
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		handleWxLogin(intent);
+	}
+
+	private void handleWxLogin(Intent intent) {
+		if (!TextUtils.isEmpty(intent.getAction()) && intent.getAction().equals(WXEntryActivity.ACTION_LOGIN_WECHAT)) {
+			WXEntryActivity.WxUserInfo userInfo = (WxUserInfo) intent.getSerializableExtra("data");
+			if (userInfo != null) {
+				getLogin("wexin", String.valueOf(userInfo.sex), userInfo.openid, userInfo.nickname,
+						userInfo.headimgurl, "");
+			}
 		}
 	}
 
@@ -203,7 +240,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		} else {
 			showProgressDialog(R.string.login_error);
 		}
+	}
 
+	private void getWeixinLogin() {
+		wxApi = WXAPIFactory.createWXAPI(this, ShareManager.APPID_WECHAT, true);
+		wxApi.registerApp(ShareManager.APPID_WECHAT);
+		SendAuth.Req req = new SendAuth.Req();
+		req.scope = "snsapi_userinfo";
+		req.state = "1212";
+		wxApi.sendReq(req);
 	}
 
 	private void getSinaLogin() {

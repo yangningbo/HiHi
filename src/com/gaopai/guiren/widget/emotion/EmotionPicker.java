@@ -11,9 +11,7 @@ import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.style.ImageSpan;
-import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +26,7 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.utils.WeiboTextUrlSpan;
+import com.gaopai.guiren.utils.MyUtils;
 
 public class EmotionPicker extends LinearLayout {
 	private int mPickerHeight;
@@ -53,6 +51,7 @@ public class EmotionPicker extends LinearLayout {
 		leftPoint = (ImageView) view.findViewById(R.id.left_point);
 		centerPoint = (ImageView) view.findViewById(R.id.center_point);
 		rightPoint = (ImageView) view.findViewById(R.id.right_point);
+		leftPoint.getDrawable().setLevel(1);
 		viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
@@ -85,8 +84,8 @@ public class EmotionPicker extends LinearLayout {
 	}
 
 	public void show(Activity paramActivity) {
-		// this.mPickerHeight = FeatureFunction.dip2px(getContext(), 200);
-		this.mPickerHeight = EmotionUtility.getKeyboardHeight(paramActivity);
+		 this.mPickerHeight = MyUtils.dip2px(getContext(), 236);
+//		this.mPickerHeight = EmotionUtility.getKeyboardHeight(paramActivity);
 		hideSoftInput(this.mEditText);
 		getLayoutParams().height = this.mPickerHeight;
 		setVisibility(View.VISIBLE);
@@ -114,9 +113,7 @@ public class EmotionPicker extends LinearLayout {
 		public Object instantiateItem(ViewGroup container, int position) {
 
 			View view = activity.getLayoutInflater().inflate(R.layout.chat_emotion_gridview, container, false);
-
 			GridView gridView = (GridView) view.findViewById(R.id.emotion_grid);
-
 			gridView.setAdapter(new SmileyAdapter(activity, position));
 			container.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 					ViewGroup.LayoutParams.MATCH_PARENT));
@@ -149,12 +146,9 @@ public class EmotionPicker extends LinearLayout {
 
 		private Map<String, Bitmap> bitmapMap;
 
-		private int emotionPosition;
-
 		private int count;
 
 		public SmileyAdapter(Context context, int emotionPosition) {
-			this.emotionPosition = emotionPosition;
 			this.mInflater = LayoutInflater.from(context);
 			this.keys = new ArrayList<String>();
 			Set<String> keySet = EmotionManager.getInstance().getEmotionsPics(emotionPosition).keySet();
@@ -180,8 +174,8 @@ public class EmotionPicker extends LinearLayout {
 						}
 						SpannableString spannableString = new SpannableString(mEditText.getText());
 						ImageSpan[] imageSpans = spannableString.getSpans(0, spannableString.length(), ImageSpan.class);
-						
-						for (int i = 0; i < imageSpans.length; i++) {
+
+						for (int i = 0, len = imageSpans.length; i < len; i++) {
 							ImageSpan imageSpan = imageSpans[i];
 							int start = spannableString.getSpanStart(imageSpan);
 							int end = spannableString.getSpanEnd(imageSpan);
@@ -192,7 +186,7 @@ public class EmotionPicker extends LinearLayout {
 								return;
 							}
 						}
-						
+
 						mEditText.setText(mEditText.getText().delete(index - 1, index));
 						mEditText.setSelection(index - 1);
 						return;

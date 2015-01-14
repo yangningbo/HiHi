@@ -5,8 +5,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.R.string;
 import com.gaopai.guiren.activity.ShowImagesActivity;
 import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatMainActivity;
@@ -33,6 +32,8 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.db.DBHelper;
+import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.media.MediaUIHeper;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 import com.gaopai.guiren.utils.DateUtil;
@@ -175,6 +176,12 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			}
 			resendView.setTag(messageInfo);
 			resendView.setOnClickListener(resendClickListener);
+		} else {
+			View voiceNotRead = ((ViewHolderLeft) viewHolder).ivVoiceNotRead;
+			voiceNotRead.setVisibility(View.GONE);
+			if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0) {
+				voiceNotRead.setVisibility(View.VISIBLE);
+			} 
 		}
 
 		onBindView(viewHolder, messageInfo);
@@ -229,6 +236,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
+						palyedPosition = position;
 						mPlayerWrapper.start(messageInfo);
 					}
 				});
@@ -376,8 +384,10 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 
 	static class ViewHolderLeft extends ViewHolder {
 
+		ImageView ivVoiceNotRead;
 		public static ViewHolderLeft getInstance(View view) {
 			ViewHolderLeft viewHolderLeft = new ViewHolderLeft();
+			viewHolderLeft.ivVoiceNotRead = (ImageView) view.findViewById(R.id.iv_chat_voice_not_read);
 			return (ViewHolderLeft) getInstance(view, viewHolderLeft);
 		}
 	}
@@ -439,6 +449,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		return mCurrentMode;
 	}
 
+	private int palyedPosition = -1;
 	private class PlayCallback extends MediaUIHeper.PlayCallback {
 
 		@Override
@@ -447,19 +458,40 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			if (((ChatBaseActivity) mContext).isModeInCall) {
 				((ChatMainActivity) mContext).showVoiceModeToastAnimation();
 			}
+			mData.get(palyedPosition).isReadVoice = 1;
+			
 			notifyDataSetChanged();
 		}
 
 		@Override
 		public void onStop(boolean stopAutomatic) {
 			// TODO Auto-generated method stub
+			Logger.d(this, "stop===" + stopAutomatic);
 			if (stopAutomatic) {
+				int nextPosition = palyedPosition + 1;
+				if (nextPosition < getCount()) {
+					MessageInfo messageInfo = mData.get(nextPosition);
+					if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0) {
+						palyedPosition = nextPosition;
+						updateVoiceReadToDb(messageInfo);
+						mPlayerWrapper.start(messageInfo);
+						return;
+					}
+				}
 				notifyDataSetChanged();// 通知播放动画
 			} else {
+			
 				notifyDataSetChanged();
 			}
 		}
 	}
+	
+	private void updateVoiceReadToDb(MessageInfo messageInfo) {
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
+		MessageTable table = new MessageTable(db);
+		table.updateVoiceReadState(messageInfo.id);
+	}
+
 
 	PopupWindow actionWindow;
 

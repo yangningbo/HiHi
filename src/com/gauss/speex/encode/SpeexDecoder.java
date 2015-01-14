@@ -221,8 +221,8 @@ public class SpeexDecoder {
 			if (track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
 				track.stop();
 				track.release();
+				uiHeper.onPlayStop(true);
 			}
-			uiHeper.onPlayStop(true);
 		}
 		dis.close();
 	}

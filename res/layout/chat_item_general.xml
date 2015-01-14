@@ -111,6 +111,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:indeterminate="false" />
+        <ImageView
+            android:id="@+id/iv_chat_voice_not_read"
+            android:layout_marginLeft="10dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/shape_notify_red_dot"
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>

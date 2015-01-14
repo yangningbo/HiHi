@@ -467,6 +467,22 @@ public class MessageTable {
 
 		return false;
 	}
+	
+	public boolean updateVoiceReadState(String id) {
+		
+		try {
+			String sql = "UPDATE " + TABLE_NAME + " SET " + COLUMN_IS_READ_VOICE
+					+ "=1 WHERE " + COLUMN_TO_ID + "='" + id + "' AND "
+					+ COLUMN_LOGIN_ID + "='"
+					+ DamiCommon.getUid(DamiApp.getInstance()) + "'";
+			mDBStore.execSQL(sql);
+			return true;
+		} catch (SQLiteConstraintException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 
 	public boolean updatePrivateReadState(String id) {
 

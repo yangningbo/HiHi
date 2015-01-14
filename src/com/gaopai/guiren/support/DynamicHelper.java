@@ -924,7 +924,8 @@ public class DynamicHelper {
 
 		userName = typeBean.realname;
 		uid = typeBean.uid;
-		userInfo = typeBean.post;
+		userInfo = TextUtils.isEmpty(typeBean.company) ? (TextUtils.isEmpty(typeBean.post) ? "" : typeBean.post) : (TextUtils
+				.isEmpty(typeBean.post) ? typeBean.company : typeBean.company + "/" + typeBean.post);
 		if (typeBean.isanonymous == 1) {
 			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader, R.drawable.default_header);
 			userInfo = "";

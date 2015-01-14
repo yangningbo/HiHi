@@ -68,14 +68,17 @@ import com.gaopai.guiren.volley.GsonObj;
 import com.gaopai.guiren.volley.IResponseListener;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.volley.UIHelperUtil;
+import com.gaopai.guiren.wxapi.WXEntryActivity.TokenBean;
+import com.gaopai.guiren.wxapi.WXEntryActivity.WxUserInfo;
 
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
-//	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-//	public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	// public static final String HOST =
+	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+	// public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
-	 public static final String HOST = "http://guirenhui.cn/index.php/";
+	public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
 
@@ -246,8 +249,6 @@ public class DamiInfo implements Serializable {
 		Map<String, Object> params = new HashMap<String, Object>();
 		request(Method.GET, TribeList.class, params, 1, listener, 1);
 	}
-
-
 
 	/**
 	 * 获取会议详情
@@ -2409,11 +2410,65 @@ public class DamiInfo implements Serializable {
 		params.put("num", "9");
 		request(Method.GET, TagResult.class, params, 0, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
 	}
-	
+
 	public static void getRecommendFriendList(IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		String url = SERVER + "user/recommendfriend";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, UserList.class, listener);
 	}
 
+	public static void getWxAccessToken(String appId, String secret, String code, IResponseListener listener) {
+		Parameters params = new Parameters();
+		params.add("appid", appId);
+		params.add("secret", secret);
+		params.add("code", code);
+		params.add("grant_type", "authorization_code");
+		customRequest("https://api.weixin.qq.com/sns/oauth2/access_token", params, Utility.HTTPMETHOD_GET, TokenBean.class,
+				listener);
+	}
+	public static void getWxUserInfo(String access_token, String openid,IResponseListener listener) {
+		Parameters params = new Parameters();
+		params.add("access_token", access_token);
+		params.add("openid", openid);
+		customRequest("https://api.weixin.qq.com/sns/userinfo", params, Utility.HTTPMETHOD_GET, WxUserInfo.class,
+				listener);
+	}
+
+	public static void customRequest(final String url, final Parameters params, final String httpMethod,
+			final Class clazz, final IResponseListener listener) {
+		final UIHelperUtil uhu = UIHelperUtil.getUIHelperUtil(listener);
+		if (!MyUtils.isNetConnected(UIHelperUtil.cxt)) {
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(UIHelperUtil.cxt, R.string.network_wrong, Toast.LENGTH_SHORT).show();
+					uhu.sendFailureMessage(null);
+					uhu.sendFinishMessage();
+				}
+			});
+			return;
+		}
+		new Thread() {
+			String rlt = null;
+			@Override
+			public void run() {
+				try {
+					uhu.sendStartMessage();
+					rlt = Utility.openUrl(url, httpMethod, params, null);
+					uhu.sendSuccessMessage(JSONObject.parseObject(rlt, clazz));
+					uhu.sendFinishMessage();
+				} catch (DamiException e) {
+					e.printStackTrace();
+					uhu.sendTimeOutMessage();
+					uhu.sendFailureMessage(null);
+					uhu.sendFinishMessage();
+				} catch (JSONException e) {
+					e.printStackTrace();
+					uhu.sendErrorMessage();
+					uhu.sendFailureMessage(null);
+					uhu.sendFinishMessage();
+				}
+			}
+		}.start();
+	}
 }

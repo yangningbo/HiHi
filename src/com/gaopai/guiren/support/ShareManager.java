@@ -257,6 +257,7 @@ public class ShareManager implements OnClickListener {
 	public final static String APPID_QQ = "100424468";
 	public final static String APPKEY_QQ = "c7394704798a158208a74ab60104f0ba";
 	public final static String APPID_WECHAT = "wx3d14f400726b7471";
+	public final static String APPSECRET_WECHAT = "828653a1ee0829d6e3e13f6ba2aeda85";
 	private UMQQSsoHandler qqSsoHandler;
 
 	private void addHandler() {

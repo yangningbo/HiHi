@@ -129,13 +129,16 @@ public class NotifyChatMessage implements NotifyMessage {
 			sendBroadUpdateCount();
 			return;
 		}
-		table.insert(info);
+
 		if (!info.parentid.equals("0")) {
 			MessageInfo message = table.queryByID(info.parentid);
 			if (message != null) {
 				message.commentCount++;
 				table.update(message);
 			}
+		} else {
+			info.isReadVoice = 0;
+			table.insert(info);
 		}
 		sendBroad(info);
 	}

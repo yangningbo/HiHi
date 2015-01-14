@@ -5,6 +5,7 @@
     android:padding="3.0dip"
     android:layout_width="50dp"
     android:layout_height="50dp"
+    android:background="@drawable/selector_btn_transparent_drak"
     android:minWidth="50dp"
     android:minHeight="50dp">
     <ImageView
