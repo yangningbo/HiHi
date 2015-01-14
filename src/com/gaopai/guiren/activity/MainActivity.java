@@ -2,11 +2,9 @@ package com.gaopai.guiren.activity;
 
 import java.util.ArrayList;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;

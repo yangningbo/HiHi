@@ -3,22 +3,24 @@ package com.gaopai.guiren.wxapi;
 import java.io.Serializable;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.LoginActivity;
 import com.gaopai.guiren.support.ShareManager;
+import com.gaopai.guiren.utils.Constant;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.umeng.socialize.weixin.view.WXCallbackActivity;
 
-public class WXEntryActivity extends BaseActivity {
-	public final static String ACTION_LOGIN_WECHAT= "com.guiren.intent.action.ACTION_LOGIN_WECHAT";
+public class WXEntryActivity extends WXCallbackActivity {
+	public final static String ACTION_LOGIN_WECHAT = "com.guiren.intent.action.ACTION_LOGIN_WECHAT";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,23 +29,25 @@ public class WXEntryActivity extends BaseActivity {
 	}
 
 	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		handleIntent(intent);
-	}
-
-	private void handleIntent(Intent intent) {
+	protected void handleIntent(Intent intent) {
+		// TODO Auto-generated method stub
 		SendAuth.Resp resp = new SendAuth.Resp(intent.getExtras());
+		Logger.d(this, "resp.errCode:" + resp.errCode + ",resp.errStr:" + resp.errStr + " resp=" + resp.state);
 		if (resp.errCode == BaseResp.ErrCode.ERR_OK) {
 			Logger.d(this, "code==================" + resp.code);
+			if (resp.state == null || !resp.state.equals("wxlogin")) {
+				super.handleIntent(intent);
+				return;
+			}
+			showProgressDialog(getString(R.string.request_internet_now));
 			DamiInfo.getWxAccessToken(ShareManager.APPID_WECHAT, ShareManager.APPSECRET_WECHAT, resp.code,
-					new SimpleResponseListener(this, R.string.request_internet_now) {
+					new SimpleResponseListener(this) {
 						@Override
 						public void onSuccess(Object o) {
 							TokenBean data = (TokenBean) o;
 							if (data != null && !TextUtils.isEmpty(data.access_token)) {
 								DamiInfo.getWxUserInfo(data.access_token, data.openid, new SimpleResponseListener(
-										WXEntryActivity.this, R.string.request_internet_now) {
+										WXEntryActivity.this) {
 									@Override
 									public void onSuccess(Object o) {
 										WxUserInfo userInfo = (WxUserInfo) o;
@@ -51,11 +55,11 @@ public class WXEntryActivity extends BaseActivity {
 											WXEntryActivity.this.finish();
 											return;
 										}
-										Intent intent = new Intent(WXEntryActivity.this, LoginActivity.class);
-										intent.setAction(ACTION_LOGIN_WECHAT);
+										Intent intent = new Intent(ACTION_LOGIN_WECHAT);
 										intent.putExtra("data", userInfo);
-										intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-										startActivity(intent);
+										WXEntryActivity.this.sendBroadcast(intent);
+										WXEntryActivity.this.finish();
+										removeProgressDialog();
 									}
 								});
 							}
@@ -85,4 +89,20 @@ public class WXEntryActivity extends BaseActivity {
 		public String unionid;
 		public List<String> privilege;
 	}
+
+	private ProgressDialog mProgressDialog;
+
+	public void showProgressDialog(String message) {
+		if (mProgressDialog == null) {
+			mProgressDialog = new android.app.ProgressDialog(WXEntryActivity.this);
+			mProgressDialog.setMessage(message);
+			mProgressDialog.setCanceledOnTouchOutside(false);
+		}
+		showDialog(Constant.DIALOGPROGRESS);
+	}
+
+	public void removeProgressDialog() {
+		removeDialog(Constant.DIALOGPROGRESS);
+	}
+
 }

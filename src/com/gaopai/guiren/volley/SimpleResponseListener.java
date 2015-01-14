@@ -114,6 +114,4 @@ public abstract class SimpleResponseListener implements IResponseListener {
 			showToast(str);
 		}
 	}
-	
-
 }

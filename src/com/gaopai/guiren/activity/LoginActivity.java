@@ -6,6 +6,8 @@ import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import u.aly.ac;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -112,11 +114,22 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		setAbContentView(R.layout.activity_login);
 		mTitleBar.setTitleText(R.string.login);
 		initComponent();
-		handleWxLogin(getIntent());
 	}
 
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
+		intentFilter.addAction(WXEntryActivity.ACTION_LOGIN_WECHAT);
+	}
+	
+	
+
+	@Override
+	protected void onReceive(Intent intent) {
+		super.onReceive(intent);
+		String action = intent.getAction();
+		if (action != null && action.equals(WXEntryActivity.ACTION_LOGIN_WECHAT)) {
+			handleWxLogin(intent);
+		}
 	}
 
 	private void initComponent() {
@@ -198,12 +211,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		}
 	}
 
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		handleWxLogin(intent);
-	}
-
 	private void handleWxLogin(Intent intent) {
 		if (!TextUtils.isEmpty(intent.getAction()) && intent.getAction().equals(WXEntryActivity.ACTION_LOGIN_WECHAT)) {
 			WXEntryActivity.WxUserInfo userInfo = (WxUserInfo) intent.getSerializableExtra("data");
@@ -247,7 +254,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		wxApi.registerApp(ShareManager.APPID_WECHAT);
 		SendAuth.Req req = new SendAuth.Req();
 		req.scope = "snsapi_userinfo";
-		req.state = "1212";
+		req.state = "wxlogin";
 		wxApi.sendReq(req);
 	}
 
@@ -476,27 +483,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
-
-				// 得到手机号码
 				String phoneNumber = cursor.getString(cursor
 						.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 				phoneNumber = phoneNumber.replaceAll(" ", "");
-				// byte[] by = phoneNumber.getBytes();
 
 				String contactName = cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
-				// Log.e("contactName", contactName + "---" + phoneNumber);
-				// 当手机号码为空的或者为空字段 跳过当前循环
 				if (TextUtils.isEmpty(phoneNumber)) {
 					continue;
 				}
-
-				/*
-				 * int length = phoneNumber.length(); if (length > 11) {
-				 * phoneNumber = phoneNumber.substring(length - 11, length); }
-				 * 
-				 * if (!FeatureFunction.isMobileNum(phoneNumber)) { continue; }
-				 */
-
 				if (TextUtils.isEmpty(phoneStr)) {
 					phoneStr = contactName;
 					phoneStr += "," + phoneNumber;
@@ -504,37 +498,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 					phoneStr += "," + contactName;
 					phoneStr += "," + phoneNumber;
 				}
-
-				// 得到联系人名称
-				// String contactName =
-				// cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
-
-				// 得到联系人ID
-				// long contactid =
-				// cursor.getLong(cursor.getColumnIndex(Phone.CONTACT_ID));
-
-				/*
-				 * for (int i = 0; i < mContactList.size(); i++) { if(contactid
-				 * == mContactList.get(i).contactId){ continue; } }
-				 */
-
-				// 得到联系人头像ID
-				// long photoid =
-				// cursor.getLong(cursor.getColumnIndex(Phone.PHOTO_ID));
-
-				// String sortKey =
-				// cursor.getString(cursor.getColumnIndex("sort_key"));
-				/*
-				 * Bitmap contactPhoto = null; if(photoid > 0) { Uri uri
-				 * =ContentUris
-				 * .withAppendedId(ContactsContract.Contacts.CONTENT_URI
-				 * ,contactid); InputStream input =
-				 * ContactsContract.Contacts.openContactPhotoInputStream
-				 * (contentResolver, uri); contactPhoto =
-				 * BitmapFactory.decodeStream(input); }else { contactPhoto =
-				 * BitmapFactory.decodeResource(getResources(),
-				 * R.drawable.contact_default_header); }
-				 */
 			}
 
 			cursor.close();
@@ -545,38 +508,51 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	}
 
 	private void getInfo(final SHARE_MEDIA sm) {
-		mController.getPlatformInfo(LoginActivity.this, sm, new UMDataListener() {
+		LoginActivity.this.showProgressDialog(R.string.loading_login);
+		new Thread(new Runnable() {
 			@Override
-			public void onStart() {
-			}
-
-			@Override
-			public void onComplete(int status, Map<String, Object> info) {
-				if (status == 200 && info != null) {
-					StringBuilder sb = new StringBuilder();
-					Set<String> keys = info.keySet();
-					for (String kStr : keys) {
-						sb.append(kStr + "=" + info.get(kStr).toString() + "\r\n");
+			public void run() {
+				mController.getPlatformInfo(LoginActivity.this, sm, new UMDataListener() {
+					@Override
+					public void onStart() {
 					}
-					Log.d("Chen", sb.toString());
 
-					String id = info.get("uid").toString();
-					String sex;
-					if (info.get("gender").toString().equals("男")) {
-						sex = "1";
-					} else {
-						sex = "2";
+					@Override
+					public void onComplete(int status, Map<String, Object> info) {
+						if (status == 200 && info != null) {
+							StringBuilder sb = new StringBuilder();
+							Set<String> keys = info.keySet();
+							for (String kStr : keys) {
+								sb.append(kStr + "=" + info.get(kStr).toString() + "\r\n");
+							}
+							Log.d("Chen", sb.toString());
+
+							String id = info.get("uid").toString();
+							String sex;
+							if (info.get("gender").toString().equals("男")) {
+								sex = "1";
+							} else {
+								sex = "2";
+							}
+							String nickName = info.get("screen_name").toString();
+							String head = info.get("profile_image_url").toString();
+
+							getLogin("sina", sex, id, nickName, head, "");
+
+						} else {
+							showToast("发生错误：" + status);
+							btLogin.post(new Runnable() {
+
+								@Override
+								public void run() {
+									LoginActivity.this.removeProgressDialog();
+								}
+							});
+
+						}
 					}
-					String nickName = info.get("screen_name").toString();
-					;
-					String head = info.get("profile_image_url").toString();
-
-					getLogin("sina", sex, id, nickName, head, "");
-
-				} else {
-					showToast("发生错误：" + status);
-				}
+				});
 			}
-		});
+		}).start();
 	}
 }
