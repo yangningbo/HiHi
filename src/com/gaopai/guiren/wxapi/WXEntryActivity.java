@@ -12,7 +12,6 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.utils.Constant;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;

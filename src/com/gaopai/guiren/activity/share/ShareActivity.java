@@ -66,7 +66,6 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_share);
@@ -160,7 +159,6 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 				@Override
 				public void onClick(View v) {
 					showDialog("确认邀请", "", new DialogInterface.OnClickListener() {
-
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// TODO Auto-generated method stub
@@ -233,7 +231,6 @@ public class ShareActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onBackPressed() {
-		// TODO Auto-generated method stub
 		if (backListener != null && backListener.onBack()) {
 			return;
 		}

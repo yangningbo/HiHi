@@ -1,11 +1,10 @@
 package com.gaopai.guiren.support.view;
 
-import com.gaopai.guiren.utils.Logger;
-
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewParent;
 
 public class ConsumeViewPager extends ViewPager {
 
@@ -17,22 +16,14 @@ public class ConsumeViewPager extends ViewPager {
 		super(context);
 	}
 
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent arg0) {
-		Logger.d(this, "itercept = " + super.onInterceptTouchEvent(arg0));
-		return super.onInterceptTouchEvent(arg0);
-	}
-
+	// In Dynamic Fragment, always let emotion panel consume touch event.
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
-		Logger.d(this, "dispatchTouchEvent = " + super.dispatchTouchEvent(ev));
+		super.dispatchTouchEvent(ev);
+		final ViewParent parent = getParent();
+		if (parent != null) {
+			parent.requestDisallowInterceptTouchEvent(true);
+		}
 		return true;
 	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent arg0) {
-		Logger.d(this, "onTouchEvent = " + super.onTouchEvent(arg0));
-		return super.onTouchEvent(arg0);
-	}
-
 }

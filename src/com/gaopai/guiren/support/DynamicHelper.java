@@ -618,7 +618,6 @@ public class DynamicHelper {
 		Logger.startCountTime();
 		try {
 			switch (typeBean.type) {
-
 			case TYPE_SPREAD_OTHER_DYNAMIC:
 			case TYPE_SEND_DYNAMIC:
 				if (shouldInflateNew(convertView)) {
@@ -655,7 +654,7 @@ public class DynamicHelper {
 		if (convertView == null) {
 			convertView = buildErrorView();
 		}
-		Logger.time(this, "type=" + typeBean.type + "  getView");
+		Logger.time(this, " type=" + typeBean.type + "  getView");
 		return convertView;
 	}
 

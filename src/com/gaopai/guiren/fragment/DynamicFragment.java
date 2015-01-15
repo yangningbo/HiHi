@@ -59,6 +59,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	@ViewInject(id = R.id.chat_box_edit_keyword)
 	private CustomEditText etComment;
 	private ChatBoxManager chaBoxManager;
+	private EmotionPicker emotionPicker;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,7 +110,7 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		Button emotionBtn = ViewUtil.findViewById(view, R.id.emotion_btn);
 		emotionBtn.setOnClickListener(this);
 		emotionBtn.setVisibility(View.VISIBLE);
-		EmotionPicker emotionPicker = ViewUtil.findViewById(view, R.id.emotion_picker);
+		emotionPicker = ViewUtil.findViewById(view, R.id.emotion_picker);
 		emotionPicker.setEditText(getActivity(), null, etComment);
 		chaBoxManager = new ChatBoxManager(getActivity(), etComment, emotionPicker, emotionBtn);
 		ViewUtil.findViewById(view, R.id.chat_box_btn_switch_voice_text).setOnClickListener(this);
@@ -144,6 +145,19 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				isInitialed = true;
 			}
 		}
+	}
+
+	private void lockListViewHeight() {
+		LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) this.mListView.getLayoutParams();
+		Logger.d(this, "listheight = " + mListView.getHeight());
+		Logger.d(this, "diffheight = " + emotionPicker.getEmotionPickerKeyboardHeightDiff(getActivity()));
+		localLayoutParams.height = mListView.getHeight()
+				- emotionPicker.getEmotionPickerKeyboardHeightDiff(getActivity());
+		localLayoutParams.weight = 0.0F;
+	}
+
+	private void unLockListViewHeight() {
+		((LinearLayout.LayoutParams) this.mListView.getLayoutParams()).weight = 1.0f;
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 
 public class EmotionPicker extends LinearLayout {
@@ -84,11 +85,16 @@ public class EmotionPicker extends LinearLayout {
 	}
 
 	public void show(Activity paramActivity) {
-		 this.mPickerHeight = MyUtils.dip2px(getContext(), 236);
-//		this.mPickerHeight = EmotionUtility.getKeyboardHeight(paramActivity);
-		hideSoftInput(this.mEditText);
+		this.mPickerHeight = MyUtils.dip2px(getContext(), 236);
+		// this.mPickerHeight = EmotionUtility.getKeyboardHeight(paramActivity);
+//		hideSoftInput(this.mEditText);
 		getLayoutParams().height = this.mPickerHeight;
 		setVisibility(View.VISIBLE);
+	}
+
+	public int getEmotionPickerKeyboardHeightDiff(Activity paramActivity) {
+		Logger.d(this, "keyboard height = " + EmotionUtility.getKeyboardHeight(paramActivity));
+		return EmotionUtility.getKeyboardHeight(paramActivity) - MyUtils.dip2px(getContext(), 236);
 	}
 
 	public void hideSoftInput(View paramEditText) {

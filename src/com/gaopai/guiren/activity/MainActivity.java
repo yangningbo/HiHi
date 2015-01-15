@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiApp;
@@ -52,13 +51,12 @@ import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.SPConst;
-import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.utils.UpdateManager;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.slide.DragLayout;
 import com.gaopai.guiren.view.slide.DragLayout.DragListener;
-import com.gaopai.guiren.volley.IResponseListener;
 import com.gaopai.guiren.volley.MyVolley;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
 	private ViewPager mTabPager;
@@ -76,8 +74,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	public final static int UNLOGIN_REQUEST = 1634365;
 	public final static int RESULT_EXIT = 702;
 	public final static int MSG_LOAD_ERROR = 11818;
-	public final static int INVITATION_VERIFY_REQUEST = 12545;
-	public final static int REAL_VERIFY_REQUEST = 12546;
 
 	public final static String ACTION_NETWORK_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 	public static final String ACTION_SHOW_TOAST = "com.guiren.intent.action.ACTION_SHOW_TOAST";
@@ -326,6 +322,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		filter.addAction(LOGIN_SUCCESS_ACTION);
 		filter.addAction(ACTION_SHOW_TOAST);
 		filter.addAction(ACTION_UPDATE_PROFILE);
+		filter.addAction(ACTION_LOGIN_SHOW);
 	}
 
 	@Override
@@ -352,10 +349,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 			startActivityForResult(loginIntent, LOGIN_REQUEST);
 		} else if (LOGIN_SUCCESS_ACTION.equals(action)) {
-			onNewIntent(notifyItent);
-			bindUserView();
-			dragLayout.close();
-			FeatureFunction.startService(MainActivity.this);
+			onLoginSuccess();
 		} else if (ACTION_SHOW_TOAST.equals(action)) {
 			showToast(intent.getStringExtra("toast_msg"));
 		} else if (ACTION_UPDATE_PROFILE.equals(action)) {
@@ -363,13 +357,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		} else if (ACTION_LOGIN_SHOW.equals(action)) {
 			layoutWelcome.setVisibility(View.GONE);
 		}
-	}
-
-	private void onLoginSuccess() {
-		onNewIntent(notifyItent);
-		bindUserView();
-		dragLayout.close();
-		FeatureFunction.startService(MainActivity.this);
 	}
 
 	@Override
@@ -537,8 +524,17 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		super.onPause();
 	}
 
+	private void onLoginSuccess() {
+		onNewIntent(notifyItent);
+		bindUserView();
+		dragLayout.close();
+		FeatureFunction.startService(MainActivity.this);
+		initPage();
+		checkUpdate();
+	}
+
 	private void getLogin() {
-		DamiInfo.hiddenLogin(new IResponseListener() {
+		DamiInfo.hiddenLogin(new SimpleResponseListener(mContext, R.string.loading_login) {
 			@Override
 			public void onSuccess(Object o) {
 				LoginResult data = (LoginResult) o;
@@ -551,34 +547,13 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 						MessageTable table = new MessageTable(db);
 						if (data.data.roomids != null)
 							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
+						onLoginSuccess();
 					}
-					onNewIntent(notifyItent);
-					bindUserView();
-					dragLayout.close();
-					FeatureFunction.startService(MainActivity.this);
-					initPage();
-					checkUpdate();
 					return;
 				} else {
-					String str;
-					if (data.state != null && !StringUtils.isEmpty(data.state.msg)) {
-						str = data.state.msg;
-					} else {
-						str = getString(R.string.login_error);
-					}
-					showToast(str);
+					otherCondition(data.state, MainActivity.this);
 					reLogin();
 				}
-			}
-
-			@Override
-			public void onReqStart() {
-				showProgressDialog(R.string.loading_login);
-			}
-
-			@Override
-			public void onFinish() {
-				removeProgressDialog();
 			}
 
 			@Override
@@ -589,7 +564,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onTimeOut() {
-				// TODO Auto-generated method stub
 				showToast(R.string.request_timeout);
 				reLogin();
 			}
@@ -622,16 +596,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		switch (requestCode) {
 		case LOGIN_REQUEST:
-			if (resultCode == RESULT_EXIT) {// dl repair
+			if (resultCode == RESULT_EXIT) {
 				MainActivity.this.finish();
 				return;
 			} else if (resultCode == RESULT_OK) {
-				initPage();
-				onNewIntent(notifyItent);
-				bindUserView();
-				dragLayout.close();
-				checkUpdate();
-				FeatureFunction.startService(mContext);
+				onLoginSuccess();
 			} else if (resultCode == UNLOGIN_REQUEST) {
 				FeatureFunction.startService(mContext);
 			} else {
@@ -649,13 +618,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 					getLogin();
 				}
 			}
-			break;
-		case INVITATION_VERIFY_REQUEST:
-			sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
-			break;
-
-		case REAL_VERIFY_REQUEST:
-			sendBroadcast(new Intent(LOGIN_SUCCESS_ACTION));
 			break;
 
 		default:
@@ -683,7 +645,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ab_add:
 			if (dropDownView == null) {

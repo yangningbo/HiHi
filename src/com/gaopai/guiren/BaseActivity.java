@@ -60,34 +60,24 @@ public class BaseActivity extends FragmentActivity {
 
 	protected Context mContext;
 
-	/** The tag. */
 	protected String TAG = BaseActivity.class.getSimpleName();
 
-	/** 加载框的文字说明. */
 	private String mProgressMessage = "";
 
-	/** 底部弹出的Dialog. */
 	private Dialog mBottomDialog;
 
-	/** 居中弹出的Dialog. */
 	private Dialog mCenterDialog;
 
-	/** 顶部弹出的Dialog. */
 	private Dialog mTopDialog;
 
-	/** 底部弹出的Dialog的View. */
 	private View mBottomDialogView = null;
 
-	/** 居中弹出的Dialog的View. */
 	private View mCenterDialogView = null;
 
-	/** 顶部弹出的Dialog的View. */
 	private View mTopDialogView = null;
 
-	/** 全局的加载框对象，已经完成初始化. */
 	public ProgressDialog mProgressDialog;
 
-	/** 全局的LayoutInflater对象，已经完成初始化. */
 	public LayoutInflater mInflater;
 
 	public LinearLayout windowLayout = null;

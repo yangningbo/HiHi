@@ -227,9 +227,6 @@ public abstract class BaseShareFragment extends Fragment implements CancelInterf
 			if (data.state != null && data.state.code == 0) {
 				mListView.setHasMoreData(false);
 				if (data.data != null && data.data.size() > 0) {
-					// if (isRefresh) {
-					// mAdapter.clear();
-					// }
 					searchHolder.addData(data);
 				}
 			} else {

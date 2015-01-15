@@ -88,13 +88,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	private BaseInfo mUser;
 	public static final String SINA_APP_KEY = "609349870";
 	public static final String SINA_REDIRECT_URL = "http://www.kaopuhui.com/dami";
-	public static final String SCOPE = "email,direct_messages_read,direct_messages_write,"
-			+ "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
-			+ "follow_app_official_microblog," + "invitation_write";
-
-	private ImageView mAgreeProtocalView;
-	private static final String SINA_USER_INFO_URL = "https://api.weibo.com/2/users/show.json";
-	public SharedPreferences mPreferences;
 	public final static int INVITATION_VERIFY_REQUEST = 12545;
 	public final static int REAL_VERIFY_REQUEST = 12546;
 
@@ -108,6 +101,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Logger.startCountTime();
 		initTitleBar();
 		setAbContentView(R.layout.activity_login);
 		mTitleBar.setTitleText(R.string.login);
@@ -117,6 +111,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Logger.time(this, "loginCreatTime");
 		sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_SHOW));
 	}
 
@@ -138,7 +133,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	}
 
 	private void initComponent() {
-		mPreferences = this.getSharedPreferences(DamiCommon.REMENBER_SHARED, 0);
 
 		btnQQLogin = (Button) findViewById(R.id.btn_qq_login);
 		btnWeiboLogin = (Button) findViewById(R.id.btn_weibo_login);
@@ -188,7 +182,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 				return;
 			}
 			getQQLogin();
-			// getWeixinLogin();
 			break;
 		case R.id.btn_weixin_login:
 			if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
@@ -233,7 +226,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	}
 
 	private void customLogin() {
-		// TODO Auto-generated method stub
 		String userName = etUserName.getText().toString();
 		String password = etPassword.getText().toString();
 		if (TextUtils.isEmpty(password) || TextUtils.isEmpty(userName)) {
@@ -468,6 +460,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		});
 
 	}
+	
 
 	private boolean showRecomendPage() {
 		return DamiApp.getInstance().getPou().getBoolean(SPConst.getRecKey(mContext), true);

@@ -127,52 +127,6 @@ public class BaseFragment extends Fragment implements OnClickListener {
 		super.onResume();
 	}
 
-
-	// /**
-	// * 系统自带的activity启动方式
-	// */
-	// public void startDefaultActivity(Intent intent) {
-	// super.startActivity(intent);
-	// }
-	//
-	// public void startDefaultActivityForResult(Intent intent, int requestCode)
-	// {
-	// super.startActivityForResult(intent, requestCode);
-	// }
-	//
-	// /**
-	// * 自定义启动activity的方式，向左滑动出来
-	// */
-	// @Override
-	// public void startActivity(Intent intent) {
-	// super.startActivity(intent);
-	// act.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-	// }
-	//
-	// /**
-	// * 自定义启动activity的方式，向左滑动出来
-	// */
-	// @Override
-	// public void startActivityForResult(Intent intent, int requestCode) {
-	// super.startActivityForResult(intent, requestCode);
-	// act.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-	// }
-	//
-	// /**
-	// * 自定义关闭activity的方式，向右滑动出去
-	// */
-	// public void finish() {
-	// act.overridePendingTransition(R.anim.push_right_in,
-	// R.anim.push_right_out);
-	// }
-	//
-	// /**
-	// * 系统自带的activity启动方式
-	// */
-	// public void defaultFinish() {
-	// act.finish();
-	// }
-
 	/** 通过Class跳转界面 **/
 	protected void startActivity(Class<?> cls) {
 		startActivity(cls, null);

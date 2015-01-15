@@ -65,19 +65,25 @@ public class ChatBoxManager {
 			showSoftKeyboard();
 		} else {
 			hideAddGrid();
-			showEmotion();
+			hideSoftKeyboard();
+			mEmotionPicker.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					showEmotion();
+				}
+			}, 200L);
 			/**
-			 * force listview scroll to bottom when show emotion
-			 * need to be refactored
+			 * force listview scroll to bottom when show emotion need to be
+			 * refactored
 			 */
-			if (mCallback != null) {
-				mEmotionPicker.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						mCallback.onShowKeyBoard();
-					}
-				}, 200L);
-			}
+			// if (mCallback != null) {
+			// mEmotionPicker.postDelayed(new Runnable() {
+			// @Override
+			// public void run() {
+			// mCallback.onShowKeyBoard();
+			// }
+			// }, 200L);
+			// }
 		}
 	}
 
