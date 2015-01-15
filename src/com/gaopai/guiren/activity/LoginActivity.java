@@ -108,13 +108,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// initShare();
-		Logger.d(this, "taskid = " + this.getTaskId());
 		initTitleBar();
 		setAbContentView(R.layout.activity_login);
 		mTitleBar.setTitleText(R.string.login);
 		initComponent();
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_SHOW));
+	}
+
 
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {

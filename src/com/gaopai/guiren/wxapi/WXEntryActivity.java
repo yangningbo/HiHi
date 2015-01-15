@@ -24,45 +24,45 @@ public class WXEntryActivity extends WXCallbackActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Logger.d(this, "taskid = " + this.getTaskId());
 		handleIntent(getIntent());
 	}
 
 	@Override
 	protected void handleIntent(Intent intent) {
-		// TODO Auto-generated method stub
 		SendAuth.Resp resp = new SendAuth.Resp(intent.getExtras());
-		Logger.d(this, "resp.errCode:" + resp.errCode + ",resp.errStr:" + resp.errStr + " resp=" + resp.state);
 		if (resp.errCode == BaseResp.ErrCode.ERR_OK) {
-			Logger.d(this, "code==================" + resp.code);
 			if (resp.state == null || !resp.state.equals("wxlogin")) {
 				super.handleIntent(intent);
 				return;
 			}
+			// Login with wechat
 			showProgressDialog(getString(R.string.request_internet_now));
 			DamiInfo.getWxAccessToken(ShareManager.APPID_WECHAT, ShareManager.APPSECRET_WECHAT, resp.code,
 					new SimpleResponseListener(this) {
 						@Override
 						public void onSuccess(Object o) {
 							TokenBean data = (TokenBean) o;
-							if (data != null && !TextUtils.isEmpty(data.access_token)) {
-								DamiInfo.getWxUserInfo(data.access_token, data.openid, new SimpleResponseListener(
-										WXEntryActivity.this) {
-									@Override
-									public void onSuccess(Object o) {
-										WxUserInfo userInfo = (WxUserInfo) o;
-										if (TextUtils.isEmpty(userInfo.openid)) {
-											WXEntryActivity.this.finish();
-											return;
-										}
-										Intent intent = new Intent(ACTION_LOGIN_WECHAT);
-										intent.putExtra("data", userInfo);
-										WXEntryActivity.this.sendBroadcast(intent);
-										WXEntryActivity.this.finish();
-										removeProgressDialog();
-									}
-								});
+							if (data == null || TextUtils.isEmpty(data.access_token)) {
+								WXEntryActivity.this.finish();
+								return;
 							}
+							DamiInfo.getWxUserInfo(data.access_token, data.openid, new SimpleResponseListener(
+									WXEntryActivity.this) {
+								@Override
+								public void onSuccess(Object o) {
+									WxUserInfo userInfo = (WxUserInfo) o;
+									if (TextUtils.isEmpty(userInfo.openid)) {
+										WXEntryActivity.this.finish();
+										return;
+									}
+									Intent intent = new Intent(ACTION_LOGIN_WECHAT);
+									intent.putExtra("data", userInfo);
+									WXEntryActivity.this.sendBroadcast(intent);
+									WXEntryActivity.this.finish();
+									removeProgressDialog();
+								}
+							});
+
 						}
 					});
 		}

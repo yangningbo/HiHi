@@ -47,7 +47,7 @@ public class EmotionManager {
 		}
 	}
 	public LinkedHashMap<String, Bitmap> getAllEmotionsPics() {
-		if (allEmotions != null) {
+		if (allEmotions.size() > 0) {
 			return allEmotions;
 		} else {
 			getEmotionsTask();

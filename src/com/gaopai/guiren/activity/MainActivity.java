@@ -63,7 +63,6 @@ import com.gaopai.guiren.volley.MyVolley;
 public class MainActivity extends BaseActivity implements OnClickListener {
 	private ViewPager mTabPager;
 	private ArrayList<Fragment> pagerItemList = null;
-	private int currIndex = 0;
 	private int pagerCount;
 	private LinearLayout main_bottom;
 	private Fragment page1;
@@ -92,29 +91,48 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	public static final String ACTION_CHAT_TRIBE = "com.guiren.intent.action.ACTION_CHAT_TRIBE";
 	public static final String ACTION_NOTIFY_SYSTEM = "com.guiren.intent.action.ACTION_NOTIFY_SYSTEM";
 
+	public static final String ACTION_LOGIN_SHOW = "com.guiren.intent.action.ACTION_LOGIN_SHOW";
+
 	private View layoutWelcome;
 
 	private Intent notifyItent;
+
+	/**
+	 * Initialize the MainActivity will take a long time, so I chose to embed
+	 * welcome page in this activity to avoid a short-time black screen in
+	 * transition. At the same time, a timer with 3 seconds delay is set up to
+	 * hide welcome page and determine whether to show loginActivity (if token
+	 * has expired) or stay in this page. For the first choice, we won't hide
+	 * the welcome page until the loginActivity has run the method of onResume
+	 * which will send an Intent with ACTION_LOGIN_SHOW.
+	 */
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		notifyItent = getIntent();
 		setContentView(R.layout.activity_main);
+		initComponent();
+		showWelcomePage();
+		showMainpage();
+	}
+
+	private void initComponent() {
 		addTitleBar();
 		initTitleBarLocal();
 		initDragLayout();
 		mTabPager = (ViewPager) findViewById(R.id.vPager);
 		main_bottom = (LinearLayout) findViewById(R.id.main_bottom);
-
 		layoutWelcome = ViewUtil.findViewById(this, R.id.layout_welcome);
+	}
+
+	private void showWelcomePage() {
 		ImageView view = (ImageView) findViewById(R.id.iv_back);
 		TextView welcome = (TextView) findViewById(R.id.tv_welcome_info);
 		welcome.setText(getWelcomeStr());
 		view.setImageDrawable(getWelcomeRandomDrawable());
 		Animation welcomeAnimation = AnimationUtils.loadAnimation(this, R.anim.welcome_scale);
 		view.startAnimation(welcomeAnimation);
-		showMainpage();
 	}
 
 	private String getWelcomeStr() {
@@ -135,17 +153,17 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				layoutWelcome.setVisibility(View.GONE);
 				if (!startGuidePage()) {
 					if (TextUtils.isEmpty(DamiCommon.getToken(mContext))) {
 						Intent intent = new Intent(mContext, LoginActivity.class);
 						startActivityForResult(intent, LOGIN_REQUEST);
 					} else {
 						getLogin();
+						layoutWelcome.setVisibility(View.GONE);
 					}
 				}
 			}
-		}, 4000);
+		}, 3000);
 	}
 
 	private void addTitleBar() {
@@ -180,7 +198,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onDrag(float percent) {
-				 ((DynamicFragment) page2).hideChatBox();
+				((DynamicFragment) page2).hideChatBox();
 			}
 		});
 
@@ -210,7 +228,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		view.setOnClickListener(slideMenuClickListener);
 		view = (View) findViewById(R.id.slide_btn_setting);
 		view.setOnClickListener(slideMenuClickListener);
-
 	}
 
 	private void bindUserView() {
@@ -304,19 +321,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void registerReceiver(IntentFilter filter) {
-		// TODO Auto-generated method stub
 		filter.addAction(ACTION_NETWORK_CHANGE);
-		// filter.addAction(EXIT_ACTION);
-		// filter.addAction(ACTION_REFRESH_NOTIFIY);
-		// filter.addAction(ACTION_UPDATE_NOTIFY_SESSION_COUNT);
-		// filter.addAction(ACTION_UPDATE_TRIBE_SESSION_COUNT);
-		// filter.addAction(ACTION_UPDATE_MESSAGE_SESSION_COUNT);
-		// filter.addAction(ACTION_UPDATE_MEETING_SESSION_COUNT);
-		// filter.addAction(ACTION_CALLBACK);
-		// filter.addAction(ACTION_REFRESH_FRIEND);
 		filter.addAction(ACTION_LOGIN_OUT);
 		filter.addAction(LOGIN_SUCCESS_ACTION);
-		// filter.addAction(SYSTEM_EXIT);
 		filter.addAction(ACTION_SHOW_TOAST);
 		filter.addAction(ACTION_UPDATE_PROFILE);
 	}
@@ -332,16 +339,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			if (activeNetInfo != null) {
 				if (activeNetInfo.isConnected()) {
 					isNetConnect = true;
-					Toast.makeText(mContext,
-							getResources().getString(R.string.message_net_connect) + activeNetInfo.getTypeName(),
-							Toast.LENGTH_SHORT).show();
+					showToast(getString(R.string.message_net_connect) + activeNetInfo.getTypeName());
 				} else {
-					Toast.makeText(mContext,
-							getResources().getString(R.string.network_error) + " " + activeNetInfo.getTypeName(),
-							Toast.LENGTH_SHORT).show();
+					showToast(getResources().getString(R.string.network_error) + " " + activeNetInfo.getTypeName());
 				}
 			} else {
-				Toast.makeText(mContext, getResources().getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+				showToast(R.string.network_error);
 			}
 			DamiCommon.setNetWorkState(isNetConnect);
 		} else if (ACTION_LOGIN_OUT.equals(action)) {
@@ -354,11 +357,19 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			dragLayout.close();
 			FeatureFunction.startService(MainActivity.this);
 		} else if (ACTION_SHOW_TOAST.equals(action)) {
-			String str = intent.getStringExtra("toast_msg");
-			showToast(str);
+			showToast(intent.getStringExtra("toast_msg"));
 		} else if (ACTION_UPDATE_PROFILE.equals(action)) {
 			bindUserView();
+		} else if (ACTION_LOGIN_SHOW.equals(action)) {
+			layoutWelcome.setVisibility(View.GONE);
 		}
+	}
+
+	private void onLoginSuccess() {
+		onNewIntent(notifyItent);
+		bindUserView();
+		dragLayout.close();
+		FeatureFunction.startService(MainActivity.this);
 	}
 
 	@Override
@@ -367,6 +378,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			return;
 		}
 		String action = intent.getAction();
+		if (action == null) {
+			return;
+		}
 		if (ACTION_CHAT_PRIVATE.equals(action)) {
 			intent.setClass(mContext, ChatMessageActivity.class);
 			mContext.startActivity(intent);
@@ -421,14 +435,12 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
-			// ((ConnectionFragment) page3).hideIndexedTextWhenChangePage();
 		}
 
 		@Override
 		public void onPageSelected(int arg0) {
 			setTitleBarText(arg0);
 			changeBg(arg0);
-			currIndex = arg0;
 		}
 	}
 
@@ -465,33 +477,30 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-	/**
-	 * @param arg0
-	 */
-	public void changeBg(int arg0) {
+	public void changeBg(int page) {
 		for (int i = 0; i < pagerCount; i++) {
-			int imgId = getResources().getIdentifier("img_" + (i + 1), "id", MainActivity.this.getPackageName());
-			int rlId = getResources().getIdentifier("layout_tab_indicator" + (i + 1), "id",
-					MainActivity.this.getPackageName());
-			int textId = getResources().getIdentifier("title_" + (i + 1), "id", MainActivity.this.getPackageName());
-			RelativeLayout rl = (RelativeLayout) findViewById(rlId);
-			ImageView iv = (ImageView) findViewById(imgId);
-			TextView tv = (TextView) findViewById(textId);
-			rl.setOnClickListener(new MyOnClickListener(i));
-			int resId = getResources().getIdentifier("tabbar_item" + i + "_d", "drawable",
-					MainActivity.this.getPackageName());
-			Drawable drawable = getResources().getDrawable(resId);
-			int resId2 = getResources().getIdentifier("tabbar_item" + i + "_n", "drawable",
-					MainActivity.this.getPackageName());
-			Drawable drawable2 = getResources().getDrawable(resId2);
-			if (arg0 == i) {
-				iv.setImageDrawable(drawable);
+			RelativeLayout layout = (RelativeLayout) findViewById(getId("layout_tab_indicator" + (i + 1)));
+			ImageView iv = (ImageView) findViewById(getId("img_" + (i + 1)));
+			TextView tv = (TextView) findViewById(getId("title_" + (i + 1)));
+			layout.setOnClickListener(new MyOnClickListener(i));
+			Drawable drawableDown = getResources().getDrawable(getDrawableId("tabbar_item" + i + "_d"));
+			Drawable drawableNormal = getResources().getDrawable(getDrawableId("tabbar_item" + i + "_n"));
+			if (page == i) {
+				iv.setImageDrawable(drawableDown);
 				tv.setTextColor(getResources().getColor(R.color.tab_text_d_color));
 			} else {
-				iv.setImageDrawable(drawable2);
+				iv.setImageDrawable(drawableNormal);
 				tv.setTextColor(getResources().getColor(R.color.tab_text_n_color));
 			}
 		}
+	}
+
+	private int getId(String name) {
+		return getResources().getIdentifier(name, "id", MainActivity.this.getPackageName());
+	}
+
+	private int getDrawableId(String name) {
+		return getResources().getIdentifier(name, "drawable", MainActivity.this.getPackageName());
 	}
 
 	public int getBottomHeight() {
@@ -509,7 +518,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		Logger.d(this, "onResume");
 		bindUserView();
 	}
 
@@ -597,11 +605,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		startActivityForResult(intent, LOGIN_REQUEST);
 	}
 
-	/**
-	 * 根据版本判断是否显示引导界面
-	 * 
-	 * @return isShowGudie ture显示
-	 */
 	private boolean startGuidePage() {
 		boolean isShowGudie = false;
 		int result = DamiApp.getInstance().getPou().getInt(SPConst.KEY_GUIDE_START_PAGE, 0);
