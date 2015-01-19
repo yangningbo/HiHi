@@ -578,9 +578,15 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 
 		@Override
 		public void onRecording(int volume, float time) {
-			Log.d(TAG, "call back recording" + volume + "  " + time);
 			if (recordDialog.isShowing()) {
 				recordDialog.setDialogImg(volume);
+			}
+			if (time > SpeexRecorderWrapper.MAX_TIME - 10) {
+				recordDialog.setCountDownTime((int) (SpeexRecorderWrapper.MAX_TIME - time));
+			}
+			if (time > SpeexRecorderWrapper.MAX_TIME) {
+				speexRecorder.stop();
+				recordDialog.cancelDialog();
 			}
 		}
 	};

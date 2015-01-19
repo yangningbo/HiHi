@@ -228,6 +228,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		});
 	}
+
 	private void showGetIdentityDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.identity_name);
@@ -511,6 +512,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			if (recordDialog.isShowing()) {
 				recordDialog.setDialogImg(volume);
 			}
+			if (time > SpeexRecorderWrapper.MAX_TIME - 10) {
+				recordDialog.setCountDownTime((int) (SpeexRecorderWrapper.MAX_TIME - time));
+			}
+			if (time > SpeexRecorderWrapper.MAX_TIME) {
+				speexRecorder.stop();
+				recordDialog.cancelDialog();
+			}
 		}
 	};
 
@@ -638,7 +646,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		commentCountText = (TextView) view.findViewById(R.id.chat_comment_count);
 		likeCountText = (TextView) view.findViewById(R.id.chat_zan_count);
 		likeCountText.setText(String.valueOf(messageInfo.agreeCount));
-		
+
 		favouriteCountText = (TextView) view.findViewById(R.id.chat_favourite_count);
 		favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
 
@@ -1449,9 +1457,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				tempInfo.id = messageInfo.id;
 				tempInfo.time = messageInfo.time;
 				/**
-				 * Avoid updating picture location after sending success, it
-				 * may lead to a new http request. Just save the information
-				 * into database and fetch from Internet next time.
+				 * Avoid updating picture location after sending success, it may
+				 * lead to a new http request. Just save the information into
+				 * database and fetch from Internet next time.
 				 */
 				tempInfo.imgUrlS = messageInfo.imgUrlS;
 				tempInfo.imgUrlL = messageInfo.imgUrlL;

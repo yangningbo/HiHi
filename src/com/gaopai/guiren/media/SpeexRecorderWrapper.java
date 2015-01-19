@@ -11,7 +11,7 @@ import com.gaopai.guiren.utils.MyUtils;
 public class SpeexRecorderWrapper {
 
 	public static final int MIN_TIME = 2; // 录音的下线
-	public static final int MAX_TIME = 60; // 录音的下线
+	public static final int MAX_TIME = 20; // 录音的下线
 
 	private SpeexRecorder recorder;
 	private MediaUIHeper.RecordCallback recordCallback;
@@ -22,6 +22,9 @@ public class SpeexRecorderWrapper {
 	private String recordPath;
 	private boolean isCancelByUser = false;
 
+	// when count down time to zero while releasing the record button, avoid
+	// send voice twice
+	private boolean hasSend = false;
 
 	public SpeexRecorderWrapper(Context context) {
 		mContext = context;
@@ -42,25 +45,30 @@ public class SpeexRecorderWrapper {
 		if (recordCallback != null) {
 			uiHeper.onStart();
 		}
+		hasSend = false;
 	}
 
 	public void stop() {
+		if (hasSend) {
+			return;
+		}
 		recorder.setRecording(false);
 		if (recordTime <= MIN_TIME || isCancelByUser) {
 			File file = new File(recordPath);
-			if(file.exists()) {
+			if (file.exists()) {
 				file.delete();
 			}
-			if(recordTime < SpeexRecorderWrapper.MIN_TIME) {
+			if (recordTime < SpeexRecorderWrapper.MIN_TIME) {
 				Toast.makeText(mContext, mContext.getString(R.string.record_time_too_short), Toast.LENGTH_SHORT).show();
 			}
 			return;
 		}
+		hasSend = true;
 		if (recordCallback != null) {
 			uiHeper.onRecordStop(recordTime, recordPath);
 		}
 	}
-	
+
 	private class RecordTimeThread implements Runnable {
 
 		@Override
@@ -90,20 +98,17 @@ public class SpeexRecorderWrapper {
 	public int getVolume() {
 		return recorder.getVolum();
 	}
-	
-	public void setCancelByUser(boolean isCancel) {		
+
+	public void setCancelByUser(boolean isCancel) {
 		isCancelByUser = isCancel;
 	}
-	
+
 	public String getRecordPath() {
 		return recordPath;
 	}
-	
+
 	public float getRecordTime() {
 		return recordTime;
 	}
-
-	
-	
 
 }

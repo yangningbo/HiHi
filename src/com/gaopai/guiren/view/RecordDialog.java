@@ -12,49 +12,61 @@ import android.widget.TextView;
 import com.gaopai.guiren.R;
 
 public class RecordDialog {
-	
+
 	private ImageView recordView;
 	private Dialog dialog = null;
 	private ImageView mDialogBackground;
 	private TextView tvInfo;
-	
+
 	private Context context;
+	
+	private String recordInfoStr;
+	private boolean isInCancelView = false;
+
 	public RecordDialog(Context context) {
 		this.context = context;
 		intDialog();
 	}
-	
-	private void intDialog(){
+
+	private void intDialog() {
 		dialog = new Dialog(context, R.style.DialogPrompt);
 		dialog.setContentView(R.layout.chat_voice_dialog);
 		recordView = (ImageView) dialog.findViewById(R.id.iv_dialog_record);
 		tvInfo = (TextView) dialog.findViewById(R.id.tv_record_info);
 		mDialogBackground = (ImageView) dialog.findViewById(R.id.chat_voice);
+		recordInfoStr = context.getString(R.string.move_up_cancel_voice);
 	}
-	
+
 	public void showDialog() {
-		if(dialog.isShowing()){
+		if (dialog.isShowing()) {
 			dialog.cancel();
 		}
+		recordInfoStr = context.getString(R.string.move_up_cancel_voice);
 		showRecordView();
 		dialog.show();
 	}
-	
+
 	public void cancelDialog() {
-		if(dialog.isShowing()){
+		if (dialog.isShowing()) {
 			dialog.cancel();
 		}
 	}
-	
+
+	public void setCountDownTime(int countDownTime) {
+		recordInfoStr = "还可录音" + countDownTime + "秒";
+		if (!isInCancelView) {
+			tvInfo.setText(recordInfoStr);
+		}
+	}
+
 	public void setDialogImg(double amplitude) {
-		Log.d("ss", "volume="+amplitude);
 		int index = 100;
 		if (0 <= amplitude && amplitude < index) {
 			mDialogBackground.setImageResource(R.drawable.amp1);
-			
+
 		} else if (index <= amplitude && amplitude < index * 2) {
 			mDialogBackground.setImageResource(R.drawable.amp2);
-		
+
 		} else if (index * 2 <= amplitude && amplitude < index * 3) {
 			mDialogBackground.setImageResource(R.drawable.amp3);
 		} else if (index * 3 <= amplitude && amplitude < index * 4) {
@@ -67,58 +79,31 @@ public class RecordDialog {
 			mDialogBackground.setImageResource(R.drawable.amp7);
 		}
 	}
-//	public void setDialogImg(double amplitude) {
-//		Log.d("ss", "volume="+amplitude);
-//		int index = 2333;
-//		if (0 <= amplitude && amplitude < index) {
-//			mDialogBackground.setImageResource(R.drawable.amp1);
-//		} else if (index <= amplitude && amplitude < index * 2) {
-//			mDialogBackground.setImageResource(R.drawable.amp2);
-//		} else if (index * 2 <= amplitude && amplitude < index * 3) {
-//			mDialogBackground.setImageResource(R.drawable.amp2);
-//		} else if (index * 3 <= amplitude && amplitude < index * 4) {
-//			mDialogBackground.setImageResource(R.drawable.amp3);
-//		} else if (index * 4 <= amplitude && amplitude < index * 5) {
-//			mDialogBackground.setImageResource(R.drawable.amp3);
-//		} else if (index * 5 <= amplitude && amplitude < index * 6) {
-//			mDialogBackground.setImageResource(R.drawable.amp4);
-//		} else if (index * 6 <= amplitude && amplitude < index * 7) {
-//			mDialogBackground.setImageResource(R.drawable.amp4);
-//		} else if (index * 7 <= amplitude && amplitude < index * 8) {
-//			mDialogBackground.setImageResource(R.drawable.amp5);
-//		} else if (index * 8 <= amplitude && amplitude < index * 9) {
-//			mDialogBackground.setImageResource(R.drawable.amp5);
-//		} else if (index * 9 <= amplitude && amplitude < index * 10) {
-//			mDialogBackground.setImageResource(R.drawable.amp6);
-//		} else if (index * 10 <= amplitude && amplitude < index * 11) {
-//			mDialogBackground.setImageResource(R.drawable.amp6);
-//		} else if (index * 11 <= amplitude && amplitude < index * 12) {
-//			mDialogBackground.setImageResource(R.drawable.amp7);
-//		}
-//	}
-	
+
 	public void showCancalView() {
 		mDialogBackground.setVisibility(View.GONE);
 		recordView.setImageResource(R.drawable.icon_rec_dialog_recylebin);
 		tvInfo.setText(R.string.remove_cancel_voice);
 		tvInfo.setBackgroundResource(R.drawable.icon_dialog_rec_text_background);
+		isInCancelView = true;
 	}
-	
+
 	public void showRecordView() {
 		mDialogBackground.setVisibility(View.VISIBLE);
-		tvInfo.setText(R.string.move_up_cancel_voice);
+		tvInfo.setText(recordInfoStr);
 		tvInfo.setBackgroundColor(Color.TRANSPARENT);
 		recordView.setImageResource(R.drawable.icon_rec_dialog_record);
+		isInCancelView = false;
 	}
-	
+
 	public boolean isShowing() {
 		return dialog.isShowing();
 	}
-	
-	public View getDialogView () {
+
+	public View getDialogView() {
 		return dialog.getWindow().findViewById(R.id.dialog_view);
 	}
-	
+
 	private Rect dialogRect = new Rect();
 	private int[] voicePos = new int[2];
 
