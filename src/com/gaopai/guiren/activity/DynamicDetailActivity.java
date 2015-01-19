@@ -65,6 +65,9 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		dynamicHelper.setCallback(callback);
 		mTitleBar.setTitleText("动态详情");
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		View view = mTitleBar.addRightTextView(R.string.report);
+		view.setId(R.id.ab_report);
+		view.setOnClickListener(this);
 		user = DamiCommon.getLoginResult(mContext);
 		typeBean = (TypeHolder) getIntent().getSerializableExtra(KEY_TYPEHOLDER);
 		if (typeBean == null) {
@@ -347,6 +350,9 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.ab_report:
+			startActivity(ReportPeopleActivity.getIntent(mContext, "13"));
+			break;
 		case R.id.emotion_btn:
 			chaBoxManager.emotionClick();
 			break;

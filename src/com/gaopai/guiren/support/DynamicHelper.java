@@ -37,6 +37,7 @@ import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.activity.ShowImagesActivity;
+import com.gaopai.guiren.activity.SpreadDynamicActivity;
 import com.gaopai.guiren.activity.TribeDetailActivity;
 import com.gaopai.guiren.activity.WebActivity;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -383,7 +384,8 @@ public class DynamicHelper {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				spread(typeHolder);
+				mContext.startActivity(SpreadDynamicActivity.getIntent(mContext, typeHolder));
+//				spread(typeHolder);
 				actionWindow.dismiss();
 			}
 		});

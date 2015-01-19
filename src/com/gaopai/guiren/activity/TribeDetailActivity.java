@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,7 +33,6 @@ import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.Tribe.Member;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
-import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.MessageHelper;
@@ -43,7 +41,6 @@ import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.support.ShareManager.CallDyback;
 import com.gaopai.guiren.support.TagWindowManager;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -66,7 +63,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 	private MyGridLayout mlUserLayout;
 
-	private Button btnSpread;
+	private Button btnEnterTribe;
 	private Button btnOnLook;
 	private Button btnApplyJoin;
 	private Button btnExitTribe;
@@ -112,6 +109,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		tagWindowManager = new TagWindowManager(this, true, null);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.tribe_detail);
+		View shareView = mTitleBar.addRightButtonView(R.drawable.selector_titlebar_share);
+		shareView.setId(R.id.ab_share);
+		shareView.setOnClickListener(this);
 
 		tvTribeTitle = (TextView) findViewById(R.id.tv_tibe_title);
 		tvTribeInfo = (TextView) findViewById(R.id.tv_tribe_detail);
@@ -121,8 +121,8 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		mlUserLayout = (MyGridLayout) findViewById(R.id.ml_tribe_users);
 		mlUserLayout.setOnClickListener(this);
 
-		btnSpread = (Button) findViewById(R.id.btn_spread);
-		btnSpread.setOnClickListener(this);
+		btnEnterTribe = (Button) findViewById(R.id.btn_spread);
+		btnEnterTribe.setOnClickListener(this);
 		btnOnLook = (Button) findViewById(R.id.btn_on_look);
 		btnOnLook.setOnClickListener(this);
 		btnApplyJoin = (Button) findViewById(R.id.btn_want_in_tribe);
@@ -260,6 +260,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 			btnApplyJoin.setVisibility(View.GONE);
 			layoutAdmin.setVisibility(View.VISIBLE);
 			btnOnLook.setText(getString(R.string.invite));
+			btnEnterTribe.setEnabled(true);
 		} else {
 			layoutAdmin.setVisibility(View.GONE);
 			if (mTribe.isjoin == 1) {
@@ -267,9 +268,12 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 				btnOnLook.setText(getString(R.string.invite));
 				btnApplyJoin.setVisibility(View.GONE);
 				btnExitTribe.setVisibility(View.VISIBLE);
+				btnEnterTribe.setEnabled(true);
 			} else {
 				layoutSetting.setVisibility(View.GONE);
 				btnOnLook.setText(getString(R.string.onlooker));
+				btnEnterTribe.setEnabled(false);
+				//privacy tribe is forbidden to have onlookers
 				if (mTribe.type == 2) {
 					btnOnLook.setEnabled(false);
 				} else {
@@ -396,6 +400,9 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_spread:
+			startActivity(ChatTribeActivity.getIntent(mContext, mTribe, ChatTribeActivity.CHAT_TYPE_TRIBE));
+			break;
+		case R.id.ab_share:
 			if (mTribe == null) {
 				return;
 			}

@@ -6,13 +6,10 @@ import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import u.aly.ac;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -28,7 +25,6 @@ import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,10 +57,6 @@ import com.umeng.socialize.controller.listener.SocializeListeners.UMAuthListener
 import com.umeng.socialize.controller.listener.SocializeListeners.UMDataListener;
 import com.umeng.socialize.exception.SocializeException;
 import com.umeng.socialize.sso.UMSsoHandler;
-
-/**
- * 登录界面。包括微博，qq
- */
 public class LoginActivity extends BaseActivity implements OnClickListener, OnTouchListener {
 
 	private Button btnQQLogin;

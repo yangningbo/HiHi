@@ -12,6 +12,7 @@
     <item name="ab_add" type="id"/>
     <item name="ab_setting" type="id"/>
     <item name="ab_share" type="id"/>
+    <item name="ab_report" type="id"/>
     <!--  -->
     <item name="ab_complete" type="id"/>
     <item name="ab_chat_more" type="id"/>

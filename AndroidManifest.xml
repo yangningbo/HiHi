@@ -185,12 +185,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.chat.ChatTribeActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.gaopai.guiren.activity.chat.ChatMessageActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -267,6 +265,9 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.gaopai.guiren.activity.share.ShareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.gaopai.guiren.activity.share.SpreadDynamicActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.WebActivity"

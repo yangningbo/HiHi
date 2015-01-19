@@ -184,6 +184,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		Intent intent = new Intent(context, ChatTribeActivity.class);
 		intent.putExtra(KEY_TRIBE, tribe);
 		intent.putExtra(KEY_CHAT_TYPE, type);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		return intent;
 	}
 

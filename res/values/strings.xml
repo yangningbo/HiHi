@@ -451,7 +451,6 @@
     <string name="refuse_become_host">拒绝成为主持人</string>
     <string name="refuse_become_guest">拒绝成为嘉宾</string>
     <string name="meeting_detail">会议详情</string>
-    <string name="enter_tribe">进入圈子</string>
     <string name="kick_out_meeting">踢出会场</string>
     <string name="talk">发言</string>
     <string name="remove_success">移除成功</string>
@@ -648,6 +647,7 @@
     <string name="create_tribe">创建圈子 </string>
     <string name="edit_meeting">修改会议</string>
     <string name="edit_tribe">修改圈子</string>
+    <string name="enter_tribe">进入圈子</string>
 
     <!-- action -->
     <string name="zan">赞</string>
