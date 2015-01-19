@@ -12,6 +12,7 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.utils.Constant;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
@@ -19,6 +20,8 @@ import com.umeng.socialize.weixin.view.WXCallbackActivity;
 
 public class WXEntryActivity extends WXCallbackActivity {
 	public final static String ACTION_LOGIN_WECHAT = "com.guiren.intent.action.ACTION_LOGIN_WECHAT";
+	
+	private boolean hasReceivedIntent = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class WXEntryActivity extends WXCallbackActivity {
 				return;
 			}
 			// Login with wechat
+			hasReceivedIntent = true;
 			showProgressDialog(getString(R.string.request_internet_now));
 			DamiInfo.getWxAccessToken(ShareManager.APPID_WECHAT, ShareManager.APPSECRET_WECHAT, resp.code,
 					new SimpleResponseListener(this) {

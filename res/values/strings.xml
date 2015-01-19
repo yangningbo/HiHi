@@ -145,7 +145,7 @@
     <string name="input_message_hint">输入消息</string>
     <string name="get_voice">发送了一条语音</string>
     <string name="get_location">发来位置信息</string>
-    <string name="record_time_too_short">录制时间小于2秒</string>
+    <string name="record_time_too_short">录制时间小于1秒</string>
     <string name="record_time_too_long">录制时间超过60秒</string>
     <string name="record_failed">录音失败!</string>
     <string name="file_not_exist">文件不存在</string>

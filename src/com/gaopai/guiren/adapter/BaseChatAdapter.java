@@ -469,7 +469,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			Logger.d(this, "stop===" + stopAutomatic);
 			if (stopAutomatic) {
 				int nextPosition = palyedPosition + 1;
-				if (nextPosition < getCount()) {
+				while (nextPosition < getCount()) {
 					MessageInfo messageInfo = mData.get(nextPosition);
 					if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0) {
 						palyedPosition = nextPosition;
@@ -477,6 +477,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 						mPlayerWrapper.start(messageInfo);
 						return;
 					}
+					nextPosition = nextPosition + 1;
 				}
 				notifyDataSetChanged();// 通知播放动画
 			} else {

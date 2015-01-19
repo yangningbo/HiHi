@@ -20,9 +20,29 @@
         android:layout_toRightOf="@id/iv_header"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="厚度和"
         android:textColor="@color/general_text_blue"
         android:textSize="16sp" />
+
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/layout_right_view_holder"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" >
+
+        <ImageView
+            android:id="@+id/iv_pic"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/default_header"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tv_info"
@@ -30,28 +50,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title"
         android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@id/layout_right_view_holder"
         android:layout_toRightOf="@id/iv_header"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="厚度和"
         android:textSize="14sp" />
-
-    <ImageView
-        android:id="@+id/iv_pic"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/default_header"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tv_content"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_date"

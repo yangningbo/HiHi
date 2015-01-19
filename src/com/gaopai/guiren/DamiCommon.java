@@ -436,31 +436,6 @@ public class DamiCommon {
 		return promptList;
 	}
 
-	public static void showLevel(int integral, LinearLayout levelLayout, int size, int margin) {
-		int sunCount = integral / DamiCommon.SUN_SCORE;
-		int moonCount = (integral % DamiCommon.SUN_SCORE) / DamiCommon.MOON_SCORE;
-		int starCount = ((integral % DamiCommon.SUN_SCORE) % DamiCommon.MOON_SCORE) / DamiCommon.STAR_SCORE;
-
-		if (sunCount + moonCount + starCount == 0) {
-			starCount = 1;
-		}
-
-		for (int i = 0; i < 5; i++) {
-			ImageView imageView = new ImageView(DamiApp.getInstance());
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					MyUtils.dip2px(DamiApp.getInstance(), size), MyUtils.dip2px(DamiApp.getInstance(), size));
-			params.setMargins(0, 0, margin, 0);
-			imageView.setLayoutParams(params);
-			if (i < sunCount) {
-				imageView.setImageResource(R.drawable.level_sun_icon);
-			} else if (i < sunCount + moonCount) {
-				imageView.setImageResource(R.drawable.level_moon_icon);
-			} else if (i < sunCount + moonCount + starCount) {
-				imageView.setImageResource(R.drawable.level_star_icon);
-			}
-			levelLayout.addView(imageView);
-		}
-	}
 
 	// public static int getRandomSampleRate() {
 	// Random r = new Random();

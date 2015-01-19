@@ -10,8 +10,8 @@ import com.gaopai.guiren.utils.MyUtils;
 
 public class SpeexRecorderWrapper {
 
-	public static final int MIN_TIME = 2; // 录音的下线
-	public static final int MAX_TIME = 20; // 录音的下线
+	public static final int MIN_TIME = 1; // 录音的下线
+	public static final int MAX_TIME = 60; // 录音的下线
 
 	private SpeexRecorder recorder;
 	private MediaUIHeper.RecordCallback recordCallback;

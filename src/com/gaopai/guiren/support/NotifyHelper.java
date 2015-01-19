@@ -31,7 +31,7 @@ import com.gaopai.guiren.utils.SPConst;
 public class NotifyHelper {
 
 	/**
-	 * Helper class to manage notify system. There are two kinds of
+	 * Helper class to manage notification system. There are two kinds of
 	 * notification, one is for chat message, another is for system message.
 	 * 
 	 * We build both notifications based on the global settings to determine

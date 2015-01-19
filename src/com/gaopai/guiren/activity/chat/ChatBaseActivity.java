@@ -248,6 +248,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 							FeatureFunction.reNameFile(new File(msg.voiceUrl), voice);
 						}
 						messageInfo.time = msg.time;
+						messageInfo.isReadVoice = 1;
 						updateNewMessage(messageInfo);
 						modifyMessageState(messageInfo);
 						return;

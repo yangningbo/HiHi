@@ -101,6 +101,11 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 				if (view instanceof TextView) { // the error view
 					return;
 				}
+				if (position == 0) {
+					tvDyCount.setVisibility(View.GONE);
+					startActivity(NewDynamicActivity.class);
+					return;
+				}
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
 				mAdapter.viewDynamicDetail((TypeHolder) mAdapter.getItem(pos));
 			}
