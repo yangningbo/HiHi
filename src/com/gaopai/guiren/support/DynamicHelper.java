@@ -460,6 +460,7 @@ public class DynamicHelper {
 		TextView tvContent;
 		FlowLayout flTags;
 		MyGridLayout gridLayout;
+		View layoutDyContent;
 
 		public static ViewHolderSendDynamic getInstance(View view) {
 			// TODO Auto-generated method stub
@@ -469,6 +470,7 @@ public class DynamicHelper {
 			viewHolder.tvContent = (TextView) view.findViewById(R.id.tv_content);
 			viewHolder.flTags = (FlowLayout) view.findViewById(R.id.fl_tags);
 			viewHolder.gridLayout = (MyGridLayout) view.findViewById(R.id.dynamic_pics_holder);
+			viewHolder.layoutDyContent = view.findViewById(R.id.layout_dy_content);
 
 			return viewHolder;
 		}
@@ -1100,6 +1102,9 @@ public class DynamicHelper {
 			viewHolder.tvContent.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(jsonContent.realname, jsonContent.uid),
 					MyTextUtils.addHttpLinks("说：" + jsonContent.content)));
+			changeDyHolderState(true, viewHolder);
+		} else {
+			changeDyHolderState(false, viewHolder);
 		}
 
 		buidImageViews(viewHolder.gridLayout, jsonContent.pic);
@@ -1115,6 +1120,18 @@ public class DynamicHelper {
 							viewHolder.flTags.getTextLayoutParams());
 				}
 			}
+		}
+	}
+	
+	private void changeDyHolderState(boolean isSpread, ViewHolderSendDynamic viewHolder) {
+		View layoutDyContent = viewHolder.layoutDyContent;
+		if (isSpread) {
+			layoutDyContent.setBackgroundColor(mContext.getResources().getColor(R.color.general_background_gray));
+			int padding = MyUtils.dip2px(mContext, 5);
+			layoutDyContent.setPadding(padding, padding, padding, padding);
+		} else {
+			layoutDyContent.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+			layoutDyContent.setPadding(0, 0, 0, 0);
 		}
 	}
 

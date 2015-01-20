@@ -3,6 +3,7 @@ package com.gaopai.guiren.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.Tribe;
@@ -20,11 +22,13 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.dynamic.DynamicBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.GuestBean;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
+import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.support.DynamicHelper.DySoftCallback;
 import com.gaopai.guiren.support.TextLimitWatcher;
 import com.gaopai.guiren.utils.ViewUtil;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class SpreadDynamicActivity extends BaseActivity {
 
@@ -44,6 +48,8 @@ public class SpreadDynamicActivity extends BaseActivity {
 	public final static String KEY_TYPE = "key_type";
 	public final static String KEY_BEAN = "key_bean";
 
+	private SimpleResponseListener spreadListener;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -61,8 +67,24 @@ public class SpreadDynamicActivity extends BaseActivity {
 		v.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
 				if (type == TYPE_SPREAD_SECOND) {
 					spreadDy();
+				} else {
+					switch (bean.type) {
+					case DynamicHelper.TYPE_SPREAD_LINK:
+						break;
+					case DynamicHelper.TYPE_SPREAD_MEETING:
+						break;
+					case DynamicHelper.TYPE_SPREAD_MSG:
+						break;
+					case DynamicHelper.TYPE_SPREAD_TRIBE:
+						break;
+					case DynamicHelper.TYPE_SPREAD_USER:
+						break;
+					default:
+						break;
+					}
 				}
 			}
 		});
@@ -71,19 +93,50 @@ public class SpreadDynamicActivity extends BaseActivity {
 		tvWordNum = ViewUtil.findViewById(this, R.id.tv_num_limit);
 		layoutDyContent = ViewUtil.findViewById(this, R.id.layout_profile_dy_content);
 		etContent.addTextChangedListener(new TextLimitWatcher(tvWordNum, 500));
+
+		spreadListener = new SimpleResponseListener(mContext, R.string.request_internet_now) {
+			@Override
+			public void onSuccess(Object o) {
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.spread_success);
+				} else {
+					otherCondition(data.state, (Activity) mContext);
+				}
+			}
+		};
 		if (type == TYPE_SPREAD_SECOND) {
 			dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_MY_LIST);
 		} else {
 			dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
 		}
 		dynamicHelper.setCallback(dynamicCallback);
-
 		layoutDyContent.addView(dynamicHelper.getView(dyView, bean));
 	}
 
 	private void spreadDy() {
 		dynamicHelper.spread(bean);
 		SpreadDynamicActivity.this.finish();
+	}
+
+	private void spreadMsg(String msgId) {
+		DamiInfo.spreadDynamic(2, msgId, "", "", "", "", spreadListener);
+	}
+
+	private void spreadUser(String uid) {
+		DamiInfo.spreadDynamic(5, uid, "", "", "", "", spreadListener);
+	}
+
+	private void spreadMeeting(String meetingId) {
+		DamiInfo.spreadDynamic(3, meetingId, "", "", "", "", spreadListener);
+	}
+
+	private void spreadTribe(String tribeId) {
+		DamiInfo.spreadDynamic(4, tribeId, "", "", "", "", spreadListener);
+	}
+
+	private void spreadWeb(String title, String img, String url, String content) {
+		DamiInfo.spreadDynamic(6, null, title, img, url, content, spreadListener);
 	}
 
 	public static Intent getIntent(Context context, TypeHolder dyHolder) {
@@ -186,6 +239,7 @@ public class SpreadDynamicActivity extends BaseActivity {
 		jsonContent.imgUrlL = messageInfo.imgUrlL;
 		jsonContent.voiceTime = messageInfo.voiceTime;
 		jsonContent.voiceUrl = messageInfo.voiceUrl;
+		jsonContent.tid = messageInfo.id;//trick
 		return typeHolder;
 	}
 

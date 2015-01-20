@@ -382,18 +382,18 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 
 	private void spreadTribe() {
 		startActivity(SpreadDynamicActivity.getTribeIntent(mContext, mTribe));
-		DamiInfo.spreadDynamic(4, mTribe.id, "", "", "", "", new SimpleResponseListener(mContext) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.spread_success);
-				} else {
-					otherCondition(data.state, TribeDetailActivity.this);
-				}
-			}
-		});
+//		DamiInfo.spreadDynamic(4, mTribe.id, "", "", "", "", new SimpleResponseListener(mContext) {
+//			@Override
+//			public void onSuccess(Object o) {
+//				// TODO Auto-generated method stub
+//				BaseNetBean data = (BaseNetBean) o;
+//				if (data.state != null && data.state.code == 0) {
+//					showToast(R.string.spread_success);
+//				} else {
+//					otherCondition(data.state, TribeDetailActivity.this);
+//				}
+//			}
+//		});
 	}
 
 	@Override

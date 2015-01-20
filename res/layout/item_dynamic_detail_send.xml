@@ -16,98 +16,97 @@
         android:contentDescription="@string/desc"
         android:src="@drawable/default_header" />
 
+    <TextView
+        android:id="@+id/tv_user_name"
+        style="@style/dynamic_item_title_name"
+        android:layout_toRightOf="@id/iv_header" />
+
     <LinearLayout
-        android:id="@+id/layout_dy_name_info_holder"
+        android:id="@+id/layout_dy_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/iv_header"
-        android:orientation="horizontal" >
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_user_name"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/general_background_gray"
+        android:orientation="vertical"
+        android:padding="5dp" >
 
         <TextView
-            android:id="@+id/tv_user_name"
-            style="@style/dynamic_item_title_name" />
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.gaopai.guiren.view.FlowLayout
+            android:id="@+id/fl_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false" >
+        </com.gaopai.guiren.view.FlowLayout>
+
+        <com.gaopai.guiren.view.MyGridLayout
+            android:id="@+id/dynamic_pics_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            custom:columns="3"
+            custom:grid_gap="5dp"
+            custom:is_square="true" >
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <com.gaopai.guiren.support.view.CoverImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+        </com.gaopai.guiren.view.MyGridLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/layout_dy_name_info_holder"
-        android:layout_below="@id/layout_dy_name_info_holder"
-        android:layout_marginTop="5dp" />
-
-    <com.gaopai.guiren.view.FlowLayout
-        android:id="@+id/fl_tags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/layout_dy_name_info_holder"
-        android:layout_below="@id/tv_content"
-        android:clickable="false" >
-    </com.gaopai.guiren.view.FlowLayout>
-
-    <com.gaopai.guiren.view.MyGridLayout
-        android:id="@+id/dynamic_pics_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/layout_dy_name_info_holder"
-        android:layout_below="@id/fl_tags"
-        android:layout_marginTop="5dp"
-        custom:columns="3"
-        custom:grid_gap="5dp"
-        custom:is_square="true" >
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-
-        <com.gaopai.guiren.support.view.CoverImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
-    </com.gaopai.guiren.view.MyGridLayout>
 
     <TextView
         android:id="@+id/tv_date_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/layout_dy_name_info_holder"
-        android:layout_below="@id/dynamic_pics_holder"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/layout_dy_content"
         android:textColor="@color/u_text_gray" />
 
     <ImageButton
@@ -123,7 +122,7 @@
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/layout_dy_name_info_holder"
+        android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/btn_dynamic_ation"
         layout="@layout/layout_dynamic_detail_cover_top_bottom" />
 
