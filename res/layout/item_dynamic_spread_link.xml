@@ -16,14 +16,21 @@
     <TextView
         android:id="@+id/tv_user_name"
         style="@style/dynamic_item_title_name"
-        android:layout_toRightOf="@id/iv_header" />
+        android:layout_toRightOf="@id/iv_header"/>
+
+    <TextView
+        android:id="@+id/tv_spread_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_user_name" />
 
     <RelativeLayout
         android:id="@+id/rl_spread_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
-        android:layout_below="@id/tv_user_name"
+        android:layout_below="@id/tv_spread_info"
         android:layout_marginTop="10dp"
         android:background="@drawable/selector_btn_gray_general"
         android:padding="@dimen/general_header_padding" >

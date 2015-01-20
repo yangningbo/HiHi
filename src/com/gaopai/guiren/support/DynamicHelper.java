@@ -419,6 +419,7 @@ public class DynamicHelper {
 		TextView tvUserName;
 		// TextView tvUserInfo;
 		// TextView tvAction;
+		TextView tvSpreadInfo;
 
 		View lineSpread;
 		View lineZan;
@@ -446,6 +447,7 @@ public class DynamicHelper {
 			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
 			viewHolder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
 			viewHolder.tvUserName.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+			viewHolder.tvSpreadInfo  = (TextView) view.findViewById(R.id.tv_spread_info);
 			// viewHolder.tvUserInfo = (TextView)
 			// view.findViewById(R.id.tv_user_info);
 			// viewHolder.tvAction = (TextView)
@@ -925,8 +927,6 @@ public class DynamicHelper {
 
 		userName = typeBean.realname;
 		uid = typeBean.uid;
-//		userInfo = TextUtils.isEmpty(typeBean.company) ? (TextUtils.isEmpty(typeBean.post) ? "" : typeBean.post)
-//				: (TextUtils.isEmpty(typeBean.post) ? typeBean.company : typeBean.company + "/" + typeBean.post);
 		userInfo = getUserInfoStr(typeBean.company, typeBean.post);
 		if (typeBean.isanonymous == 1) {
 			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader, R.drawable.default_header);
@@ -948,6 +948,13 @@ public class DynamicHelper {
 					parseHeaderText(userName + HeadView.MVP_NAME_STR, uid, userInfo, spreadAction)));
 		} else {
 			viewHolder.tvUserName.setText(parseHeaderText(userName, uid, userInfo, spreadAction));
+		}
+		
+		if (true) {
+			viewHolder.tvSpreadInfo.setVisibility(View.VISIBLE);
+//			viewHolder.tvSpreadInfo.setText(text);
+		} else {
+			viewHolder.tvSpreadInfo.setVisibility(View.GONE);
 		}
 
 		viewHolder.tvDateInfo.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
@@ -1134,8 +1141,6 @@ public class DynamicHelper {
 			layoutDyContent.setPadding(0, 0, 0, 0);
 		}
 	}
-
-	public final static int KEY_PHOTO_CLICK_POSITION = 96;
 
 	private void buidImageViews(MyGridLayout gridLayout, List<PicBean> pics) {
 		int count;

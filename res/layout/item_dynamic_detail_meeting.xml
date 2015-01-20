@@ -15,26 +15,25 @@
         android:contentDescription="@string/desc"
         android:src="@drawable/default_header" />
 
-    <LinearLayout
-        android:id="@+id/layout_dy_name_info_holder"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_user_name"
+        style="@style/dynamic_item_title_name"
+        android:layout_toRightOf="@id/iv_header" />
+
+    <TextView
+        android:id="@+id/tv_spread_info"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/iv_header"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/tv_user_name"
-            style="@style/dynamic_item_title_name" />
-
-    </LinearLayout>
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_user_name" />
 
     <LinearLayout
         android:id="@+id/layout_meeting_holder"
         android:layout_width="match_parent"
-        android:layout_marginTop="7dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/layout_dy_name_info_holder"
-        android:layout_below="@id/layout_dy_name_info_holder"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_spread_info"
+        android:layout_marginTop="7dp"
         android:layout_toRightOf="@id/iv_header"
         android:background="@drawable/selector_btn_gray_general"
         android:orientation="vertical"
@@ -62,7 +61,7 @@
         android:id="@+id/tv_date_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/layout_dy_name_info_holder"
+        android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/layout_meeting_holder"
         android:layout_marginTop="7dp"
         android:textColor="@color/u_text_gray" />
@@ -80,7 +79,7 @@
     <include
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/layout_dy_name_info_holder"
+        android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/btn_dynamic_ation"
         layout="@layout/layout_dynamic_detail_cover_top_bottom" />
 

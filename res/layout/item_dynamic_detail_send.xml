@@ -21,12 +21,19 @@
         style="@style/dynamic_item_title_name"
         android:layout_toRightOf="@id/iv_header" />
 
+    <TextView
+        android:id="@+id/tv_spread_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_user_name"
+        android:layout_below="@id/tv_user_name" />
+
     <LinearLayout
         android:id="@+id/layout_dy_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
-        android:layout_below="@id/tv_user_name"
+        android:layout_below="@id/tv_spread_info"
         android:layout_marginBottom="7dp"
         android:layout_marginTop="5dp"
         android:background="@color/general_background_gray"
