@@ -1,14 +1,19 @@
 package com.gaopai.guiren.fragment;
 
-import net.tsz.afinal.FinalActivity;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.tsz.afinal.annotation.view.ViewInject;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.text.TextUtils;
+import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,16 +30,17 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.SearchActivity;
-import com.gaopai.guiren.activity.TribeActivity;
 import com.gaopai.guiren.adapter.MeetingAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private String TAG = MeetingFragment.class.getName();
@@ -43,9 +49,9 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private MeetingAdapter mAdapter;
 
-	public static final int TYPE_ONGOING_MEETING = 1;
-	public static final int TYPE_PAST_MEETING = 2;
-	public static final int TYPE_MY_MEETING = 3;
+	public static final int TYPE_ONGOING_MEETING = 0;
+	public static final int TYPE_PAST_MEETING = 1;
+	public static final int TYPE_MY_MEETING = 2;
 
 	private int meetingType;
 
@@ -53,152 +59,83 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private TextView tvOnGoingMeeting;
 	private TextView tvPastMeeting;
-	
+
 	private boolean intialFlag = true;
-	
+
+	private ViewPager viewPager;
+	private View pageIndicator;
+
+	private DisplayMetrics displayMetrics;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (mView == null) {
 			mView = mInflater.inflate(R.layout.fragment_meeting, null);
-			FinalActivity.initInjectedView(this, mView);
+			viewPager = (ViewPager) mView.findViewById(R.id.vp_meeting);
+			initViewPager();
 			initView(mView);
 		}
 		return mView;
 	}
 
+	private void initViewPager() {
+		meetingFragments.add(getMeetingFragment(TYPE_ONGOING_MEETING));
+		meetingFragments.add(getMeetingFragment(TYPE_PAST_MEETING));
+		viewPager.setAdapter(new MeetingPagerAdapter(getFragmentManager()));
+		viewPager.setOnPageChangeListener(pageChangeListener);
+		viewPager.setCurrentItem(0);
+	}
+
+	private MeetingListFragment getMeetingFragment(int type) {
+		MeetingListFragment fragment = new MeetingListFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt("type", type);
+		fragment.setArguments(bundle);
+		return fragment;
+	}
+
 	@Override
 	protected void onReceive(Intent intent) {
 		String action = intent.getAction();
-		if (!TextUtils.isEmpty(action)) {
-			if (action.equals(REFRESH_LIST_ACTION)) {
-				getMeetingList(true, meetingType);
-			} else if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
-				String id = intent.getStringExtra("id");
-				if (!TextUtils.isEmpty(id)) {
-					for (int i = 0; i < mAdapter.mData.size(); i++) {
-						if (mAdapter.mData.get(i).id.equals(id)) {
-							mAdapter.mData.remove(i);
-							mAdapter.notifyDataSetChanged();
-							break;
-						}
-					}
-				}
-			} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
-				getMeetingList(true, meetingType);
-			}
-		}
+		// if (!TextUtils.isEmpty(action)) {
+		// if (action.equals(REFRESH_LIST_ACTION)) {
+		// getMeetingList(true, meetingType);
+		// } else if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
+		// String id = intent.getStringExtra("id");
+		// if (!TextUtils.isEmpty(id)) {
+		// for (int i = 0; i < mAdapter.mData.size(); i++) {
+		// if (mAdapter.mData.get(i).id.equals(id)) {
+		// mAdapter.mData.remove(i);
+		// mAdapter.notifyDataSetChanged();
+		// break;
+		// }
+		// }
+		// }
+		// } else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
+		// getMeetingList(true, meetingType);
+		// }
+		// }
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void initView(View mView) {
-
 		meetingType = TYPE_ONGOING_MEETING;
-
-		mListView.setPullRefreshEnabled(true); // 下拉刷新
-		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
-		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
-		mListView.getRefreshableView().setDivider(null);
-		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+		pageIndicator = ViewUtil.findViewById(mView, R.id.meeting_page_indicator);
+		displayMetrics = getActivity().getResources().getDisplayMetrics();
+		int width = pageIndicator.getLayoutParams().width;
+		
+		tvPastMeeting = ViewUtil.findViewById(mView, R.id.tv_meeting_past);
+		tvPastMeeting.setOnClickListener(this);
+		tvOnGoingMeeting = ViewUtil.findViewById(mView, R.id.tv_meeting_ongoing);
+		tvOnGoingMeeting.setOnClickListener(this);
+		tvOnGoingMeeting.post(new Runnable() {
 			@Override
-			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				getMeetingList(true, meetingType);
-			}
-
-			@Override
-			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				getMeetingList(false, meetingType);
+			public void run() {
+				pageIndicator.setTranslationX(displayMetrics.widthPixels / 4 - pageIndicator.getWidth() / 2);
 			}
 		});
-		mAdapter = new MeetingAdapter(act);
-		mListView.setAdapter(mAdapter);
-
-		mListView.doPullRefreshing(true, 50);
-		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, ((Tribe) mAdapter.getItem(position)).id);
-				intent.setClass(getActivity(), MeetingDetailActivity.class);
-				startActivity(intent);
-
-			}
-		});
-
-		ViewGroup viewGroup = ViewUtil.findViewById(mView, R.id.layout_meeting_past);
-		tvPastMeeting = (TextView) viewGroup.getChildAt(0);
-		viewGroup.setOnClickListener(this);
-		viewGroup = ViewUtil.findViewById(mView, R.id.layout_meeting_faxian);
-		tvOnGoingMeeting = (TextView) viewGroup.getChildAt(0);
-		viewGroup.setOnClickListener(this);
 
 		registerReceiver(REFRESH_LIST_ACTION, MainActivity.LOGIN_SUCCESS_ACTION);
-	}
-
-	private int page = 1;
-	private boolean isFull = false;
-
-	private void getMeetingList(final boolean isRefresh, int meetingType) {
-		if (isRefresh) {
-			page = 1;
-			mAdapter.clear();
-			isFull = false;
-		}
-		if (isFull) {
-			mListView.setHasMoreData(!isFull);
-			return;
-		}
-		DamiInfo.getMeetingList(DamiCommon.getUid(act), meetingType, page, new MyResponseListener(getActivity(),
-				meetingType));
-	}
-
-	public class MyResponseListener extends SimpleResponseListener {
-		private int type;
-
-		public MyResponseListener(Context context, int type) {
-			super(context);
-			this.type = type;
-		}
-
-		@Override
-		public void onSuccess(Object o) {
-			final TribeList data = (TribeList) o;
-			if (data.state != null && data.state.code == 0) {
-				if (type != meetingType) {
-					return;
-				}
-				if (data.data != null && data.data.size() > 0) {
-					mAdapter.addAll(data.data);
-				} else {
-					if (intialFlag) {
-						mListView.onPullComplete();
-						mListView.postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								switchPage(TYPE_PAST_MEETING);
-							}
-						}, 800);
-					}
-				}
-				if (data.pageInfo != null) {
-					isFull = (data.pageInfo.hasMore == 0);
-					if (!isFull) {
-						page++;
-					}
-				}
-				mListView.setHasMoreData(!isFull);
-				
-			
-				intialFlag = false;
-			} else {
-				otherCondition(data.state, getActivity());
-			}
-		}
-
-		@Override
-		public void onFinish() {
-			mListView.onPullComplete();
-		}
 	}
 
 	@Override
@@ -212,31 +149,45 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			startActivity(intent);
 			return;
 		}
-		case R.id.layout_meeting_faxian:
-			switchPage(TYPE_ONGOING_MEETING);
+		case R.id.tv_meeting_ongoing:
+			viewPager.setCurrentItem(0);
 			break;
-		case R.id.layout_meeting_past:
-			switchPage(TYPE_PAST_MEETING);
+		case R.id.tv_meeting_past:
+			viewPager.setCurrentItem(1);
 			break;
 		default:
 			super.onClick(v);
 		}
 	}
-	
+
 	private void switchPage(int type) {
 		if (type == TYPE_ONGOING_MEETING) {
-			meetingType = TYPE_ONGOING_MEETING;
-			tvPastMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
-			tvOnGoingMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
-			mListView.doPullRefreshing(true, 0);
 		} else {
-			meetingType = TYPE_PAST_MEETING;
-			tvOnGoingMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
-			tvPastMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
-			mListView.doPullRefreshing(true, 0);
 		}
 	}
-	
+
+	private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+		@Override
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+			int onGoingLeft = (int) (displayMetrics.widthPixels / 4f - pageIndicator.getWidth() / 2f);
+			int pastLeft = (int) (displayMetrics.widthPixels *0.75f - pageIndicator.getWidth() / 2f);
+			if (position == 0) {
+				pageIndicator.setTranslationX(onGoingLeft + (pastLeft - onGoingLeft) * positionOffset);
+			} else {
+				pageIndicator.setTranslationX(pastLeft - (pastLeft - onGoingLeft) * positionOffset);
+			}
+		}
+
+		@Override
+		public void onPageSelected(int position) {
+			switchPage(position);
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int state) {
+		}
+	};
+
 	private class MeetingPagerAdapter extends FragmentPagerAdapter {
 		public MeetingPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -244,12 +195,121 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 		@Override
 		public Fragment getItem(int position) {
-			return null;
+			return meetingFragments.get(position);
 		}
 
 		@Override
 		public int getCount() {
-			return 2;
+			return meetingFragments.size();
+		}
+
+	}
+
+	private List<Fragment> meetingFragments = new ArrayList<Fragment>();
+
+	public static class MeetingListFragment extends Fragment {
+		private PullToRefreshListView mListView;
+		private int type;
+		private int page;
+		private boolean isFull;
+		private MeetingAdapter mAdapter;
+		private boolean isInitial = true;
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View view = inflater.inflate(R.layout.general_pulltorefresh_listview, null);
+			mListView = (PullToRefreshListView) view.findViewById(R.id.listView);
+			type = getArguments().getInt("type");
+			initListView();
+			return view;
+		}
+
+		private void initListView() {
+			mListView.setPullRefreshEnabled(true); // 下拉刷新
+			mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
+			mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
+			mListView.getRefreshableView().setDivider(null);
+			mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+				@Override
+				public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+					getMeetingList(true, type);
+				}
+
+				@Override
+				public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+					getMeetingList(false, type);
+				}
+			});
+			mAdapter = new MeetingAdapter(getActivity());
+			mListView.setAdapter(mAdapter);
+
+			mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent();
+					intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, ((Tribe) mAdapter.getItem(position)).id);
+					intent.setClass(getActivity(), MeetingDetailActivity.class);
+					startActivity(intent);
+
+				}
+			});
+		}
+
+		private void getMeetingList(final boolean isRefresh, int meetingType) {
+			if (isRefresh) {
+				page = 1;
+				mAdapter.clear();
+				isFull = false;
+			}
+			if (isFull) {
+				mListView.setHasMoreData(!isFull);
+				return;
+			}
+			DamiInfo.getMeetingList(DamiCommon.getUid(getActivity()), meetingType, page, new MyResponseListener(
+					getActivity()));
+		}
+
+		@Override
+		public void setUserVisibleHint(boolean isVisibleToUser) {
+			super.setUserVisibleHint(isVisibleToUser);
+			if (isVisibleToUser) {
+				if (mListView != null && isInitial) {
+					mListView.doPullRefreshing(true, 50);
+					isInitial = false;
+				}
+			}
+		}
+
+		public class MyResponseListener extends SimpleResponseListener {
+
+			public MyResponseListener(Context context) {
+				super(context);
+			}
+
+			@Override
+			public void onSuccess(Object o) {
+				final TribeList data = (TribeList) o;
+				if (data.state != null && data.state.code == 0) {
+					if (data.data != null && data.data.size() > 0) {
+						mAdapter.addAll(data.data);
+					}
+					if (data.pageInfo != null) {
+						isFull = (data.pageInfo.hasMore == 0);
+						if (!isFull) {
+							page++;
+						}
+					}
+					mListView.setHasMoreData(!isFull);
+				} else {
+					otherCondition(data.state, getActivity());
+				}
+			}
+
+			@Override
+			public void onFinish() {
+				mListView.onPullComplete();
+			}
 		}
 	}
 

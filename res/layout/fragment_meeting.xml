@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/layout_meeting_titlebar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:background="#FEFEFE" >
 
         <TextView
@@ -17,54 +17,40 @@
             android:layout_centerInParent="true"
             android:background="@color/general_text_gray" />
 
-        <LinearLayout
-            android:id="@+id/layout_meeting_faxian"
+        <TextView
+            android:id="@+id/tv_meeting_ongoing"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/line_vertical"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/line_vertical"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:text="@string/find_meeting_title"
+            android:textSize="18sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_bottom_blue_border"
-                android:paddingBottom="10dp"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:paddingTop="10dp"
-                android:text="@string/find_meeting_title"
-                android:textSize="18sp" />
-
-            <View style="@style/general_thin_divider_in_white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_meeting_past"
+        <TextView
+            android:id="@+id/tv_meeting_past"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_toRightOf="@id/line_vertical"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:text="@string/past_meeting_title"
+            android:textSize="18sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:paddingTop="10dp"
-                android:text="@string/past_meeting_title"
-                android:textSize="18sp" />
+        <View
+            android:id="@+id/line"
+            style="@style/general_thin_divider_in_white"
+            android:layout_alignParentBottom="true" />
 
-            <View style="@style/general_thin_divider_in_white" />
-        </LinearLayout>
+        <View
+            android:id="@+id/meeting_page_indicator"
+            android:layout_width="80dp"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
+            android:background="#1DAADE" />
     </RelativeLayout>
 
-    <com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_meeting"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </LinearLayout>
