@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -27,6 +29,7 @@ import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.support.DynamicHelper.DySoftCallback;
 import com.gaopai.guiren.support.TextLimitWatcher;
+import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -67,7 +70,7 @@ public class SpreadDynamicActivity extends BaseActivity {
 		v.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 				if (type == TYPE_SPREAD_SECOND) {
 					spreadDy();
 				} else {
@@ -105,13 +108,53 @@ public class SpreadDynamicActivity extends BaseActivity {
 				}
 			}
 		};
-		if (type == TYPE_SPREAD_SECOND) {
-			dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_MY_LIST);
-		} else {
-			dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
-		}
+		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
 		dynamicHelper.setCallback(dynamicCallback);
-		layoutDyContent.addView(dynamicHelper.getView(dyView, bean));
+		layoutDyContent.addView(parseView(dynamicHelper.getView(dyView, bean)));
+	}
+
+	private View parseView(View source) {
+		ImageView header = (ImageView) source.findViewById(R.id.iv_header);
+		TextView tvInfo = (TextView) source.findViewById(R.id.tv_user_name);
+		switch (bean.type) {
+		case DynamicHelper.TYPE_SEND_DYNAMIC:
+			header.setVisibility(View.VISIBLE);
+			tvInfo.setVisibility(View.VISIBLE);
+			source.setBackgroundColor(getResources().getColor(R.color.general_background_gray));
+			ImageLoaderUtil.displayImage(bean.defhead, header, R.drawable.default_header, false);
+			break;
+		case DynamicHelper.TYPE_SPREAD_OTHER_DYNAMIC:
+			header.setVisibility(View.VISIBLE);
+			source.setBackgroundColor(getResources().getColor(R.color.general_background_gray));
+			tvInfo.setVisibility(View.VISIBLE);
+			ImageLoaderUtil.displayImage(bean.defhead, header, R.drawable.default_header, false);
+			break;
+		case DynamicHelper.TYPE_SPREAD_USER:
+		case DynamicHelper.TYPE_SPREAD_TRIBE:
+		case DynamicHelper.TYPE_SPREAD_MSG:
+		case DynamicHelper.TYPE_SPREAD_LINK: {
+			source.setPadding(0, 0, 0, 0);
+			header.setVisibility(View.GONE);
+			tvInfo.setVisibility(View.GONE);
+			MarginLayoutParams params = (MarginLayoutParams) ViewUtil.findViewById(source, R.id.rl_spread_holder)
+					.getLayoutParams();
+			params.setMargins(0, 0, 0, 0);
+			break;
+		}
+		case DynamicHelper.TYPE_SPREAD_MEETING: {
+			source.setPadding(0, 0, 0, 0);
+			header.setVisibility(View.GONE);
+			tvInfo.setVisibility(View.GONE);
+			MarginLayoutParams params = (MarginLayoutParams) ViewUtil.findViewById(source, R.id.layout_meeting_holder)
+					.getLayoutParams();
+			params.setMargins(0, 0, 0, 0);
+			break;
+		}
+
+		default:
+			break;
+		}
+		return source;
 	}
 
 	private void spreadDy() {
@@ -141,8 +184,35 @@ public class SpreadDynamicActivity extends BaseActivity {
 
 	public static Intent getIntent(Context context, TypeHolder dyHolder) {
 		Intent intent = new Intent(context, SpreadDynamicActivity.class);
-		intent.putExtra(KEY_BEAN, dyHolder);
 		intent.putExtra(KEY_TYPE, TYPE_SPREAD_SECOND);
+		switch (dyHolder.type) {
+		case DynamicHelper.TYPE_SEND_DYNAMIC:
+			dyHolder.title = context.getString(R.string.spread_dynamic);
+			break;
+		case DynamicHelper.TYPE_SPREAD_OTHER_DYNAMIC:
+			dyHolder.title = context.getString(R.string.spread_dynamic);
+			break;
+		case DynamicHelper.TYPE_SPREAD_LINK:
+			dyHolder.title = context.getString(R.string.spread_web);
+			break;
+		case DynamicHelper.TYPE_SPREAD_TRIBE:
+			dyHolder.title = context.getString(R.string.spread_tribe);
+			break;
+		case DynamicHelper.TYPE_SPREAD_USER:
+			dyHolder.title = context.getString(R.string.spread_user);
+			break;
+		case DynamicHelper.TYPE_SPREAD_MSG:
+			dyHolder.title = context.getString(R.string.spread_msg);
+			break;
+		case DynamicHelper.TYPE_SPREAD_MEETING:
+			dyHolder.title = context.getString(R.string.spread_meeting);
+			break;
+
+		default:
+			break;
+		}
+
+		intent.putExtra(KEY_BEAN, dyHolder);
 		return intent;
 	}
 
@@ -239,7 +309,7 @@ public class SpreadDynamicActivity extends BaseActivity {
 		jsonContent.imgUrlL = messageInfo.imgUrlL;
 		jsonContent.voiceTime = messageInfo.voiceTime;
 		jsonContent.voiceUrl = messageInfo.voiceUrl;
-		jsonContent.tid = messageInfo.id;//trick
+		jsonContent.tid = messageInfo.id;// trick
 		return typeHolder;
 	}
 

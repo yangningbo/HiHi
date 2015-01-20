@@ -913,6 +913,7 @@ public class DynamicHelper {
 			} else {
 				spreadAction = typeBean.title;
 			}
+			viewHolder.tvSpreadInfo.setVisibility(View.GONE);
 			viewHolder.tvUserName.setText(parseProfileHeaderText(spreadAction));
 			viewHolder.btnDynamicAction.setVisibility(View.GONE);
 			viewHolder.tvDateInfo.setVisibility(View.GONE);
@@ -951,7 +952,7 @@ public class DynamicHelper {
 		}
 		
 		if (true) {
-			viewHolder.tvSpreadInfo.setVisibility(View.VISIBLE);
+			viewHolder.tvSpreadInfo.setVisibility(View.GONE);
 //			viewHolder.tvSpreadInfo.setText(text);
 		} else {
 			viewHolder.tvSpreadInfo.setVisibility(View.GONE);

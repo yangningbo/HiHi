@@ -44,9 +44,8 @@ public class MyGridLayout extends ViewGroup {
 		int width = MeasureSpec.getSize(widthMeasureSpec);
 		int height = MeasureSpec.getSize(heightMeasureSpec);
 
-		int childWidthSpec = MeasureSpec.makeMeasureSpec((width - getPaddingLeft() - getPaddingRight() - mColumns
-				* gridGap)
-				/ mColumns, MeasureSpec.EXACTLY);
+		int childWidthSpec = MeasureSpec.makeMeasureSpec((int) ((width - getPaddingLeft() - getPaddingRight()
+				- mColumns * gridGap + gridGap) / (mColumns + 0.0f)), MeasureSpec.EXACTLY);
 
 		int childHeightSpec;
 		if (isSquare) {
@@ -95,9 +94,11 @@ public class MyGridLayout extends ViewGroup {
 			childWidth = child.getMeasuredWidth();
 			row = i / mColumns;
 			column = i % mColumns;
-			child.layout(column * childWidth + paddingLeft + (column - 1) * gridGap, row * childHeight + paddingTop
-					+ (row - 1) * gridGap, (column + 1) * childWidth + paddingLeft + (column - 1) * gridGap, (row + 1)
-					* childHeight + (row - 1) * gridGap + paddingTop);
+			int left = column * childWidth + paddingLeft + column * gridGap;
+			int top = row * childHeight + paddingTop + row * gridGap;
+			int right = left + childWidth;
+			int bottom = top + childHeight;
+			child.layout(left, top, right, bottom);
 		}
 
 	}

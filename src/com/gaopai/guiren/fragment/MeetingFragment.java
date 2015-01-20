@@ -5,6 +5,9 @@ import net.tsz.afinal.annotation.view.ViewInject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +55,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 	private TextView tvPastMeeting;
 	
 	private boolean intialFlag = true;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (mView == null) {
@@ -231,6 +234,22 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			tvOnGoingMeeting.setBackgroundColor(getResources().getColor(R.color.transparent));
 			tvPastMeeting.setBackgroundResource(R.drawable.shape_bottom_blue_border);
 			mListView.doPullRefreshing(true, 0);
+		}
+	}
+	
+	private class MeetingPagerAdapter extends FragmentPagerAdapter {
+		public MeetingPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public int getCount() {
+			return 2;
 		}
 	}
 
