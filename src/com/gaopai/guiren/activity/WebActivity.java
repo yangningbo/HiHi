@@ -270,7 +270,7 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 	StringBuilder stringBuilder = new StringBuilder();
 
 	final class InJavaScriptLocalObj {
-		
+
 		@JavascriptInterface
 		public void showSource(String html) {
 			Logger.d(this, html);
@@ -290,7 +290,8 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 				Logger.d(this, "title=" + title);
 			}
 			if (!TextUtils.isEmpty(content) && !content.equals("undefined")) {
-				mWebContent = content.replace("\n", "").replace("\r", "").replaceAll("\\s*", "").replace("地歌网讯", "").replaceAll("【<span.*span>】", "");
+				mWebContent = content.replace("\n", "").replace("\r", "").replaceAll("\\s*", "").replace("地歌网讯", "")
+						.replaceAll("【<span.*span>】", "");
 				Logger.d(this, "content=" + mWebContent);
 			}
 		}
@@ -331,20 +332,24 @@ public class WebActivity extends BaseActivity implements OnClickListener {
 					if (TextUtils.isEmpty(mUrl)) {
 						return;
 					}
-					DamiInfo.spreadDynamic(6, null, mWebTitle.trim(), mWebImage.trim(), mUrl.trim(),
-							mWebContent.trim(), new SimpleResponseListener(mContext) {
-
-								@Override
-								public void onSuccess(Object o) {
-									// TODO Auto-generated method stub
-									BaseNetBean data = (BaseNetBean) o;
-									if (data.state != null && data.state.code == 0) {
-										showToast(R.string.spread_success);
-									} else {
-										otherCondition(data.state, WebActivity.this);
-									}
-								}
-							});
+					startActivity(SpreadDynamicActivity.getWebIntent(mContext, mWebImage.trim(), mWebTitle.trim(),
+							mWebContent.trim(), mUrl.trim()));
+					// DamiInfo.spreadDynamic(6, null, mWebTitle.trim(),
+					// mWebImage.trim(), mUrl.trim(),
+					// mWebContent.trim(), new SimpleResponseListener(mContext)
+					// {
+					//
+					// @Override
+					// public void onSuccess(Object o) {
+					// // TODO Auto-generated method stub
+					// BaseNetBean data = (BaseNetBean) o;
+					// if (data.state != null && data.state.code == 0) {
+					// showToast(R.string.spread_success);
+					// } else {
+					// otherCondition(data.state, WebActivity.this);
+					// }
+					// }
+					// });
 				}
 			});
 			break;

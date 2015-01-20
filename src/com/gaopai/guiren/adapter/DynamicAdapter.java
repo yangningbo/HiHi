@@ -137,10 +137,6 @@ public class DynamicAdapter extends BaseAdapter {
 		}
 
 		@Override
-		public void onDeleteItem(String dataid) {
-		}
-
-		@Override
 		public void onVoiceStart() {
 			DynamicAdapter.this.notifyDataSetChanged();
 		}

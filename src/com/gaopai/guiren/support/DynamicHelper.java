@@ -154,8 +154,6 @@ public class DynamicHelper {
 
 		public void onDeleteItemSuccess(TypeHolder typeHolder);
 
-		public void onDeleteItem(String dataid);
-
 		public void onVoiceStart();
 
 		public void onVoiceStop();
@@ -183,12 +181,6 @@ public class DynamicHelper {
 
 		@Override
 		public void onCommentSuccess() {
-
-		}
-
-		@Override
-		public void onDeleteItem(String dataid) {
-			// TODO Auto-generated method stub
 
 		}
 
@@ -385,7 +377,7 @@ public class DynamicHelper {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				mContext.startActivity(SpreadDynamicActivity.getIntent(mContext, typeHolder));
-//				spread(typeHolder);
+				// spread(typeHolder);
 				actionWindow.dismiss();
 			}
 		});
@@ -618,41 +610,41 @@ public class DynamicHelper {
 
 	public View getView(View convertView, TypeHolder typeBean) {
 		Logger.startCountTime();
-		try {
-			switch (typeBean.type) {
-			case TYPE_SPREAD_OTHER_DYNAMIC:
-			case TYPE_SEND_DYNAMIC:
-				if (shouldInflateNew(convertView)) {
-					convertView = inflateItemView(TYPE_SEND_DYNAMIC);
-				}
-				buildDynamicView((ViewHolderSendDynamic) convertView.getTag(), typeBean);
-				break;
-			case TYPE_SPREAD_USER:
-			case TYPE_SPREAD_TRIBE:
-			case TYPE_SPREAD_LINK: {
-				if (shouldInflateNew(convertView)) {
-					convertView = inflateItemView(TYPE_SPREAD_LINK);
-				}
-				buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag(), typeBean);
-				break;
+		// try {
+		switch (typeBean.type) {
+		case TYPE_SPREAD_OTHER_DYNAMIC:
+		case TYPE_SEND_DYNAMIC:
+			if (shouldInflateNew(convertView)) {
+				convertView = inflateItemView(TYPE_SEND_DYNAMIC);
 			}
-			case TYPE_SPREAD_MEETING: {
-				if (shouldInflateNew(convertView)) {
-					convertView = inflateItemView(TYPE_SPREAD_MEETING);
-				}
-				buildMeetingView((ViewHolderMeeting) convertView.getTag(), typeBean);
-				break;
+			buildDynamicView((ViewHolderSendDynamic) convertView.getTag(), typeBean);
+			break;
+		case TYPE_SPREAD_USER:
+		case TYPE_SPREAD_TRIBE:
+		case TYPE_SPREAD_LINK: {
+			if (shouldInflateNew(convertView)) {
+				convertView = inflateItemView(TYPE_SPREAD_LINK);
 			}
-			case TYPE_SPREAD_MSG:
-				if (shouldInflateNew(convertView)) {
-					convertView = inflateItemView(TYPE_SPREAD_MSG);
-				}
-				buildMsgView((ViewHolderSpreadMsg) convertView.getTag(), typeBean);
-				break;
-			}
-		} catch (Exception e) {
-			convertView = buildErrorView();
+			buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag(), typeBean);
+			break;
 		}
+		case TYPE_SPREAD_MEETING: {
+			if (shouldInflateNew(convertView)) {
+				convertView = inflateItemView(TYPE_SPREAD_MEETING);
+			}
+			buildMeetingView((ViewHolderMeeting) convertView.getTag(), typeBean);
+			break;
+		}
+		case TYPE_SPREAD_MSG:
+			if (shouldInflateNew(convertView)) {
+				convertView = inflateItemView(TYPE_SPREAD_MSG);
+			}
+			buildMsgView((ViewHolderSpreadMsg) convertView.getTag(), typeBean);
+			break;
+		}
+		// } catch (Exception e) {
+		// convertView = buildErrorView();
+		// }
 		if (convertView == null) {
 			convertView = buildErrorView();
 		}
@@ -875,7 +867,8 @@ public class DynamicHelper {
 		case TYPE_SPREAD_USER:
 			ImageLoaderUtil.displayImage(jsonContent.headsmall, viewHolder.ivHeader1, R.drawable.default_header);
 			viewHolder.tvTitle1.setText(jsonContent.realname);
-			viewHolder.tvInfo1.setText(jsonContent.post);
+
+			viewHolder.tvInfo1.setText(getUserInfoStr(jsonContent.company, jsonContent.post));
 			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -889,6 +882,11 @@ public class DynamicHelper {
 		default:
 			break;
 		}
+	}
+
+	public static String getUserInfoStr(String company, String post) {
+		return TextUtils.isEmpty(company) ? (TextUtils.isEmpty(post) ? "" : post) : (TextUtils.isEmpty(post) ? company
+				: company + "/" + post);
 	}
 
 	public TextView buildErrorView() {
@@ -925,8 +923,9 @@ public class DynamicHelper {
 
 		userName = typeBean.realname;
 		uid = typeBean.uid;
-		userInfo = TextUtils.isEmpty(typeBean.company) ? (TextUtils.isEmpty(typeBean.post) ? "" : typeBean.post) : (TextUtils
-				.isEmpty(typeBean.post) ? typeBean.company : typeBean.company + "/" + typeBean.post);
+//		userInfo = TextUtils.isEmpty(typeBean.company) ? (TextUtils.isEmpty(typeBean.post) ? "" : typeBean.post)
+//				: (TextUtils.isEmpty(typeBean.post) ? typeBean.company : typeBean.company + "/" + typeBean.post);
+		userInfo = getUserInfoStr(typeBean.company, typeBean.post);
 		if (typeBean.isanonymous == 1) {
 			ImageLoaderUtil.displayImage(typeBean.defhead, viewHolder.ivHeader, R.drawable.default_header);
 			userInfo = "";

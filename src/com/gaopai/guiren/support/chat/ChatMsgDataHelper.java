@@ -14,6 +14,7 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.AddReasonActivity;
 import com.gaopai.guiren.activity.MainActivity;
+import com.gaopai.guiren.activity.SpreadDynamicActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
 import com.gaopai.guiren.bean.MessageInfo;
@@ -225,19 +226,20 @@ public class ChatMsgDataHelper {
 	}
 
 	public void spreadToDy(MessageInfo messageInfo) {
-		DamiInfo.spreadDynamic(2, messageInfo.id, "", "", "", "", new SimpleResponseListener(mContext) {
-
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.spread_success);
-				} else {
-					otherCondition(data.state, (Activity) mContext);
-				}
-			}
-		});
+		mContext.startActivity(SpreadDynamicActivity.getMsgIntent(mContext, messageInfo));
+//		DamiInfo.spreadDynamic(2, messageInfo.id, "", "", "", "", new SimpleResponseListener(mContext) {
+//
+//			@Override
+//			public void onSuccess(Object o) {
+//				// TODO Auto-generated method stub
+//				BaseNetBean data = (BaseNetBean) o;
+//				if (data.state != null && data.state.code == 0) {
+//					showToast(R.string.spread_success);
+//				} else {
+//					otherCondition(data.state, (Activity) mContext);
+//				}
+//			}
+//		});
 	}
 
 	private String getString(int sid) {

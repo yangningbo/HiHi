@@ -381,6 +381,7 @@ public class TribeDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void spreadTribe() {
+		startActivity(SpreadDynamicActivity.getTribeIntent(mContext, mTribe));
 		DamiInfo.spreadDynamic(4, mTribe.id, "", "", "", "", new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {

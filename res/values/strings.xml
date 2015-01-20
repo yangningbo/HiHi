@@ -856,4 +856,13 @@
     <string name="his_fans">TA的粉丝</string>
     <string name="his_follow">TA的关注</string>
     
+    <string name="spread_dynamic">扩散动态</string>
+    <string name="spread_tribe">扩散圈子</string>
+    <string name="spread_meeting">扩散会议</string>
+    <string name="spread_msg">扩散消息</string>
+    <string name="spread_user">扩散用户</string>
+    <string name="spread_web">扩散连接</string>
+    
+    
+    
 </resources>

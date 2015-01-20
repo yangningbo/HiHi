@@ -878,7 +878,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 		case R.id.layout_profile_weixin_num:
-			
+
 			if (isSelf) {
 				changeContact(ChangeProfileActivity.TYPE_WEIXIN, tUser.weixin);
 				return;
@@ -1054,18 +1054,20 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void spreadUser() {
-		DamiInfo.spreadDynamic(5, tUser.uid, "", "", "", "", new SimpleResponseListener(mContext) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.spread_success);
-				} else {
-					otherCondition(data.state, ProfileActivity.this);
-				}
-			}
-		});
+		startActivity(SpreadDynamicActivity.getUserIntent(mContext, tUser));
+		// DamiInfo.spreadDynamic(5, tUser.uid, "", "", "", "", new
+		// SimpleResponseListener(mContext) {
+		// @Override
+		// public void onSuccess(Object o) {
+		// // TODO Auto-generated method stub
+		// BaseNetBean data = (BaseNetBean) o;
+		// if (data.state != null && data.state.code == 0) {
+		// showToast(R.string.spread_success);
+		// } else {
+		// otherCondition(data.state, ProfileActivity.this);
+		// }
+		// }
+		// });
 	}
 
 	private void startActivityWithUser(String key, Class clazz) {

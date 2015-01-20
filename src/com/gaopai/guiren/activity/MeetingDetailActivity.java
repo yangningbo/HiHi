@@ -524,18 +524,20 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	public void spreadMeeting(Tribe meeting) {
-		DamiInfo.spreadDynamic(3, meeting.id, "", "", "", "", new SimpleResponseListener(mContext) {
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.spread_success);
-				} else {
-					otherCondition(data.state, MeetingDetailActivity.this);
-				}
-			}
-		});
+		startActivity(SpreadDynamicActivity.getMeetingIntent(mContext, mMeeting));
+		// DamiInfo.spreadDynamic(3, meeting.id, "", "", "", "", new
+		// SimpleResponseListener(mContext) {
+		// @Override
+		// public void onSuccess(Object o) {
+		// // TODO Auto-generated method stub
+		// BaseNetBean data = (BaseNetBean) o;
+		// if (data.state != null && data.state.code == 0) {
+		// showToast(R.string.spread_success);
+		// } else {
+		// otherCondition(data.state, MeetingDetailActivity.this);
+		// }
+		// }
+		// });
 	}
 
 	private void setAlarmForMeeting() {
@@ -633,8 +635,8 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void deleteConverstion() {
-//		ConversationHelper.deleteItem(mContext, mMeetingID);
-//		sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		// ConversationHelper.deleteItem(mContext, mMeetingID);
+		// sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
 		ConversationHelper.deleteChatItemAndUpadte(mContext, mMeetingID, false);
 	}
 

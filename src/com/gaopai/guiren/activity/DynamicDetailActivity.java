@@ -130,11 +130,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			dynamicHelper.getView(headerView, typeBean);
 		}
 
-		@Override
-		public void onDeleteItem(String dataid) {
-			// TODO Auto-generated method stub
-
-		}
 
 		@Override
 		public void onDeleteItemSuccess(TypeHolder typeHolder) {

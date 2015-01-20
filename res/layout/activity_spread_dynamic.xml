@@ -1,50 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/general_background"
-    android:orientation="vertical"
-    android:padding="@dimen/general_paading" >
+    android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <com.gaopai.guiren.support.view.ScrollEditText
-            android:id="@+id/et_dynamic_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/selector_edit_white_round_corner"
-            android:gravity="top|left"
-            android:hint="说点什么吧"
-            android:lines="6"
-            android:maxLength="500"
-            android:paddingBottom="30dp"
-            android:paddingLeft="@dimen/general_paading"
-            android:paddingRight="@dimen/general_paading"
-            android:paddingTop="@dimen/general_paading"
-            android:textSize="@dimen/general_font_small" />
-
-        <TextView
-            android:id="@+id/tv_num_limit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/et_dynamic_msg"
-            android:layout_alignRight="@id/et_dynamic_msg"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
-            android:text="还能输入500字"
-            android:textColor="@color/general_text_gray" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/layout_profile_dy_content"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@color/white"
-        android:gravity="center_vertical" >
-    </RelativeLayout>
+        android:background="@color/general_background"
+        android:orientation="vertical"
+        android:padding="@dimen/general_paading" >
 
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.gaopai.guiren.support.view.ScrollEditText
+                android:id="@+id/et_dynamic_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/selector_edit_white_round_corner"
+                android:gravity="top|left"
+                android:hint="说点什么吧"
+                android:lines="6"
+                android:maxLength="500"
+                android:paddingBottom="30dp"
+                android:paddingLeft="@dimen/general_paading"
+                android:paddingRight="@dimen/general_paading"
+                android:paddingTop="@dimen/general_paading"
+                android:textSize="@dimen/general_font_small" />
+
+            <TextView
+                android:id="@+id/tv_num_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/et_dynamic_msg"
+                android:layout_alignRight="@id/et_dynamic_msg"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
+                android:text="还能输入500字"
+                android:textColor="@color/general_text_gray" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_profile_dy_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingBottom="@dimen/general_paading"
+            android:background="@color/white"
+            android:gravity="center_vertical" >
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

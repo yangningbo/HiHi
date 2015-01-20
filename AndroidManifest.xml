@@ -267,7 +267,7 @@
             android:name="com.gaopai.guiren.activity.share.ShareActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.gaopai.guiren.activity.share.SpreadDynamicActivity"
+            android:name="com.gaopai.guiren.activity.SpreadDynamicActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.WebActivity"
