@@ -122,8 +122,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		meetingType = TYPE_ONGOING_MEETING;
 		pageIndicator = ViewUtil.findViewById(mView, R.id.meeting_page_indicator);
 		displayMetrics = getActivity().getResources().getDisplayMetrics();
-		int width = pageIndicator.getLayoutParams().width;
-		
+
 		tvPastMeeting = ViewUtil.findViewById(mView, R.id.tv_meeting_past);
 		tvPastMeeting.setOnClickListener(this);
 		tvOnGoingMeeting = ViewUtil.findViewById(mView, R.id.tv_meeting_ongoing);
@@ -140,7 +139,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ab_search: {
 			Intent intent = new Intent();
@@ -160,17 +158,11 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		}
 	}
 
-	private void switchPage(int type) {
-		if (type == TYPE_ONGOING_MEETING) {
-		} else {
-		}
-	}
-
 	private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 			int onGoingLeft = (int) (displayMetrics.widthPixels / 4f - pageIndicator.getWidth() / 2f);
-			int pastLeft = (int) (displayMetrics.widthPixels *0.75f - pageIndicator.getWidth() / 2f);
+			int pastLeft = (int) (displayMetrics.widthPixels * 0.75f - pageIndicator.getWidth() / 2f);
 			if (position == 0) {
 				pageIndicator.setTranslationX(onGoingLeft + (pastLeft - onGoingLeft) * positionOffset);
 			} else {
@@ -180,7 +172,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 		@Override
 		public void onPageSelected(int position) {
-			switchPage(position);
 		}
 
 		@Override
@@ -246,7 +237,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					// TODO Auto-generated method stub
 					Intent intent = new Intent();
 					intent.putExtra(MeetingDetailActivity.KEY_MEETING_ID, ((Tribe) mAdapter.getItem(position)).id);
 					intent.setClass(getActivity(), MeetingDetailActivity.class);
@@ -312,5 +302,4 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			}
 		}
 	}
-
 }

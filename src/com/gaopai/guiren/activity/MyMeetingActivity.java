@@ -41,7 +41,7 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 		fid = getIntent().getStringExtra("fid");
 		isMyself = DamiCommon.getUid(mContext).equals(fid);
 		initTitleBar();
-		setAbContentView(R.layout.fragment_meeting);
+		setAbContentView(R.layout.general_pulltorefresh_listview);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		if (isMyself) {
 			mTitleBar.setTitleText(R.string.my_meeting);
@@ -51,7 +51,6 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 		} else {
 			mTitleBar.setTitleText(R.string.his_meeting);
 		}
-		ViewUtil.findViewById(this, R.id.layout_meeting_titlebar).setVisibility(View.GONE);
 		mListView = (PullToRefreshListView) findViewById(R.id.listView);
 		mListView.setPullRefreshEnabled(false); // 下拉刷新
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
