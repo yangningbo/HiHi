@@ -272,8 +272,8 @@ public class DynamicHelper {
 		});
 	}
 
-	public void spread(final TypeHolder typeBean) {
-		DamiInfo.spreadDynamic(-1, typeBean.id, "", "", "", "", new SimpleResponseListener(mContext) {
+	public void spread(final TypeHolder typeBean, String spreadInfo) {
+		DamiInfo.spreadDynamic(-1, typeBean.id, "", "", "", "", spreadInfo, new SimpleResponseListener(mContext) {
 
 			@Override
 			public void onSuccess(Object o) {

@@ -30,6 +30,7 @@ public class DynamicBean implements Serializable {
 		public int type;
 		public String title;
 		public JsonContent jsoncontent;
+		public String speak;//扩散时说的话
 
 		public String tag;
 		public long time;
@@ -71,6 +72,8 @@ public class DynamicBean implements Serializable {
 
 
 	public static class JsonContent implements Serializable {
+		
+
 
 		// type=3 4扩散了会议
 		public List<PicBean> pic;

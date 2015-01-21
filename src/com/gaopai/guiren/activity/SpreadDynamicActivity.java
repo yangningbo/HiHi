@@ -53,6 +53,8 @@ public class SpreadDynamicActivity extends BaseActivity {
 
 	private SimpleResponseListener spreadListener;
 
+	private String spreadInfo;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -70,20 +72,27 @@ public class SpreadDynamicActivity extends BaseActivity {
 		v.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				spreadInfo = etContent.getText().toString();
 
 				if (type == TYPE_SPREAD_SECOND) {
 					spreadDy();
 				} else {
 					switch (bean.type) {
 					case DynamicHelper.TYPE_SPREAD_LINK:
+						spreadWeb(bean.jsoncontent.title, bean.jsoncontent.image, bean.jsoncontent.url,
+								bean.jsoncontent.desc);
 						break;
 					case DynamicHelper.TYPE_SPREAD_MEETING:
+						spreadMeeting(bean.jsoncontent.tid);
 						break;
 					case DynamicHelper.TYPE_SPREAD_MSG:
+						spreadMsg(bean.jsoncontent.tid);
 						break;
 					case DynamicHelper.TYPE_SPREAD_TRIBE:
+						spreadTribe(bean.jsoncontent.tid);
 						break;
 					case DynamicHelper.TYPE_SPREAD_USER:
+						spreadUser(bean.uid);
 						break;
 					default:
 						break;
@@ -103,6 +112,7 @@ public class SpreadDynamicActivity extends BaseActivity {
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
 					showToast(R.string.spread_success);
+					SpreadDynamicActivity.this.finish();
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}
@@ -158,28 +168,28 @@ public class SpreadDynamicActivity extends BaseActivity {
 	}
 
 	private void spreadDy() {
-		dynamicHelper.spread(bean);
+		dynamicHelper.spread(bean, spreadInfo);
 		SpreadDynamicActivity.this.finish();
 	}
 
 	private void spreadMsg(String msgId) {
-		DamiInfo.spreadDynamic(2, msgId, "", "", "", "", spreadListener);
+		DamiInfo.spreadDynamic(2, msgId, "", "", "", "", spreadInfo, spreadListener);
 	}
 
 	private void spreadUser(String uid) {
-		DamiInfo.spreadDynamic(5, uid, "", "", "", "", spreadListener);
+		DamiInfo.spreadDynamic(5, uid, "", "", "", "", spreadInfo, spreadListener);
 	}
 
 	private void spreadMeeting(String meetingId) {
-		DamiInfo.spreadDynamic(3, meetingId, "", "", "", "", spreadListener);
+		DamiInfo.spreadDynamic(3, meetingId, "", "", "", "", spreadInfo, spreadListener);
 	}
 
 	private void spreadTribe(String tribeId) {
-		DamiInfo.spreadDynamic(4, tribeId, "", "", "", "", spreadListener);
+		DamiInfo.spreadDynamic(4, tribeId, "", "", "", "", spreadInfo, spreadListener);
 	}
 
 	private void spreadWeb(String title, String img, String url, String content) {
-		DamiInfo.spreadDynamic(6, null, title, img, url, content, spreadListener);
+		DamiInfo.spreadDynamic(6, null, title, img, url, content, spreadInfo, spreadListener);
 	}
 
 	public static Intent getIntent(Context context, TypeHolder dyHolder) {

@@ -122,21 +122,21 @@ public class ShareManager implements OnClickListener {
 
 	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
 
-	public void shareContentToDy(String title, String info, String link, String picLink) {
-		DamiInfo.spreadDynamic(6, "", title, picLink, link, info, new SimpleResponseListener(mActivity) {
-
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				BaseNetBean data = (BaseNetBean) o;
-				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.spread_success);
-				} else {
-					otherCondition(data.state, mActivity);
-				}
-			}
-		});
-	}
+//	public void shareContentToDy(String title, String info, String link, String picLink) {
+//		DamiInfo.spreadDynamic(6, "", title, picLink, link, info, new SimpleResponseListener(mActivity) {
+//
+//			@Override
+//			public void onSuccess(Object o) {
+//				// TODO Auto-generated method stub
+//				BaseNetBean data = (BaseNetBean) o;
+//				if (data.state != null && data.state.code == 0) {
+//					showToast(R.string.spread_success);
+//				} else {
+//					otherCondition(data.state, mActivity);
+//				}
+//			}
+//		});
+//	}
 
 	public void setShareContent(String img, String title, String content, String url) {
 		setShareContent(new UMImage(mActivity, img), title, content, url);

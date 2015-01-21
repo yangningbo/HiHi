@@ -76,9 +76,9 @@ public class DamiInfo implements Serializable {
 
 	// public static final String HOST =
 	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-//	 public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	 public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
-	public static final String HOST = "http://guirenhui.cn/index.php/";
+//	public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
 
@@ -832,7 +832,7 @@ public class DamiInfo implements Serializable {
 	 *            Type＝6时分享的链接的副标题
 	 * @param listener
 	 */
-	public static void spreadDynamic(int type, String sid, String title, String image, String url, String desc,
+	public static void spreadDynamic(int type, String sid, String title, String image, String url, String desc, String speak,
 			IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		if (type != -1) {
@@ -840,6 +840,9 @@ public class DamiInfo implements Serializable {
 		}
 		if (!TextUtils.isEmpty(sid)) {
 			bundle.add("sid", String.valueOf(sid));
+		}
+		if (!TextUtils.isEmpty(speak)) {
+			bundle.add("speak", speak);
 		}
 		bundle.add("title", title);
 		bundle.add("image", image);
