@@ -26,11 +26,11 @@ public class WXEntryActivity extends WXCallbackActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		handleIntent(getIntent());
 	}
 
 	@Override
 	protected void handleIntent(Intent intent) {
+		Logger.d(this, "handleIntent twice??");
 		SendAuth.Resp resp = new SendAuth.Resp(intent.getExtras());
 		if (resp.errCode == BaseResp.ErrCode.ERR_OK) {
 			if (resp.state == null || !resp.state.equals("wxlogin")) {
@@ -46,6 +46,7 @@ public class WXEntryActivity extends WXCallbackActivity {
 						public void onSuccess(Object o) {
 							TokenBean data = (TokenBean) o;
 							if (data == null || TextUtils.isEmpty(data.access_token)) {
+								removeProgressDialog();
 								WXEntryActivity.this.finish();
 								return;
 							}
@@ -55,14 +56,15 @@ public class WXEntryActivity extends WXCallbackActivity {
 								public void onSuccess(Object o) {
 									WxUserInfo userInfo = (WxUserInfo) o;
 									if (TextUtils.isEmpty(userInfo.openid)) {
+										removeProgressDialog();
 										WXEntryActivity.this.finish();
 										return;
 									}
 									Intent intent = new Intent(ACTION_LOGIN_WECHAT);
 									intent.putExtra("data", userInfo);
 									WXEntryActivity.this.sendBroadcast(intent);
-									WXEntryActivity.this.finish();
 									removeProgressDialog();
+									WXEntryActivity.this.finish();
 								}
 							});
 

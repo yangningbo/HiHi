@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +31,10 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.MeetingDetailActivity;
 import com.gaopai.guiren.activity.SearchActivity;
+import com.gaopai.guiren.activity.TribeActivity;
 import com.gaopai.guiren.adapter.MeetingAdapter;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeList;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -53,14 +54,10 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 	public static final int TYPE_PAST_MEETING = 1;
 	public static final int TYPE_MY_MEETING = 2;
 
-	private int meetingType;
-
 	public final static String REFRESH_LIST_ACTION = "com.gaopai.guiren.intent.action.REFRESH_LIST_ACTION";
 
 	private TextView tvOnGoingMeeting;
 	private TextView tvPastMeeting;
-
-	private boolean intialFlag = true;
 
 	private ViewPager viewPager;
 	private View pageIndicator;
@@ -97,29 +94,16 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 	@Override
 	protected void onReceive(Intent intent) {
 		String action = intent.getAction();
-		// if (!TextUtils.isEmpty(action)) {
-		// if (action.equals(REFRESH_LIST_ACTION)) {
-		// getMeetingList(true, meetingType);
-		// } else if (action.equals(TribeActivity.ACTION_KICK_TRIBE)) {
-		// String id = intent.getStringExtra("id");
-		// if (!TextUtils.isEmpty(id)) {
-		// for (int i = 0; i < mAdapter.mData.size(); i++) {
-		// if (mAdapter.mData.get(i).id.equals(id)) {
-		// mAdapter.mData.remove(i);
-		// mAdapter.notifyDataSetChanged();
-		// break;
-		// }
-		// }
-		// }
-		// } else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
-		// getMeetingList(true, meetingType);
-		// }
-		// }
+		if (!TextUtils.isEmpty(action)) {
+			if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
+				meetingFragments.get(0).doPullRefresh();
+				viewPager.setCurrentItem(0);
+			}
+		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void initView(View mView) {
-		meetingType = TYPE_ONGOING_MEETING;
 		pageIndicator = ViewUtil.findViewById(mView, R.id.meeting_page_indicator);
 		displayMetrics = getActivity().getResources().getDisplayMetrics();
 
@@ -196,7 +180,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	}
 
-	private List<Fragment> meetingFragments = new ArrayList<Fragment>();
+	private List<MeetingListFragment> meetingFragments = new ArrayList<MeetingListFragment>();
 
 	public static class MeetingListFragment extends Fragment {
 		private PullToRefreshListView mListView;
@@ -205,6 +189,8 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		private boolean isFull;
 		private MeetingAdapter mAdapter;
 		private boolean isInitial = true;
+		private boolean isFirstTime = true;
+		
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -260,16 +246,31 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 					getActivity()));
 		}
 
+		public void doPullRefresh() {
+			mListView.doPullRefreshing(true, 50);
+		}
+		
+		
+
 		@Override
-		public void setUserVisibleHint(boolean isVisibleToUser) {
-			super.setUserVisibleHint(isVisibleToUser);
-			if (isVisibleToUser) {
-				if (mListView != null && isInitial) {
-					mListView.doPullRefreshing(true, 50);
-					isInitial = false;
-				}
+		public void onResume() {
+			super.onResume();
+			if (mListView != null && isInitial) {
+				mListView.doPullRefreshing(true, 50);
+				isInitial = false;
 			}
 		}
+
+//		@Override
+//		public void setUserVisibleHint(boolean isVisibleToUser) {
+//			super.setUserVisibleHint(isVisibleToUser);
+//			if (isVisibleToUser) {
+//				if (mListView != null && isInitial) {
+//					mListView.doPullRefreshing(true, 50);
+//					isInitial = false;
+//				}
+//			}
+//		}
 
 		public class MyResponseListener extends SimpleResponseListener {
 

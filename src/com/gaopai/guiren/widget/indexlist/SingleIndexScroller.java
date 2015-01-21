@@ -115,10 +115,11 @@ public class SingleIndexScroller extends View {
 			mCurrentSection = getSectionByPoint(ev.getY());
 			mListView.setCurrentSection(mCurrentSection);
 			newSelection = mIndexer.getPositionForSection(mCurrentSection);
-			selection = (newSelection == -1) ? 0 : newSelection;
-			oldSelection = selection;
-			mListView.setSelection(selection+mListView.getHeaderViewsCount());
-			invalidate();
+			if (newSelection > -1) {
+				oldSelection = newSelection;
+				mListView.setSelection(newSelection+mListView.getHeaderViewsCount());
+				invalidate();
+			}
 			return true;
 		case MotionEvent.ACTION_MOVE:
 			mCurrentSection = getSectionByPoint(ev.getY());

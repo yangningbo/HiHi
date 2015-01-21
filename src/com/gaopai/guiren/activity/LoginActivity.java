@@ -387,7 +387,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	private void getLogin(final String type, final String sex, final String id, final String nickName,
 			final String head, final String password) {
 
+		Logger.startCountTime();
 		String phone = getContacts();
+		Logger.time(this, "time");
 		if (TextUtils.isEmpty(phone)) {
 			showToast(R.string.login_need_contact);
 			return;

@@ -18,7 +18,7 @@ import com.nineoldandroids.view.ViewHelper;
 
 /**
  * 
- * @author BlueMor, moified by withparadox2 you can get source code from
+ * @author BlueMor, modified by withparadox2, you can get source code from
  *         https://github.com/BlueMor/DragLayout
  * 
  */
