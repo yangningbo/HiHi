@@ -199,17 +199,16 @@
 
                         <TextView
                             android:id="@+id/iv_count_4"
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="16dp"
                             android:layout_alignRight="@id/img_4"
                             android:layout_alignTop="@id/img_4"
-                            android:layout_marginRight="-5dp"
-                            android:background="@drawable/shape_notify_red_dot"
+                            android:layout_marginRight="-8dp"
+                            android:background="@drawable/shape_notify_red_dot2"
                             android:gravity="center"
-                            android:minWidth="@dimen/notification_item_dot_size"
+                            android:minWidth="16dp"
                             android:textColor="@color/white"
-                            android:textSize="12sp"
-                            android:visibility="gone" />
+                            android:textSize="12sp" />
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>

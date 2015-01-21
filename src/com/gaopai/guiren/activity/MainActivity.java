@@ -50,6 +50,7 @@ import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.UpdateManager;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -532,6 +533,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		FeatureFunction.startService(MainActivity.this);
 		initPage();
 		checkUpdate();
+		showNotificationDot();
 	}
 
 	private void getLogin() {
@@ -591,6 +593,18 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			isShowGudie = true;
 		}
 		return isShowGudie;
+	}
+	
+	public void showNotificationDot() {
+		PreferenceOperateUtils operateUtils = new PreferenceOperateUtils(this);
+		int count = operateUtils.getInt(SPConst.KEY_HAS_NOTIFICATION, 0);
+		TextView viewDot = ViewUtil.findViewById(this, R.id.iv_count_4);
+		if (count > 0) {
+			viewDot.setVisibility(View.VISIBLE);
+			viewDot.setText(count < 99 ? String.valueOf(count) : count+"+");
+		} else {
+			viewDot.setVisibility(View.GONE);
+		}
 	}
 
 	@Override

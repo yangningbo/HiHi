@@ -34,8 +34,8 @@ public class XmppManager {
 	public static final int XMPP_AUTH_ERR = 0xc;
 
 //	private static final String HOST = "guirenhui.vicp.cc";
-	 private static final String HOST = "192.168.1.239";
-//	 private static final String HOST = "guirenhui.cn";
+//	 private static final String HOST = "192.168.1.239";
+	 private static final String HOST = "guirenhui.cn";
 
 	// private static final String HOST = "59.174.108.18";
 

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.TextView;
 
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.R;
@@ -168,19 +169,8 @@ public class NotificationFragment extends BaseFragment {
 
 	private void setNotification(int count) {
 		PreferenceOperateUtils spo = new PreferenceOperateUtils(getActivity());
-		spo.setBoolean(SPConst.KEY_HAS_NOTIFICATION, count > 0);
-		showNotificationDot();
-	}
-
-	private void showNotificationDot() {
-		PreferenceOperateUtils operateUtils = new PreferenceOperateUtils(getActivity());
-		boolean hasNotification = operateUtils.getBoolean(SPConst.KEY_HAS_NOTIFICATION, false);
-		View viewDot = ViewUtil.findViewById(getActivity(), R.id.iv_count_4);
-		if (hasNotification) {
-			viewDot.setVisibility(View.VISIBLE);
-		} else {
-			viewDot.setVisibility(View.GONE);
-		}
+		spo.setInt(SPConst.KEY_HAS_NOTIFICATION, count);
+		((MainActivity) getActivity()).showNotificationDot();
 	}
 
 	// private void resetCount(String id) {
