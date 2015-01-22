@@ -691,13 +691,16 @@
     <!-- login  register -->
     <string name="register">注册</string>
     <string name="modify">修改密码</string>
+    <string name="bind_phone">绑定手机号</string>
     <string name="third_party_login">第三方登录账号</string>
     <string name="register_success">注册成功</string>
     <string name="modify_success">修改成功</string>
     <string name="veryficaion_can_not_be_empty">验证码不能为空</string>
+    <string name="name_can_not_be_empty">姓名不能为空</string>
     <string name="phone_can_not_be_empty">手机号不能为空</string>
     <string name="confirm_register">确认注册</string>
     <string name="confirm_modify">确认修改</string>
+    <string name="confirm_bind_phone">绑定</string>
     <string name="send_verify_code">发送验证码</string>
     <string name="please_input_verify_code">请输入验证码</string>
     <string name="please_chose_country">选择您手机号码所在的国家，以便收到短信</string>
@@ -716,7 +719,7 @@
     <string name="get_verify_code">获取验证码</string>
     <string name="verify_code">验证码</string>
     <string name="mobile_num">手机号</string>
-    <string name="please_input_nickname">请输入昵称</string>
+    <string name="please_input_your_name">请输入您的姓名</string>
     <string name="please_input_email">请输入邮箱</string>
     <string name="please_input_correct_email">请输入正确邮箱格式</string>
     <string name="please_input_correct_mobile_num">请输入正确格式的手机号</string>

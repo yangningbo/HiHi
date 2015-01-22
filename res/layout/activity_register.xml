@@ -25,6 +25,13 @@
         android:paddingRight="20dp"
         android:paddingTop="20dp" >
 
+        <EditText
+            android:id="@+id/et_input_name"
+            style="@style/general_edittext"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/general_large_gap"
+            android:hint="@string/please_input_your_name"/>
+
         <TextView
             android:id="@+id/tv_select_country"
             android:layout_width="match_parent"
@@ -32,6 +39,7 @@
             android:background="@drawable/selector_btn_general"
             android:gravity="center_vertical"
             android:padding="@dimen/general_paading"
+            android:layout_marginTop="@dimen/general_paading"
             android:text="@string/china_full_name"
             android:textSize="@dimen/general_font_medium" />
 

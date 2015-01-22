@@ -44,8 +44,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/tv_user_name"
                 android:layout_below="@id/tv_user_name"
-                android:maxWidth="220dp"
-                android:minWidth="30dp"
                 android:visibility="visible" />
 
             <FrameLayout
@@ -127,7 +125,8 @@
                     android:layout_marginLeft="2dp"
                     android:clickable="false"
                     android:gravity="center_vertical"
-                    android:text="点赞" />
+                    android:text="点赞"
+                    android:textColor="@color/general_text_gray" />
             </LinearLayout>
 
             <View
@@ -157,7 +156,8 @@
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="2dp"
                     android:gravity="center_vertical"
-                    android:text="收藏" />
+                    android:text="收藏"
+                    android:textColor="@color/general_text_gray" />
             </LinearLayout>
 
             <View
@@ -187,7 +187,8 @@
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="2dp"
                     android:gravity="center_vertical"
-                    android:text="评论" />
+                    android:text="评论"
+                    android:textColor="@color/general_text_gray" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -210,7 +211,8 @@
             android:drawableLeft="@drawable/icon_chat_detail_retangle"
             android:drawablePadding="15dp"
             android:gravity="center_vertical"
-            android:text="觉得很赞" />
+            android:text="觉得很赞"
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/iv_chat_down_arrow"
@@ -239,7 +241,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:padding="5dp" />
+        android:padding="10dp" />
 
     <View style="@style/general_thin_divider_in_white" />
 
@@ -256,7 +258,8 @@
             android:drawableLeft="@drawable/icon_chat_detail_retangle"
             android:drawablePadding="15dp"
             android:gravity="center_vertical"
-            android:text="全部评论" />
+            android:text="全部评论"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/chat_comment_count"

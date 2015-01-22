@@ -31,6 +31,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private Button btnConfirm;
 	private Button btnSendVeryfication;
 	private EditText etPassword;
+	private EditText etName;
 	private TextView tvSelectCountry;
 	private TextView tvRequestVeryficaion;
 
@@ -40,6 +41,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 	public final static int TYPE_REGISTER = 0;
 	public final static int TYPE_FORGET_PASSWORD = 1;
+	public final static int TYPE_BIND_PHONE = 2;
 	public final static String KEY_TYPE = "type";
 	private int type;
 
@@ -71,6 +73,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		btnConfirm = ViewUtil.findViewById(this, R.id.btn_confirm);
 		btnConfirm.setOnClickListener(this);
 		etPassword = ViewUtil.findViewById(this, R.id.et_input_password);
+		etName = ViewUtil.findViewById(this, R.id.et_input_name);
 
 		btnSendVeryfication = ViewUtil.findViewById(this, R.id.btn_send_veryfication);
 		btnSendVeryfication.setOnClickListener(this);
@@ -84,9 +87,14 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		if (type == TYPE_REGISTER) {
 			btnConfirm.setText(R.string.confirm_register);
 			mTitleBar.setTitleText(R.string.register);
-		} else {
+		} else if (type == TYPE_FORGET_PASSWORD) {
 			btnConfirm.setText(R.string.confirm_modify);
 			mTitleBar.setTitleText(R.string.modify);
+		} else if (type == TYPE_BIND_PHONE) {
+			btnConfirm.setText(R.string.confirm_bind_phone);
+			mTitleBar.setTitleText(R.string.bind_phone);
+			etPassword.setVisibility(View.GONE);
+			etName.setVisibility(View.GONE);
 		}
 	}
 
@@ -265,16 +273,32 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			showToast(R.string.phone_can_not_be_empty);
 			return;
 		}
-		if (TextUtils.isEmpty(password)) {
-			showToast(R.string.password_can_not_be_empty);
-			return;
-		}
+		
 		if (TextUtils.isEmpty(veryfication)) {
 			showToast(R.string.veryficaion_can_not_be_empty);
 			return;
 		}
+		
+		if (type == TYPE_BIND_PHONE) {
+			bindPhone();
+			return;
+		}
+		if (TextUtils.isEmpty(password)) {
+			showToast(R.string.password_can_not_be_empty);
+			return;
+		}
+		
+
+		if (TextUtils.isEmpty(etName.getText())) {
+			showToast(R.string.name_can_not_be_empty);
+			return;
+		}
 
 		register(etPhone.getText().toString(), password, veryfication);
+	}
+
+	private void bindPhone() {
+		
 	}
 
 }

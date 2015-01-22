@@ -90,6 +90,7 @@ import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -171,7 +172,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_chat_main);
-		getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.chat_detail_background));
 		mLogin = DamiCommon.getLoginResult(mContext);
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(INTENT_MESSAGE_KEY);
 		mTribe = (Tribe) getIntent().getSerializableExtra(INTENT_TRIBE_KEY);
@@ -660,14 +660,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		ivVoiceTriangle = view.findViewById(R.id.iv_chat_voice_triangle);
 		ivChatDownArrow = view.findViewById(R.id.iv_chat_down_arrow);
 		ivChatDownArrow.setOnClickListener(this);
-		// ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
 		ivPhoto = (ImageView) view.findViewById(R.id.iv_chat_photo);
-		// ivPhotoCover = (ImageView)
-		// view.findViewById(R.id.iv_chat_photo_cover);
-		// layoutPic = view.findViewById(R.id.layout_msg_pic_holder);
-
-		// progressbar = ViewUtil.findViewById(view, R.id.pb_chat_progress);
-
 		headImageView = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
 		tvName = (TextView) view.findViewById(R.id.tv_user_name);
 		// layoutMsgContent =
@@ -696,8 +689,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
 
-		// bindCommentCountView();
-		// bindZanCommentBorderView();
+		bindCommentCountView();
 		return view;
 	}
 
@@ -731,17 +723,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void notHideViews(int which) {
-		// layoutPic.setVisibility(View.GONE);
 		tvText.setVisibility(View.GONE);
 		tvVoiceLength.setVisibility(View.GONE);
-		// ivVoice.setVisibility(View.GONE);
 		layoutChatVoice.setVisibility(View.GONE);
+		ivPhoto.setVisibility(View.GONE);
 		switch (which) {
 		case MessageType.TEXT:
 			tvText.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.PICTURE:
-			// layoutPic.setVisibility(View.VISIBLE);
+			ivPhoto.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.VOICE:
 			layoutChatVoice.setVisibility(View.VISIBLE);
@@ -775,15 +766,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 					speexPlayerWrapper.start(messageInfo);
 				}
 			});
-
-			// AnimationDrawable drawable = (AnimationDrawable)
-			// ivVoice.getDrawable();
 			if (speexPlayerWrapper.isPlay() && speexPlayerWrapper.getMessageTag().equals(messageInfo.tag)) {
-				// drawable.start();
 				changeVoiceState(true);
 			} else {
-				// drawable.stop();
-				// drawable.selectDrawable(0);
 				changeVoiceState(false);
 			}
 			break;
@@ -793,8 +778,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			int height = (int) (MyUtils.dip2px(mContext, messageInfo.imgHeight) * 0.7);
 			ivPhoto.getLayoutParams().height = height;
 			ivPhoto.getLayoutParams().width = width;
-			// ivPhotoCover.getLayoutParams().height = height;
-			// ivPhotoCover.getLayoutParams().width = width;
 			if (path.startsWith("http://")) {
 				ImageLoaderUtil.displayImageByProgress(path, ivPhoto, null, progressbar);
 			} else {
@@ -941,10 +924,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			} else {
 				viewHolder.progressBar.setVisibility(View.GONE);
 			}
+			viewHolder.tvChatTime.setText(DateUtil.getCreateTime(commentInfo.time));
 			viewHolder.tvText.setTag(position);
 			viewHolder.tvText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 			viewHolder.tvUserName.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHeade, R.drawable.default_header);
+			ImageLoaderUtil.displayImage(commentInfo.headImgUrl, viewHolder.ivHeade, R.drawable.default_header);
 			CharSequence replyFromToText;
 			String fromId = commentInfo.isanonymity == 0 ? commentInfo.from : "-1";
 			String commenterId = commentInfo.reisanonymity == 0 ? commentInfo.commenterid : "-1";
