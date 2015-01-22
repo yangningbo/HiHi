@@ -20,10 +20,12 @@ import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class ReportPeopleActivity extends BaseActivity implements OnClickListener {
-	public final static String KEY_UID = "uid";
+	public final static String KEY_ID = "id";
 	private String fid;
+	private int type; //0 user, 1 dynamic
 
 	private List<TextView> list = new ArrayList<TextView>();
+	private SimpleResponseListener reportListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +35,33 @@ public class ReportPeopleActivity extends BaseActivity implements OnClickListene
 		setAbContentView(R.layout.activity_report_people);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.report);
-		fid = getIntent().getStringExtra(KEY_UID);
+		fid = getIntent().getStringExtra(KEY_ID);
+		type = getIntent().getIntExtra("type", 0);
 		ViewUtil.findViewById(this, R.id.btn_report).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_rp_abuse).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_rp_ad).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_rp_politics).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_rp_cheat).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.tv_rp_yellow).setOnClickListener(this);
+		reportListener = new SimpleResponseListener(mContext, R.string.request_internet_now) {
+			@Override
+			public void onSuccess(Object o) {
+				// TODO Auto-generated method stub
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.report_success);
+					ReportPeopleActivity.this.finish();
+				} else {
+					otherCondition(data.state, ReportPeopleActivity.this);
+				}
+			}
+		};
 	}
 
-	public static Intent getIntent(Context context, String uid) {
+	public static Intent getIntent(Context context, String id, int type) {
 		Intent intent = new Intent(context, ReportPeopleActivity.class);
-		intent.putExtra(KEY_UID, uid);
+		intent.putExtra(KEY_ID, id);
+		intent.putExtra("type", type);
 		return intent;
 	}
 	
@@ -57,19 +74,11 @@ public class ReportPeopleActivity extends BaseActivity implements OnClickListene
 				showToast(R.string.rp_chose_reason);
 				return;
 			}
-			DamiInfo.reportUser(fid, getContent(), new SimpleResponseListener(mContext, R.string.request_internet_now) {
-				@Override
-				public void onSuccess(Object o) {
-					// TODO Auto-generated method stub
-					BaseNetBean data = (BaseNetBean) o;
-					if (data.state != null && data.state.code == 0) {
-						showToast(R.string.report_success);
-						ReportPeopleActivity.this.finish();
-					} else {
-						otherCondition(data.state, ReportPeopleActivity.this);
-					}
-				}
-			});
+			if (type == 0) {
+				DamiInfo.reportUser(fid, getContent(), reportListener);
+			} else {
+				DamiInfo.reportDynamic(fid, getContent(), reportListener);
+			}
 			break;
 		case R.id.tv_rp_abuse:
 		case R.id.tv_rp_ad:

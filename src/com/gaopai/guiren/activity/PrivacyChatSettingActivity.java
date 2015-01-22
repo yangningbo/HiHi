@@ -72,7 +72,7 @@ public class PrivacyChatSettingActivity extends BaseActivity implements OnClickL
 			MessageHelper.clearChatCache(mContext, user.uid, 100, deleteCallback);
 			break;
 		case R.id.tv_report:
-			startActivity(ReportPeopleActivity.getIntent(mContext, user.uid));
+			startActivity(ReportPeopleActivity.getIntent(mContext, user.uid, 0));
 			break;
 		case R.id.iv_header:
 			startActivity(ProfileActivity.getIntent(mContext, user.uid));

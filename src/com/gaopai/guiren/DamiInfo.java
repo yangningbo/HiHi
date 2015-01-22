@@ -2297,6 +2297,14 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/ReportUser";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
+	// 举报动态
+	public static void reportDynamic(String dynamicid, String reason, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("dynamicid", dynamicid);
+		bundle.add("reason", reason);
+		String url = SERVER + "user/reportDynamic";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
 
 	// 获取动态详情
 	public static void getDynamicDetails(String dynaid, IResponseListener listener) {
@@ -2405,12 +2413,15 @@ public class DamiInfo implements Serializable {
 
 	/**
 	 * 获取系统默认标签
-	 * 
+	 * type	False 标签的分类（可填 user \quanzi\search）
 	 * @param listener
 	 */
-	public static void getTags(IResponseListener listener) {
+	public static void getTags(String type, IResponseListener listener) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("num", "9");
+		if (!TextUtils.isEmpty(type)) {
+			params.put("type", type);
+		}
 		request(Method.GET, TagResult.class, params, 0, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
 	}
 

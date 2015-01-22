@@ -162,7 +162,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void getTags() {
-		DamiInfo.getTags(new SimpleResponseListener(mContext) {
+		DamiInfo.getTags("search", new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub

@@ -346,7 +346,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ab_report:
-			startActivity(ReportPeopleActivity.getIntent(mContext, "13"));
+			startActivity(ReportPeopleActivity.getIntent(mContext, typeBean.id, 1));
 			break;
 		case R.id.emotion_btn:
 			chaBoxManager.emotionClick();

@@ -122,7 +122,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 	}
 
 	private void getTags() {
-		DamiInfo.getTags(new SimpleResponseListener(mContext) {
+		DamiInfo.getTags(null, new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub

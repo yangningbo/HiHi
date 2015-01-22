@@ -1139,7 +1139,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void getRecTags() {
-		DamiInfo.getTags(new SimpleResponseListener(mContext) {
+		DamiInfo.getTags("user", new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub

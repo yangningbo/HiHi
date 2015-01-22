@@ -114,7 +114,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void getTags() {
-		DamiInfo.getTags(new SimpleResponseListener(mContext) {
+		DamiInfo.getTags("quanzi", new SimpleResponseListener(mContext) {
 			@Override
 			public void onSuccess(Object o) {
 				// TODO Auto-generated method stub
