@@ -116,6 +116,7 @@ public class NotifySystemActivity extends BaseActivity {
 				case NotifiyType.APPLY_ADD_TRIBE:
 					Intent applyTribeIntent = new Intent(mContext, ApplyListActivity.class);
 					applyTribeIntent.putExtra("id", mNotifyList.get(position).room.id);
+					applyTribeIntent.putExtra("type", 0);
 					startActivity(applyTribeIntent);
 					break;
 

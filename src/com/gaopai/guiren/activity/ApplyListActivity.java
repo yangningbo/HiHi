@@ -35,10 +35,6 @@ import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
-/**
- * 处理参会申请、嘉宾申请等，由会议详情界面或部落详情界面跳转过来
- * 
- */
 public class ApplyListActivity extends BaseActivity implements OnClickListener {
 	private ListView mListView;
 	private List<User> mUserList = new ArrayList<User>();
@@ -46,9 +42,6 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 	private String mTribeID;
 	public final static int AGREE_SUCCESS = 4641;
 	public final static int REFUSE_SUCCESS = 4642;
-	private final static int HIDE_PROGRESS_DIALOG = 15453;
-	private int mExcuteCode = 0;
-	private int mPosition = -1;
 	private int mType = 0;
 	private final static int REFUSE_CODE = 1110;
 
@@ -249,10 +242,24 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent refuseIntent = new Intent(mContext, AddReasonActivity.class);
-					refuseIntent.putExtra("id", mTribeID);
-					refuseIntent.putExtra("type", mType);
-					refuseIntent.putExtra("refuseType", 1);
-					refuseIntent.putExtra("uid", mUserList.get(position).uid);
+					refuseIntent.putExtra(AddReasonActivity.KEY_MEETING_ID, mTribeID);
+					switch (mType) {
+					case 0:
+						refuseIntent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_REFUSE_JOIN_TRIBE);
+						break;
+					case 1:
+						refuseIntent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_REFUSE_JOIN_MEETING);
+						break;
+					case 2:
+						refuseIntent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_REFUSE_BECOME_HOST);
+						break;
+					case 3:
+						refuseIntent.putExtra(AddReasonActivity.KEY_APLLY_TYPE, AddReasonActivity.TYPE_REFUSE_BECOME_GUEST);
+						break;
+					default:
+						break;
+					}
+					refuseIntent.putExtra(AddReasonActivity.KEY_USER, mUserList.get(position));
 					startActivityForResult(refuseIntent, REFUSE_CODE);
 				}
 			});
