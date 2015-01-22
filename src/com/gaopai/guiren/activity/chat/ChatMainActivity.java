@@ -187,7 +187,6 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	}
 
 	protected void loadMessage(String id, int chatType) {
-		Logger.d(this, "haslocaldata=" + mHasLocalData);
 		if (mHasLocalData) {
 			if (mAdapter.getMessageInfos().size() == 0) {
 				mHasLocalData = false;
@@ -308,6 +307,7 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 	};
 
 	protected void initViewComponent() {
+		getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.chat_background));
 		mSwitchVoiceTextBtn = (Button) findViewById(R.id.chat_box_btn_switch_voice_text);
 		mSwitchVoiceTextBtn.setOnClickListener(this);
 		layoutChatbox = ViewUtil.findViewById(this, R.id.chat_box);

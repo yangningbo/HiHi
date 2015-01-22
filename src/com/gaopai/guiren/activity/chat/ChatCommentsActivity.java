@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.text.Editable;
@@ -31,8 +33,13 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -42,7 +49,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,9 +104,6 @@ import com.gaopai.guiren.widget.emotion.EmotionPicker;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
-/**
- * 消息详情界面，包括查看评论以及回复评论等功能
- */
 public class ChatCommentsActivity extends BaseActivity implements OnClickListener {
 	public static final String INTENT_MESSAGE_KEY = "message_key";
 	public static final String INTENT_TRIBE_KEY = "tribe_key";
@@ -114,13 +117,14 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected Identity mIdentity;
 	protected int mChatType = 0;
 
-	private ImageView ivVoice, ivPhoto, ivPhotoCover, headImageView;
-	private View layoutPic;
-	private ImageView mVoiceModeImage;
+	private ImageView ivPhoto, headImageView;
 	private ProgressBar progressbar;
-	private TextView tvText, tvVoiceLength, commentCountText, likeCountText, favouriteCountText, nameTextView, zanText;
+	private TextView tvText, tvVoiceLength, tvCommentCount, tvZanCount, tvName, tvZan;
 	private ImageView commentCountBtn, favoriteCountBtn, zanCountBtn;
-	private View layoutMsgContent;
+	private View layoutChatVoice;
+	private View ivVoiceTriangle;
+	private View ivVoiceRotate;
+	private View ivChatDownArrow;
 
 	private LinearLayout commentCountLayout, zanCountLayout, favoriteCountLayout;
 
@@ -154,18 +158,20 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	protected MyAdapter mAdapter;
 	protected PullToRefreshListView mListView;
-	private View viewCoverTop;
 	private ChatMsgDataHelper msgHelper;
 	private List<ZanBean> zanList = new ArrayList<ZanBean>();
 
 	private PreferenceOperateUtils spoAnony;
 	private CameralHelper cameralHelper;
 
+	private View headerView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_chat_main);
+		getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.chat_detail_background));
 		mLogin = DamiCommon.getLoginResult(mContext);
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(INTENT_MESSAGE_KEY);
 		mTribe = (Tribe) getIntent().getSerializableExtra(INTENT_TRIBE_KEY);
@@ -177,7 +183,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		cameralHelper = new CameralHelper(this);
 		cameralHelper.setCallback(picCallback);
 		initComponent();
-		mListView.getRefreshableView().addHeaderView(creatHeaderView());
+		headerView = creatHeaderView();
+		mListView.getRefreshableView().addHeaderView(headerView);
 		bindView();
 
 		mAdapter = new MyAdapter();
@@ -424,7 +431,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				mEmotionBtn, mVoiceSendBtn);
 
 		mListView = (PullToRefreshListView) findViewById(R.id.listview);
-		mListView.getRefreshableView().setDivider(null);
 		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
 
 		mListView.setPullRefreshEnabled(false); // 下拉刷新，启用
@@ -440,6 +446,23 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				getmessageInfos();
+			}
+		});
+		mListView.getRefreshableView().setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//				if (layoutZan != null && firstVisibleItem == 0) {
+//					int scrollY = headerView.getTop();
+//					int zanTop = layoutZan.getTop();
+//					if (scrollY + zanTop <= 0) {
+//						layoutZan.setTranslationY(-(scrollY + zanTop));
+//					}
+//				}
 			}
 		});
 
@@ -628,27 +651,30 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private View creatHeaderView() {
 		// mVoiceModeImage = (ImageView) findViewById(R.id.voice_mode_image);
 		View view = mInflater.inflate(R.layout.activity_chat_comment_layout, null);
-		zanText = (TextView) view.findViewById(R.id.zan_text);
-		zanText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		tvZan = (TextView) view.findViewById(R.id.zan_text);
+		tvZan.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		tvText = (TextView) view.findViewById(R.id.iv_chat_text);
 		tvVoiceLength = (TextView) view.findViewById(R.id.tv_chat_voice_time_length);
-		ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
+		layoutChatVoice = view.findViewById(R.id.layout_chat_voice);
+		ivVoiceRotate = view.findViewById(R.id.iv_chat_voice_rotate);
+		ivVoiceTriangle = view.findViewById(R.id.iv_chat_voice_triangle);
+		ivChatDownArrow = view.findViewById(R.id.iv_chat_down_arrow);
+		ivChatDownArrow.setOnClickListener(this);
+		// ivVoice = (ImageView) view.findViewById(R.id.iv_chat_voice);
 		ivPhoto = (ImageView) view.findViewById(R.id.iv_chat_photo);
-		ivPhotoCover = (ImageView) view.findViewById(R.id.iv_chat_photo_cover);
-		layoutPic = view.findViewById(R.id.layout_msg_pic_holder);
+		// ivPhotoCover = (ImageView)
+		// view.findViewById(R.id.iv_chat_photo_cover);
+		// layoutPic = view.findViewById(R.id.layout_msg_pic_holder);
 
-		progressbar = ViewUtil.findViewById(view, R.id.pb_chat_progress);
+		// progressbar = ViewUtil.findViewById(view, R.id.pb_chat_progress);
 
 		headImageView = (ImageView) view.findViewById(R.id.iv_chat_talk_img_head);
-		nameTextView = (TextView) view.findViewById(R.id.tv_user_name);
-		layoutMsgContent = view.findViewById(R.id.layout_msg_text_voice_holder);
+		tvName = (TextView) view.findViewById(R.id.tv_user_name);
+		// layoutMsgContent =
+		// view.findViewById(R.id.layout_msg_text_voice_holder);
 
-		commentCountText = (TextView) view.findViewById(R.id.chat_comment_count);
-		likeCountText = (TextView) view.findViewById(R.id.chat_zan_count);
-		likeCountText.setText(String.valueOf(messageInfo.agreeCount));
-
-		favouriteCountText = (TextView) view.findViewById(R.id.chat_favourite_count);
-		favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
+		tvCommentCount = (TextView) view.findViewById(R.id.chat_comment_count);
+		tvZanCount = (TextView) view.findViewById(R.id.chat_zan_count);
 
 		zanCountLayout = (LinearLayout) view.findViewById(R.id.zan_count_layout);
 		zanCountBtn = (ImageView) view.findViewById(R.id.zan_count_btn);
@@ -669,15 +695,14 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
-		viewCoverTop = view.findViewById(R.id.view_cover_top);
 
-		bindCommentCountView();
-		bindZanCommentBorderView();
+		// bindCommentCountView();
+		// bindZanCommentBorderView();
 		return view;
 	}
 
 	private void bindCommentCountView() {
-		commentCountText.setText(String.valueOf(messageInfo.commentCount));
+		tvCommentCount.setText(messageInfo.commentCount + "条评论");
 	}
 
 	private void initialSendIdAndName() {
@@ -706,23 +731,20 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void notHideViews(int which) {
-		layoutPic.setVisibility(View.GONE);
-		layoutMsgContent.setVisibility(View.GONE);
+		// layoutPic.setVisibility(View.GONE);
 		tvText.setVisibility(View.GONE);
 		tvVoiceLength.setVisibility(View.GONE);
-		ivVoice.setVisibility(View.GONE);
-		progressbar.setVisibility(View.GONE);
+		// ivVoice.setVisibility(View.GONE);
+		layoutChatVoice.setVisibility(View.GONE);
 		switch (which) {
 		case MessageType.TEXT:
-			layoutMsgContent.setVisibility(View.VISIBLE);
 			tvText.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.PICTURE:
-			layoutPic.setVisibility(View.VISIBLE);
+			// layoutPic.setVisibility(View.VISIBLE);
 			break;
 		case MessageType.VOICE:
-			layoutMsgContent.setVisibility(View.VISIBLE);
-			ivVoice.setVisibility(View.VISIBLE);
+			layoutChatVoice.setVisibility(View.VISIBLE);
 			tvVoiceLength.setVisibility(View.VISIBLE);
 			break;
 		default:
@@ -732,7 +754,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private void bindView() {
 		ImageLoaderUtil.displayImage(messageInfo.headImgUrl, headImageView, R.drawable.default_header);
-		nameTextView.setText(messageInfo.displayname);
+		tvName.setText(messageInfo.displayname);
 		tvText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		notHideViews(messageInfo.fileType);
 		switch (messageInfo.fileType) {
@@ -747,21 +769,22 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				break;
 			}
 			tvVoiceLength.setText(messageInfo.voiceTime + "''");
-			ivVoice.setLayoutParams(getVoiceViewLengthParams((ViewGroup.LayoutParams) ivVoice.getLayoutParams(),
-					messageInfo));
-			layoutMsgContent.setOnClickListener(new OnClickListener() {
+			layoutChatVoice.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					speexPlayerWrapper.start(messageInfo);
 				}
 			});
 
-			AnimationDrawable drawable = (AnimationDrawable) ivVoice.getDrawable();
+			// AnimationDrawable drawable = (AnimationDrawable)
+			// ivVoice.getDrawable();
 			if (speexPlayerWrapper.isPlay() && speexPlayerWrapper.getMessageTag().equals(messageInfo.tag)) {
-				drawable.start();
+				// drawable.start();
+				changeVoiceState(true);
 			} else {
-				drawable.stop();
-				drawable.selectDrawable(0);
+				// drawable.stop();
+				// drawable.selectDrawable(0);
+				changeVoiceState(false);
 			}
 			break;
 		case MessageType.PICTURE:
@@ -770,8 +793,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			int height = (int) (MyUtils.dip2px(mContext, messageInfo.imgHeight) * 0.7);
 			ivPhoto.getLayoutParams().height = height;
 			ivPhoto.getLayoutParams().width = width;
-			ivPhotoCover.getLayoutParams().height = height;
-			ivPhotoCover.getLayoutParams().width = width;
+			// ivPhotoCover.getLayoutParams().height = height;
+			// ivPhotoCover.getLayoutParams().width = width;
 			if (path.startsWith("http://")) {
 				ImageLoaderUtil.displayImageByProgress(path, ivPhoto, null, progressbar);
 			} else {
@@ -790,6 +813,29 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			zanCountBtn.setImageResource(R.drawable.icon_msg_detail_zan_active);
 		}
 		bindFavoriteView();
+		bindZanView();
+	}
+
+	private void changeVoiceState(boolean isAnim) {
+		if (isAnim) {
+			ivVoiceTriangle.setVisibility(View.GONE);
+			ivVoiceRotate.setVisibility(View.VISIBLE);
+			ivVoiceRotate.startAnimation(getRoateAnimation());
+		} else {
+			ivVoiceRotate.clearAnimation();
+			ivVoiceRotate.setVisibility(View.GONE);
+			ivVoiceTriangle.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private Animation getRoateAnimation() {
+		RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f,
+				Animation.RELATIVE_TO_SELF, 0.5f);
+		animation.setDuration(2000);
+		animation.setInterpolator(new LinearInterpolator());
+		animation.setRepeatMode(Animation.RESTART);
+		animation.setRepeatCount(Animation.INFINITE);
+		return animation;
 	}
 
 	public ViewGroup.LayoutParams getVoiceViewLengthParams(ViewGroup.LayoutParams lp, MessageInfo commentInfo) {
@@ -810,25 +856,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			lp.width = width;
 		}
 		return lp;
-	}
-
-	private void bindZanCommentBorderView() {
-		if (zanList.size() == 0) {
-			layoutZan.setVisibility(View.GONE);
-			if (messageInfos.size() == 0) {
-				viewCoverTop.setVisibility(View.GONE);
-			} else {
-				viewCoverTop.setVisibility(View.VISIBLE);
-			}
-		} else {
-			layoutZan.setVisibility(View.VISIBLE);
-			viewCoverTop.setVisibility(View.VISIBLE);
-			if (messageInfos.size() != 0) {
-				layoutZan.getChildAt(1).setVisibility(View.VISIBLE);
-			} else {
-				layoutZan.getChildAt(1).setVisibility(View.GONE);
-			}
-		}
 	}
 
 	private OnClickListener photoClickListener = new OnClickListener() {
@@ -870,33 +897,26 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			if (convertView == null) {
 				viewHolder = new ViewHolder();
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail, null, false);
-				viewHolder.messageNameText = (TextView) convertView.findViewById(R.id.chat_comment_not_text_name);
-				viewHolder.voiceImageView = (ImageView) convertView.findViewById(R.id.chat_talk_msg_info_msg_voice);
-				viewHolder.picImageView = (ImageView) convertView.findViewById(R.id.iv_chat_photo);
-				viewHolder.picImageCover = (ImageView) convertView.findViewById(R.id.iv_chat_photo_cover);
-				viewHolder.rootLayout = (RelativeLayout) convertView.findViewById(R.id.chat_talk_msg_info);
-				viewHolder.voiceLayout = (RelativeLayout) convertView.findViewById(R.id.chat_voice_layout);
-				viewHolder.voiceTimeText = (TextView) convertView.findViewById(R.id.chat_talk_voice_num);
+				viewHolder.tvText = (TextView) convertView.findViewById(R.id.iv_chat_text);
+				viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tv_user_name);
+				viewHolder.tvChatTime = (TextView) convertView.findViewById(R.id.tv_chat_time);
+				viewHolder.ivHeade = (ImageView) convertView.findViewById(R.id.iv_chat_talk_img_head);
+				viewHolder.ivVoice = (ImageView) convertView.findViewById(R.id.iv_chat_voice);
+				viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.iv_chat_photo);
+				viewHolder.ivPhotoCover = (ImageView) convertView.findViewById(R.id.iv_chat_photo_cover);
+				viewHolder.msgInfoLayout = convertView.findViewById(R.id.layout_msg_content);
+				viewHolder.layoutTextVoiceHolder = convertView.findViewById(R.id.layout_msg_text_voice_holder);
+				viewHolder.tvVoiceLength = (TextView) convertView.findViewById(R.id.tv_chat_voice_time_length);
 				viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.pb_chat_progress);
-				viewHolder.resendImageView = (ImageView) convertView.findViewById(R.id.iv_chat_resend_icon);
+				viewHolder.resendImageView = (ImageView) convertView.findViewById(R.id.iv_chat_resend_icon);// ??
 				viewHolder.layoutPicHolder = convertView.findViewById(R.id.layout_msg_pic_holder);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			viewHolder.messageNameText.setCompoundDrawablePadding(MyUtils.dip2px(mContext, 5));
-			if (position == 0) {
-				viewHolder.messageNameText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_dynamic_comment, 0,
-						0, 0);
-			} else {
-				viewHolder.messageNameText.setCompoundDrawablesWithIntrinsicBounds(
-						R.drawable.icon_dynamic_comment_transparent, 0, 0, 0);
-			}
-
 			final MessageInfo commentInfo = messageInfos.get(position);
-
-			notHideViews(viewHolder, commentInfo.fileType);
+			notHideViews(viewHolder, commentInfo);
 
 			final boolean isMyself = commentInfo.from.equals(mLogin.uid) ? true : false;
 			View resendView = viewHolder.resendImageView;
@@ -921,80 +941,68 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			} else {
 				viewHolder.progressBar.setVisibility(View.GONE);
 			}
-			viewHolder.messageNameText.setTag(position);
-			viewHolder.messageNameText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+			viewHolder.tvText.setTag(position);
+			viewHolder.tvText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+			viewHolder.tvUserName.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+			ImageLoaderUtil.displayImage(messageInfo.headImgUrl, viewHolder.ivHeade, R.drawable.default_header);
 			CharSequence replyFromToText;
-
 			String fromId = commentInfo.isanonymity == 0 ? commentInfo.from : "-1";
 			String commenterId = commentInfo.reisanonymity == 0 ? commentInfo.commenterid : "-1";
 			if (!TextUtils.isEmpty(commentInfo.commenterid) && !TextUtils.isEmpty(commentInfo.commentername)) {
 				replyFromToText = MyTextUtils.getSpannableString(
 						MyTextUtils.addSingleUserSpan(commentInfo.displayname, fromId), "回复",
-						MyTextUtils.addSingleUserSpan(commentInfo.commentername, commenterId), ":");
+						MyTextUtils.addSingleUserSpan(commentInfo.commentername, commenterId));
 			} else {
-				replyFromToText = MyTextUtils.getSpannableString(
-						MyTextUtils.addSingleUserSpan(commentInfo.displayname, fromId), ":");
+				replyFromToText = MyTextUtils.getSpannableString(MyTextUtils.addSingleUserSpan(commentInfo.displayname,
+						fromId));
 			}
+			viewHolder.tvUserName.setText(replyFromToText);
 			switch (commentInfo.fileType) {
 			case MessageType.TEXT:
-				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 2000));
-
 				if (commentInfo.mIsShide == 0) {// not hide
-					viewHolder.messageNameText.setText(MyTextUtils.getSpannableString(replyFromToText,
-							MyTextUtils.addHttpLinks(commentInfo.content)));
+					viewHolder.tvText.setText(MyTextUtils.addHttpLinks(commentInfo.content));
 				} else {
-					viewHolder.messageNameText.setText(mContext.getString(R.string.shide_msg_prompt));
+					viewHolder.tvText.setText(mContext.getString(R.string.shide_msg_prompt));
 				}
 				break;
 			case MessageType.VOICE:
-				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 150));
-				viewHolder.messageNameText.setText(replyFromToText);
 				if (mCurrentModel == TEXT_MODEL) {
-					viewHolder.messageNameText.setText(MyTextUtils.getSpannableString(replyFromToText,
-							commentInfo.content));
-				}
-
-				if (mCurrentModel == VOICE_MODEL) {
-					viewHolder.voiceImageView.setLayoutParams(getVoiceViewLengthParams(
-							viewHolder.voiceImageView.getLayoutParams(), commentInfo));
-					viewHolder.voiceTimeText.setText(commentInfo.voiceTime + "''");
-					viewHolder.voiceLayout.setTag(commentInfo);
-					viewHolder.voiceLayout.setOnClickListener(new OnClickListener() {
+					viewHolder.tvText.setText(commentInfo.content);
+				} else {
+					viewHolder.ivVoice.setLayoutParams(getVoiceViewLengthParams(viewHolder.ivVoice.getLayoutParams(),
+							commentInfo));
+					viewHolder.tvVoiceLength.setText(commentInfo.voiceTime + "''");
+					viewHolder.layoutTextVoiceHolder.setTag(commentInfo);
+					viewHolder.layoutTextVoiceHolder.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							speexPlayerWrapper.start(commentInfo);
 						}
 					});
-					AnimationDrawable drawable = (AnimationDrawable) viewHolder.voiceImageView.getDrawable();
+					AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
 					if (speexPlayerWrapper.isPlay() && commentInfo.tag.equals(speexPlayerWrapper.getMessageTag())) {
 						drawable.start();
 					} else {
 						drawable.stop();
 						drawable.selectDrawable(0);
 					}
-				} else {
-					viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 1000));
-					notHideViews(viewHolder, MessageType.TEXT);
 				}
 				break;
 			case MessageType.PICTURE:
-				viewHolder.messageNameText.setMaxWidth(FeatureFunction.dip2px(mContext, 150));
 
 				int width = (int) (MyUtils.dip2px(mContext, commentInfo.imgWidth) * 0.7);
 				int height = (int) (MyUtils.dip2px(mContext, commentInfo.imgHeight) * 0.7);
 
-				viewHolder.picImageView.getLayoutParams().width = width;
-				viewHolder.picImageView.getLayoutParams().height = height;
-				viewHolder.messageNameText.setText(replyFromToText);
+				viewHolder.ivPhoto.getLayoutParams().width = width;
+				viewHolder.ivPhoto.getLayoutParams().height = height;
 				final String path = commentInfo.imgUrlS;
 				if (path.startsWith("http://")) {
-					ImageLoaderUtil.displayImageByProgress(path, viewHolder.picImageView, options,
-							viewHolder.progressBar);
+					ImageLoaderUtil.displayImageByProgress(path, viewHolder.ivPhoto, options, viewHolder.progressBar);
 				} else {
-					ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.picImageView, options,
+					ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.ivPhoto, options,
 							viewHolder.progressBar);
 				}
-				viewHolder.picImageView.setOnClickListener(new OnClickListener() {
+				viewHolder.ivPhoto.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(mContext, ShowImagesActivity.class);
@@ -1011,64 +1019,54 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			return convertView;
 		}
 
-		private void notHideViews(ViewHolder viewHolder, int which) {
+		private void notHideViews(ViewHolder viewHolder, MessageInfo messageInfo) {
 			viewHolder.layoutPicHolder.setVisibility(View.GONE);
-			viewHolder.voiceLayout.setVisibility(View.GONE);
-			viewHolder.progressBar.setVisibility(View.GONE);
-			viewHolder.messageNameText.setVisibility(View.VISIBLE);
-			switch (which) {
+
+			viewHolder.layoutTextVoiceHolder.setVisibility(View.GONE);
+			viewHolder.tvText.setVisibility(View.GONE);
+			viewHolder.tvVoiceLength.setVisibility(View.GONE);
+			viewHolder.ivVoice.setVisibility(View.GONE);
+			viewHolder.tvUserName.setVisibility(View.VISIBLE);
+			viewHolder.msgInfoLayout.setVisibility(View.VISIBLE);
+
+			boolean isShide = messageInfo.mIsShide == MessageState.MESSAGE_SHIDE;
+			boolean isShowVoiceText = (messageInfo.fileType == MessageType.VOICE) && (mCurrentModel == MODE_TEXT);
+			if (isShide || isShowVoiceText) {
+				viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
+				viewHolder.tvText.setVisibility(View.VISIBLE);
+				return;
+			}
+
+			switch (messageInfo.fileType) {
 			case MessageType.TEXT:
-				viewHolder.messageNameText.setVisibility(View.VISIBLE);
+				viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
+				viewHolder.tvText.setVisibility(View.VISIBLE);
 				break;
 			case MessageType.PICTURE:
 				viewHolder.layoutPicHolder.setVisibility(View.VISIBLE);
 				break;
 			case MessageType.VOICE:
-				viewHolder.voiceLayout.setVisibility(View.VISIBLE);
-				break;
-			case MessageType.MAP:
-				viewHolder.progressBar.setVisibility(View.VISIBLE);
+				viewHolder.layoutTextVoiceHolder.setVisibility(View.VISIBLE);
+				viewHolder.ivVoice.setVisibility(View.VISIBLE);
+				viewHolder.tvVoiceLength.setVisibility(View.VISIBLE);
 				break;
 			default:
 				break;
 			}
 		}
+
 	}
 
 	static class ViewHolder {
-		TextView messageNameText;
-		ImageView picImageView, voiceImageView, resendImageView, picImageCover;
-		TextView voiceTimeText;
-		RelativeLayout rootLayout;
-		RelativeLayout voiceLayout;
+		TextView tvUserName;
+		TextView tvText;
+		TextView tvChatTime;
+		ImageView ivPhoto, ivVoice, resendImageView, ivPhotoCover, ivHeade;
+		TextView tvVoiceLength;
+		View msgInfoLayout;
+		View layoutTextVoiceHolder;
 		View layoutPicHolder;
 		ProgressBar progressBar;
-	}
-
-	/* 重发信息 */
-	private void btnResendAction(MessageInfo messageInfo) {
-		if (messageInfo != null) {
-			switch (messageInfo.fileType) {
-			case MessageType.PICTURE:
-			case MessageType.VOICE:
-				resendFile(messageInfo);
-				break;
-			case MessageType.TEXT:
-				// sendMessage(messageInfo, 1);
-				break;
-
-			default:
-				break;
-			}
-		}
-	};
-
-	private void resendFile(MessageInfo messageInfo) {
-		try {
-			// sendFilePath(messageInfo, 1);
-		} catch (Exception e) {
-			showToast(mContext.getString(R.string.resend_failed));
-		}
 	}
 
 	private void removeMessage(MessageInfo messageInfo) {
@@ -1122,7 +1120,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 						}
 						messageInfos.addAll(data.data);
 						notifyDataSetChanged();
-						mListView.getRefreshableView().setSelection(data.data.size());
+//						mListView.getRefreshableView().setSelection(data.data.size());
 
 						if (data.pageInfo != null) {
 							isFull = data.pageInfo.hasMore == 0;// true not has
@@ -1235,9 +1233,24 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		case R.id.ab_chat_more:
 			showItemLongClickDialog(messageInfo);
 			break;
+		case R.id.iv_chat_down_arrow:
+			rotateArrow(tvZan.getVisibility() == View.VISIBLE);
+			tvZan.setVisibility(tvZan.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void rotateArrow(boolean arrowToTop) {
+		ivChatDownArrow.clearAnimation();
+		int start = arrowToTop ? 0 : 180;
+		RotateAnimation rotateAnimation = new RotateAnimation(start, 180 + start, Animation.RELATIVE_TO_SELF, 0.5f,
+				Animation.RELATIVE_TO_SELF, 0.5f);
+		rotateAnimation.setDuration(500);
+		rotateAnimation.setFillAfter(true);
+		rotateAnimation.setFillBefore(true);
+		ivChatDownArrow.startAnimation(rotateAnimation);
 	}
 
 	protected void btnCameraAction() {
@@ -1501,10 +1514,10 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private void bindZanView() {
 		zanCountBtn.setEnabled(true);
 		messageInfo.agreeCount = zanList.size();
-		likeCountText.setText(String.valueOf(zanList.size()));
+		tvZanCount.setText(String.valueOf(zanList.size()) + "人赞过");
 		zanCountBtn.setImageDrawable(this.getResources().getDrawable(R.drawable.icon_msg_detail_zan_normal));
 		if (zanList.size() > 0) {
-			zanText.setText(MyTextUtils.addUserSpans(getZanUserList(zanList)));
+			tvZan.setText(MyTextUtils.addUserSpans(getZanUserList(zanList)));
 			for (ZanBean info : zanList) {
 				if (info.uid.equals(mLogin.uid)) {
 					zanCountBtn
@@ -1512,8 +1525,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 					break;
 				}
 			}
+		} else {
+			tvZan.setText("客官，快来点赞吧:-)");
 		}
-		bindZanCommentBorderView();
 	}
 
 	private void bindFavoriteView() {
@@ -1522,7 +1536,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		} else {
 			favoriteCountBtn.setImageResource(R.drawable.icon_msg_detail_favorite_active);
 		}
-		favouriteCountText.setText(String.valueOf(messageInfo.favoriteCount));
 	}
 
 	private List<SpanUser> getZanUserList(List<ZanBean> zanBeans) {
@@ -1644,7 +1657,6 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void notifyDataSetChanged() {
-		bindZanCommentBorderView();
 		mAdapter.notifyDataSetChanged();
 	}
 
