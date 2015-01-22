@@ -1,10 +1,7 @@
 package com.gaopai.guiren.activity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import u.aly.A;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,10 +9,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,8 +25,6 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Item;
-import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Row;
-import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Section;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
@@ -73,6 +67,7 @@ public class ContactActivity extends BaseActivity {
 		initTitleBar();
 		setAbContentView(R.layout.activity_contact_list);
 
+		mListView = (PullToRefreshIndexableListView) findViewById(R.id.listView);
 		if (type == TYPE_FANS) {
 			if (isMyself) {
 				mTitleBar.setTitleText(getString(R.string.my_fans));
@@ -85,10 +80,12 @@ public class ContactActivity extends BaseActivity {
 			} else {
 				mTitleBar.setTitleText(getString(R.string.his_follow));
 			}
+			mListView.getRefreshableView().addHeaderView(creatHeaderView());
+			
 		}
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
-		mListView = (PullToRefreshIndexableListView) findViewById(R.id.listView);
+		
 		indexScroller = (SingleIndexScroller) findViewById(R.id.scroller);
 		etSearch = (EditText) findViewById(R.id.et_search);
 		etSearch.addTextChangedListener(new TextWatcher() {
@@ -182,6 +179,17 @@ public class ContactActivity extends BaseActivity {
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 		mListView.doPullRefreshing(true, 0);
+	}
+	
+	private View creatHeaderView() {
+		View view = mInflater.inflate(R.layout.layout_contact_header, null);
+		view.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(ContactActivity.getIntent(mContext, TYPE_FANS, uid));
+			}
+		});
+		return view;
 	}
 	
 	

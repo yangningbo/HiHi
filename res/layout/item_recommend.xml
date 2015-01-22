@@ -50,6 +50,18 @@
         android:singleLine="true"
         android:textColor="@color/content_gray_color"
         android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tv_recommend_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_recommend"
+        android:layout_marginTop="3dp"
+        android:layout_toRightOf="@id/layout_header_mvp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:visibility="gone"
+        android:textColor="@color/content_gray_color"
+        android:textSize="14sp" />
 
     <ImageButton
         android:id="@+id/btn_add"

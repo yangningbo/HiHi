@@ -120,7 +120,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private ImageView ivPhoto, headImageView;
 	private ProgressBar progressbar;
-	private TextView tvText, tvVoiceLength, tvCommentCount, tvZanCount, tvName, tvZan;
+	private TextView tvText, tvVoiceLength, tvCommentCount, tvZanCount, tvName, tvZan, tvChatTime;
 	private ImageView commentCountBtn, favoriteCountBtn, zanCountBtn;
 	private View layoutChatVoice;
 	private View ivVoiceTriangle;
@@ -653,6 +653,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		View view = mInflater.inflate(R.layout.activity_chat_comment_layout, null);
 		tvZan = (TextView) view.findViewById(R.id.zan_text);
 		tvZan.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		tvChatTime = (TextView) view.findViewById(R.id.tv_chat_time);
 		tvText = (TextView) view.findViewById(R.id.iv_chat_text);
 		tvVoiceLength = (TextView) view.findViewById(R.id.tv_chat_voice_time_length);
 		layoutChatVoice = view.findViewById(R.id.layout_chat_voice);
@@ -747,6 +748,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		ImageLoaderUtil.displayImage(messageInfo.headImgUrl, headImageView, R.drawable.default_header);
 		tvName.setText(messageInfo.displayname);
 		tvText.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		tvChatTime.setText(DateUtil.getCreateTime(messageInfo.time));
 		notHideViews(messageInfo.fileType);
 		switch (messageInfo.fileType) {
 		case MessageType.TEXT:

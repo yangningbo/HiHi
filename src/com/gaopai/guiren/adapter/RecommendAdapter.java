@@ -126,6 +126,7 @@ public class RecommendAdapter<T> extends BaseAdapter {
 			convertView = mInflater.inflate(R.layout.item_recommend, null);
 			holder = new ViewHolder();
 			holder.tvRecommend = (TextView) convertView.findViewById(R.id.tv_recommend);
+			holder.tvRecommendInfo = (TextView) convertView.findViewById(R.id.tv_recommend_info);
 			holder.tvUserName = (TextView) convertView.findViewById(R.id.tv_user_name);
 			holder.ivHeader = (ImageView) convertView.findViewById(R.id.iv_header);
 			holder.btnAdd = (ImageButton) convertView.findViewById(R.id.btn_add);
@@ -140,6 +141,8 @@ public class RecommendAdapter<T> extends BaseAdapter {
 			holder.layoutHeader.setMVP(user.bigv == 1);
 			holder.tvUserName.setText(user.realname);
 			holder.tvRecommend.setText(User.getUserInfo(user));
+			holder.tvRecommendInfo.setVisibility(View.VISIBLE);
+			holder.tvRecommendInfo.setText("系统为您精选");
 			holder.btnAdd.setOnClickListener(mAddClickListener);
 			holder.btnAdd.setTag(user);
 			if (choseSet.contains(user.uid)) {
@@ -166,6 +169,7 @@ public class RecommendAdapter<T> extends BaseAdapter {
 	final static class ViewHolder {
 		TextView tvUserName;
 		TextView tvRecommend;
+		TextView tvRecommendInfo;
 		ImageView ivHeader;
 		ImageButton btnAdd;
 		HeadView layoutHeader;

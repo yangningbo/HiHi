@@ -526,6 +526,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void onLoginSuccess() {
+//		mUser = DamiCommon.getLoginResult(this);
+//		if (mUser.integral < 210) {
+//		}
 		layoutWelcome.setVisibility(View.GONE);
 		onNewIntent(notifyItent);
 		bindUserView();
@@ -594,14 +597,14 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		}
 		return isShowGudie;
 	}
-	
+
 	public void showNotificationDot() {
 		PreferenceOperateUtils operateUtils = new PreferenceOperateUtils(this);
 		int count = operateUtils.getInt(SPConst.KEY_HAS_NOTIFICATION, 0);
 		TextView viewDot = ViewUtil.findViewById(this, R.id.iv_count_4);
 		if (count > 0) {
 			viewDot.setVisibility(View.VISIBLE);
-			viewDot.setText(count < 99 ? String.valueOf(count) : count+"+");
+			viewDot.setText(count < 99 ? String.valueOf(count) : count + "+");
 		} else {
 			viewDot.setVisibility(View.GONE);
 		}
