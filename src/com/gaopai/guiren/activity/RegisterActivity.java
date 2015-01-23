@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -40,7 +41,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private TextView tvRequestVeryficaion;
 
 	private TextView tvCountryCode;
-	private CheckBox cbAgreeGuiren;
+	private ImageButton cbAgreeGuiren;
 	private TextView tvAgreeGuiren;
 
 	private Button btnEye;
@@ -52,6 +53,8 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	public final static int TYPE_BIND_PHONE = 2;
 	public final static String KEY_TYPE = "type";
 	private int type;
+
+	private boolean isChecked = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +97,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 		tvCountryCode = ViewUtil.findViewById(this, R.id.tv_country_num);
 		cbAgreeGuiren = ViewUtil.findViewById(this, R.id.cb_agree_guiren);
+		cbAgreeGuiren.setOnClickListener(this);
 		tvAgreeGuiren = ViewUtil.findViewById(this, R.id.tv_agree_guiren);
 		tvAgreeGuiren.setOnClickListener(this);
-		
+
 		tvCountryCode.setText(countryCode);
 
 		if (type == TYPE_REGISTER) {
@@ -113,7 +117,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			findViewById(R.id.layout_input_name).setVisibility(View.GONE);
 			findViewById(R.id.layout_input_password).setVisibility(View.GONE);
 		}
-		
+
 		etPhone.addTextChangedListener(new ViewUtil.SimpleWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -293,13 +297,17 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		case R.id.tv_agree_guiren:
 			startActivity(UserProtocalActivity.getIntent(mContext, 0));
 			return;
+		case R.id.cb_agree_guiren:
+			isChecked = !isChecked;
+			cbAgreeGuiren.setImageResource(isChecked ? R.drawable.icon_check_box_hook : R.drawable.transparent);
+			break;
 		default:
 			break;
 		}
 	}
 
 	private void confirm() {
-		if(!cbAgreeGuiren.isChecked()) {
+		if (!isChecked) {
 			showToast(R.string.please_agree_guiren_first);
 			return;
 		}

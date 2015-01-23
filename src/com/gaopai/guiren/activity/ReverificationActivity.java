@@ -38,12 +38,12 @@ public class ReverificationActivity extends BaseActivity {
 	private EditText etWeibo;
 
 	private User mUser = null;
-	
-	
+
 	public final static int TYPE_NORMAL = 0;
 	public final static int TYPE_SHORT_OF_INTEGRA = 1;
 
 	private int type;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -58,12 +58,7 @@ public class ReverificationActivity extends BaseActivity {
 			mTitleBar.addRightTextView(R.string.jump_over).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (showRecomendPage()) {
-						DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
-						Intent intent = new Intent(ReverificationActivity.this, RecommendActivity.class);
-						startActivity(intent);
-					}
-					ReverificationActivity.this.finish();
+					goToRecomendPage();
 				}
 			});
 		}
@@ -89,8 +84,9 @@ public class ReverificationActivity extends BaseActivity {
 				final String email = etEmail.getText().toString();
 				final String weixin = etWeixin.getText().toString();
 				final String weibo = etWeibo.getText().toString();
-				if (TextUtils.isEmpty(name.trim()) || TextUtils.isEmpty(company.trim()) || TextUtils.isEmpty(industry.trim())
-						|| TextUtils.isEmpty(job.trim()) || TextUtils.isEmpty(phone.trim()) || TextUtils.isEmpty(email.trim())) {
+				if (TextUtils.isEmpty(name.trim()) || TextUtils.isEmpty(company.trim())
+						|| TextUtils.isEmpty(industry.trim()) || TextUtils.isEmpty(job.trim())
+						|| TextUtils.isEmpty(phone.trim()) || TextUtils.isEmpty(email.trim())) {
 					showToast(R.string.must_input_can_not_be_empty);
 					return;
 				}
@@ -143,6 +139,16 @@ public class ReverificationActivity extends BaseActivity {
 			}
 		});
 	}
+
+	private void goToRecomendPage() {
+		if (showRecomendPage()) {
+			DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
+			Intent intent = new Intent(ReverificationActivity.this, RecommendActivity.class);
+			startActivity(intent);
+		}
+		ReverificationActivity.this.finish();
+	}
+
 	private boolean showRecomendPage() {
 		return DamiApp.getInstance().getPou().getBoolean(SPConst.getRecKey(mContext), true);
 	}
@@ -158,10 +164,20 @@ public class ReverificationActivity extends BaseActivity {
 			}
 		});
 	}
-	
+
 	public static Intent getIntent(Context context) {
 		Intent intent = new Intent(context, ReverificationActivity.class);
 		intent.putExtra("type", TYPE_SHORT_OF_INTEGRA);
 		return intent;
 	}
+
+	@Override
+	public void onBackPressed() {
+		if (type == TYPE_SHORT_OF_INTEGRA) {
+			goToRecomendPage();
+		} else {
+			super.onBackPressed();
+		}
+	}
+
 }

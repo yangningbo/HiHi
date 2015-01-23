@@ -2,7 +2,8 @@
 <com.gaopai.guiren.support.view.ChatDetailFixedHeader xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_chat_detail_fixedheader"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/chat_detail_background" >
 
     <com.gaopai.guiren.support.view.PullToRefreshChatDetailListView
         android:id="@+id/listview"
@@ -42,73 +43,23 @@
         android:layout_alignParentBottom="true"
         layout="@layout/chat_box" />
 
-    <LinearLayout
-        android:id="@+id/layout_zan_header_copy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone" >
-
-        <RelativeLayout
-            android:id="@+id/ll_zan"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/white"
-            android:gravity="center_vertical" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:drawableLeft="@drawable/icon_chat_detail_retangle"
-                android:drawablePadding="15dp"
-                android:gravity="center_vertical"
-                android:text="觉得很赞"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:id="@+id/iv_chat_down_arrow1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_chat_detail_down_arrow" />
-
-            <TextView
-                android:id="@+id/chat_zan_count1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/iv_chat_down_arrow"
-                android:gravity="right"
-                android:textColor="@color/general_text_gray"
-                android:textSize="13sp" />
-        </RelativeLayout>
-
-        <View style="@style/general_thin_divider_in_white" />
-
-        <TextView
-            android:id="@+id/zan_text1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="10dp" />
-
-        <View style="@style/general_thin_divider_in_white" />
-    </LinearLayout>
-
     <RelativeLayout
         android:id="@+id/layout_comment_header_copy"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:background="@color/white"
         android:gravity="center_vertical" >
+
+        <ImageView
+            android:id="@+id/iv_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_alignParentBottom="true" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_above="@id/iv_shadow"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:drawableLeft="@drawable/icon_chat_detail_retangle"
@@ -121,16 +72,13 @@
             android:id="@+id/chat_comment_count1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@id/iv_shadow"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:gravity="right|center_vertical"
             android:textColor="@color/general_text_gray"
             android:textSize="13sp" />
-
-        <View
-            style="@style/general_thin_divider_in_white"
-            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 
 </com.gaopai.guiren.support.view.ChatDetailFixedHeader>

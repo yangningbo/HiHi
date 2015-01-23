@@ -59,7 +59,10 @@ public class DamiCommon {
 	public static final String MESSAGE_NOTIFY = "message_notify";
 	public static final String SOUND = "sound";
 	
-	public final static int BASE_INTEGRA = 500;
+	public final static int BASE_INTEGRA = 1000;
+	// 30 * 24 * 60 * 60 * 1000
+//	public final static long BASE_GET_PHONE_INTERVAL = 2592000000L;
+	public final static long BASE_GET_PHONE_INTERVAL = 1L;
 
 	/**
 	 * 版本号文件存储常量

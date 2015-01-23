@@ -386,9 +386,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	private void getLogin(final String type, final String sex, final String id, final String nickName,
 			final String head, final String password) {
 
-		Logger.startCountTime();
 		String phone = getContacts();
-		Logger.time(this, "time");
 		if (TextUtils.isEmpty(phone)) {
 			showToast(R.string.login_need_contact);
 			return;
@@ -411,13 +409,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 						if (data.data.integral < DamiCommon.BASE_INTEGRA) {
 							startActivity(ReverificationActivity.getIntent(mContext));
 						}
-						// if (showRecomendPage()) {
-						// DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext),
-						// false);
-						// Intent intent = new Intent(LoginActivity.this,
-						// RecommendActivity.class);
-						// startActivity(intent);
-						// }
 						LoginActivity.this.finish();
 					} else {
 						showToast(R.string.login_error);
@@ -468,8 +459,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 	private String getContacts() {
 		long lastTime = DamiApp.getInstance().getPou().getLong(SPConst.KEY_READ_PHONE_NUM_TIME, 0L);
-		// 30 * 24 * 60 * 60 * 1000
-		if (System.currentTimeMillis() - lastTime < 2592000000L) {
+	
+		if (System.currentTimeMillis() - lastTime < DamiCommon.BASE_GET_PHONE_INTERVAL) {
 			DamiApp.getInstance().getPou().setLong(SPConst.KEY_READ_PHONE_NUM_TIME, System.currentTimeMillis());
 			return "";
 		}

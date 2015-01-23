@@ -3,7 +3,7 @@
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F3F0F0"
+    android:background="@color/chat_detail_background"
     android:orientation="vertical" >
 
     <View
@@ -42,8 +42,8 @@
                 android:id="@+id/tv_chat_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignBottom="@id/tv_user_name"
+                android:layout_alignParentRight="true"
                 android:textColor="@color/general_text_gray"
                 android:textSize="12sp" />
 
@@ -68,6 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="5.33dp"
                     android:src="@drawable/icon_chat_detail_triangle"
                     android:visibility="visible" />
 

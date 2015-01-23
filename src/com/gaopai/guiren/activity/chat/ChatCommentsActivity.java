@@ -445,6 +445,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		mListView.setPullRefreshEnabled(false); // 下拉刷新，启用
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
 		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
+		mListView.getRefreshableView().setFastScrollEnabled(false);
 		mListView.setOnRefreshListener(new OnRefreshListener<ChatDetailFixedHeaderListView>() {
 
 			@Override

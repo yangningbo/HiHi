@@ -31,7 +31,7 @@
             android:layout_weight="3"
             android:background="@drawable/selector_btn_general"
             android:drawableRight="@drawable/icon_right_arrow"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:padding="@dimen/general_paading"
             android:text="@string/china_full_name"
             android:textSize="@dimen/general_font_medium" />
@@ -60,7 +60,7 @@
 
         <EditText
             android:id="@+id/et_input_name"
-            style="@style/general_edittext"
+            style="@style/general_edittext_no_border"
             android:layout_width="match_parent"
             android:hint="@string/please_input_your_name" />
     </LinearLayout>
@@ -73,7 +73,7 @@
 
         <EditText
             android:id="@+id/et_input_phone"
-            style="@style/general_edittext"
+            style="@style/general_edittext_no_border"
             android:layout_width="match_parent"
             android:hint="@string/please_input_phone"
             android:inputType="phone"
@@ -98,7 +98,7 @@
 
     <EditText
         android:id="@+id/et_input_veryfication_code"
-        style="@style/general_edittext"
+        style="@style/general_edittext_no_border"
         android:layout_width="match_parent"
         android:layout_height="@dimen/general_button_medium"
         android:hint="@string/please_input_verify_code" />
@@ -122,7 +122,7 @@
 
         <EditText
             android:id="@+id/et_input_password"
-            style="@style/general_edittext"
+            style="@style/general_edittext_no_border"
             android:layout_width="match_parent"
             android:hint="@string/please_input_password"
             android:inputType="textPassword"
@@ -166,20 +166,24 @@
             android:id="@+id/layout_agree_guiren"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal" >
 
-            <CheckBox
+            <ImageButton
                 android:id="@+id/cb_agree_guiren"
+                android:background="@drawable/icon_check_box_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tv_agree_guiren"
                 android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_height="wrap_content"
                 android:text="@string/gree_guiren_protocol"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
                 android:background="@drawable/selector_btn_transparent_general"
                 android:textColor="@color/general_text_gray"
                 android:textSize="@dimen/general_font_small" />
