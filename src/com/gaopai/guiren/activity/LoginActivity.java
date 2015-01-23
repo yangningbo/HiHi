@@ -2,6 +2,7 @@ package com.gaopai.guiren.activity;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -466,7 +467,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	}
 
 	private String getContacts() {
-
+		long lastTime = DamiApp.getInstance().getPou().getLong(SPConst.KEY_READ_PHONE_NUM_TIME, 0L);
+		// 30 * 24 * 60 * 60 * 1000
+		if (System.currentTimeMillis() - lastTime < 2592000000L) {
+			DamiApp.getInstance().getPou().setLong(SPConst.KEY_READ_PHONE_NUM_TIME, System.currentTimeMillis());
+			return "";
+		}
+		DamiApp.getInstance().getPou().setLong(SPConst.KEY_READ_PHONE_NUM_TIME, System.currentTimeMillis());
 		ContentResolver contentResolver = getContentResolver();
 		String[] projection = { BaseColumns._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
 				ContactsContract.CommonDataKinds.Phone.DATA1, "sort_key",
@@ -478,6 +485,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 		String phoneStr = "";
 
+		Pattern pattern = Pattern.compile("[^?&]*");
+
 		if (cursor != null) {
 			while (cursor.moveToNext()) {
 				String phoneNumber = cursor.getString(cursor
@@ -485,7 +494,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 				phoneNumber = phoneNumber.replaceAll(" ", "");
 
 				String contactName = cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME));
-				if (TextUtils.isEmpty(phoneNumber)) {
+				if (TextUtils.isEmpty(phoneNumber) || (!pattern.matcher(contactName).matches())) {
 					continue;
 				}
 				if (TextUtils.isEmpty(phoneStr)) {

@@ -29,6 +29,7 @@ public class SPConst {
 	public final static String KEY_GUIDE_USE_REAL_NAME = "use_real_name";
 	public final static String KEY_GUIDE_START_PAGE = "guide_start_page";
 	public final static String KEY_SHOW_RECOMMEND_PAGE = "show_rec_page";
+	public final static String KEY_READ_PHONE_NUM_TIME = "read_phone_num_time";
 
 	public static String getRecKey(Context context) {
 		return DamiCommon.getUid(context) + KEY_SHOW_RECOMMEND_PAGE;

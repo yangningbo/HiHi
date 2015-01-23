@@ -546,9 +546,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 						DamiCommon.saveLoginResult(MainActivity.this, data.data);
 						DamiCommon.setUid(data.data.uid);
 						DamiCommon.setToken(data.data.token);
-						if (data.data.integral < DamiCommon.BASE_INTEGRA) {
-							startActivity(ReverificationActivity.getIntent(mContext));
-						}
 						SQLiteDatabase db = DBHelper.getInstance(MainActivity.this).getWritableDatabase();
 						MessageTable table = new MessageTable(db);
 						if (data.data.roomids != null)
@@ -557,7 +554,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 					}
 					return;
 				} else {
-			
 					otherCondition(data.state, MainActivity.this);
 					reLogin();
 				}
