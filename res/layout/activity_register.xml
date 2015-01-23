@@ -1,134 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/general_background" >
+    android:background="@color/general_background"
+    android:orientation="vertical"
+    android:paddingTop="20dp" >
+
+    <View style="@style/general_thin_divider_in_white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/general_button_medium"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_country_num"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textSize="@dimen/general_font_medium" />
+
+        <View style="@style/general_thin_divider_in_white_vertical" />
+
+        <TextView
+            android:id="@+id/tv_select_country"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/general_button_medium"
+            android:layout_weight="3"
+            android:background="@drawable/selector_btn_general"
+            android:drawableRight="@drawable/icon_right_arrow"
+            android:gravity="center_vertical"
+            android:padding="@dimen/general_paading"
+            android:text="@string/china_full_name"
+            android:textSize="@dimen/general_font_medium" />
+    </LinearLayout>
+
+    <View style="@style/general_thin_divider_in_white" />
 
     <TextView
-        android:id="@+id/tv_register_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/general_paading"
+        android:layout_marginLeft="@dimen/general_paading"
         android:layout_marginTop="5dp"
-        android:gravity="center_horizontal"
-        android:text="填写中如果有问题，请关注微信号：guirenhui"
+        android:text="@string/please_chose_country"
         android:textColor="@color/general_text_gray"
         android:textSize="@dimen/general_font_small" />
 
     <LinearLayout
+        android:id="@+id/layout_input_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/tv_register_info"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="20dp" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            style="@style/general_thin_divider_in_white"
+            android:layout_marginTop="@dimen/general_large_gap" />
 
         <EditText
             android:id="@+id/et_input_name"
             style="@style/general_edittext"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/general_large_gap"
-            android:hint="@string/please_input_your_name"/>
+            android:hint="@string/please_input_your_name" />
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_select_country"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/general_button_medium"
-            android:background="@drawable/selector_btn_general"
-            android:gravity="center_vertical"
-            android:padding="@dimen/general_paading"
-            android:layout_marginTop="@dimen/general_paading"
-            android:text="@string/china_full_name"
-            android:textSize="@dimen/general_font_medium" />
+    <View style="@style/general_thin_divider_in_white" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/please_chose_country"
-            android:textColor="@color/general_text_gray"
-            android:textSize="@dimen/general_font_small" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/general_button_medium" >
 
         <EditText
             android:id="@+id/et_input_phone"
             style="@style/general_edittext"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/general_large_gap"
             android:hint="@string/please_input_phone"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:paddingRight="100dp" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_send_veryfication"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/general_large_gap"
+            android:layout_marginRight="@dimen/general_paading"
+            android:background="@drawable/selector_tribe_detail_btn_blue"
+            android:text="@string/send_verify_code"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <View style="@style/general_thin_divider_in_white" />
+
+    <EditText
+        android:id="@+id/et_input_veryfication_code"
+        style="@style/general_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/general_button_medium"
+        android:hint="@string/please_input_verify_code" />
+
+    <View style="@style/general_thin_divider_in_white" />
+
+    <TextView
+        android:id="@+id/tv_request_veryfication"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/general_text_gray"
+        android:textSize="@dimen/general_font_small"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/layout_input_password"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/general_button_medium"
+        android:layout_marginTop="@dimen/general_large_gap" >
+
+        <EditText
+            android:id="@+id/et_input_password"
+            style="@style/general_edittext"
+            android:layout_width="match_parent"
+            android:hint="@string/please_input_password"
+            android:inputType="textPassword"
+            android:paddingRight="@dimen/general_button_medium" />
+
+        <Button
+            android:id="@+id/btn_pswd_eye"
+            android:layout_width="@dimen/general_button_medium"
+            android:layout_height="@dimen/general_button_medium"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/icon_eye" />
+
+        <View
+            style="@style/general_thin_divider_in_white"
+            android:layout_alignParentTop="true" />
+
+        <View
+            style="@style/general_thin_divider_in_white"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btn_confirm"
             android:layout_width="match_parent"
             android:layout_height="@dimen/general_button_medium"
-            android:layout_marginTop="@dimen/general_large_gap"
-            android:orientation="horizontal" >
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_tribe_detail_btn_blue"
+            android:text="@string/confirm_register"
+            android:textColor="@color/white" />
 
-            <EditText
-                android:id="@+id/et_input_veryfication_code"
-                style="@style/general_edittext"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:hint="@string/please_input_verify_code" />
-
-            <Button
-                android:id="@+id/btn_send_veryfication"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/general_large_gap"
-                android:layout_weight="2"
-                android:background="@drawable/selector_tribe_detail_btn_green"
-                android:text="@string/send_verify_code"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_request_veryfication"
+        <LinearLayout
+            android:id="@+id/layout_agree_guiren"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textColor="@color/general_text_gray"
-            android:textSize="@dimen/general_font_small"
-            android:visibility="gone" />
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
 
-        <RelativeLayout
+            <CheckBox
+                android:id="@+id/cb_agree_guiren"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_agree_guiren"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gree_guiren_protocol"
+                android:textColor="@color/general_text_gray"
+                android:textSize="@dimen/general_font_small" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_register_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/general_large_gap" >
-
-            <EditText
-                android:id="@+id/et_input_password"
-                style="@style/general_edittext"
-                android:layout_width="match_parent"
-                android:hint="@string/please_input_password"
-                android:inputType="textPassword"
-                android:paddingRight="@dimen/general_button_medium" />
-
-            <Button
-                android:id="@+id/btn_pswd_eye"
-                android:layout_width="@dimen/general_button_medium"
-                android:layout_height="@dimen/general_button_medium"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/icon_eye" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Button
-                android:id="@+id/btn_confirm"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/general_button_medium"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/selector_tribe_detail_btn_blue"
-                android:text="@string/confirm_register"
-                android:textColor="@color/white" />
-        </LinearLayout>
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:text="填写中如果有问题，请关注微信号：guirenhui"
+            android:textColor="@color/general_text_gray"
+            android:textSize="@dimen/general_font_small" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

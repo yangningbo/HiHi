@@ -94,9 +94,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 		case R.id.tv_help:
-			Intent helpIntent = new Intent(mContext, UserProtocalActivity.class);
-			helpIntent.putExtra("type", 1);
-			startActivity(helpIntent);
+			startActivity(UserProtocalActivity.getIntent(mContext, 1));
 			break;
 		case R.id.tv_send_feedback:
 			Intent intent = new Intent();

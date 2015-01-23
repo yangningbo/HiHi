@@ -703,7 +703,7 @@
     <string name="confirm_bind_phone">绑定</string>
     <string name="send_verify_code">发送验证码</string>
     <string name="please_input_verify_code">请输入验证码</string>
-    <string name="please_chose_country">选择您手机号码所在的国家，以便收到短信</string>
+    <string name="please_chose_country">选择您手机号码所在的国家，以便收到验证码</string>
     <string name="please_input_phone">请输入手机号码</string>
     <string name="forget_password">忘记密码?</string>
     <string name="new_user_register">新账户注册</string>
@@ -729,6 +729,8 @@
     <string name="modify_password">修改密码</string>
     <string name="dynamic_msg">动态消息</string>
     <string name="china_full_name">中华人民共和国</string>
+    <string name="please_agree_guiren_first">请先同意贵人会服务条款</string>
+    <string name="gree_guiren_protocol">我同意贵人会服务条款</string>
 
     <!-- send dynamic -->
     <string name="send_dynamic">发布动态</string>

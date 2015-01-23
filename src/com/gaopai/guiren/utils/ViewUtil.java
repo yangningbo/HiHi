@@ -471,28 +471,6 @@ public class ViewUtil {
 		return (T) activity.findViewById(id);
 	}
 
-	public static interface OnTextChangedListener {
-		public void onTextChanged(Editable s);
-	}
-
-	public static TextWatcher creatNumLimitWatcher(final EditText etDynamicMsg, final int numLimit,
-			final OnTextChangedListener changedListener) {
-		return new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				changedListener.onTextChanged(s);
-			}
-		};
-	}
 
 	public static View creatTitleBarLineView(Context context) {
 		View view = new View(context);
@@ -500,5 +478,19 @@ public class ViewUtil {
 				R.dimen.general_line_narrow)));
 		view.setBackgroundColor(context.getResources().getColor(R.color.titlebar_divider));
 		return view;
+	}
+	
+	public static class SimpleWatcher implements TextWatcher {
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+		}
 	}
 }

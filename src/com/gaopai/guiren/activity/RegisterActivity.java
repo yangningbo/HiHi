@@ -5,15 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -35,6 +38,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private EditText etName;
 	private TextView tvSelectCountry;
 	private TextView tvRequestVeryficaion;
+
+	private TextView tvCountryCode;
+	private CheckBox cbAgreeGuiren;
+	private TextView tvAgreeGuiren;
 
 	private Button btnEye;
 	private Handler mHandler;
@@ -85,6 +92,13 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		btnEye = ViewUtil.findViewById(this, R.id.btn_pswd_eye);
 		btnEye.setOnClickListener(this);
 
+		tvCountryCode = ViewUtil.findViewById(this, R.id.tv_country_num);
+		cbAgreeGuiren = ViewUtil.findViewById(this, R.id.cb_agree_guiren);
+		tvAgreeGuiren = ViewUtil.findViewById(this, R.id.tv_agree_guiren);
+		tvAgreeGuiren.setOnClickListener(this);
+		
+		tvCountryCode.setText(countryCode);
+
 		if (type == TYPE_REGISTER) {
 			btnConfirm.setText(R.string.confirm_register);
 			mTitleBar.setTitleText(R.string.register);
@@ -96,7 +110,20 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			mTitleBar.setTitleText(R.string.bind_phone);
 			etPassword.setVisibility(View.GONE);
 			etName.setVisibility(View.GONE);
+			findViewById(R.id.layout_input_name).setVisibility(View.GONE);
+			findViewById(R.id.layout_input_password).setVisibility(View.GONE);
 		}
+		
+		etPhone.addTextChangedListener(new ViewUtil.SimpleWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if (s.length() > 0) {
+					btnSendVeryfication.setVisibility(View.VISIBLE);
+				} else {
+					btnSendVeryfication.setVisibility(View.GONE);
+				}
+			}
+		});
 	}
 
 	private boolean isCountDown = false;
@@ -223,6 +250,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			String code = intent.getStringExtra(CountryCodeActivity.KEY_COUNTRY_CODE);
 			String name = intent.getStringExtra(CountryCodeActivity.KEY_COUNTRY_NAME);
 			countryCode = code;
+			tvCountryCode.setText(countryCode);
 			tvSelectCountry.setText(name);
 		}
 	}
@@ -262,24 +290,31 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			}
 			etPassword.setSelection(selection);
 			break;
+		case R.id.tv_agree_guiren:
+			startActivity(UserProtocalActivity.getIntent(mContext, 0));
+			return;
 		default:
 			break;
 		}
 	}
 
 	private void confirm() {
+		if(!cbAgreeGuiren.isChecked()) {
+			showToast(R.string.please_agree_guiren_first);
+			return;
+		}
 		String password = etPassword.getText().toString();
 		String veryfication = etVeryfication.getText().toString();
 		if (TextUtils.isEmpty(etPhone.getText())) {
 			showToast(R.string.phone_can_not_be_empty);
 			return;
 		}
-		
+
 		if (TextUtils.isEmpty(veryfication)) {
 			showToast(R.string.veryficaion_can_not_be_empty);
 			return;
 		}
-		
+
 		if (type == TYPE_BIND_PHONE) {
 			bindPhone();
 			return;
@@ -288,7 +323,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			showToast(R.string.password_can_not_be_empty);
 			return;
 		}
-		
 
 		if (TextUtils.isEmpty(etName.getText())) {
 			showToast(R.string.name_can_not_be_empty);
@@ -299,9 +333,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void bindPhone() {
-		
+
 	}
-	
+
 	public static Intent getIntent(Context context, int type) {
 		Intent intent = new Intent(context, RegisterActivity.class);
 		intent.putExtra(KEY_TYPE, type);

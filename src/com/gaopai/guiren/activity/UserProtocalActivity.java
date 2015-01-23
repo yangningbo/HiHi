@@ -1,5 +1,7 @@
 package com.gaopai.guiren.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebView;
 
@@ -42,6 +44,12 @@ public class UserProtocalActivity extends BaseActivity {
 		mWebView.getSettings().setJavaScriptEnabled(true);
 
 		mWebView.loadUrl(path);
+	}
+
+	public static Intent getIntent(Context context, int type) {
+		Intent intent = new Intent(context, UserProtocalActivity.class);
+		intent.putExtra("type", type);
+		return intent;
 	}
 
 }

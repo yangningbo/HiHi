@@ -364,6 +364,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
     </style>
+    <style name="general_thin_divider_in_white_vertical">
+        <item name="android:background">@color/general_divider_in_white</item>
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
 
     <style name="general_thin_divider_in_drak">
         <item name="android:background">@color/profile_vertical_divider</item>
