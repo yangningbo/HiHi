@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -299,6 +300,12 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 	private void bindPhone() {
 		
+	}
+	
+	public static Intent getIntent(Context context, int type) {
+		Intent intent = new Intent(context, RegisterActivity.class);
+		intent.putExtra(KEY_TYPE, type);
+		return intent;
 	}
 
 }

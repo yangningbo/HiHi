@@ -526,9 +526,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void onLoginSuccess() {
-//		mUser = DamiCommon.getLoginResult(this);
-//		if (mUser.integral < 210) {
-//		}
 		layoutWelcome.setVisibility(View.GONE);
 		onNewIntent(notifyItent);
 		bindUserView();
@@ -549,6 +546,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 						DamiCommon.saveLoginResult(MainActivity.this, data.data);
 						DamiCommon.setUid(data.data.uid);
 						DamiCommon.setToken(data.data.token);
+						if (data.data.integral < DamiCommon.BASE_INTEGRA) {
+							startActivity(ReverificationActivity.getIntent(mContext));
+						}
 						SQLiteDatabase db = DBHelper.getInstance(MainActivity.this).getWritableDatabase();
 						MessageTable table = new MessageTable(db);
 						if (data.data.roomids != null)
@@ -557,6 +557,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 					}
 					return;
 				} else {
+			
 					otherCondition(data.state, MainActivity.this);
 					reLogin();
 				}
@@ -618,7 +619,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				MainActivity.this.finish();
 				return;
 			} else if (resultCode == RESULT_OK) {
-				onLoginSuccess();
+				// Login activity has sent broadcast
 			} else if (resultCode == UNLOGIN_REQUEST) {
 				FeatureFunction.startService(mContext);
 			} else {

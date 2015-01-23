@@ -1,11 +1,9 @@
 package com.gaopai.guiren.activity;
 
-import java.util.regex.Pattern;
-
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -17,7 +15,6 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserInfoBean;
-import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -37,6 +34,7 @@ public class ChangeProfileActivity extends BaseActivity {
 
 	private User mUser = null;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -141,4 +139,6 @@ public class ChangeProfileActivity extends BaseActivity {
 			}
 		});
 	}
+	
+
 }

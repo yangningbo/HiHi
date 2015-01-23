@@ -57,6 +57,7 @@ import com.umeng.socialize.controller.listener.SocializeListeners.UMAuthListener
 import com.umeng.socialize.controller.listener.SocializeListeners.UMDataListener;
 import com.umeng.socialize.exception.SocializeException;
 import com.umeng.socialize.sso.UMSsoHandler;
+
 public class LoginActivity extends BaseActivity implements OnClickListener, OnTouchListener {
 
 	private Button btnQQLogin;
@@ -107,13 +108,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_SHOW));
 	}
 
-
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
 		intentFilter.addAction(WXEntryActivity.ACTION_LOGIN_WECHAT);
 	}
-	
-	
 
 	@Override
 	protected void onReceive(Intent intent) {
@@ -409,16 +407,24 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
 						setResult(RESULT_OK);
 						sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-						if (showRecomendPage()) {
-							DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
-							Intent intent = new Intent(LoginActivity.this, RecommendActivity.class);
-							startActivity(intent);
+						if (data.data.integral < DamiCommon.BASE_INTEGRA) {
+							startActivity(ReverificationActivity.getIntent(mContext));
 						}
+						// if (showRecomendPage()) {
+						// DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext),
+						// false);
+						// Intent intent = new Intent(LoginActivity.this,
+						// RecommendActivity.class);
+						// startActivity(intent);
+						// }
 						LoginActivity.this.finish();
 					} else {
 						showToast(R.string.login_error);
 					}
 				} else {
+					if (data.state.code == 9) {
+						startActivity(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE));
+					}
 					if (data.state != null && !StringUtils.isEmpty(data.state.msg)) {
 						showToast(data.state.msg);
 					}
@@ -454,7 +460,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		});
 
 	}
-	
 
 	private boolean showRecomendPage() {
 		return DamiApp.getInstance().getPou().getBoolean(SPConst.getRecKey(mContext), true);

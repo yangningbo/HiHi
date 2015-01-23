@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +12,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -35,17 +38,35 @@ public class ReverificationActivity extends BaseActivity {
 	private EditText etWeibo;
 
 	private User mUser = null;
+	
+	
+	public final static int TYPE_NORMAL = 0;
+	public final static int TYPE_SHORT_OF_INTEGRA = 1;
 
+	private int type;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
 		setAbContentView(R.layout.activity_verification_profile);
+		type = getIntent().getIntExtra("type", TYPE_NORMAL);
 		mUser = DamiCommon.getLoginResult(this);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.click_verify);
-
+		if (type == 1) {
+			mTitleBar.addRightTextView(R.string.jump_over).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (showRecomendPage()) {
+						DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
+						Intent intent = new Intent(ReverificationActivity.this, RecommendActivity.class);
+						startActivity(intent);
+					}
+					ReverificationActivity.this.finish();
+				}
+			});
+		}
 		etName = (EditText) findViewById(R.id.et_real_name);
 		etCompany = (EditText) findViewById(R.id.et_company);
 		etIndustry = (TextView) findViewById(R.id.et_industry);
@@ -122,6 +143,9 @@ public class ReverificationActivity extends BaseActivity {
 			}
 		});
 	}
+	private boolean showRecomendPage() {
+		return DamiApp.getInstance().getPou().getBoolean(SPConst.getRecKey(mContext), true);
+	}
 
 	private String[] industries = new String[] { "电子商务", "移动互联网", "社交网络", "网络游戏", "大数据", "在线视频", "企业软件", "智能硬件", "金融业",
 			"投资", "汽车业", "奢侈品", "房地产", "其它" };
@@ -133,5 +157,11 @@ public class ReverificationActivity extends BaseActivity {
 				etIndustry.setText(industries[which]);
 			}
 		});
+	}
+	
+	public static Intent getIntent(Context context) {
+		Intent intent = new Intent(context, ReverificationActivity.class);
+		intent.putExtra("type", TYPE_SHORT_OF_INTEGRA);
+		return intent;
 	}
 }

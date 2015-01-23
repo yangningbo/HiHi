@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.gaopai.guiren.support.view.ChatDetailFixedHeader xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -42,7 +42,8 @@
                 android:id="@+id/tv_chat_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|top"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@id/tv_user_name"
                 android:textColor="@color/general_text_gray"
                 android:textSize="12sp" />
 
@@ -254,6 +255,7 @@
     <View style="@style/general_thin_divider_in_white" />
 
     <LinearLayout
+        android:id="@+id/layout_comment_header"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -279,4 +281,4 @@
             android:textSize="13sp" />
     </LinearLayout>
 
-</com.gaopai.guiren.support.view.ChatDetailFixedHeader>
+</LinearLayout>

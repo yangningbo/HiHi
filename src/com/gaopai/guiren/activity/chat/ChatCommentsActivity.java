@@ -86,11 +86,14 @@ import com.gaopai.guiren.support.chat.ChatBoxManager;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper;
 import com.gaopai.guiren.support.chat.ChatMsgDataHelper.Callback;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
+import com.gaopai.guiren.support.view.ChatDetailFixedHeader;
+import com.gaopai.guiren.support.view.ChatDetailFixedHeaderListView;
+import com.gaopai.guiren.support.view.PullToRefreshChatDetailListView;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyTextUtils.SpanUser;
-import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
@@ -130,6 +133,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private LinearLayout commentCountLayout, zanCountLayout, favoriteCountLayout;
 
 	private ViewGroup layoutZan;
+	private ViewGroup layoutCommentHeader;
+	private TextView tvCommentCountCopy;
 
 	private Button mSendTextBtn;
 	private Button mEmotionBtn;
@@ -158,7 +163,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected SpeexPlayerWrapper speexPlayerWrapper;
 
 	protected MyAdapter mAdapter;
-	protected PullToRefreshListView mListView;
+	protected PullToRefreshChatDetailListView mListView;
 	private ChatMsgDataHelper msgHelper;
 	private List<ZanBean> zanList = new ArrayList<ZanBean>();
 
@@ -166,12 +171,14 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private CameralHelper cameralHelper;
 
 	private View headerView;
+	
+	private ChatDetailFixedHeader layoutFixedHeader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initTitleBar();
-		setAbContentView(R.layout.activity_chat_main);
+		setAbContentView(R.layout.activity_chat_detail);
 		mLogin = DamiCommon.getLoginResult(mContext);
 		messageInfo = (MessageInfo) getIntent().getSerializableExtra(INTENT_MESSAGE_KEY);
 		mTribe = (Tribe) getIntent().getSerializableExtra(INTENT_TRIBE_KEY);
@@ -348,6 +355,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	View viewChatText;
 
 	protected void initComponent() {
+		tvCommentCountCopy = (TextView) findViewById(R.id.chat_comment_count1);
+		layoutFixedHeader = ViewUtil.findViewById(this, R.id.layout_chat_detail_fixedheader);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(R.string.message_detail);
 		int imageId = R.drawable.icon_chat_title_voice_mode;
@@ -430,21 +439,21 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		boxManager = new ChatBoxManager(this, mContentEdit, mSwitchVoiceTextBtn, mEmotionPicker, chatGridLayout,
 				mEmotionBtn, mVoiceSendBtn);
 
-		mListView = (PullToRefreshListView) findViewById(R.id.listview);
+		mListView = (PullToRefreshChatDetailListView) findViewById(R.id.listview);
 		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
 
 		mListView.setPullRefreshEnabled(false); // 下拉刷新，启用
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
 		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
-		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+		mListView.setOnRefreshListener(new OnRefreshListener<ChatDetailFixedHeaderListView>() {
 
 			@Override
-			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+			public void onPullDownToRefresh(PullToRefreshBase<ChatDetailFixedHeaderListView> refreshView) {
 				getmessageInfos();
 			}
 
 			@Override
-			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+			public void onPullUpToRefresh(PullToRefreshBase<ChatDetailFixedHeaderListView> refreshView) {
 				getmessageInfos();
 			}
 		});
@@ -456,13 +465,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//				if (layoutZan != null && firstVisibleItem == 0) {
-//					int scrollY = headerView.getTop();
-//					int zanTop = layoutZan.getTop();
-//					if (scrollY + zanTop <= 0) {
-//						layoutZan.setTranslationY(-(scrollY + zanTop));
-//					}
-//				}
+				layoutFixedHeader.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, layoutCommentHeader, headerView);
 			}
 		});
 
@@ -668,6 +671,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		// view.findViewById(R.id.layout_msg_text_voice_holder);
 
 		tvCommentCount = (TextView) view.findViewById(R.id.chat_comment_count);
+		
 		tvZanCount = (TextView) view.findViewById(R.id.chat_zan_count);
 
 		zanCountLayout = (LinearLayout) view.findViewById(R.id.zan_count_layout);
@@ -689,6 +693,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
+		layoutCommentHeader = (ViewGroup) view.findViewById(R.id.layout_comment_header);
 
 		bindCommentCountView();
 		return view;
@@ -696,6 +701,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	private void bindCommentCountView() {
 		tvCommentCount.setText(messageInfo.commentCount + "条评论");
+		tvCommentCountCopy.setText(messageInfo.commentCount + "条评论");
 	}
 
 	private void initialSendIdAndName() {
@@ -1106,7 +1112,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 						}
 						messageInfos.addAll(data.data);
 						notifyDataSetChanged();
-//						mListView.getRefreshableView().setSelection(data.data.size());
+						// mListView.getRefreshableView().setSelection(data.data.size());
 
 						if (data.pageInfo != null) {
 							isFull = data.pageInfo.hasMore == 0;// true not has

@@ -58,6 +58,8 @@ public class DamiCommon {
 	public static final String MESSAGE_NOTIFY_SHARED = "message_notify_shared";
 	public static final String MESSAGE_NOTIFY = "message_notify";
 	public static final String SOUND = "sound";
+	
+	public final static int BASE_INTEGRA = 500;
 
 	/**
 	 * 版本号文件存储常量

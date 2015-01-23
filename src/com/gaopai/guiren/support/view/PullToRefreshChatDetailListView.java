@@ -1,20 +1,23 @@
-package com.gaopai.guiren.view.pulltorefresh;
+package com.gaopai.guiren.support.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Adapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.AbsListView.OnScrollListener;
 
-import com.gaopai.guiren.R;
+import com.gaopai.guiren.view.pulltorefresh.FooterLoadingLayout;
+import com.gaopai.guiren.view.pulltorefresh.HeaderLoadingLayout;
 import com.gaopai.guiren.view.pulltorefresh.ILoadingLayout.State;
-import com.gaopai.guiren.widget.indexlist.IndexableListView;
+import com.gaopai.guiren.view.pulltorefresh.LoadingLayout;
+import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 
-public class PullToRefreshIndexableListView extends PullToRefreshBase<IndexableListView> implements OnScrollListener {
+public class PullToRefreshChatDetailListView extends PullToRefreshBase<ChatDetailFixedHeaderListView> implements OnScrollListener {
 
+	
 	/** ListView */
 	private ListView mListView;
 	/** 用于滑到底部自动加载的Footer */
@@ -28,7 +31,7 @@ public class PullToRefreshIndexableListView extends PullToRefreshBase<IndexableL
 	 * @param context
 	 *            context
 	 */
-	public PullToRefreshIndexableListView(Context context) {
+	public PullToRefreshChatDetailListView(Context context) {
 		this(context, null);
 	}
 
@@ -40,7 +43,7 @@ public class PullToRefreshIndexableListView extends PullToRefreshBase<IndexableL
 	 * @param attrs
 	 *            attrs
 	 */
-	public PullToRefreshIndexableListView(Context context, AttributeSet attrs) {
+	public PullToRefreshChatDetailListView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
 
@@ -54,15 +57,15 @@ public class PullToRefreshIndexableListView extends PullToRefreshBase<IndexableL
 	 * @param defStyle
 	 *            defStyle
 	 */
-	public PullToRefreshIndexableListView(Context context, AttributeSet attrs, int defStyle) {
+	public PullToRefreshChatDetailListView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
 		setPullLoadEnabled(false);
 	}
 
 	@Override
-	protected IndexableListView createRefreshableView(Context context, AttributeSet attrs) {
-		IndexableListView listView = new IndexableListView(context);
+	protected ChatDetailFixedHeaderListView createRefreshableView(Context context, AttributeSet attrs) {
+		ChatDetailFixedHeaderListView listView = new ChatDetailFixedHeaderListView(context);
 		mListView = listView;
 		mListView.setFastScrollEnabled(true);// 不设置scroller为null
 		// mListView.setCacheColorHint(0);
@@ -70,7 +73,6 @@ public class PullToRefreshIndexableListView extends PullToRefreshBase<IndexableL
 		mListView.setFooterDividersEnabled(false);
 		mListView.setHeaderDividersEnabled(false);
 		mListView.setFadingEdgeLength(0);
-		mListView.setFastScrollEnabled(false);
 		// mListView.setSelector(context.getResources().getDrawable(R.color.transparent));
 		listView.setOnScrollListener(this);
 
