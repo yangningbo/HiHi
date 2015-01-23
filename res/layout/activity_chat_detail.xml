@@ -47,7 +47,6 @@
         android:id="@+id/layout_comment_header_copy"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/white"
         android:gravity="center_vertical" >
 
         <ImageView
@@ -57,11 +56,13 @@
             android:layout_alignParentBottom="true" />
 
         <TextView
+            android:id="@+id/tv_chat_comment_header_copy"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_above="@id/iv_shadow"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:background="@color/white"
             android:drawableLeft="@drawable/icon_chat_detail_retangle"
             android:drawablePadding="15dp"
             android:gravity="center_vertical"
@@ -70,12 +71,14 @@
 
         <TextView
             android:id="@+id/chat_comment_count1"
+            android:layout_toRightOf="@id/tv_chat_comment_header_copy"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/iv_shadow"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
+            android:background="@color/white"
             android:gravity="right|center_vertical"
             android:textColor="@color/general_text_gray"
             android:textSize="13sp" />
