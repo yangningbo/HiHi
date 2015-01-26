@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -36,10 +37,12 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.BaseInfo;
 import com.gaopai.guiren.bean.LoginResult;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.volley.IResponseListener;
@@ -391,31 +394,41 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			showToast(R.string.login_need_contact);
 			return;
 		}
-		DamiInfo.getLogin(type, sex, id, nickName, head, password, phone, new IResponseListener() {
+		DamiInfo.getLogin(type, sex, id, nickName, head, password, phone, MyUtils.getVersionName(mContext), "Android", new IResponseListener() {
 			@Override
 			public void onSuccess(Object o) {
-				LoginResult data = (LoginResult) o;
+				final LoginResult data = (LoginResult) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
-						DamiCommon.saveLoginResult(LoginActivity.this, data.data);
-						DamiCommon.setUid(data.data.uid);
-						DamiCommon.setToken(data.data.token);
+						User user = data.data;
+						DamiCommon.saveLoginResult(LoginActivity.this, user);
+						DamiCommon.setUid(user.uid);
+						DamiCommon.setToken(user.token);
 						SQLiteDatabase db = DBHelper.getInstance(LoginActivity.this).getWritableDatabase();
 						MessageTable table = new MessageTable(db);
-						if (data.data.roomids != null)
-							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
+						if (user.roomids != null)
+							table.deleteMore(user.roomids.tribelist, user.roomids.meetinglist);
 						setResult(RESULT_OK);
 						sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-						if (data.data.integral < DamiCommon.BASE_INTEGRA) {
-							startActivity(ReverificationActivity.getIntent(mContext));
+						if (!TextUtils.isEmpty(user.nextpage)) {
+							if (user.nextpage.equals("completeinfo")) {
+								startActivity(ReverificationActivity.getIntent(mContext));
+							} else if (user.nextpage.equals("bindphone")) {
+								startActivity(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE));
+							}
 						}
 						LoginActivity.this.finish();
 					} else {
 						showToast(R.string.login_error);
 					}
 				} else {
-					if (data.state.code == 9) {
-						startActivity(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE));
+					if (data.state != null && data.state.code == 15) {
+						showDialog(null, data.data.alertmessage, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								startActivity(WebActivity.getIntent(mContext, data.data.url, data.data.alertmessage));
+							}
+						});
 					}
 					if (data.state != null && !StringUtils.isEmpty(data.state.msg)) {
 						showToast(data.state.msg);
@@ -459,7 +472,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 	private String getContacts() {
 		long lastTime = DamiApp.getInstance().getPou().getLong(SPConst.KEY_READ_PHONE_NUM_TIME, 0L);
-	
+
 		if (System.currentTimeMillis() - lastTime < DamiCommon.BASE_GET_PHONE_INTERVAL) {
 			DamiApp.getInstance().getPou().setLong(SPConst.KEY_READ_PHONE_NUM_TIME, System.currentTimeMillis());
 			return "";

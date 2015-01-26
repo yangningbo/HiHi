@@ -127,6 +127,9 @@ public class User implements Serializable {
 
 	public String codeurl;// QRcode
 
+	public String nextpage;
+	public String url;
+	public String alertmessage;
 	public class RoomIds implements Serializable {
 		@Expose
 		public String tribelist; // 用户所加入的部落id

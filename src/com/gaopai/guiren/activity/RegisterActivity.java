@@ -220,7 +220,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		tvRequestVeryficaion.setVisibility(View.GONE);
 	}
 
-	private void register(String phone, String password, String code) {
+	private void register(String realName, String phone, String password, String code) {
 		SimpleResponseListener listener = new SimpleResponseListener(mContext, R.string.request_internet_now) {
 			@Override
 			public void onSuccess(Object o) {
@@ -241,7 +241,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			}
 		};
 		if (type == TYPE_REGISTER) {
-			DamiInfo.register(phone, password, code, listener);
+			DamiInfo.register(realName, phone, password, code, listener);
 		} else {
 			DamiInfo.resetPassword(phone, password, code, listener);
 		}
@@ -337,7 +337,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			return;
 		}
 
-		register(etPhone.getText().toString(), password, veryfication);
+		register(etName.getText().toString(), etPhone.getText().toString(), password, veryfication);
 	}
 
 	private void bindPhone() {

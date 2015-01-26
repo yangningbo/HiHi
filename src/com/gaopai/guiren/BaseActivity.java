@@ -364,11 +364,13 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	public void showDialog(String title, String msg, DialogInterface.OnClickListener mOkOnClickListener) {
+		showDialog(title, msg, getString(R.string.ok), mOkOnClickListener);
+	}
+	public void showDialog(String title, String msg, String okStr, DialogInterface.OnClickListener mOkOnClickListener) {
 		AlertDialog.Builder builder = new Builder(this);
 		if (!TextUtils.isEmpty(msg)) {
 			builder.setMessage(msg);
 		}
-		builder.setTitle(title);
 		builder.setPositiveButton(R.string.ok, mOkOnClickListener);
 		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 			@Override
@@ -377,6 +379,11 @@ public class BaseActivity extends FragmentActivity {
 			}
 		});
 		Dialog dialog = builder.create();
+		if (TextUtils.isEmpty(title)) {
+			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		} else {
+			dialog.setTitle(title);
+		}
 		dialog.setCanceledOnTouchOutside(true);
 		dialog.show();
 	}

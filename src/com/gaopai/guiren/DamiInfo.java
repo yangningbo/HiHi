@@ -190,7 +190,7 @@ public class DamiInfo implements Serializable {
 	 * @param head
 	 */
 	public static void getLogin(String type, String sex, String id, String nickName, String head, String password,
-			String phone, IResponseListener listener) {
+			String phone, String version, String os, IResponseListener listener) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (!TextUtils.isEmpty(type)) {
 			params.put("type", type);
@@ -214,6 +214,12 @@ public class DamiInfo implements Serializable {
 
 		if (!TextUtils.isEmpty(phone)) {
 			params.put("phone", phone);
+		}
+		if (!TextUtils.isEmpty(version)) {
+			params.put("version", version);
+		}
+		if (!TextUtils.isEmpty(os)) {
+			params.put("os", os);
 		}
 		request(Method.POST, LoginResult.class, params, 0, listener, 0);
 	}
@@ -351,12 +357,15 @@ public class DamiInfo implements Serializable {
 		request(Method.GET, RegisterResult.class, params, 1, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
 	}
 
-	public static void register(String phone, String password, String code, IResponseListener listener) {
+	public static void register(String realname, String phone, String password, String code, IResponseListener listener) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (!TextUtils.isEmpty(phone)) {
 			params.put("phone", phone);
 			params.put("password", password);
 			params.put("code", code);
+		}
+		if (!TextUtils.isEmpty(realname)) {
+			params.put("realname", realname);
 		}
 		request(Method.GET, RegisterResult.class, params, 0, listener, LOGIN_TYPE_NOT_NEED_LOGIN);
 	}
@@ -2413,7 +2422,7 @@ public class DamiInfo implements Serializable {
 
 	/**
 	 * 获取系统默认标签
-	 * type	False 标签的分类（可填 user \quanzi\search）
+	 * type	False 标签的分类（可填 user \quanzi\search\dynamic）
 	 * @param listener
 	 */
 	public static void getTags(String type, IResponseListener listener) {
