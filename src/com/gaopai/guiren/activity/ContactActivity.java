@@ -28,6 +28,7 @@ import com.gaopai.guiren.adapter.ContactAdapter;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Item;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -170,7 +171,6 @@ public class ContactActivity extends BaseActivity implements OnClickListener{
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
 				int pos = position - mListView.getRefreshableView().getHeaderViewsCount();
 				if (!(mAdapter.getItem(pos) instanceof Item)) {
 					return;

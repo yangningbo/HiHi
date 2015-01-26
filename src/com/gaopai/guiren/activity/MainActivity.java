@@ -209,8 +209,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		view.setOnClickListener(slideMenuClickListener);
 		view = (View) findViewById(R.id.slide_btn_my_followers);
 		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_my_fans);
-		view.setOnClickListener(slideMenuClickListener);
 		view = (View) findViewById(R.id.slide_btn_my_tribe);
 		view.setOnClickListener(slideMenuClickListener);
 		view = (View) findViewById(R.id.slide_btn_my_meeting);
@@ -245,8 +243,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 		textView = (TextView) findViewById(R.id.tv_slide_count_followers);
 		textView.setText(String.valueOf(mUser.followers));
-		textView = (TextView) findViewById(R.id.tv_slide_count_fans);
-		textView.setText(String.valueOf(mUser.fansers));
 		textView = (TextView) findViewById(R.id.tv_slide_count_tribes);
 		textView.setText(String.valueOf(mUser.tribeCount));
 		textView = (TextView) findViewById(R.id.tv_slide_count_meetings);
@@ -271,9 +267,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			}
 			case R.id.slide_btn_my_followers:
 				goToContact(ContactActivity.TYPE_FOLLOWERS);
-				break;
-			case R.id.slide_btn_my_fans:
-				goToContact(ContactActivity.TYPE_FANS);
 				break;
 			case R.id.slide_btn_my_tribe:
 				startActivity(TribeActivity.getIntent(mContext, mUser.uid));

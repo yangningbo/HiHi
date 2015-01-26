@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -137,7 +138,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		initTitleBar();
+		initTitleBar(true);
+		mTitleBar.setBackgroundColor(Color.TRANSPARENT);
 		setAbContentView(R.layout.activity_profile);
 		addLoadingView();
 		showLoadingView();

@@ -162,7 +162,7 @@
 
     <style name="slide_item_layout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">46dp</item>
+        <item name="android:layout_height">53dp</item>
         <item name="android:background">@drawable/selector_slide_item</item>
         <item name="android:paddingLeft">@dimen/slide_item_image_padding_left</item>
         <item name="android:clickable">true</item>

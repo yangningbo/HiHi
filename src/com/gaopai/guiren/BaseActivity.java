@@ -80,7 +80,7 @@ public class BaseActivity extends FragmentActivity {
 
 	public LayoutInflater mInflater;
 
-	public LinearLayout windowLayout = null;
+	public RelativeLayout windowLayout = null;
 	public TitleBar mTitleBar = null;
 	protected FrameLayout contentLayout = null;
 
@@ -137,16 +137,28 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	protected void initTitleBar() {
+		initTitleBar(false);
+	}
+	
+	protected void initTitleBar(boolean isFloat) {
 		mTitleBar = new TitleBar(this);
-		windowLayout = new LinearLayout(this);
-		windowLayout.setOrientation(LinearLayout.VERTICAL);
-		windowLayout.addView(mTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		windowLayout.addView(ViewUtil.creatTitleBarLineView(mContext));
+		windowLayout = new RelativeLayout(this);
 
 		contentLayout = new FrameLayout(this);
 		contentLayout.setPadding(0, 0, 0, 0);
 		contentLayout.setBackgroundColor(getResources().getColor(R.color.general_background));
-		windowLayout.addView(contentLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		RelativeLayout.LayoutParams lpBar = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		lpBar.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		RelativeLayout.LayoutParams lpContent = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		if (isFloat) {
+			windowLayout.addView(contentLayout, lpContent);
+			windowLayout.addView(mTitleBar, lpBar);
+		} else {
+			windowLayout.addView(mTitleBar, lpBar);
+			lpContent.addRule(RelativeLayout.BELOW, R.id.action_bar);
+			windowLayout.addView(contentLayout, lpContent);
+		}
+		
 		setContentView(windowLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 

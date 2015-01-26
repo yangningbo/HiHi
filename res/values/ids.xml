@@ -35,5 +35,10 @@
     
     
     <item name="dy_photo_position" type="id"/>
+    
+    <item name="action_bar" type="id"/>
+    
+    
 
+    
 </resources>

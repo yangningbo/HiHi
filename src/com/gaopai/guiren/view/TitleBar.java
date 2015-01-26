@@ -17,6 +17,8 @@ package com.gaopai.guiren.view;
 
 import android.R.integer;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils.TruncateAt;
@@ -80,6 +82,8 @@ public class TitleBar extends ViewGroup {
 	private PopupWindow popupWindow;
 	private Context mContext;
 	private int titleBarHeight;
+	
+	private Paint dividerPaint;
 
 	public TitleBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -97,7 +101,10 @@ public class TitleBar extends ViewGroup {
 	public void ininTitleBar(Context context) {
 
 		mActivity = (BaseActivity) context;
-		this.setId(mAbTitleBarID);
+		dividerPaint = new Paint();
+		dividerPaint.setColor(getResources().getColor(R.color.titlebar_divider));
+		dividerPaint.setStrokeWidth(1f);
+		this.setId(R.id.action_bar);
 		this.setBackgroundColor(getResources().getColor(R.color.titlebar_background));
 		titleBarHeight = getResources().getDimensionPixelSize(R.dimen.title_bar);
 		mInflater = LayoutInflater.from(context);
@@ -349,4 +356,12 @@ public class TitleBar extends ViewGroup {
 				+ centerMarginLeft, b);
 		rightLayout.layout(r - rightWidth, t, r, b);
 	}
+
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+		canvas.drawLine(0, getHeight(), getWidth(), getHeight(), dividerPaint);
+	}
+	
+	
 }

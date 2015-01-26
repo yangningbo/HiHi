@@ -110,7 +110,7 @@ public class BaseFragment extends Fragment implements OnClickListener {
 		windowLayout = new LinearLayout(act);
 		windowLayout.setOrientation(LinearLayout.VERTICAL);
 		windowLayout.addView(mTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		windowLayout.addView(ViewUtil.creatTitleBarLineView(act));
+//		windowLayout.addView(ViewUtil.creatTitleBarLineView(act));
 
 		contentLayout = new FrameLayout(act);
 		contentLayout.setPadding(0, 0, 0, 0);

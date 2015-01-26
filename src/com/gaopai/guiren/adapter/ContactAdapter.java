@@ -35,6 +35,7 @@ public class ContactAdapter extends CopyOfConnectionAdapter {
 			viewHolder.ivHeader = (ImageView) convertView.findViewById(R.id.iv_header);
 			viewHolder.layoutHeader = (HeadView) convertView.findViewById(R.id.layout_header_mvp);
 			viewHolder.btnInvite = ViewUtil.findViewById(convertView, R.id.btn_invite);
+			
 			viewHolder.tvUserName.setText(User.getUserName(user));
 			viewHolder.tvUserInfo.setText(User.getUserInfo(user));
 			viewHolder.btnInvite.setTag(user);
