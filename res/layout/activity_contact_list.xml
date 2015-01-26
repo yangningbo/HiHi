@@ -3,34 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/general_background" >
-
-    <EditText
-        android:id="@+id/et_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:singleLine="true"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/selector_edit_white_round_corner"
-        android:imeOptions="actionSearch"
-        android:padding="5dp" />
-
     <com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/et_search" >
+        android:layout_height="match_parent" >
     </com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView>
 
     <com.gaopai.guiren.widget.indexlist.SingleIndexScroller
         android:id="@+id/scroller"
         android:layout_width="20dp"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/et_search" >
+        android:layout_alignParentRight="true" >
     </com.gaopai.guiren.widget.indexlist.SingleIndexScroller>
 
 </RelativeLayout>

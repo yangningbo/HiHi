@@ -51,18 +51,18 @@ public class TitleBar extends ViewGroup {
 
 	private BaseActivity mActivity;
 
-	protected LinearLayout centerLayout = null;
+	public LinearLayout centerLayout = null;
 
-	protected Button titleTextBtn = null;
+	public Button titleTextBtn = null;
 
-	protected EditText etSearch = null;
+	public EditText etSearch = null;
 
-	protected TextView logoView = null;
+	public TextView logoView = null;
 
 	private LayoutParams generalLayoutParams = null;
 
-	protected LinearLayout rightLayout = null;
-	protected LinearLayout leftLayout = null;
+	public LinearLayout rightLayout = null;
+	public LinearLayout leftLayout = null;
 
 	public int mAbTitleBarID = 1;
 
@@ -139,9 +139,9 @@ public class TitleBar extends ViewGroup {
 			}
 		});
 
-		// centerLayout.setBackgroundColor(getResources().getColor(R.color.red_dongtai_bg));
-		// leftLayout.setBackgroundColor(getResources().getColor(R.color.general_btn_green_active));
-		// rightLayout.setBackgroundColor(getResources().getColor(R.color.general_blue));
+//		 centerLayout.setBackgroundColor(getResources().getColor(R.color.red_dongtai_bg));
+//		 leftLayout.setBackgroundColor(getResources().getColor(R.color.general_btn_green_active));
+//		 rightLayout.setBackgroundColor(getResources().getColor(R.color.general_blue));
 
 	}
 
@@ -237,6 +237,7 @@ public class TitleBar extends ViewGroup {
 		Button btn = new Button(mContext);
 		btn.setBackgroundResource(bgId);
 		rightLayout.addView(btn, layoutParamsBtnDefault);
+		btn.setTextColor(getResources().getColor(R.color.title_right_text_color));
 		return btn;
 	}
 
@@ -266,6 +267,12 @@ public class TitleBar extends ViewGroup {
 		AutoCompleteTextView view = (AutoCompleteTextView) mInflater.inflate(R.layout.title_search_edittext, null);
 		centerLayout.addView(view);
 		return view;
+	}
+
+	public EditText addContactSearchEditText() {
+		View view = mInflater.inflate(R.layout.title_contact_search_edittext, null);
+		centerLayout.addView(view, layoutParamsFW);
+		return (EditText) view;
 	}
 
 	public void showWindow(View parent, View view) {
@@ -321,7 +328,8 @@ public class TitleBar extends ViewGroup {
 		centerLayout.measure(
 				getChildMeasureSpec(
 						MeasureSpec.makeMeasureSpec(getMeasuredWidth() - 2 * centerXStart, MeasureSpec.EXACTLY), 0,
-						LayoutParams.WRAP_CONTENT), heightSpec);
+						LayoutParams.MATCH_PARENT), heightSpec);
+		Logger.d(this, "center width=" + centerLayout.getMeasuredWidth());
 		setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), heightSpec);
 	}
 

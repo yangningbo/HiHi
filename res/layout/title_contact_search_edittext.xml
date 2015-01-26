@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/act_search"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/selector_edit_white_round_corner"
-    android:completionThreshold="1"
-    android:ems="20"
+    android:hint="@string/search_user"
+    android:imeOptions="actionSearch"
     android:padding="5dp"
+    android:maxLength="100"
     android:singleLine="true" >
 
     <requestFocus />
 
-</AutoCompleteTextView>
+</EditText>

@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -35,7 +36,7 @@ import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.widget.indexlist.IndexableListView;
 import com.gaopai.guiren.widget.indexlist.SingleIndexScroller;
 
-public class ContactActivity extends BaseActivity {
+public class ContactActivity extends BaseActivity implements OnClickListener{
 	public final static int TYPE_FOLLOWERS = 0;
 	public final static int TYPE_FANS = 1;
 	public final static String KEY_TYPE = "type";
@@ -57,6 +58,8 @@ public class ContactActivity extends BaseActivity {
 
 	public final static String ACTION_UPDATE_LIST_ADD = "com.gaopai.guiren.ACTION_UPDATE_LIST_ADD";
 	public final static String ACTION_UPDATE_LIST_DELETE = "com.gaopai.guiren.ACTION_UPDATE_LIST_DELETE";
+	
+	private Button btnSearch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,11 @@ public class ContactActivity extends BaseActivity {
 		isNewChat = getIntent().getBooleanExtra(KEY_NEWCHAT, false);
 		initTitleBar();
 		setAbContentView(R.layout.activity_contact_list);
+		
+		btnSearch = (Button) mTitleBar.addRightButtonView(R.drawable.selector_titlebar_search);
+		btnSearch.setLayoutParams(mTitleBar.layoutParamsWW);
+		btnSearch.setId(R.id.ab_search);
+		btnSearch.setOnClickListener(this);
 
 		mListView = (PullToRefreshIndexableListView) findViewById(R.id.listView);
 		if (type == TYPE_FANS) {
@@ -89,7 +97,8 @@ public class ContactActivity extends BaseActivity {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
 		indexScroller = (SingleIndexScroller) findViewById(R.id.scroller);
-		etSearch = (EditText) findViewById(R.id.et_search);
+		etSearch = mTitleBar.addContactSearchEditText();
+		etSearch.setVisibility(View.GONE);
 		etSearch.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -320,6 +329,30 @@ public class ContactActivity extends BaseActivity {
 		public void onFinish() {
 			mListView.onPullComplete();
 			mListView.setHasMoreData(!isFullList);
+		}
+	}
+
+	private boolean openSearch = false;
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.ab_search:
+			if (openSearch) {
+				btnSearch.setBackgroundResource(R.drawable.selector_titlebar_search);
+				btnSearch.setText("");
+				etSearch.setVisibility(View.GONE);
+				mTitleBar.titleTextBtn.setVisibility(View.VISIBLE);
+			} else {
+				btnSearch.setBackgroundResource(R.drawable.transparent);
+				btnSearch.setText(R.string.cancel);
+				etSearch.setVisibility(View.VISIBLE);
+				mTitleBar.titleTextBtn.setVisibility(View.GONE);
+				etSearch.requestFocus();
+			}
+			openSearch = !openSearch;
+			break;
+		default:
+			break;
 		}
 	}
 
