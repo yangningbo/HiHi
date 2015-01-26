@@ -77,13 +77,9 @@ public class User implements Serializable {
 	@Expose
 	public String device = ""; // 设备ID
 	@Expose
-	public String sign = ""; // 个性签名
-	@Expose
 	public int isfollow = 0; // 0-没有关系 1-关注 2-被关注 3-相互关注 关注指的是我关注别人
 	@Expose
 	public String displayName = "";
-	@Expose
-	public int mProcessType = 0;
 	@Expose
 	public long addtime = 0;
 	@Expose
@@ -98,22 +94,15 @@ public class User implements Serializable {
 	public int dynamicCount = 0; // 动态数
 	public int tribeCount = 0;
 	public int meetingCount = 0;
-	public int releaseCount = 0;
-	public int isdelete = 0;
 	@Expose
 	public RoomIds roomids;
-	@Expose
-	public int relation;// 和我有没有关系，有关系为1，没关系为0
-	@Expose
-	public int totalcomfriend;// 和我有多少共同好友
-
-	public String reason;
 
 	public String weibo;
 	public String weixin;
 
 	public int bigv;
 	public int iscontact;//1是通讯录 0不是通讯录
+	public int localType = 0;//
 
 	public List<SpreadBean> kuosanlist;
 	public List<ZanBean> zantaglist;

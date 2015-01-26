@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_btn_general"
+    android:padding="@dimen/general_paading" >
+
+    <com.gaopai.guiren.support.view.HeadView
+        android:id="@+id/layout_header_mvp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp" >
+
+        <ImageView
+            android:id="@+id/iv_header"
+            style="@style/connection_item_header1"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/iv_user_header"
+            android:layout_alignRight="@id/iv_user_header"
+            android:layout_marginBottom="-8dp"
+            android:layout_marginRight="-6dp"
+            android:visibility="gone"
+            android:src="@drawable/icon_mvp_head" />
+    </com.gaopai.guiren.support.view.HeadView>
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/layout_header_mvp"
+        android:layout_toRightOf="@id/layout_header_mvp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/one_word_prompt_color"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_user_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_user_name"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/layout_header_mvp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/content_gray_color"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btn_invite"
+        android:layout_width="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/selector_contact_invite"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/tv_user_fancy"/>
+
+</RelativeLayout>

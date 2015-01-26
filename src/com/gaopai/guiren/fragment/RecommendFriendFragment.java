@@ -1,6 +1,10 @@
 package com.gaopai.guiren.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
+import android.text.InputFilter.LengthFilter;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +21,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.ProfileActivity;
 import com.gaopai.guiren.adapter.RecommendAdapter;
+import com.gaopai.guiren.adapter.RecommendUserAdapter;
 import com.gaopai.guiren.bean.BatFollowResult;
 import com.gaopai.guiren.bean.BatFollowResult.BatFollowBean;
 import com.gaopai.guiren.bean.User;
@@ -30,7 +35,7 @@ import com.gaopai.guiren.volley.SimpleResponseListener;
 public class RecommendFriendFragment extends BaseFragment implements OnClickListener {
 	private PullToRefreshListView mListView;
 	private Button btnAddAll;
-	private RecommendAdapter<User> mAdapter;
+	private RecommendUserAdapter mAdapter;
 	private String TAG = RecommendFriendFragment.class.getName();
 
 	@Override
@@ -64,7 +69,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 			}
 		});
 
-		mAdapter = new RecommendAdapter<User>(act, RecommendAdapter.RECOMMEND_FRIEND, new AddClickListener());
+		mAdapter = new RecommendUserAdapter(act, new AddClickListener());
 		mListView.setAdapter(mAdapter);
 		// mListView.doPullRefreshing(true, 0);
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
@@ -89,12 +94,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 				final UserList data = (UserList) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
-						for (User user : data.data) {
-							if(user.bigv == 1 || user.iscontact == 1) {
-								mAdapter.choseSet.add(user.uid);
-							}
-						}
-						mAdapter.addAll(data.data);
+						mAdapter.addAll(parseUserList(data.data));
 					}
 				} else {
 					otherCondition(data.state, getActivity());
@@ -109,6 +109,45 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 
 		});
 
+	}
+
+	private List<User> parseUserList(List<User> sourceList) {
+		List<User> resultList = new ArrayList<User>();
+		int contactVipLen = 0;
+		int contactNormalLen = 0;
+		int vipNormalLen = 0;
+		int normalLen = 0;
+		for (int i = 0, len = sourceList.size(); i < len; i++) {
+			User user = sourceList.get(i);
+			if (user.iscontact == 1) {
+				if (user.bigv == 1) {
+					resultList.add(0, user);
+					contactVipLen++;
+				} else {
+					resultList.add(contactVipLen, user);
+					contactNormalLen++;
+				}
+				mAdapter.choseSet.add(user.uid);
+			} else if (user.bigv == 1) {
+				resultList.add(contactVipLen + contactNormalLen, user);
+				vipNormalLen++;
+				mAdapter.choseSet.add(user.uid);
+			} else {
+				resultList.add(user);
+				normalLen++;
+			}
+		}
+		int vipTotal = contactVipLen + contactNormalLen + vipNormalLen;
+		if (vipTotal > 0 && normalLen > 0) {
+			resultList.add(vipTotal, getBlankUser());
+		}
+		return resultList;
+	}
+
+	private User getBlankUser() {
+		User user = new User();
+		user.localType = 2;
+		return user;
 	}
 
 	private class AddClickListener implements OnClickListener {
@@ -147,7 +186,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		switch (v.getId()) {
 		case R.id.btn_follow:
 			if (mAdapter.choseSet.size() == 0) {
-//				getBaseActivity().showToast(R.string.please_choose_add);
+				// getBaseActivity().showToast(R.string.please_choose_add);
 				getBaseActivity().finish();
 				return;
 			}

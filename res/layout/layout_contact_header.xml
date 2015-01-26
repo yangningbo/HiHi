@@ -9,13 +9,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我的粉丝" />
+        android:drawableLeft="@drawable/icon_my_fans"
+        android:gravity="center_vertical"
+        android:drawablePadding="5dp"
+        android:text="@string/my_fans" />
 
     <TextView
         android:id="@+id/tv_fans_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/general_text_gray"
         android:gravity="right"
-        android:drawableRight="@drawable/icon_right_arrow"/>
+        android:drawablePadding="5dp"
+        android:layout_marginRight="5dp"
+        android:drawableRight="@drawable/icon_arrow_right_blue"/>
 
 </LinearLayout>

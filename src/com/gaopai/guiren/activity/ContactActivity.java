@@ -23,10 +23,11 @@ import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
-import com.gaopai.guiren.adapter.CopyOfConnectionAdapter;
+import com.gaopai.guiren.adapter.ContactAdapter;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Item;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
+import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshIndexableListView;
@@ -45,9 +46,10 @@ public class ContactActivity extends BaseActivity {
 	private String uid;
 	private boolean isNewChat = false;// if true, clicking item lead to chat
 										// interface
+	private User mLogin;
 	private boolean isMyself = false;
 	private PullToRefreshIndexableListView mListView;
-	private CopyOfConnectionAdapter mAdapter;
+	private ContactAdapter mAdapter;
 	private SingleIndexScroller indexScroller;
 	private EditText etSearch;
 	private boolean isSearchMode = false;
@@ -62,7 +64,8 @@ public class ContactActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		type = getIntent().getIntExtra(KEY_TYPE, TYPE_FANS);
 		uid = getIntent().getStringExtra(KEY_UID);
-		isMyself = DamiCommon.getUid(mContext).equals(uid);
+		mLogin = DamiCommon.getLoginResult(mContext);
+		isMyself = mLogin.uid.equals(uid);
 		isNewChat = getIntent().getBooleanExtra(KEY_NEWCHAT, false);
 		initTitleBar();
 		setAbContentView(R.layout.activity_contact_list);
@@ -81,11 +84,10 @@ public class ContactActivity extends BaseActivity {
 				mTitleBar.setTitleText(getString(R.string.his_follow));
 			}
 			mListView.getRefreshableView().addHeaderView(creatHeaderView());
-			
+
 		}
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 
-		
 		indexScroller = (SingleIndexScroller) findViewById(R.id.scroller);
 		etSearch = (EditText) findViewById(R.id.et_search);
 		etSearch.addTextChangedListener(new TextWatcher() {
@@ -174,15 +176,18 @@ public class ContactActivity extends BaseActivity {
 			}
 		});
 
-		mAdapter = new CopyOfConnectionAdapter();
+		mAdapter = new ContactAdapter();
 		mListView.setAdapter(mAdapter);
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
 		mListView.doPullRefreshing(true, 0);
 	}
-	
+
+	private TextView tvFansCount;
 	private View creatHeaderView() {
 		View view = mInflater.inflate(R.layout.layout_contact_header, null);
+		tvFansCount = ViewUtil.findViewById(view, R.id.tv_fans_count);
+		tvFansCount.setText(String.valueOf(mLogin.fansers));
 		view.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -191,8 +196,6 @@ public class ContactActivity extends BaseActivity {
 		});
 		return view;
 	}
-	
-	
 
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
@@ -201,7 +204,7 @@ public class ContactActivity extends BaseActivity {
 		intentFilter.addAction(ACTION_UPDATE_LIST_DELETE);
 	}
 
-	//send broadcast in ProfileActivity
+	// send broadcast in ProfileActivity
 	@Override
 	protected void onReceive(Intent intent) {
 		if (intent.getAction().equals(ACTION_UPDATE_LIST_ADD)) {
@@ -271,7 +274,6 @@ public class ContactActivity extends BaseActivity {
 	private boolean isFullSearch = false;
 	private boolean isFullList = false;
 
-	
 	class MyListener extends SimpleResponseListener {
 
 		public MyListener(Context context) {

@@ -221,13 +221,7 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 			ImageLoaderUtil.displayImage(user.headsmall, holder.ivHeader, R.drawable.default_header);
 
 			holder.tvName.setText(user.realname);
-			String content = "";
-			if (!TextUtils.isEmpty(user.company)) {
-				content = user.company;
-			} else {
-				content = user.sign;
-			}
-			holder.tvContent.setText(content);
+			holder.tvContent.setText(User.getUserInfo(user));
 			holder.btnAgree.setOnClickListener(new OnClickListener() {
 
 				@Override

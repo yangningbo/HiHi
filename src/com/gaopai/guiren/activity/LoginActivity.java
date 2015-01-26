@@ -394,76 +394,89 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			showToast(R.string.login_need_contact);
 			return;
 		}
-		DamiInfo.getLogin(type, sex, id, nickName, head, password, phone, MyUtils.getVersionName(mContext), "Android", new IResponseListener() {
-			@Override
-			public void onSuccess(Object o) {
-				final LoginResult data = (LoginResult) o;
-				if (data.state != null && data.state.code == 0) {
-					if (data.data != null) {
-						User user = data.data;
-						DamiCommon.saveLoginResult(LoginActivity.this, user);
-						DamiCommon.setUid(user.uid);
-						DamiCommon.setToken(user.token);
-						SQLiteDatabase db = DBHelper.getInstance(LoginActivity.this).getWritableDatabase();
-						MessageTable table = new MessageTable(db);
-						if (user.roomids != null)
-							table.deleteMore(user.roomids.tribelist, user.roomids.meetinglist);
-						setResult(RESULT_OK);
-						sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-						if (!TextUtils.isEmpty(user.nextpage)) {
-							if (user.nextpage.equals("completeinfo")) {
-								startActivity(ReverificationActivity.getIntent(mContext));
-							} else if (user.nextpage.equals("bindphone")) {
-								startActivity(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE));
+		DamiInfo.getLogin(type, sex, id, nickName, head, password, phone, MyUtils.getVersionName(mContext), "Android",
+				new IResponseListener() {
+					@Override
+					public void onSuccess(Object o) {
+						final LoginResult data = (LoginResult) o;
+						if (data.state != null && data.state.code == 0) {
+							if (data.data != null) {
+								User user = data.data;
+								DamiCommon.saveLoginResult(LoginActivity.this, user);
+								DamiCommon.setUid(user.uid);
+								DamiCommon.setToken(user.token);
+								SQLiteDatabase db = DBHelper.getInstance(LoginActivity.this).getWritableDatabase();
+								MessageTable table = new MessageTable(db);
+								if (user.roomids != null)
+									table.deleteMore(user.roomids.tribelist, user.roomids.meetinglist);
+								setResult(RESULT_OK);
+								sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
+//								if (!TextUtils.isEmpty(user.nextpage)) {
+//									if (user.nextpage.equals("completeinfo")) {
+//										startActivity(ReverificationActivity.getIntent(mContext));
+//									} else if (user.nextpage.equals("bindphone")) {
+//										startActivity(RegisterActivity.getIntent(mContext,
+//												RegisterActivity.TYPE_BIND_PHONE));
+//									}
+//								}
+								goToRecomendPage();
+								LoginActivity.this.finish();
+							} else {
+								showToast(R.string.login_error);
+							}
+						} else {
+							if (data.state != null && data.state.code == 15) {
+								showDialog(null, data.data.alertmessage, new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										startActivity(WebActivity.getIntent(mContext, data.data.url,
+												data.data.alertmessage));
+									}
+								});
+							}
+							if (data.state != null && !StringUtils.isEmpty(data.state.msg)) {
+								showToast(data.state.msg);
 							}
 						}
-						LoginActivity.this.finish();
-					} else {
+					}
+
+					@Override
+					public void onReqStart() {
+						showProgressDialog(R.string.loading_login);
+					}
+
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						removeProgressDialog();
+						if (mQQAuth != null) {
+							mQQAuth.logout(LoginActivity.this);
+						}
+						if (mTencent != null) {
+							mTencent.logout(LoginActivity.this);
+						}
+					}
+
+					@Override
+					public void onFailure(Object o) {
 						showToast(R.string.login_error);
 					}
-				} else {
-					if (data.state != null && data.state.code == 15) {
-						showDialog(null, data.data.alertmessage, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								startActivity(WebActivity.getIntent(mContext, data.data.url, data.data.alertmessage));
-							}
-						});
+
+					@Override
+					public void onTimeOut() {
+						showToast(R.string.request_timeout);
 					}
-					if (data.state != null && !StringUtils.isEmpty(data.state.msg)) {
-						showToast(data.state.msg);
-					}
-				}
-			}
+				});
 
-			@Override
-			public void onReqStart() {
-				showProgressDialog(R.string.loading_login);
-			}
+	}
 
-			@Override
-			public void onFinish() {
-				// TODO Auto-generated method stub
-				removeProgressDialog();
-				if (mQQAuth != null) {
-					mQQAuth.logout(LoginActivity.this);
-				}
-				if (mTencent != null) {
-					mTencent.logout(LoginActivity.this);
-				}
-			}
-
-			@Override
-			public void onFailure(Object o) {
-				showToast(R.string.login_error);
-			}
-
-			@Override
-			public void onTimeOut() {
-				showToast(R.string.request_timeout);
-			}
-		});
-
+	private void goToRecomendPage() {
+//		if (showRecomendPage()) {
+			DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
+			Intent intent = new Intent(this, RecommendActivity.class);
+			startActivity(intent);
+//		}
+		this.finish();
 	}
 
 	private boolean showRecomendPage() {
