@@ -833,13 +833,15 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.layout_profile_phone_num:
 			if (isSelf) {
-				changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
+//				changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
+				bindMyPhone();
 				return;
 			}
 			if (isFollowEachOther()) {
 				if (TextUtils.isEmpty(mUser.phone)) {// edit your suck profile
-					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
-							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+//					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
+//							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					bindMyPhone();
 				} else {
 					makePhonecall(tUser.phone);
 				}
@@ -848,8 +850,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					return;
 				}
 				if (TextUtils.isEmpty(mUser.phone)) {
-					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
-							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+//					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
+//							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					bindMyPhone();
 					return;
 				}
 				makePhonecall(tUser.phone);
@@ -1079,6 +1082,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		startActivity(intent);
 	}
 
+	private void bindMyPhone() {
+		startActivity(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE));
+	}
 	private void changeContact(int type, String text) {
 		changeContact(type, text, REQUEST_CHANGE_PROFILE);
 	}

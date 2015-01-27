@@ -42,6 +42,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/general_large_gap"
         android:layout_marginLeft="@dimen/general_paading"
         android:layout_marginTop="5dp"
         android:text="@string/please_chose_country"
@@ -54,9 +55,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <View
-            style="@style/general_thin_divider_in_white"
-            android:layout_marginTop="@dimen/general_large_gap" />
+        <View style="@style/general_thin_divider_in_white" />
 
         <EditText
             android:id="@+id/et_input_name"
@@ -109,6 +108,7 @@
         android:id="@+id/tv_request_veryfication"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/general_paading"
         android:layout_marginTop="5dp"
         android:textColor="@color/general_text_gray"
         android:textSize="@dimen/general_font_small"
@@ -157,7 +157,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/selector_tribe_detail_btn_blue"
             android:text="@string/confirm_register"
             android:textColor="@color/white" />
@@ -172,19 +172,19 @@
 
             <ImageButton
                 android:id="@+id/cb_agree_guiren"
-                android:background="@drawable/icon_check_box_box"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_check_box_box" />
 
             <TextView
                 android:id="@+id/tv_agree_guiren"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_height="wrap_content"
-                android:text="@string/gree_guiren_protocol"
                 android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
+                android:layout_marginLeft="5dp"
                 android:background="@drawable/selector_btn_transparent_general"
+                android:gravity="center_vertical"
+                android:text="@string/gree_guiren_protocol"
                 android:textColor="@color/general_text_gray"
                 android:textSize="@dimen/general_font_small" />
         </LinearLayout>

@@ -66,7 +66,6 @@
                 android:gravity="center_vertical|right"
                 android:hint="@string/must_edit"
                 android:padding="0dp"
-                 
                 android:textSize="@dimen/general_font_medium" />
         </LinearLayout>
 
@@ -93,7 +92,6 @@
                 android:gravity="center_vertical|right"
                 android:hint="@string/must_edit"
                 android:padding="0dp"
-                 
                 android:textSize="@dimen/general_font_medium" />
         </LinearLayout>
 
@@ -121,35 +119,6 @@
                 android:gravity="center_vertical|right"
                 android:hint="@string/must_edit"
                 android:padding="0dp"
-                 
-                android:textSize="@dimen/general_font_medium" />
-        </LinearLayout>
-
-        <View style="@style/general_thin_divider_in_white" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:padding="7dp" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/phone" />
-
-            <EditText
-                android:id="@+id/et_phone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/transparent"
-                android:gravity="center_vertical|right"
-                android:hint="@string/must_edit"
-                android:inputType="phone"
-                android:padding="0dp"
-                 
                 android:textSize="@dimen/general_font_medium" />
         </LinearLayout>
 
@@ -176,7 +145,6 @@
                 android:gravity="center_vertical|right"
                 android:hint="@string/must_edit"
                 android:padding="0dp"
-                 
                 android:textSize="@dimen/general_font_medium" />
         </LinearLayout>
 
@@ -202,7 +170,6 @@
                 android:background="@color/transparent"
                 android:gravity="center_vertical|right"
                 android:padding="0dp"
-                 
                 android:textSize="@dimen/general_font_medium" />
         </LinearLayout>
 
@@ -229,7 +196,6 @@
                 android:gravity="center_vertical|right"
                 android:padding="0dp"
                 android:textSize="@dimen/general_font_medium" />
-
         </LinearLayout>
 
         <TextView

@@ -732,6 +732,7 @@
     <string name="please_agree_guiren_first">请先同意贵人会服务条款</string>
     <string name="gree_guiren_protocol">我同意贵人会服务条款</string>
     <string name="need_help_in_register">填写中如果有问题，请关注微信号：guirenhui</string>
+    <string name="bind_phone_success">绑定成功</string>
 
     <!-- send dynamic -->
     <string name="send_dynamic">发布动态</string>
@@ -848,20 +849,16 @@
     <string name="please_finish_profile">请完善您的资料后再邀请朋友加入贵人</string>
     <string name="meeting_is_not_begin">会议还未开始</string>
     <string name="ellipsize">&#8230;</string>
-    
     <string name="phone">手机</string>
     <string name="must_edit">(必填)</string>
     <string name="weixin_num">微信号码</string>
     <string name="name">姓名</string>
     <string name="must_input_can_not_be_empty">必填内容不能为空</string>
-    
     <string name="no_right_see_members">"您未加入，无法查看其他成员！"</string>
-    
     <string name="my_fans">我的粉丝</string>
     <string name="my_follow">我的关注</string>
     <string name="his_fans">TA的粉丝</string>
     <string name="his_follow">TA的关注</string>
-    
     <string name="spread_dynamic">扩散动态</string>
     <string name="spread_tribe">扩散圈子</string>
     <string name="spread_meeting">扩散会议</string>
@@ -870,7 +867,5 @@
     <string name="spread_web">扩散连接</string>
     <string name="jump_over">略过</string>
     <string name="search_user">搜人脉</string>
-    
-    
-    
+
 </resources>

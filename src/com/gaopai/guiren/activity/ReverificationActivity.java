@@ -32,7 +32,6 @@ public class ReverificationActivity extends BaseActivity {
 	private EditText etJob;
 	private Button btnVerificaion;
 
-	private EditText etPhone;
 	private EditText etEmail;
 	private EditText etWeixin;
 	private EditText etWeibo;
@@ -67,7 +66,6 @@ public class ReverificationActivity extends BaseActivity {
 		etIndustry = (TextView) findViewById(R.id.et_industry);
 		etJob = (EditText) findViewById(R.id.et_job);
 
-		etPhone = ViewUtil.findViewById(this, R.id.et_phone);
 		etEmail = ViewUtil.findViewById(this, R.id.et_email);
 		etWeibo = ViewUtil.findViewById(this, R.id.et_weibo);
 		etWeixin = ViewUtil.findViewById(this, R.id.et_weixin);
@@ -80,25 +78,20 @@ public class ReverificationActivity extends BaseActivity {
 				final String company = etCompany.getText().toString();
 				final String industry = etIndustry.getText().toString();
 				final String job = etJob.getText().toString();
-				final String phone = etPhone.getText().toString();
 				final String email = etEmail.getText().toString();
 				final String weixin = etWeixin.getText().toString();
 				final String weibo = etWeibo.getText().toString();
 				if (TextUtils.isEmpty(name.trim()) || TextUtils.isEmpty(company.trim())
 						|| TextUtils.isEmpty(industry.trim()) || TextUtils.isEmpty(job.trim())
-						|| TextUtils.isEmpty(phone.trim()) || TextUtils.isEmpty(email.trim())) {
+						|| TextUtils.isEmpty(email.trim())) {
 					showToast(R.string.must_input_can_not_be_empty);
-					return;
-				}
-				if (!MyTextUtils.checkIsPhone(phone)) {
-					showToast(R.string.please_input_correct_mobile_num);
 					return;
 				}
 				if (!MyTextUtils.checkIsEmail(email)) {
 					showToast(R.string.please_input_correct_email);
 					return;
 				}
-				DamiInfo.reAuth(industry, name, company, job, email, weibo, weixin, phone, new SimpleResponseListener(
+				DamiInfo.reAuth(industry, name, company, job, email, weibo, weixin, new SimpleResponseListener(
 						mContext, R.string.request_internet_now) {
 					@Override
 					public void onSuccess(Object o) {
@@ -108,7 +101,6 @@ public class ReverificationActivity extends BaseActivity {
 							mUser.company = company;
 							mUser.depa = industry;
 							mUser.post = job;
-							mUser.phone = phone;
 							mUser.email = email;
 							mUser.weixin = weixin;
 							mUser.weibo = weibo;
@@ -128,7 +120,6 @@ public class ReverificationActivity extends BaseActivity {
 		etCompany.setText(mUser.company);
 		etIndustry.setText(mUser.depa);
 		etJob.setText(mUser.post);
-		etPhone.setText(mUser.phone);
 		etWeibo.setText(mUser.weibo);
 		etWeixin.setText(mUser.weixin);
 		etEmail.setText(mUser.email);

@@ -76,9 +76,9 @@ public class DamiInfo implements Serializable {
 
 	// public static final String HOST =
 	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-	 public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
-//	public static final String HOST = "http://guirenhui.cn/index.php/";
+	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
 
@@ -841,8 +841,8 @@ public class DamiInfo implements Serializable {
 	 *            Type＝6时分享的链接的副标题
 	 * @param listener
 	 */
-	public static void spreadDynamic(int type, String sid, String title, String image, String url, String desc, String speak,
-			IResponseListener listener) {
+	public static void spreadDynamic(int type, String sid, String title, String image, String url, String desc,
+			String speak, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		if (type != -1) {
 			bundle.add("type", String.valueOf(type));
@@ -1706,7 +1706,7 @@ public class DamiInfo implements Serializable {
 	// post true string 职位
 
 	public static void reAuth(String depa, String realname, String company, String post, String email, String weibo,
-			String weixin, String phone, IResponseListener listener) {
+			String weixin, IResponseListener listener) {
 		Parameters bundle = new Parameters();
 		if (!TextUtils.isEmpty(email)) {
 			bundle.add("email", email);
@@ -1716,9 +1716,6 @@ public class DamiInfo implements Serializable {
 		}
 		if (!TextUtils.isEmpty(weixin)) {
 			bundle.add("weixin", weixin);
-		}
-		if (!TextUtils.isEmpty(phone)) {
-			bundle.add("phone", phone);
 		}
 		bundle.add("depa", depa);
 		bundle.add("realname", realname);
@@ -2306,6 +2303,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/ReportUser";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
 	}
+
 	// 举报动态
 	public static void reportDynamic(String dynamicid, String reason, IResponseListener listener) {
 		Parameters bundle = new Parameters();
@@ -2419,10 +2417,20 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/batFollow";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BatFollowResult.class, listener);
 	}
+	
+	// 绑定手机号码
+	public static void bindPhone(String phone, String code, String realname, IResponseListener listener) {
+		Parameters bundle = new Parameters();
+		bundle.add("phone", phone);
+		bundle.add("code", code);
+		bundle.add("realname", realname);
+		String url = SERVER + "user/bindphone";
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+	}
 
 	/**
-	 * 获取系统默认标签
-	 * type	False 标签的分类（可填 user \quanzi\search\dynamic）
+	 * 获取系统默认标签 type False 标签的分类（可填 user \quanzi\search\dynamic）
+	 * 
 	 * @param listener
 	 */
 	public static void getTags(String type, IResponseListener listener) {
@@ -2446,10 +2454,11 @@ public class DamiInfo implements Serializable {
 		params.add("secret", secret);
 		params.add("code", code);
 		params.add("grant_type", "authorization_code");
-		customRequest("https://api.weixin.qq.com/sns/oauth2/access_token", params, Utility.HTTPMETHOD_GET, TokenBean.class,
-				listener);
+		customRequest("https://api.weixin.qq.com/sns/oauth2/access_token", params, Utility.HTTPMETHOD_GET,
+				TokenBean.class, listener);
 	}
-	public static void getWxUserInfo(String access_token, String openid,IResponseListener listener) {
+
+	public static void getWxUserInfo(String access_token, String openid, IResponseListener listener) {
 		Parameters params = new Parameters();
 		params.add("access_token", access_token);
 		params.add("openid", openid);
@@ -2473,6 +2482,7 @@ public class DamiInfo implements Serializable {
 		}
 		new Thread() {
 			String rlt = null;
+
 			@Override
 			public void run() {
 				try {

@@ -76,7 +76,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 	private TextView tvForgetPassword;
 
-	public final static int RESULT_FINISH = 9874;
+	public final static int REQUEST_BIND_PHONE = 3;
 	private UserInfo mInfo;
 	public static String TENCENT_APP_ID = "101061639";
 	public static String TENCENT_APP_KEY = "5c67409b26d3b6bae3d84a6f2de8e445";
@@ -371,18 +371,16 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
-		// SSO 授权回调
-		// 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResult
 		UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
 		if (ssoHandler != null) {
 			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
 		} else {
 			removeProgressDialog();
 		}
-		switch (requestCode) {
-		default:
-			break;
+		if (resultCode == RESULT_OK) {
+			if (requestCode == REQUEST_BIND_PHONE) {
+				this.finish();
+			}
 		}
 	}
 
@@ -411,16 +409,16 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 									table.deleteMore(user.roomids.tribelist, user.roomids.meetinglist);
 								setResult(RESULT_OK);
 								sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-//								if (!TextUtils.isEmpty(user.nextpage)) {
-//									if (user.nextpage.equals("completeinfo")) {
-//										startActivity(ReverificationActivity.getIntent(mContext));
-//									} else if (user.nextpage.equals("bindphone")) {
-//										startActivity(RegisterActivity.getIntent(mContext,
-//												RegisterActivity.TYPE_BIND_PHONE));
-//									}
-//								}
-								goToRecomendPage();
-								LoginActivity.this.finish();
+								if (!TextUtils.isEmpty(user.nextpage)) {
+									if (user.nextpage.equals("completeinfo")) {
+										startActivity(ReverificationActivity.getIntent(mContext));
+										LoginActivity.this.finish();
+									} else if (user.nextpage.equals("bindphone")) {
+										startActivityForResult(RegisterActivity.getIntent(mContext,
+												RegisterActivity.TYPE_BIND_PHONE), REQUEST_BIND_PHONE);
+									}
+								}
+								// goToRecomendPage();
 							} else {
 								showToast(R.string.login_error);
 							}
@@ -471,11 +469,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	}
 
 	private void goToRecomendPage() {
-//		if (showRecomendPage()) {
-			DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
-			Intent intent = new Intent(this, RecommendActivity.class);
-			startActivity(intent);
-//		}
+		// if (showRecomendPage()) {
+		DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
+		Intent intent = new Intent(this, RecommendActivity.class);
+		startActivity(intent);
+		// }
 		this.finish();
 	}
 

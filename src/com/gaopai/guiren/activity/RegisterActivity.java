@@ -13,19 +13,27 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.RegisterResult;
 import com.gaopai.guiren.bean.net.VerificationResult;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -113,9 +121,17 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			btnConfirm.setText(R.string.confirm_bind_phone);
 			mTitleBar.setTitleText(R.string.bind_phone);
 			etPassword.setVisibility(View.GONE);
-			etName.setVisibility(View.GONE);
-			findViewById(R.id.layout_input_name).setVisibility(View.GONE);
+			// etName.setVisibility(View.GONE);
+			// findViewById(R.id.layout_input_name).setVisibility(View.GONE);
 			findViewById(R.id.layout_input_password).setVisibility(View.GONE);
+			findViewById(R.id.layout_agree_guiren).setVisibility(View.GONE);
+			findViewById(R.id.tv_register_info).setVisibility(View.GONE);
+			((LinearLayout) btnConfirm.getParent()).setGravity(Gravity.TOP);
+			User user = DamiCommon.getLoginResult(mContext);
+			if (user != null) {
+				etName.setText(user.realname);
+			}
+			etName.setEnabled(false);
 		}
 
 		etPhone.addTextChangedListener(new ViewUtil.SimpleWatcher() {
@@ -307,7 +323,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void confirm() {
-		if (!isChecked) {
+		if (!isChecked && type != TYPE_BIND_PHONE) {
 			showToast(R.string.please_agree_guiren_first);
 			return;
 		}
@@ -341,7 +357,18 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void bindPhone() {
-
+		DamiInfo.bindPhone(etPhone.getText().toString(), etVeryfication.getText().toString(), etName.getText()
+				.toString(), new SimpleResponseListener(mContext, R.string.request_internet_now) {
+			@Override
+			public void onSuccess(Object o) {
+				BaseNetBean data = (BaseNetBean) o;
+				if (data.state != null && data.state.code == 0) {
+					showToast(R.string.register_success);
+				} else {
+					otherCondition(data.state, RegisterActivity.this);
+				}
+			}
+		});
 	}
 
 	public static Intent getIntent(Context context, int type) {

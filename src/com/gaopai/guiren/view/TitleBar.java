@@ -336,7 +336,6 @@ public class TitleBar extends ViewGroup {
 				getChildMeasureSpec(
 						MeasureSpec.makeMeasureSpec(getMeasuredWidth() - 2 * centerXStart, MeasureSpec.EXACTLY), 0,
 						LayoutParams.MATCH_PARENT), heightSpec);
-		Logger.d(this, "center width=" + centerLayout.getMeasuredWidth());
 		setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), heightSpec);
 	}
 
