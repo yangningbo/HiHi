@@ -3,6 +3,8 @@ package com.gaopai.guiren.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import u.aly.be;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +30,7 @@ import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.support.DynamicHelper.DySoftCallback;
+import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.support.TextLimitWatcher;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -126,18 +129,30 @@ public class SpreadDynamicActivity extends BaseActivity {
 	private View parseView(View source) {
 		ImageView header = (ImageView) source.findViewById(R.id.iv_header);
 		TextView tvInfo = (TextView) source.findViewById(R.id.tv_user_name);
+		source.findViewById(R.id.tv_spread_words).setVisibility(View.GONE);
 		switch (bean.type) {
 		case DynamicHelper.TYPE_SEND_DYNAMIC:
-			header.setVisibility(View.VISIBLE);
-			tvInfo.setVisibility(View.VISIBLE);
-			source.setBackgroundColor(getResources().getColor(R.color.general_background_gray));
-			ImageLoaderUtil.displayImage(bean.defhead, header, R.drawable.default_header, false);
-			break;
 		case DynamicHelper.TYPE_SPREAD_OTHER_DYNAMIC:
+			String userName = bean.realname;
+			String uid = bean.uid;
+			String userInfo = DynamicHelper.getUserInfoStr(bean.company, bean.post);
 			header.setVisibility(View.VISIBLE);
 			source.setBackgroundColor(getResources().getColor(R.color.general_background_gray));
 			tvInfo.setVisibility(View.VISIBLE);
-			ImageLoaderUtil.displayImage(bean.defhead, header, R.drawable.default_header, false);
+			if (bean.isanonymous == 1) {
+				ImageLoaderUtil.displayImage(bean.defhead, header, R.drawable.default_header);
+				uid = "-1";
+				userInfo = "";
+				userName = getString(R.string.no_name);
+			} else {
+				ImageLoaderUtil.displayImage(bean.s_path, header, R.drawable.default_header);
+			}
+			if (bean.bigv == 1 && bean.isanonymous == 0) {
+				tvInfo.setText(HeadView.getMvpName(mContext,
+						dynamicHelper.parseHeaderText(userName + HeadView.MVP_NAME_STR, uid, userInfo, null)));
+			} else {
+				tvInfo.setText(dynamicHelper.parseHeaderText(userName, uid, userInfo, null));
+			}
 			break;
 		case DynamicHelper.TYPE_SPREAD_USER:
 		case DynamicHelper.TYPE_SPREAD_TRIBE:

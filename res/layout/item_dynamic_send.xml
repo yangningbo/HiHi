@@ -20,18 +20,15 @@
         android:layout_toRightOf="@id/iv_header" />
 
     <TextView
-        android:id="@+id/tv_spread_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_user_name"
-        android:layout_below="@id/tv_user_name" />
+        android:id="@+id/tv_spread_words"
+        style="@style/dynamic_spread_words" />
 
     <LinearLayout
         android:id="@+id/layout_dy_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
-        android:layout_below="@id/tv_spread_info"
+        android:layout_below="@id/tv_spread_words"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="@color/general_background_gray"

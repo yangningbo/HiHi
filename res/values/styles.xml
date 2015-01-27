@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -364,6 +364,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
     </style>
+
     <style name="general_thin_divider_in_white_vertical">
         <item name="android:background">@color/general_divider_in_white</item>
         <item name="android:layout_width">1px</item>
@@ -418,17 +419,26 @@
         <item name="android:textSize">@dimen/general_font_medium</item>
         <item name="android:padding">@dimen/general_paading</item>
     </style>
+
     <style name="general_edittext_no_border" parent="@style/general_edittext">
         <item name="android:layout_height">@dimen/general_button_medium</item>
         <item name="android:background">@color/white</item>
         <item name="android:textSize">@dimen/general_font_medium</item>
         <item name="android:padding">@dimen/general_paading</item>
     </style>
+
     <style name="general_edittext_small">
         <item name="android:layout_height">@dimen/general_button_small</item>
         <item name="android:background">@drawable/selector_edit_white_round_corner</item>
         <item name="android:textSize">@dimen/general_font_small</item>
         <item name="android:padding">@dimen/general_paading</item>
+    </style>
+
+    <style name="dynamic_spread_words">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignLeft">@id/tv_user_name</item>
+        <item name="android:layout_below">@id/tv_user_name</item>
     </style>
 
 </resources>

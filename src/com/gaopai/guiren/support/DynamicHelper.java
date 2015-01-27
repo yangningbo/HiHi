@@ -419,7 +419,7 @@ public class DynamicHelper {
 		TextView tvUserName;
 		// TextView tvUserInfo;
 		// TextView tvAction;
-		TextView tvSpreadInfo;
+		TextView tvSpreadWords;
 
 		View lineSpread;
 		View lineZan;
@@ -447,7 +447,7 @@ public class DynamicHelper {
 			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
 			viewHolder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
 			viewHolder.tvUserName.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-			viewHolder.tvSpreadInfo  = (TextView) view.findViewById(R.id.tv_spread_info);
+			viewHolder.tvSpreadWords  = (TextView) view.findViewById(R.id.tv_spread_words);
 			// viewHolder.tvUserInfo = (TextView)
 			// view.findViewById(R.id.tv_user_info);
 			// viewHolder.tvAction = (TextView)
@@ -712,7 +712,7 @@ public class DynamicHelper {
 	}
 
 	// full
-	private Spannable parseHeaderText(String name, String uid, String userInfo, String actionInfo) {
+	public Spannable parseHeaderText(String name, String uid, String userInfo, String actionInfo) {
 		SpannableStringBuilder builder = new SpannableStringBuilder();
 		int grayColor = mContext.getResources().getColor(R.color.general_text_gray);
 		if (!TextUtils.isEmpty(name)) {
@@ -913,7 +913,6 @@ public class DynamicHelper {
 			} else {
 				spreadAction = typeBean.title;
 			}
-			viewHolder.tvSpreadInfo.setVisibility(View.GONE);
 			viewHolder.tvUserName.setText(parseProfileHeaderText(spreadAction));
 			viewHolder.btnDynamicAction.setVisibility(View.GONE);
 			viewHolder.tvDateInfo.setVisibility(View.GONE);
@@ -944,18 +943,18 @@ public class DynamicHelper {
 			spreadAction = typeBean.title;
 		}
 
-		if (typeBean.bigv == 1) {
+		if (typeBean.bigv == 1 && typeBean.isanonymous == 0) {
 			viewHolder.tvUserName.setText(HeadView.getMvpName(mContext,
 					parseHeaderText(userName + HeadView.MVP_NAME_STR, uid, userInfo, spreadAction)));
 		} else {
 			viewHolder.tvUserName.setText(parseHeaderText(userName, uid, userInfo, spreadAction));
 		}
 		
-		if (true) {
-			viewHolder.tvSpreadInfo.setVisibility(View.GONE);
-//			viewHolder.tvSpreadInfo.setText(text);
+		if (TextUtils.isEmpty(typeBean.speak)) {
+			viewHolder.tvSpreadWords.setVisibility(View.GONE);
 		} else {
-			viewHolder.tvSpreadInfo.setVisibility(View.GONE);
+			viewHolder.tvSpreadWords.setVisibility(View.VISIBLE);
+			viewHolder.tvSpreadWords.setText(typeBean.speak);
 		}
 
 		viewHolder.tvDateInfo.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
