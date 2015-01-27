@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_fake_background"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <com.gaopai.guiren.support.view.BorderRoundedImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:layout_marginTop="40dp"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/default_header"
+                app:riv_border_color="#80666669"
+                app:riv_border_width="1px"
+                app:riv_corner_radius="40dp"
+                app:riv_mutate_background="true" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/general_font_medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="该贵人尚未出山"
+                android:textColor="@color/white"
+                android:textSize="@dimen/general_font_small" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/friend_not_in_guiren"
+            android:textColor="@color/fake_text_gray"
+            android:textSize="@dimen/general_font_small" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/general_paading"
+            android:background="@drawable/selector_fake_invite"
+            android:paddingLeft="30dp"
+            android:text="@string/invite_to_guiren"
+            android:textColor="@color/white"
+            android:id="@+id/btn_invite"
+            android:textSize="@dimen/general_font_small" />
+
+        <View
+            style="@style/general_thin_divider_in_white"
+            android:layout_marginTop="@dimen/general_paading" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:background="@color/general_background"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/general_paading"
+            android:text="联系方式"
+            android:textColor="@color/fake_text_gray"
+            android:textSize="@dimen/general_font_medium" />
+
+        <View style="@style/general_thin_divider_in_white" />
+
+        <LinearLayout
+            android:id="@+id/layout_phone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/selector_btn_general"
+            android:paddingLeft="@dimen/general_paading"
+            android:paddingRight="@dimen/general_paading" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="手机号码"
+                android:textColor="@color/fake_text_gray"
+                android:textSize="@dimen/general_font_medium" />
+
+            <TextView
+                android:id="@+id/tv_phone_num"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:drawableRight="@drawable/icon_arrow_right_blue"
+                android:textColor="@color/general_blue"
+                android:textSize="@dimen/general_font_medium" />
+        </LinearLayout>
+
+        <View style="@style/general_thin_divider_in_white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/general_paading"
+            android:paddingRight="@dimen/general_paading" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/weixin_num"
+                android:textColor="@color/fake_text_gray"
+                android:textSize="@dimen/general_font_medium" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/not_edit"
+                android:textColor="@color/fake_text_gray"
+                android:textSize="@dimen/general_font_medium" />
+        </LinearLayout>
+
+        <View style="@style/general_thin_divider_in_white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/general_paading"
+            android:paddingRight="@dimen/general_paading" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/weibo"
+                android:textColor="@color/fake_text_gray"
+                android:textSize="@dimen/general_font_medium" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/not_edit"
+                android:textColor="@color/fake_text_gray"
+                android:textSize="@dimen/general_font_medium" />
+        </LinearLayout>
+
+        <View style="@style/general_thin_divider_in_white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/general_paading"
+            android:paddingRight="@dimen/general_paading" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/email"
+                android:textColor="@color/fake_text_gray"
+                android:textSize="@dimen/general_font_medium" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/not_edit"
+                android:textColor="@color/fake_text_gray"
+                android:textSize="@dimen/general_font_medium" />
+        </LinearLayout>
+
+        <View style="@style/general_thin_divider_in_white" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/general_large_gap"
+            android:background="@color/general_background" />
+    </LinearLayout>
+
+</ScrollView>

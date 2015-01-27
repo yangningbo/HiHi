@@ -37,17 +37,14 @@ import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.widget.indexlist.IndexableListView;
 import com.gaopai.guiren.widget.indexlist.SingleIndexScroller;
 
-public class ContactActivity extends BaseActivity implements OnClickListener{
+public class ContactActivity extends BaseActivity implements OnClickListener {
 	public final static int TYPE_FOLLOWERS = 0;
 	public final static int TYPE_FANS = 1;
 	public final static String KEY_TYPE = "type";
 	public final static String KEY_UID = "uid";
-	public final static String KEY_NEWCHAT = "newchat";
 
 	private int type;
 	private String uid;
-	private boolean isNewChat = false;// if true, clicking item lead to chat
-										// interface
 	private User mLogin;
 	private boolean isMyself = false;
 	private PullToRefreshIndexableListView mListView;
@@ -59,7 +56,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener{
 
 	public final static String ACTION_UPDATE_LIST_ADD = "com.gaopai.guiren.ACTION_UPDATE_LIST_ADD";
 	public final static String ACTION_UPDATE_LIST_DELETE = "com.gaopai.guiren.ACTION_UPDATE_LIST_DELETE";
-	
+
 	private Button btnSearch;
 
 	@Override
@@ -70,10 +67,9 @@ public class ContactActivity extends BaseActivity implements OnClickListener{
 		uid = getIntent().getStringExtra(KEY_UID);
 		mLogin = DamiCommon.getLoginResult(mContext);
 		isMyself = mLogin.uid.equals(uid);
-		isNewChat = getIntent().getBooleanExtra(KEY_NEWCHAT, false);
 		initTitleBar();
 		setAbContentView(R.layout.activity_contact_list);
-		
+
 		btnSearch = (Button) mTitleBar.addRightButtonView(R.drawable.selector_titlebar_search);
 		btnSearch.setLayoutParams(mTitleBar.layoutParamsWW);
 		btnSearch.setId(R.id.ab_search);
@@ -176,11 +172,8 @@ public class ContactActivity extends BaseActivity implements OnClickListener{
 					return;
 				}
 				User user = ((Item) mAdapter.getItem(pos)).user;
-				if (isNewChat) {
-					startActivity(ChatMessageActivity.getIntent(mContext, user));
-				} else {
-					startActivity(ProfileActivity.getIntent(mContext, user.uid));
-				}
+//				startActivity(ProfileActivity.getIntent(mContext, user.uid));
+				 startActivity(FakeProfileActivity.class);
 
 			}
 		});
@@ -193,6 +186,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener{
 	}
 
 	private TextView tvFansCount;
+
 	private View creatHeaderView() {
 		View view = mInflater.inflate(R.layout.layout_contact_header, null);
 		tvFansCount = ViewUtil.findViewById(view, R.id.tv_fans_count);
@@ -242,14 +236,6 @@ public class ContactActivity extends BaseActivity implements OnClickListener{
 	public static Intent getAddBroadcastIntent(User user) {
 		Intent intent = new Intent(ACTION_UPDATE_LIST_ADD);
 		intent.putExtra("user", user);
-		return intent;
-	}
-
-	public static Intent getIntent(Context context, int type, String uid, boolean isNewChat) {
-		Intent intent = new Intent(context, ContactActivity.class);
-		intent.putExtra(KEY_TYPE, type);
-		intent.putExtra(KEY_UID, uid);
-		intent.putExtra(KEY_NEWCHAT, isNewChat);
 		return intent;
 	}
 
@@ -333,6 +319,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener{
 	}
 
 	private boolean openSearch = false;
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {

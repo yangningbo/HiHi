@@ -85,6 +85,7 @@ public class TitleBar extends ViewGroup {
 	
 	private Paint dividerPaint;
 
+	private boolean isEnableDivider = true;
 	public TitleBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.mContext = context;
@@ -356,10 +357,16 @@ public class TitleBar extends ViewGroup {
 		rightLayout.layout(r - rightWidth, t, r, b);
 	}
 
+	public void setEnableDivider(boolean enableDivider) {
+		this.isEnableDivider = enableDivider;
+		
+	}
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		canvas.drawLine(0, getHeight(), getWidth(), getHeight(), dividerPaint);
+		if (isEnableDivider) {
+			canvas.drawLine(0, getHeight(), getWidth(), getHeight(), dividerPaint);
+		}
 	}
 	
 	

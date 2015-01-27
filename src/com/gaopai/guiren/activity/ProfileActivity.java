@@ -58,6 +58,7 @@ import com.gaopai.guiren.support.view.AgreeAnimWindow;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.FlowLayout;
 import com.gaopai.guiren.view.LineRelativeLayout;
@@ -843,7 +844,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 //							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
 					bindMyPhone();
 				} else {
-					makePhonecall(tUser.phone);
+					MyUtils.makePhonecall(mContext, tUser.phone);
 				}
 			} else {
 				if (pc.phone == 0) {
@@ -855,7 +856,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					bindMyPhone();
 					return;
 				}
-				makePhonecall(tUser.phone);
+				MyUtils.makePhonecall(mContext, tUser.phone);
 			}
 			break;
 		case R.id.layout_profile_weibo_num:
@@ -951,16 +952,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		default:
 			break;
-		}
-	}
-
-	private void makePhonecall(String phone) {
-		Intent Telintent = new Intent();
-		Telintent.setAction(Intent.ACTION_CALL);
-		Telintent.setData(Uri.parse("tel:" + phone));
-		try {
-			startActivity(Telintent);
-		} catch (Exception e) {
 		}
 	}
 

@@ -15,12 +15,14 @@ import java.util.Properties;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
@@ -29,7 +31,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.gaopai.guiren.FeatureFunction;
-import com.squareup.picasso.Picasso;
 
 public class MyUtils {
 
@@ -411,5 +412,15 @@ public class MyUtils {
 		}
 
 		return size;
+	}
+	
+	public static void makePhonecall(Context context, String phone) {
+		Intent Telintent = new Intent();
+		Telintent.setAction(Intent.ACTION_CALL);
+		Telintent.setData(Uri.parse("tel:" + phone));
+		try {
+			context.startActivity(Telintent);
+		} catch (Exception e) {
+		}
 	}
 }
