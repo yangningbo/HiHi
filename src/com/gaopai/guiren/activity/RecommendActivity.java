@@ -11,7 +11,6 @@ import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 public class RecommendActivity extends BaseActivity {
 
 	private PullToRefreshListView listView;
-
 	private TribeAdapter adapter;
 
 	@Override

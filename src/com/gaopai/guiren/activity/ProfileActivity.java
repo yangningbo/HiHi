@@ -139,7 +139,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		initTitleBar(true);
+		initTitleBar(false);
 		mTitleBar.setBackgroundColor(Color.TRANSPARENT);
 		setAbContentView(R.layout.activity_profile);
 		addLoadingView();

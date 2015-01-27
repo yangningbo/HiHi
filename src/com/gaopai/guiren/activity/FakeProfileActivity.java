@@ -30,6 +30,7 @@ public class FakeProfileActivity extends BaseActivity implements OnClickListener
 
 		tvUserName = ViewUtil.findViewById(this, R.id.tv_name);
 		tvPhoneNum = ViewUtil.findViewById(this, R.id.tv_phone_num);
+		((TextView) ViewUtil.findViewById(this, R.id.tv_fake_info)).setShadowLayer(4F, 2f, 2f, Color.BLACK);
 	}
 
 	@Override
