@@ -692,6 +692,7 @@
     <string name="register">注册</string>
     <string name="modify">修改密码</string>
     <string name="bind_phone">绑定手机号</string>
+    <string name="re_bind_phone">修改手机号</string>
     <string name="third_party_login">第三方登录账号</string>
     <string name="register_success">注册成功</string>
     <string name="modify_success">修改成功</string>
@@ -856,14 +857,14 @@
     <string name="must_input_can_not_be_empty">必填内容不能为空</string>
     <string name="no_right_see_members">"您未加入，无法查看其他成员！"</string>
     <string name="my_fans">我的粉丝</string>
-    <string name="my_follow">我的关注</string>
+    <string name="my_follow">我的人脉</string>
     <string name="his_fans">TA的粉丝</string>
-    <string name="his_follow">TA的关注</string>
+    <string name="his_follow">TA的人脉</string>
     <string name="spread_dynamic">扩散动态</string>
     <string name="spread_tribe">扩散圈子</string>
     <string name="spread_meeting">扩散会议</string>
     <string name="spread_msg">扩散消息</string>
-    <string name="spread_user">扩散用户</string>
+    <string name="spread_user">扩散人脉</string>
     <string name="spread_web">扩散连接</string>
     <string name="jump_over">略过</string>
     <string name="search_user">搜人脉</string>

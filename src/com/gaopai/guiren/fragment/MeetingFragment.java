@@ -190,7 +190,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		private MeetingAdapter mAdapter;
 		private boolean isInitial = true;
 		private boolean isFirstTime = true;
-		
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -247,10 +246,10 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		}
 
 		public void doPullRefresh() {
-			mListView.doPullRefreshing(true, 50);
+			if (mListView != null) {
+				mListView.doPullRefreshing(true, 50);
+			}
 		}
-		
-		
 
 		@Override
 		public void onResume() {
@@ -261,16 +260,16 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			}
 		}
 
-//		@Override
-//		public void setUserVisibleHint(boolean isVisibleToUser) {
-//			super.setUserVisibleHint(isVisibleToUser);
-//			if (isVisibleToUser) {
-//				if (mListView != null && isInitial) {
-//					mListView.doPullRefreshing(true, 50);
-//					isInitial = false;
-//				}
-//			}
-//		}
+		// @Override
+		// public void setUserVisibleHint(boolean isVisibleToUser) {
+		// super.setUserVisibleHint(isVisibleToUser);
+		// if (isVisibleToUser) {
+		// if (mListView != null && isInitial) {
+		// mListView.doPullRefreshing(true, 50);
+		// isInitial = false;
+		// }
+		// }
+		// }
 
 		public class MyResponseListener extends SimpleResponseListener {
 

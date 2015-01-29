@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/tv_spread_words"
-        style="@style/dynamic_spread_words"/>
+        style="@style/dynamic_spread_words" />
 
     <LinearLayout
         android:id="@+id/layout_meeting_holder"
@@ -60,7 +60,10 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/layout_meeting_holder"
+        android:layout_marginRight="37dp"
         android:layout_marginTop="7dp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/u_text_gray" />
 
     <ImageButton

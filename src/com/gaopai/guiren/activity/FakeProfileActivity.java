@@ -1,5 +1,7 @@
 package com.gaopai.guiren.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,14 +10,20 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.InviteFriendActivity.InviteUrlResult;
+import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
+import com.gaopai.guiren.volley.SimpleResponseListener;
 
 public class FakeProfileActivity extends BaseActivity implements OnClickListener {
 
 	private TextView tvUserName;
 	private TextView tvPhoneNum;
+
+	private User user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +35,12 @@ public class FakeProfileActivity extends BaseActivity implements OnClickListener
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back_in_dark);
 		ViewUtil.findViewById(this, R.id.layout_phone).setOnClickListener(this);
 		ViewUtil.findViewById(this, R.id.btn_invite).setOnClickListener(this);
-
+		user = (User) getIntent().getSerializableExtra("user");
 		tvUserName = ViewUtil.findViewById(this, R.id.tv_name);
 		tvPhoneNum = ViewUtil.findViewById(this, R.id.tv_phone_num);
+		tvUserName.setText(user.realname);
+		tvUserName.setShadowLayer(4F, 2f, 2f, Color.BLACK);
+		tvPhoneNum.setText(user.phone);
 		((TextView) ViewUtil.findViewById(this, R.id.tv_fake_info)).setShadowLayer(4F, 2f, 2f, Color.BLACK);
 	}
 
@@ -42,12 +53,36 @@ public class FakeProfileActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.btn_invite:
-			startActivity(InviteFriendActivity.class);
+			getInviteUrl();
 			break;
 
 		default:
 			break;
 		}
+	}
+
+	public static Intent getIntent(Context context, User user) {
+		Intent intent = new Intent(context, FakeProfileActivity.class);
+		intent.putExtra("user", user);
+		return intent;
+	}
+
+	private void getInviteUrl() {
+		DamiInfo.getUserInvitation(new SimpleResponseListener(mContext, R.string.request_share_url) {
+			@Override
+			public void onSuccess(Object o) {
+				InviteUrlResult data = (InviteUrlResult) o;
+				if (data.state != null && data.state.code == 0) {
+					String shareStr = getString(R.string.invite_str_1);
+					if (!TextUtils.isEmpty(data.data)) {
+						shareStr = shareStr + data.data;
+					}
+					MyUtils.sendSms(mContext, user.phone, shareStr);
+				} else {
+					otherCondition(data.state, FakeProfileActivity.this);
+				}
+			}
+		});
 	}
 
 }

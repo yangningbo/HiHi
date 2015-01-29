@@ -447,7 +447,7 @@ public class DynamicHelper {
 			viewHolder.ivHeader = (ImageView) view.findViewById(R.id.iv_header);
 			viewHolder.tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
 			viewHolder.tvUserName.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-			viewHolder.tvSpreadWords  = (TextView) view.findViewById(R.id.tv_spread_words);
+			viewHolder.tvSpreadWords = (TextView) view.findViewById(R.id.tv_spread_words);
 			// viewHolder.tvUserInfo = (TextView)
 			// view.findViewById(R.id.tv_user_info);
 			// viewHolder.tvAction = (TextView)
@@ -614,41 +614,41 @@ public class DynamicHelper {
 
 	public View getView(View convertView, TypeHolder typeBean) {
 		Logger.startCountTime();
-		// try {
-		switch (typeBean.type) {
-		case TYPE_SPREAD_OTHER_DYNAMIC:
-		case TYPE_SEND_DYNAMIC:
-			if (shouldInflateNew(convertView)) {
-				convertView = inflateItemView(TYPE_SEND_DYNAMIC);
+		try {
+			switch (typeBean.type) {
+			case TYPE_SPREAD_OTHER_DYNAMIC:
+			case TYPE_SEND_DYNAMIC:
+				if (shouldInflateNew(convertView)) {
+					convertView = inflateItemView(TYPE_SEND_DYNAMIC);
+				}
+				buildDynamicView((ViewHolderSendDynamic) convertView.getTag(), typeBean);
+				break;
+			case TYPE_SPREAD_USER:
+			case TYPE_SPREAD_TRIBE:
+			case TYPE_SPREAD_LINK: {
+				if (shouldInflateNew(convertView)) {
+					convertView = inflateItemView(TYPE_SPREAD_LINK);
+				}
+				buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag(), typeBean);
+				break;
 			}
-			buildDynamicView((ViewHolderSendDynamic) convertView.getTag(), typeBean);
-			break;
-		case TYPE_SPREAD_USER:
-		case TYPE_SPREAD_TRIBE:
-		case TYPE_SPREAD_LINK: {
-			if (shouldInflateNew(convertView)) {
-				convertView = inflateItemView(TYPE_SPREAD_LINK);
+			case TYPE_SPREAD_MEETING: {
+				if (shouldInflateNew(convertView)) {
+					convertView = inflateItemView(TYPE_SPREAD_MEETING);
+				}
+				buildMeetingView((ViewHolderMeeting) convertView.getTag(), typeBean);
+				break;
 			}
-			buildSpreadLinkView((ViewHolderSpreadLink) convertView.getTag(), typeBean);
-			break;
+			case TYPE_SPREAD_MSG:
+				if (shouldInflateNew(convertView)) {
+					convertView = inflateItemView(TYPE_SPREAD_MSG);
+				}
+				buildMsgView((ViewHolderSpreadMsg) convertView.getTag(), typeBean);
+				break;
+			}
+		} catch (Exception e) {
+			convertView = buildErrorView();
 		}
-		case TYPE_SPREAD_MEETING: {
-			if (shouldInflateNew(convertView)) {
-				convertView = inflateItemView(TYPE_SPREAD_MEETING);
-			}
-			buildMeetingView((ViewHolderMeeting) convertView.getTag(), typeBean);
-			break;
-		}
-		case TYPE_SPREAD_MSG:
-			if (shouldInflateNew(convertView)) {
-				convertView = inflateItemView(TYPE_SPREAD_MSG);
-			}
-			buildMsgView((ViewHolderSpreadMsg) convertView.getTag(), typeBean);
-			break;
-		}
-		// } catch (Exception e) {
-		// convertView = buildErrorView();
-		// }
 		if (convertView == null) {
 			convertView = buildErrorView();
 		}
@@ -949,7 +949,7 @@ public class DynamicHelper {
 		} else {
 			viewHolder.tvUserName.setText(parseHeaderText(userName, uid, userInfo, spreadAction));
 		}
-		
+
 		if (TextUtils.isEmpty(typeBean.speak)) {
 			viewHolder.tvSpreadWords.setVisibility(View.GONE);
 		} else {
@@ -1108,7 +1108,7 @@ public class DynamicHelper {
 			}
 			viewHolder.tvContent.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(jsonContent.realname, jsonContent.uid),
-					MyTextUtils.addHttpLinks("说：" + jsonContent.content)));
+					MyTextUtils.addHttpLinks("：" + jsonContent.content)));
 			changeDyHolderState(true, viewHolder);
 		} else {
 			changeDyHolderState(false, viewHolder);
@@ -1129,7 +1129,7 @@ public class DynamicHelper {
 			}
 		}
 	}
-	
+
 	private void changeDyHolderState(boolean isSpread, ViewHolderSendDynamic viewHolder) {
 		View layoutDyContent = viewHolder.layoutDyContent;
 		if (isSpread) {

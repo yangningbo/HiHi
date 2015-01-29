@@ -70,7 +70,11 @@ public class SpreadDynamicActivity extends BaseActivity {
 		}
 		type = getIntent().getIntExtra(KEY_TYPE, TYPE_SPREAD_SECOND);
 		View v = mTitleBar.addRightButtonView(R.drawable.icon_titlebar_send_dy);
-		mTitleBar.setTitleText(R.string.spread_dynamic);
+		if (bean.type == DynamicHelper.TYPE_SPREAD_USER) {
+			mTitleBar.setTitleText(R.string.spread_user);
+		} else {
+			mTitleBar.setTitleText(R.string.spread_dynamic);
+		}
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		v.setOnClickListener(new OnClickListener() {
 			@Override
@@ -95,7 +99,7 @@ public class SpreadDynamicActivity extends BaseActivity {
 						spreadTribe(bean.jsoncontent.tid);
 						break;
 					case DynamicHelper.TYPE_SPREAD_USER:
-						spreadUser(bean.uid);
+						spreadUser(bean.jsoncontent.uid);
 						break;
 					default:
 						break;

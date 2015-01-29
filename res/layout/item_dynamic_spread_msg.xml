@@ -132,8 +132,11 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/iv_picture"
+        android:layout_marginRight="37dp"
         android:layout_marginTop="7dp"
         android:layout_toLeftOf="@id/btn_dynamic_ation"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/general_text_gray" />
 
     <include

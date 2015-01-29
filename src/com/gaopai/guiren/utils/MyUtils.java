@@ -26,11 +26,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.gaopai.guiren.FeatureFunction;
+import com.gaopai.guiren.R;
 
 public class MyUtils {
 
@@ -422,5 +424,12 @@ public class MyUtils {
 			context.startActivity(Telintent);
 		} catch (Exception e) {
 		}
+	}
+	
+	public static void sendSms(Context context, String phoneNum, String content) {
+		Uri uri = Uri.parse("smsto:" + phoneNum);
+		Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+		it.putExtra("sms_body", content);
+		context.startActivity(it);
 	}
 }

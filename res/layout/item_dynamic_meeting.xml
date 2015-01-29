@@ -59,6 +59,9 @@
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/layout_meeting_holder"
         android:layout_marginTop="7dp"
+        android:layout_marginRight="37dp"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textColor="@color/u_text_gray" />
 
     <ImageButton

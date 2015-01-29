@@ -15,6 +15,13 @@ import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.ViewUtil;
 
 public class ContactAdapter extends CopyOfConnectionAdapter {
+	
+	private OnClickListener inviteClickListener;
+	
+	public ContactAdapter(OnClickListener inviteClickListener) {
+		super();
+		this.inviteClickListener = inviteClickListener;
+	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder;
@@ -35,14 +42,16 @@ public class ContactAdapter extends CopyOfConnectionAdapter {
 			viewHolder.ivHeader = (ImageView) convertView.findViewById(R.id.iv_header);
 			viewHolder.layoutHeader = (HeadView) convertView.findViewById(R.id.layout_header_mvp);
 			viewHolder.btnInvite = ViewUtil.findViewById(convertView, R.id.btn_invite);
-			
+
 			viewHolder.tvUserName.setText(User.getUserName(user));
 			viewHolder.tvUserInfo.setText(User.getUserInfo(user));
-			viewHolder.btnInvite.setTag(user);
+			viewHolder.btnInvite.setTag(user.phone);
 			viewHolder.btnInvite.setOnClickListener(inviteClickListener);
 
 			viewHolder.layoutHeader.setImage(user.headsmall);
 			viewHolder.layoutHeader.setMVP(user.bigv == 1);
+
+			viewHolder.btnInvite.setVisibility(user.isguirenuser == 0 ? View.VISIBLE : View.GONE);
 		} else { // Section
 			if (convertView == null) {
 				LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(
@@ -57,20 +66,13 @@ public class ContactAdapter extends CopyOfConnectionAdapter {
 
 		return convertView;
 	}
-	
-	private OnClickListener inviteClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			User user = (User) v.getTag();
-		}
-	};
 
 	protected static final class ViewHolder {
 		TextView tvUserName;
 		TextView tvUserInfo;
 		ImageView ivHeader;
 		HeadView layoutHeader;
-		
+
 		Button btnInvite;
 	}
 }

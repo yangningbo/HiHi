@@ -59,6 +59,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	public final static int TYPE_REGISTER = 0;
 	public final static int TYPE_FORGET_PASSWORD = 1;
 	public final static int TYPE_BIND_PHONE = 2;
+	public final static int TYPE_RE_BIND_PHONE = 3;
 	public final static String KEY_TYPE = "type";
 	private int type;
 
@@ -117,19 +118,22 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		} else if (type == TYPE_FORGET_PASSWORD) {
 			btnConfirm.setText(R.string.confirm_modify);
 			mTitleBar.setTitleText(R.string.modify);
-		} else if (type == TYPE_BIND_PHONE) {
-			btnConfirm.setText(R.string.confirm_bind_phone);
-			mTitleBar.setTitleText(R.string.bind_phone);
+		} else if (type == TYPE_BIND_PHONE || type == TYPE_RE_BIND_PHONE) {
+			if (type == TYPE_BIND_PHONE) {
+				btnConfirm.setText(R.string.confirm_bind_phone);
+				mTitleBar.setTitleText(R.string.bind_phone);
+			} else {
+				btnConfirm.setText(R.string.confirm_modify);
+				mTitleBar.setTitleText(R.string.re_bind_phone);
+			}
 			etPassword.setVisibility(View.GONE);
-			// etName.setVisibility(View.GONE);
-			// findViewById(R.id.layout_input_name).setVisibility(View.GONE);
 			findViewById(R.id.layout_input_password).setVisibility(View.GONE);
 			findViewById(R.id.layout_agree_guiren).setVisibility(View.GONE);
 			findViewById(R.id.tv_register_info).setVisibility(View.GONE);
 			((LinearLayout) btnConfirm.getParent()).setGravity(Gravity.TOP);
 			User user = DamiCommon.getLoginResult(mContext);
 			if (user != null) {
-				etName.setText(user.realname);
+				etName.setText(User.getUserName(user));
 			}
 			etName.setEnabled(false);
 		}
@@ -265,7 +269,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		// TODO Auto-generated method stub
 		if (resultCode == RESULT_OK) {
 			String code = intent.getStringExtra(CountryCodeActivity.KEY_COUNTRY_CODE);
 			String name = intent.getStringExtra(CountryCodeActivity.KEY_COUNTRY_NAME);
@@ -285,7 +288,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_send_veryfication:
 			if (TextUtils.isEmpty(etPhone.getText())) {
@@ -323,7 +325,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void confirm() {
-		if (!isChecked && type != TYPE_BIND_PHONE) {
+		if (!isChecked && type != TYPE_BIND_PHONE && type != TYPE_RE_BIND_PHONE) {
 			showToast(R.string.please_agree_guiren_first);
 			return;
 		}
@@ -339,7 +341,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			return;
 		}
 
-		if (type == TYPE_BIND_PHONE) {
+		if (type == TYPE_BIND_PHONE || type == TYPE_RE_BIND_PHONE) {
 			bindPhone();
 			return;
 		}
@@ -363,7 +365,15 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			public void onSuccess(Object o) {
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.register_success);
+					if (type == TYPE_BIND_PHONE) {
+						showToast(R.string.bind_phone_success);
+					} else {
+						showToast(R.string.modify_success);
+					}
+					User user = DamiCommon.getLoginResult(mContext);
+					user.phone = etPhone.getText().toString();
+					DamiCommon.saveLoginResult(mContext, user);
+					RegisterActivity.this.setResult(RESULT_OK);
 				} else {
 					otherCondition(data.state, RegisterActivity.this);
 				}

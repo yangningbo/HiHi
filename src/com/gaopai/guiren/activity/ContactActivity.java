@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,12 +24,14 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.InviteFriendActivity.InviteUrlResult;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.adapter.ContactAdapter;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Item;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -172,13 +175,15 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 					return;
 				}
 				User user = ((Item) mAdapter.getItem(pos)).user;
-//				startActivity(ProfileActivity.getIntent(mContext, user.uid));
-				 startActivity(FakeProfileActivity.class);
-
+//				if (user.isguirenuser == 0) {
+//					startActivity(FakeProfileActivity.getIntent(mContext, user));
+//				} else {
+					startActivity(ProfileActivity.getIntent(mContext, user.uid));
+//				}
 			}
 		});
 
-		mAdapter = new ContactAdapter();
+		mAdapter = new ContactAdapter(inviteClickListener);
 		mListView.setAdapter(mAdapter);
 		mListView.getRefreshableView().setFastScrollEnabled(false);
 		indexScroller.setListView(mListView.getRefreshableView());
@@ -318,13 +323,13 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-	private boolean openSearch = false;
+	private boolean isOpenSearch = false;
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.ab_search:
-			if (openSearch) {
+			if (isOpenSearch) {
 				btnSearch.setBackgroundResource(R.drawable.selector_titlebar_search);
 				btnSearch.setText("");
 				etSearch.setVisibility(View.GONE);
@@ -336,11 +341,40 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 				mTitleBar.titleTextBtn.setVisibility(View.GONE);
 				etSearch.requestFocus();
 			}
-			openSearch = !openSearch;
+			isOpenSearch = !isOpenSearch;
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private OnClickListener inviteClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			String phone = (String) v.getTag();
+			if (TextUtils.isEmpty(phone)) {
+				return;
+			}
+			getInviteUrl(phone);
+		}
+	};
+	
+	private void getInviteUrl(final String phone) {
+		DamiInfo.getUserInvitation(new SimpleResponseListener(mContext, R.string.request_share_url) {
+			@Override
+			public void onSuccess(Object o) {
+				InviteUrlResult data = (InviteUrlResult) o;
+				if (data.state != null && data.state.code == 0) {
+					String shareStr = getString(R.string.invite_str_1);
+					if (!TextUtils.isEmpty(data.data)) {
+						shareStr = shareStr + data.data;
+					}
+					MyUtils.sendSms(mContext, phone, shareStr);
+				} else {
+					otherCondition(data.state, ContactActivity.this);
+				}
+			}
+		});
 	}
 
 }

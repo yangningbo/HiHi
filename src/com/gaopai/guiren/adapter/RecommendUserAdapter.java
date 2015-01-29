@@ -131,7 +131,13 @@ public class RecommendUserAdapter extends BaseAdapter {
 		holder.tvUserName.setText(user.realname);
 		holder.tvUserInfo.setText(User.getUserInfo(user));
 		holder.tvRecommendInfo.setVisibility(View.VISIBLE);
-		holder.tvRecommendInfo.setText("系统为您精选");
+		if (user.bigv == 1) {
+			holder.tvRecommendInfo.setText("来自：贵人汇VIP用户");
+		} else if (user.iscontact == 1) {
+			holder.tvRecommendInfo.setText("来自：您的通讯录朋友");
+		} else {
+			holder.tvRecommendInfo.setText("来自：为您推荐的朋友");
+		}
 		holder.btnAdd.setOnClickListener(mAddClickListener);
 		holder.btnAdd.setTag(user);
 		if (choseSet.contains(user.uid)) {

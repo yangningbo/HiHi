@@ -202,6 +202,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="16dp"
                             android:layout_alignRight="@id/img_4"
+                            android:visibility="gone"
                             android:layout_alignTop="@id/img_4"
                             android:layout_marginRight="-8dp"
                             android:background="@drawable/shape_notify_red_dot2"

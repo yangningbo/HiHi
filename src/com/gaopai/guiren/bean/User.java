@@ -119,6 +119,8 @@ public class User implements Serializable {
 	public String nextpage;
 	public String url;
 	public String alertmessage;
+	
+	public int isguirenuser;
 	public class RoomIds implements Serializable {
 		@Expose
 		public String tribelist; // 用户所加入的部落id

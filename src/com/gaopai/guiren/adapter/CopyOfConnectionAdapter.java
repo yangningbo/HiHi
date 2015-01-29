@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,11 @@ import android.widget.TextView;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.support.view.HeadView;
-import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.widget.indexlist.CharacterParser;
 
 public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndexer, Filterable {
 
-	private String mSections = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private String mSections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#";
 
 	public static abstract class Row {
 	}
@@ -45,7 +43,11 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 
 		public Item(User user) {
 			this.user = user;
-			this.pingYinText = parser.getSelling(User.getUserName(user)).toUpperCase();
+			if (user.integral > 2) {
+				this.pingYinText = parser.getSelling(User.getUserName(user)).toUpperCase();
+			} else {
+				this.pingYinText = "1";
+			}
 		}
 
 		@Override
@@ -113,10 +115,10 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 			viewHolder.layoutHeader = (HeadView) convertView.findViewById(R.id.layout_header_mvp);
 			viewHolder.tvUserName.setText(User.getUserName(user));
 			viewHolder.tvUserInfo.setText(User.getUserInfo(user));
-			
+
 			viewHolder.layoutHeader.setImage(user.headsmall);
 			viewHolder.layoutHeader.setMVP(user.bigv == 1);
-			
+
 			viewHolder.tvFancyCount.setText(String.valueOf(user.integral));
 		} else { // Section
 			if (convertView == null) {
@@ -194,7 +196,7 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 	}
 
 	public void removeUser(String uid) {
-		for(User user:mUserList) {
+		for (User user : mUserList) {
 			if (uid.equals(user.uid)) {
 				mUserList.remove(user);
 				sortData(mUserList);
@@ -202,7 +204,7 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 			}
 		}
 	}
-	
+
 	public void addUser(User user) {
 		mUserList.add(user);
 		sortData(mUserList);
@@ -212,6 +214,8 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 		int size = userList.size();
 		mItems.clear();
 		mRows.clear();
+		int sharpSize = 0;
+		boolean hasAddSharp = false;
 		for (int i = 0; i < size; i++) {
 			mItems.add(new Item(userList.get(i)));
 		}
@@ -220,16 +224,22 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 		for (int i = 0; i < mItems.size(); i++) {
 			Item item = mItems.get(i);
 			char first = item.pingYinText.charAt(0);
-			if (i == 0 && (first < 'A' || first > 'Z')) {
-				mRows.add(new Section("#"));
+			if (!hasAddSharp && (first < 'A' || first > 'Z')) {
+				mRows.add(mRows.size(), new Section("#"));
+				hasAddSharp = true;
+				sharpSize = 1;
 			}
 			if (first >= 'A' && first <= 'Z') {
 				if (character != first) {
-					mRows.add(new Section(String.valueOf(first)));
+					mRows.add(mRows.size() - sharpSize, new Section(String.valueOf(first)));
 					character = first;
 				}
+				mRows.add(mRows.size() - sharpSize, item);
+			} else {
+				mRows.add(item);
+				sharpSize++;
 			}
-			mRows.add(item);
+
 		}
 		addAll(mRows);
 	}

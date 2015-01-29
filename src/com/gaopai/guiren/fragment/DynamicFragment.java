@@ -247,6 +247,9 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	}
 
 	public void hideChatBox() {
+		if (chatBox == null || chaBoxManager == null) {
+			return;
+		}
 		if (chatBox.getVisibility() == View.GONE) {
 			return;
 		}

@@ -496,6 +496,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				commenterid = messageInfos.get(pos).from;
 				commenterName = messageInfos.get(pos).displayname;
 				reisanonymity = messageInfos.get(pos).isanonymity;
+				if(boxManager.isInTextMode()) {
+					boxManager.switchToText(true);
+				}
 			}
 		});
 		options = new DisplayImageOptions.Builder().cacheInMemory(true).showImageOnLoading(R.drawable.default_pic)
@@ -902,6 +905,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.pb_chat_progress);
 				viewHolder.resendImageView = (ImageView) convertView.findViewById(R.id.iv_chat_resend_icon);// ??
 				viewHolder.layoutPicHolder = convertView.findViewById(R.id.layout_msg_pic_holder);
+				viewHolder.ivPhotoCover.setImageResource(R.drawable.icon_chat_detail_img_left_cover);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
@@ -988,6 +992,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 				viewHolder.ivPhoto.getLayoutParams().width = width;
 				viewHolder.ivPhoto.getLayoutParams().height = height;
+				viewHolder.ivPhotoCover.getLayoutParams().width = width;
+				viewHolder.ivPhotoCover.getLayoutParams().height = height;
 				final String path = commentInfo.imgUrlS;
 				if (path.startsWith("http://")) {
 					ImageLoaderUtil.displayImageByProgress(path, viewHolder.ivPhoto, options, viewHolder.progressBar);
@@ -1160,6 +1166,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		case R.id.comment_count_layout:
 		case R.id.comment_count_btn:
 			initialSendIdAndName();
+			boxManager.switchToText(true);
 			break;
 		case R.id.zan_count_layout:
 		case R.id.zan_count_btn:
@@ -1519,7 +1526,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				}
 			}
 		} else {
-			tvZan.setText("客官，快来点赞吧:-)");
+			tvZan.setText("快来点赞吧:-)");
 		}
 	}
 

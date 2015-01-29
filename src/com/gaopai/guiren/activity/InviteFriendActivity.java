@@ -18,6 +18,7 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.support.ShareManager;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -114,14 +115,11 @@ public class InviteFriendActivity extends BaseActivity implements OnClickListene
 			if (TextUtils.isEmpty(phoneNum)) {
 				return;
 			}
-			Uri uri = Uri.parse("smsto:" + phoneNum);
-			Intent it = new Intent(Intent.ACTION_SENDTO, uri);
 			String shareStr = getString(R.string.invite_str_1);
 			if (!TextUtils.isEmpty(url)) {
 				shareStr = shareStr + url;
 			}
-			it.putExtra("sms_body", shareStr);
-			mContext.startActivity(it);
+			MyUtils.sendSms(mContext, phoneNum, shareStr);
 		}
 	}
 

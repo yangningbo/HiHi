@@ -109,13 +109,13 @@
                 <ImageView
                     style="@style/slide_item_image"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/icon_slide_follower" />
+                    android:src="@drawable/icon_slide_fans" />
 
                 <TextView
                     style="@style/slide_item_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="我的关注" />
+                    android:text="我的人脉" />
 
                 <TextView
                     android:id="@+id/tv_slide_count_followers"

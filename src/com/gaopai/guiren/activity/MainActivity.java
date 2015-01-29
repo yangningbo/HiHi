@@ -73,7 +73,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	public final static int LOGIN_REQUEST = 29312;
 	public final static int SHOW_GUIDE_REQUEST = 6541;
 	public final static int UNLOGIN_REQUEST = 1634365;
-	public final static int RESULT_EXIT = 702;
 	public final static int MSG_LOAD_ERROR = 11818;
 
 	public final static String ACTION_NETWORK_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
@@ -604,10 +603,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		switch (requestCode) {
 		case LOGIN_REQUEST:
-			if (resultCode == RESULT_EXIT) {
-				MainActivity.this.finish();
-				return;
-			} else if (resultCode == RESULT_OK) {
+			if (resultCode == RESULT_OK) {
 				// Login activity has sent broadcast
 			} else if (resultCode == UNLOGIN_REQUEST) {
 				FeatureFunction.startService(mContext);

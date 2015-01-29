@@ -207,6 +207,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		JsonContent content = typeBean.jsoncontent;
 		User user = getSingleUser(content);
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
+		viewHolder.tvSpreadWords.setVisibility(View.GONE);
 		switch (type) {
 
 		case TYPE_WEIBO_USER_JOIN:
@@ -248,6 +249,10 @@ public class ConnectionAdapter extends BaseAdapter {
 				viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
 						MyTextUtils.addSingleUserSpan(content.realname, content.uid), "扩散了一条人脉",
 						MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
+			}
+			if (!TextUtils.isEmpty(content.speak)) {
+				viewHolder.tvSpreadWords.setVisibility(View.VISIBLE);
+				viewHolder.tvSpreadWords.setText(content.speak);
 			}
 		default:
 			break;
@@ -351,6 +356,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		TextView tvUserInfo;
 		TextView tvDateInfo;
 		RelativeLayout rlInfoLayout;
+		TextView tvSpreadWords;
 
 		HeadView layoutHeader;
 
@@ -365,6 +371,7 @@ public class ConnectionAdapter extends BaseAdapter {
 			viewHolder.tvDateInfo = (TextView) view.findViewById(R.id.tv_date_info);
 			viewHolder.rlInfoLayout = (RelativeLayout) view.findViewById(R.id.rl_info_holder);
 			viewHolder.layoutHeader = (HeadView) view.findViewById(R.id.layout_header_mvp);
+			viewHolder.tvSpreadWords = (TextView) view.findViewById(R.id.tv_spread_words);
 			return viewHolder;
 		}
 	}

@@ -130,7 +130,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 			dynamicHelper.getView(headerView, typeBean);
 		}
 
-
 		@Override
 		public void onDeleteItemSuccess(TypeHolder typeHolder) {
 			mContext.sendBroadcast(DynamicHelper.getDeleteIntent(typeHolder.id));
@@ -162,6 +161,9 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 					} else {
 						typeBean = data.data;
 						// getHeaderView();
+						if (headerView instanceof TextView) {
+							return;
+						}
 						dynamicHelper.buildCommonView(
 								(com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon) headerView.getTag(),
 								typeBean);

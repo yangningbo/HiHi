@@ -13,6 +13,8 @@ public class ConnectionBean extends BaseNetBean {
 		public String id;
 		public String uid;
 		public int type;
+		
+
 
 		public JsonContent jsoncontent;
 
@@ -26,7 +28,7 @@ public class ConnectionBean extends BaseNetBean {
 	}
 
 	public static class JsonContent implements Serializable {
-
+		public String speak;
 		// type=1,2,3
 		public String uid;
 		public String realname;

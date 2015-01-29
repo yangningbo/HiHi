@@ -140,7 +140,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar(false);
-		mTitleBar.setBackgroundColor(Color.TRANSPARENT);
 		setAbContentView(R.layout.activity_profile);
 		addLoadingView();
 		showLoadingView();
@@ -680,8 +679,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 		tvDyDay.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
 		tvDyMonthYear.setText(calendar.get(Calendar.YEAR) + "." + (calendar.get(Calendar.MONTH) + 1));
+		layoutDyContent.addView(parseDyView(bean, dynamicHelper.getView(dyView, bean)));
+	}
 
-		layoutDyContent.addView(dynamicHelper.getView(dyView, bean));
+	private View parseDyView(TypeHolder typeHolder, View source) {
+		if (typeHolder.type == DynamicHelper.TYPE_SEND_DYNAMIC) {
+			source.findViewById(R.id.tv_spread_words).setVisibility(View.GONE);
+		}
+		return source;
 	}
 
 	private boolean bindCommentView() {
@@ -768,6 +773,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	public final static int REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE = 3;
 	public final static int REQUEST_COMMENT = 1;
 	public final static int REQUEST_VERIFY_PROFILE = 2;
+	public final static int REQUEST_BIND_PHONE = 4;
 
 	@Override
 	public void onClick(View v) {
@@ -834,14 +840,14 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.layout_profile_phone_num:
 			if (isSelf) {
-//				changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
+				// changeContact(ChangeProfileActivity.TYPE_PHONE, tUser.phone);
 				bindMyPhone();
 				return;
 			}
 			if (isFollowEachOther()) {
 				if (TextUtils.isEmpty(mUser.phone)) {// edit your suck profile
-//					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
-//							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+				// changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
+				// REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
 					bindMyPhone();
 				} else {
 					MyUtils.makePhonecall(mContext, tUser.phone);
@@ -851,8 +857,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 					return;
 				}
 				if (TextUtils.isEmpty(mUser.phone)) {
-//					changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
-//							REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					// changeContact(ChangeProfileActivity.TYPE_PHONE,
+					// mUser.phone,
+					// REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
 					bindMyPhone();
 					return;
 				}
@@ -1074,8 +1081,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void bindMyPhone() {
-		startActivity(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE));
+		startActivityForResult(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_RE_BIND_PHONE), REQUEST_BIND_PHONE);
 	}
+
 	private void changeContact(int type, String text) {
 		changeContact(type, text, REQUEST_CHANGE_PROFILE);
 	}
@@ -1132,6 +1140,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				bindProfileView();
 				bindContactView();
 				bindTopSectionView();
+			}
+			
+			if (requestCode == REQUEST_BIND_PHONE) {
+				tUser = DamiCommon.getLoginResult(this);
+				bindContactView();
 			}
 
 		}

@@ -141,8 +141,8 @@ public class ChatBoxManager {
 	}
 
 	public void switchTextVoice() {
-		boolean sendVoice = (mContentEdit.getVisibility() == View.VISIBLE);
-		if (sendVoice) {// true 文字
+		boolean nowSendText = (mContentEdit.getVisibility() == View.VISIBLE);
+		if (nowSendText) {// true 文字
 			switchToVoice();
 		} else {
 			switchToText(true);
@@ -177,6 +177,10 @@ public class ChatBoxManager {
 		if (showKeyboard) {
 			showSoftKeyboard();
 		}
+	}
+	
+	public boolean isInTextMode() {
+		return mContentEdit.getVisibility() == View.VISIBLE;
 	}
 
 }

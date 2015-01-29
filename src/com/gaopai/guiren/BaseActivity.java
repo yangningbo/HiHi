@@ -165,7 +165,7 @@ public class BaseActivity extends FragmentActivity {
 	protected void addTitleBar(ViewGroup holder) {
 		mTitleBar = new TitleBar(this);
 		holder.addView(mTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		holder.addView(ViewUtil.creatTitleBarLineView(mContext));
+//		holder.addView(ViewUtil.creatTitleBarLineView(mContext));
 	}
 
 	public void setAbContentView(View contentView) {

@@ -407,18 +407,23 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 								MessageTable table = new MessageTable(db);
 								if (user.roomids != null)
 									table.deleteMore(user.roomids.tribelist, user.roomids.meetinglist);
-								setResult(RESULT_OK);
+
 								sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
 								if (!TextUtils.isEmpty(user.nextpage)) {
 									if (user.nextpage.equals("completeinfo")) {
 										startActivity(ReverificationActivity.getIntent(mContext));
 										LoginActivity.this.finish();
+										return;
 									} else if (user.nextpage.equals("bindphone")) {
-										startActivityForResult(RegisterActivity.getIntent(mContext,
-												RegisterActivity.TYPE_BIND_PHONE), REQUEST_BIND_PHONE);
+										startActivityForResult(
+												RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE),
+												REQUEST_BIND_PHONE);
+										return;
 									}
 								}
-								// goToRecomendPage();
+								goToRecomendPage();
+								setResult(RESULT_OK);
+								LoginActivity.this.finish();
 							} else {
 								showToast(R.string.login_error);
 							}
@@ -445,7 +450,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 					@Override
 					public void onFinish() {
-						// TODO Auto-generated method stub
 						removeProgressDialog();
 						if (mQQAuth != null) {
 							mQQAuth.logout(LoginActivity.this);
@@ -469,12 +473,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	}
 
 	private void goToRecomendPage() {
-		// if (showRecomendPage()) {
-		DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
-		Intent intent = new Intent(this, RecommendActivity.class);
-		startActivity(intent);
-		// }
-		this.finish();
+		if (showRecomendPage()) {
+			DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
+			Intent intent = new Intent(this, RecommendActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	private boolean showRecomendPage() {
@@ -575,5 +578,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 				});
 			}
 		}).start();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
 	}
 }

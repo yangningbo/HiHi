@@ -111,6 +111,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_user_name"
         android:layout_below="@id/layout_dy_content"
+        android:layout_marginRight="37dp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/u_text_gray" />
 
     <ImageButton
