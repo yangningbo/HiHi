@@ -355,26 +355,8 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 			if (TextUtils.isEmpty(phone)) {
 				return;
 			}
-			getInviteUrl(phone);
+			FakeProfileActivity.getInviteUrl(mContext, phone);
 		}
 	};
-	
-	private void getInviteUrl(final String phone) {
-		DamiInfo.getUserInvitation(new SimpleResponseListener(mContext, R.string.request_share_url) {
-			@Override
-			public void onSuccess(Object o) {
-				InviteUrlResult data = (InviteUrlResult) o;
-				if (data.state != null && data.state.code == 0) {
-					String shareStr = getString(R.string.invite_str_1);
-					if (!TextUtils.isEmpty(data.data)) {
-						shareStr = shareStr + data.data;
-					}
-					MyUtils.sendSms(mContext, phone, shareStr);
-				} else {
-					otherCondition(data.state, ContactActivity.this);
-				}
-			}
-		});
-	}
 
 }

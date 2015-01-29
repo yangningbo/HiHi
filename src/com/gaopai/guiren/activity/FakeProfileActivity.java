@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -53,7 +54,7 @@ public class FakeProfileActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.btn_invite:
-			getInviteUrl();
+			getInviteUrl(mContext, user.phone);
 			break;
 
 		default:
@@ -67,19 +68,19 @@ public class FakeProfileActivity extends BaseActivity implements OnClickListener
 		return intent;
 	}
 
-	private void getInviteUrl() {
+	public static void getInviteUrl(final Context mContext, final String phone) {
 		DamiInfo.getUserInvitation(new SimpleResponseListener(mContext, R.string.request_share_url) {
 			@Override
 			public void onSuccess(Object o) {
 				InviteUrlResult data = (InviteUrlResult) o;
 				if (data.state != null && data.state.code == 0) {
-					String shareStr = getString(R.string.invite_str_1);
+					String shareStr = mContext.getString(R.string.invite_str_1);
 					if (!TextUtils.isEmpty(data.data)) {
 						shareStr = shareStr + data.data;
 					}
-					MyUtils.sendSms(mContext, user.phone, shareStr);
+					MyUtils.sendSms(mContext, phone, shareStr);
 				} else {
-					otherCondition(data.state, FakeProfileActivity.this);
+					otherCondition(data.state, (Activity) mContext);
 				}
 			}
 		});
