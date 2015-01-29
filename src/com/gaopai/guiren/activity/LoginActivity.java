@@ -98,7 +98,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Logger.startCountTime();
 		initTitleBar();
 		setAbContentView(R.layout.activity_login);
 		mTitleBar.setTitleText(R.string.login);
@@ -108,7 +107,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Logger.time(this, "loginCreatTime");
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
 		sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_SHOW));
 	}
 

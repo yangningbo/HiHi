@@ -56,11 +56,13 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 		mListView.setPullLoadEnabled(false);// 上拉刷新，禁止
 		mListView.setScrollLoadEnabled(true);// 滑动到底部自动刷新，启用
 		mListView.getRefreshableView().setDivider(null);
+		mListView.getRefreshableView().setSelector(mContext.getResources().getDrawable(R.color.transparent));
 		mListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 				getMeetingList(true, MeetingFragment.TYPE_MY_MEETING);
 			}
+
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 				getMeetingList(false, MeetingFragment.TYPE_MY_MEETING);

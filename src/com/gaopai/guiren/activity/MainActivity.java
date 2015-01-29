@@ -99,8 +99,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	 * transition. At the same time, a timer with 3 seconds delay is set up to
 	 * hide welcome page and determine whether to show loginActivity (if token
 	 * has expired) or stay in this page. For the first choice, we won't hide
-	 * the welcome page until the loginActivity has run the method of onResume
-	 * which will send an Intent with ACTION_LOGIN_SHOW.
+	 * the welcome page until the loginActivity has run the method of
+	 * onWindowFocusChanged which will send an Intent with ACTION_LOGIN_SHOW.
 	 */
 
 	@Override
@@ -199,29 +199,19 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		});
 
 		int screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
-		int screenHeight = mContext.getResources().getDisplayMetrics().heightPixels;
 		findViewById(R.id.slide_left_holder).getLayoutParams().width = (int) (screenWidth * 0.75);
 		((TextView) findViewById(R.id.tv_user_name)).setMaxWidth((int) (screenWidth * 0.75)
 				- MyUtils.dip2px(mContext, 85));
 
-		View view = (View) findViewById(R.id.slide_btn_my_profile);
-		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_my_followers);
-		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_my_tribe);
-		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_my_meeting);
-		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_my_favourite);
-		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_my_dynamics);
-		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_invite_friend);
-		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_plus_v);
-		view.setOnClickListener(slideMenuClickListener);
-		view = (View) findViewById(R.id.slide_btn_setting);
-		view.setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_my_profile).setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_my_followers).setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_my_tribe).setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_my_meeting).setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_my_favourite).setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_my_dynamics).setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_invite_friend).setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_plus_v).setOnClickListener(slideMenuClickListener);
+		findViewById(R.id.slide_btn_setting).setOnClickListener(slideMenuClickListener);
 	}
 
 	private void bindUserView() {

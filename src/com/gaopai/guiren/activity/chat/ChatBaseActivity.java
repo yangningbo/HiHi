@@ -60,7 +60,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 	protected SpeexPlayerWrapper speexPlayerWrapper;
 
 	protected BaseChatAdapter mAdapter;
-	protected PullToRefreshListView mListView;
+	public PullToRefreshListView mListView;
 
 	protected String mId;// 部落会议id，或者对方用户id
 

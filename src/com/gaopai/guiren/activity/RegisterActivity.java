@@ -118,6 +118,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		} else if (type == TYPE_FORGET_PASSWORD) {
 			btnConfirm.setText(R.string.confirm_modify);
 			mTitleBar.setTitleText(R.string.modify);
+			etName.setVisibility(View.GONE);
 		} else if (type == TYPE_BIND_PHONE || type == TYPE_RE_BIND_PHONE) {
 			if (type == TYPE_BIND_PHONE) {
 				btnConfirm.setText(R.string.confirm_bind_phone);
@@ -251,7 +252,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 						if (type == TYPE_REGISTER) {
 							showToast(R.string.register_success);
 						} else {
-							showToast(R.string.modify_password);
+							showToast(R.string.modify_success);
 						}
 						RegisterActivity.this.finish();
 					}

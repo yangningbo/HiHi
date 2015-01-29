@@ -18,6 +18,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -179,9 +180,9 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		} else {
 			View voiceNotRead = ((ViewHolderLeft) viewHolder).ivVoiceNotRead;
 			voiceNotRead.setVisibility(View.GONE);
-			if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0) {
+			if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0 && mCurrentMode == MODE_VOICE) {
 				voiceNotRead.setVisibility(View.VISIBLE);
-			} 
+			}
 		}
 
 		onBindView(viewHolder, messageInfo);
@@ -245,7 +246,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				viewHolder.wiatProgressBar.setVisibility(View.GONE);
 				viewHolder.tvText.setText(messageInfo.content.length() == 0 ? mContext.getString(R.string.voice_scheme)
 						: messageInfo.content);
-//				onBindView(viewHolder, messageInfo);
+				// onBindView(viewHolder, messageInfo);
 			}
 			AnimationDrawable drawable = (AnimationDrawable) viewHolder.ivVoice.getDrawable();
 			if (mPlayerWrapper.isPlay() && mPlayerWrapper.getMessageTag().equals(messageInfo.tag)) {
@@ -385,6 +386,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	static class ViewHolderLeft extends ViewHolder {
 
 		ImageView ivVoiceNotRead;
+
 		public static ViewHolderLeft getInstance(View view) {
 			ViewHolderLeft viewHolderLeft = new ViewHolderLeft();
 			viewHolderLeft.ivVoiceNotRead = (ImageView) view.findViewById(R.id.iv_chat_voice_not_read);
@@ -450,6 +452,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 	}
 
 	private int palyedPosition = -1;
+
 	private class PlayCallback extends MediaUIHeper.PlayCallback {
 
 		@Override
@@ -459,7 +462,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				((ChatMainActivity) mContext).showVoiceModeToastAnimation();
 			}
 			mData.get(palyedPosition).isReadVoice = 1;
-			
+
 			notifyDataSetChanged();
 		}
 
@@ -475,24 +478,31 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 						palyedPosition = nextPosition;
 						updateVoiceReadToDb(messageInfo);
 						mPlayerWrapper.start(messageInfo);
+						if (getListView().getFirstVisiblePosition() > palyedPosition
+								|| getListView().getLastVisiblePosition() < palyedPosition) {
+							getListView().smoothScrollToPosition(palyedPosition);
+						}
 						return;
 					}
 					nextPosition = nextPosition + 1;
 				}
 				notifyDataSetChanged();// 通知播放动画
 			} else {
-			
+
 				notifyDataSetChanged();
 			}
 		}
 	}
-	
+
+	private ListView getListView() {
+		return ((ChatMainActivity) mContext).mListView.getRefreshableView();
+	}
+
 	private void updateVoiceReadToDb(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
 		table.updateVoiceReadState(messageInfo.id);
 	}
-
 
 	PopupWindow actionWindow;
 

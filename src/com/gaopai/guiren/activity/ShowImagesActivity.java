@@ -232,57 +232,7 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 
 			@Override
 			public void onViewTap(View view, float x, float y) {
-				if (mTitleBar.getVisibility() == View.VISIBLE) {
-					AlphaAnimation animation = new AlphaAnimation(1.0f, 0f);
-					animation.setDuration(500);
-					mTitleBar.startAnimation(animation);
-					animation.setAnimationListener(new AnimationListener() {
-
-						@Override
-						public void onAnimationStart(Animation arg0) {
-							// TODO Auto-generated method stub
-
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation arg0) {
-							// TODO Auto-generated method stub
-
-						}
-
-						@Override
-						public void onAnimationEnd(Animation arg0) {
-							// TODO Auto-generated method stub
-							mTitleBar.setVisibility(View.GONE);
-						}
-					});
-
-				} else {
-					mTitleBar.setVisibility(View.VISIBLE);
-					AlphaAnimation animation = new AlphaAnimation(0.0f, 1.0f);
-					animation.setDuration(500);
-					mTitleBar.startAnimation(animation);
-					animation.setAnimationListener(new AnimationListener() {
-
-						@Override
-						public void onAnimationStart(Animation arg0) {
-							// TODO Auto-generated method stub
-
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation arg0) {
-							// TODO Auto-generated method stub
-
-						}
-
-						@Override
-						public void onAnimationEnd(Animation arg0) {
-							// TODO Auto-generated method stub
-							mTitleBar.setVisibility(View.VISIBLE);
-						}
-					});
-				}
+				ShowImagesActivity.this.finish();
 			}
 		});
 	}
