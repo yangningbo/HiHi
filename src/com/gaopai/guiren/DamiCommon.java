@@ -157,6 +157,9 @@ public class DamiCommon {
 		editor.putString(LOGIN_RESULT, server);
 
 		editor.commit();
+		
+		DamiCommon.setUid(user.uid);
+		DamiCommon.setToken(user.token);
 	}
 
 	public static User getLoginResult(Context context) {
@@ -198,6 +201,15 @@ public class DamiCommon {
 
 	public static void setUid(String uid) {
 		mUid = uid;
+	}
+	
+	public static void removeUser(Context context) {
+		SharedPreferences preferences = context.getSharedPreferences(DamiCommon.LOGIN_SHARED, 0);
+		Editor editor = preferences.edit();
+		editor.remove(DamiCommon.LOGIN_RESULT);
+		editor.commit();
+		DamiCommon.setUid("");
+		DamiCommon.setToken("");
 	}
 
 	public static String getUid(Context context) {

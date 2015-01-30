@@ -27,7 +27,6 @@ import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gaopai.guiren.BaseActivity;
@@ -42,6 +41,7 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.support.ShareManager;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
@@ -67,17 +67,8 @@ import com.umeng.socialize.sso.UMSsoHandler;
 
 public class LoginActivity extends BaseActivity implements OnClickListener, OnTouchListener {
 
-	private Button btnQQLogin;
-	private Button btnWeiboLogin;
-	private Button btnWeixinLogin;
-
 	private EditText etUserName;
 	private EditText etPassword;
-
-	private Button btLogin;
-	private Button btRegister;
-
-	private TextView tvForgetPassword;
 
 	public final static int REQUEST_BIND_PHONE = 3;
 	private UserInfo mInfo;
@@ -95,7 +86,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	public static final String LOGIN_TYPE_QQ = "qq";
 	public static final String LOGIN_TYPE_WEIBO = "sina";
 	public static final String LOGIN_TYPE_WEIXIN = "weixin";
-	
+
 	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
 
 	private IWXAPI wxApi;
@@ -107,11 +98,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		setAbContentView(R.layout.activity_login);
 		mTitleBar.setTitleText(R.string.login);
 		initComponent();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 	}
 
 	@Override
@@ -135,25 +121,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	}
 
 	private void initComponent() {
-
-		btnQQLogin = (Button) findViewById(R.id.btn_qq_login);
-		btnWeiboLogin = (Button) findViewById(R.id.btn_weibo_login);
-		btnWeixinLogin = (Button) findViewById(R.id.btn_weixin_login);
-
-		btnQQLogin.setOnClickListener(this);
-		btnWeiboLogin.setOnClickListener(this);
-		btnWeixinLogin.setOnClickListener(this);
-
+		findViewById(R.id.btn_qq_login).setOnClickListener(this);
+		findViewById(R.id.btn_weibo_login).setOnClickListener(this);
+		findViewById(R.id.btn_weixin_login).setOnClickListener(this);
 		etUserName = (EditText) findViewById(R.id.et_username);
 		etPassword = (EditText) findViewById(R.id.et_password);
-
-		tvForgetPassword = (TextView) findViewById(R.id.tv_forget_password);
-		btLogin = (Button) findViewById(R.id.bt_login);
-		btRegister = (Button) findViewById(R.id.bt_register);
-
-		btLogin.setOnClickListener(this);
-		btRegister.setOnClickListener(this);
-		tvForgetPassword.setOnClickListener(this);
+		findViewById(R.id.tv_forget_password).setOnClickListener(this);
+		findViewById(R.id.bt_login).setOnClickListener(this);
+		findViewById(R.id.bt_register).setOnClickListener(this);
 	}
 
 	@Override
@@ -171,40 +146,22 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_weibo_login:
-			if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
-				showToast(R.string.network_error);
-				return;
-			}
 			getSinaLogin();
 			break;
-
 		case R.id.btn_qq_login:
-			if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
-				showToast(R.string.network_error);
-				return;
-			}
 			getQQLogin();
 			break;
 		case R.id.btn_weixin_login:
-			if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
-				showToast(R.string.network_error);
-				return;
-			}
 			getWeixinLogin();
 			break;
-
 		case R.id.tv_forget_password:
-			startRegister(RegisterActivity.TYPE_FORGET_PASSWORD);
+			startActivity(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_FORGET_PASSWORD));
 			break;
 		case R.id.bt_login:
-			if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
-				showToast(R.string.network_error);
-				return;
-			}
 			customLogin();
 			break;
 		case R.id.bt_register:
-			startRegister(RegisterActivity.TYPE_REGISTER);
+			startActivity(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_REGISTER));
 			break;
 		default:
 			break;
@@ -221,13 +178,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		}
 	}
 
-	private void startRegister(int type) {
-		Intent intent = new Intent(mContext, RegisterActivity.class);
-		intent.putExtra(RegisterActivity.KEY_TYPE, type);
-		startActivity(intent);
-	}
-
 	private void customLogin() {
+		if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
+			showToast(R.string.network_error);
+			return;
+		}
 		String userName = etUserName.getText().toString();
 		String password = etPassword.getText().toString();
 		if (TextUtils.isEmpty(password) || TextUtils.isEmpty(userName)) {
@@ -238,17 +193,25 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	}
 
 	private void getQQLogin() {
+		if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
+			showToast(R.string.network_error);
+			return;
+		}
 		showProgressDialog(R.string.loading_login);
 		mQQAuth = QQAuth.createInstance(TENCENT_APP_ID, this);
 		mTencent = Tencent.createInstance(TENCENT_APP_ID, this);
 		if (mQQAuth != null && mTencent != null) {
-			mTencent.loginWithOEM(LoginActivity.this, "all", mListener, "", "", "");
+			mTencent.loginWithOEM(LoginActivity.this, "all", qqCallbackListener, "", "", "");
 		} else {
 			showProgressDialog(R.string.login_error);
 		}
 	}
 
 	private void getWeixinLogin() {
+		if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
+			showToast(R.string.network_error);
+			return;
+		}
 		wxApi = WXAPIFactory.createWXAPI(this, ShareManager.APPID_WECHAT, true);
 		wxApi.registerApp(ShareManager.APPID_WECHAT);
 		SendAuth.Req req = new SendAuth.Req();
@@ -256,12 +219,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		req.state = "wxlogin";
 		wxApi.sendReq(req);
 	}
-	
-//	private void getSinaLoginn() {
-//		SsoH
-//	}
 
 	private void getSinaLogin() {
+		if (!DamiCommon.verifyNetwork(LoginActivity.this)) {
+			showToast(R.string.network_error);
+			return;
+		}
 		mController.getConfig().setSsoHandler(new SinaSsoHandler());
 		mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.SINA, new UMAuthListener() {
 			@Override
@@ -273,22 +236,57 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 				if (value != null && !TextUtils.isEmpty(value.getString("uid"))) {
 					getInfo(SHARE_MEDIA.SINA);
 				} else {
-					Toast.makeText(LoginActivity.this, "授权失败", Toast.LENGTH_SHORT).show();
+					removeProgressDialog();
+					showToast(R.string.authorization_failed);
 				}
 			}
 
 			@Override
 			public void onCancel(SHARE_MEDIA platform) {
+				removeProgressDialog();
 			}
 
 			@Override
 			public void onStart(SHARE_MEDIA platform) {
+				showProgressDialog(R.string.loading_login);
 			}
 		});
-
 	}
 
-	private IUiListener mListener = new BaseUiListener() {
+	private void getInfo(final SHARE_MEDIA sm) {
+		mController.getPlatformInfo(LoginActivity.this, sm, new UMDataListener() {
+			@Override
+			public void onStart() {
+			}
+
+			@Override
+			public void onComplete(int status, Map<String, Object> info) {
+				if (!(status == 200 && info != null)) {
+					showToast(getString(R.string.error_happened) + status);
+					LoginActivity.this.removeProgressDialog();
+					return;
+				}
+				StringBuilder sb = new StringBuilder();
+				Set<String> keys = info.keySet();
+				for (String kStr : keys) {
+					sb.append(kStr + "=" + info.get(kStr).toString() + "\r\n");
+				}
+
+				String id = info.get("uid").toString();
+				String sex;
+				if (info.get("gender").toString().equals("男")) {
+					sex = "1";
+				} else {
+					sex = "2";
+				}
+				String nickName = info.get("screen_name").toString();
+				String head = info.get("profile_image_url").toString();
+				getLogin("sina", sex, id, nickName, head, "");
+			}
+		});
+	}
+
+	private IUiListener qqCallbackListener = new BaseUiListener() {
 
 		@Override
 		public void onError(UiError e) {
@@ -358,25 +356,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 
 		@Override
 		public void onComplete(Object response) {
-			// Util.showResultDialog(mContext, response.toString(), "登录成功");
 			doComplete((JSONObject) response);
 		}
 
 		protected void doComplete(JSONObject values) {
-
 		}
 
 		@Override
 		public void onError(UiError e) {
-			// Util.toastMessage(MainActivity.this, "onError: " +
-			// e.errorDetail);
-			// Util.dismissDialog();
 		}
 
 		@Override
 		public void onCancel() {
-			// Util.toastMessage(MainActivity.this, "onCancel: ");
-			// Util.dismissDialog();
 		}
 	}
 
@@ -393,10 +384,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			if (resultCode == RESULT_OK) {
 				this.finish();
 			} else {
-				DamiCommon.setUid("");
-				DamiCommon.setToken("");
+				DamiCommon.removeUser(mContext);
 				FeatureFunction.stopService(mContext);
-				sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_OUT));
 			}
 		}
 	}
@@ -415,35 +404,30 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 					public void onSuccess(Object o) {
 						final LoginResult data = (LoginResult) o;
 						if (data.state != null && data.state.code == 0) {
-							if (data.data != null) {
-								User user = data.data;
-								DamiCommon.saveLoginResult(LoginActivity.this, user);
-								DamiCommon.setUid(user.uid);
-								DamiCommon.setToken(user.token);
-								SQLiteDatabase db = DBHelper.getInstance(LoginActivity.this).getWritableDatabase();
-								MessageTable table = new MessageTable(db);
-								if (user.roomids != null)
-									table.deleteMore(user.roomids.tribelist, user.roomids.meetinglist);
-
-								sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
-								if (!TextUtils.isEmpty(user.nextpage)) {
-									if (user.nextpage.equals("completeinfo")) {
-										startActivity(ReverificationActivity.getIntent(mContext));
-										LoginActivity.this.finish();
-										return;
-									} else if (user.nextpage.equals("bindphone")) {
-										startActivityForResult(
-												RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE),
-												REQUEST_BIND_PHONE);
-										return;
-									}
-								}
-								goToRecomendPage();
-								setResult(RESULT_OK);
-								LoginActivity.this.finish();
-							} else {
+							if (data.data == null) {
 								showToast(R.string.login_error);
+								return;
 							}
+							User user = data.data;
+							if (!TextUtils.isEmpty(user.nextpage)) {
+								if (user.nextpage.equals("completeinfo")) {
+									DamiCommon.saveLoginResult(LoginActivity.this, user);
+									sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
+									startActivity(ReverificationActivity.getIntent(mContext));
+									LoginActivity.this.finish();
+									return;
+								} else if (user.nextpage.equals("bindphone")) {
+									startActivityForResult(
+											RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE),
+											REQUEST_BIND_PHONE);
+									return;
+								}
+							}
+							DamiCommon.saveLoginResult(LoginActivity.this, user);
+							sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
+							goToRecomendPage();
+							setResult(RESULT_OK);
+							LoginActivity.this.finish();
 						} else {
 							if (data.state != null && data.state.code == 15) {
 								showDialog(null, data.data.alertmessage, new DialogInterface.OnClickListener() {
@@ -546,55 +530,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		}
 
 		return phoneStr;
-	}
-
-	private void getInfo(final SHARE_MEDIA sm) {
-		LoginActivity.this.showProgressDialog(R.string.loading_login);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				mController.getPlatformInfo(LoginActivity.this, sm, new UMDataListener() {
-					@Override
-					public void onStart() {
-					}
-
-					@Override
-					public void onComplete(int status, Map<String, Object> info) {
-						if (status == 200 && info != null) {
-							StringBuilder sb = new StringBuilder();
-							Set<String> keys = info.keySet();
-							for (String kStr : keys) {
-								sb.append(kStr + "=" + info.get(kStr).toString() + "\r\n");
-							}
-							Log.d("Chen", sb.toString());
-
-							String id = info.get("uid").toString();
-							String sex;
-							if (info.get("gender").toString().equals("男")) {
-								sex = "1";
-							} else {
-								sex = "2";
-							}
-							String nickName = info.get("screen_name").toString();
-							String head = info.get("profile_image_url").toString();
-
-							getLogin("sina", sex, id, nickName, head, "");
-
-						} else {
-							showToast("发生错误：" + status);
-							btLogin.post(new Runnable() {
-
-								@Override
-								public void run() {
-									LoginActivity.this.removeProgressDialog();
-								}
-							});
-
-						}
-					}
-				});
-			}
-		}).start();
 	}
 
 	@Override

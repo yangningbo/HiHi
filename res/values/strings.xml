@@ -33,6 +33,8 @@
     <string name="timeout">网络连接超时</string>
     <string name="load_error">数据加载失败</string>
     <string name="loading_login">登录...</string>
+    <string name="authorization_failed">授权失败</string>
+    <string name="error_happened">发生错误：</string>
     <string name="login_error">登录失败</string>
     <string name="login_need_contact">这里主打圈子社交，为了给您推荐更多的好友和商务资源，请开启通讯录权限</string>
     <string name="please_input_username">请输入用户名</string>

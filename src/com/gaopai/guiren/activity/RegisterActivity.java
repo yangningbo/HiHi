@@ -61,9 +61,12 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	public final static int TYPE_BIND_PHONE = 2;
 	public final static int TYPE_RE_BIND_PHONE = 3;
 	public final static String KEY_TYPE = "type";
+	public final static String KEY_USER = "user";
 	private int type;
 
 	private boolean isChecked = false;
+	
+	private User mLogin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.register));
 		type = getIntent().getIntExtra(KEY_TYPE, 0);
+		mLogin = (User) getIntent().getSerializableExtra("user");
 		initView();
 		mHandler = new Handler(getMainLooper()) {
 
@@ -132,9 +136,8 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			findViewById(R.id.layout_agree_guiren).setVisibility(View.GONE);
 			findViewById(R.id.tv_register_info).setVisibility(View.GONE);
 			((LinearLayout) btnConfirm.getParent()).setGravity(Gravity.TOP);
-			User user = DamiCommon.getLoginResult(mContext);
-			if (user != null) {
-				etName.setText(User.getUserName(user));
+			if (mLogin != null) {
+				etName.setText(User.getUserName(mLogin));
 			}
 			etName.setEnabled(false);
 		}
@@ -368,6 +371,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 				if (data.state != null && data.state.code == 0) {
 					if (type == TYPE_BIND_PHONE) {
 						showToast(R.string.bind_phone_success);
+						if (mLogin != null) {
+							DamiCommon.saveLoginResult(mContext, mLogin);
+							sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
+						}
 					} else {
 						showToast(R.string.modify_success);
 					}
@@ -387,5 +394,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		intent.putExtra(KEY_TYPE, type);
 		return intent;
 	}
-
+	public static Intent getIntent(Context context, int type, User user) {
+		Intent intent = new Intent(context, RegisterActivity.class);
+		intent.putExtra(KEY_TYPE, type);
+		intent.putExtra(KEY_USER, user);
+		return intent;
+	}
 }
