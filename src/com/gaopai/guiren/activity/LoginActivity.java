@@ -34,6 +34,7 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
+import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.BaseInfo;
 import com.gaopai.guiren.bean.LoginResult;
@@ -41,7 +42,6 @@ import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.db.DBHelper;
 import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.support.ShareManager;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.StringUtils;
@@ -57,9 +57,12 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners.UMAuthListener;
 import com.umeng.socialize.controller.listener.SocializeListeners.UMDataListener;
 import com.umeng.socialize.exception.SocializeException;
+import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 public class LoginActivity extends BaseActivity implements OnClickListener, OnTouchListener {
@@ -92,6 +95,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	public static final String LOGIN_TYPE_QQ = "qq";
 	public static final String LOGIN_TYPE_WEIBO = "sina";
 	public static final String LOGIN_TYPE_WEIXIN = "weixin";
+	
+	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
 
 	private IWXAPI wxApi;
 
@@ -251,12 +256,16 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		req.state = "wxlogin";
 		wxApi.sendReq(req);
 	}
+	
+//	private void getSinaLoginn() {
+//		SsoH
+//	}
 
 	private void getSinaLogin() {
+		mController.getConfig().setSsoHandler(new SinaSsoHandler());
 		mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.SINA, new UMAuthListener() {
 			@Override
 			public void onError(SocializeException e, SHARE_MEDIA platform) {
-				Log.d("CHEN", e.getMessage());
 			}
 
 			@Override
@@ -380,9 +389,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		} else {
 			removeProgressDialog();
 		}
-		if (resultCode == RESULT_OK) {
-			if (requestCode == REQUEST_BIND_PHONE) {
+		if (requestCode == REQUEST_BIND_PHONE) {
+			if (resultCode == RESULT_OK) {
 				this.finish();
+			} else {
+				DamiCommon.setUid("");
+				DamiCommon.setToken("");
+				FeatureFunction.stopService(mContext);
+				sendBroadcast(new Intent(MainActivity.ACTION_LOGIN_OUT));
 			}
 		}
 	}

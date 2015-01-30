@@ -21,16 +21,15 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,17 +40,7 @@ import com.gaopai.guiren.utils.StringUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.TitleBar;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.SocializeEntity;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
-import com.umeng.socialize.sso.EmailHandler;
-import com.umeng.socialize.sso.QZoneSsoHandler;
-import com.umeng.socialize.sso.SmsHandler;
-import com.umeng.socialize.sso.TencentWBSsoHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
+
 
 public class BaseActivity extends FragmentActivity {
 
@@ -139,7 +128,7 @@ public class BaseActivity extends FragmentActivity {
 	protected void initTitleBar() {
 		initTitleBar(false);
 	}
-	
+
 	protected void initTitleBar(boolean isFloat) {
 		mTitleBar = new TitleBar(this);
 		windowLayout = new RelativeLayout(this);
@@ -147,9 +136,11 @@ public class BaseActivity extends FragmentActivity {
 		contentLayout = new FrameLayout(this);
 		contentLayout.setPadding(0, 0, 0, 0);
 		contentLayout.setBackgroundColor(getResources().getColor(R.color.general_background));
-		RelativeLayout.LayoutParams lpBar = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams lpBar = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
 		lpBar.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		RelativeLayout.LayoutParams lpContent = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		RelativeLayout.LayoutParams lpContent = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
 		if (isFloat) {
 			windowLayout.addView(contentLayout, lpContent);
 			windowLayout.addView(mTitleBar, lpBar);
@@ -158,14 +149,14 @@ public class BaseActivity extends FragmentActivity {
 			lpContent.addRule(RelativeLayout.BELOW, R.id.action_bar);
 			windowLayout.addView(contentLayout, lpContent);
 		}
-		
+
 		setContentView(windowLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 
 	protected void addTitleBar(ViewGroup holder) {
 		mTitleBar = new TitleBar(this);
 		holder.addView(mTitleBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-//		holder.addView(ViewUtil.creatTitleBarLineView(mContext));
+		// holder.addView(ViewUtil.creatTitleBarLineView(mContext));
 	}
 
 	public void setAbContentView(View contentView) {
@@ -199,7 +190,7 @@ public class BaseActivity extends FragmentActivity {
 		Logger.d(this, getString(R.string.now_loading));
 		((TextView) ((ViewGroup) layoutLoading).getChildAt(1)).setText(R.string.now_loading);
 	}
-	
+
 	public void showErrorView(OnClickListener listener) {
 		layoutContent.setVisibility(View.GONE);
 		layoutLoading.setVisibility(View.VISIBLE);
@@ -378,6 +369,7 @@ public class BaseActivity extends FragmentActivity {
 	public void showDialog(String title, String msg, DialogInterface.OnClickListener mOkOnClickListener) {
 		showDialog(title, msg, getString(R.string.ok), mOkOnClickListener);
 	}
+
 	public void showDialog(String title, String msg, String okStr, DialogInterface.OnClickListener mOkOnClickListener) {
 		AlertDialog.Builder builder = new Builder(this);
 		if (!TextUtils.isEmpty(msg)) {
@@ -465,42 +457,8 @@ public class BaseActivity extends FragmentActivity {
 		startActivity(intent);
 	}
 
-	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
 
-	protected void initShare() {
-		// mController.getConfig().setSsoHandler(new SinaSsoHandler());
-		// mController.getConfig().setSinaCallbackUrl("http://www.kaopuhui.com/dami");
-		mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
-		mController.getConfig().setSsoHandler(
-				new QZoneSsoHandler(this, "100424468", "c7394704798a158208a74ab60104f0ba"));
-		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, "100424468", "c7394704798a158208a74ab60104f0ba");
-		qqSsoHandler.addToSocialSDK();
-		SmsHandler smsHandler = new SmsHandler();
-		smsHandler.addToSocialSDK();
-		EmailHandler emailHandler = new EmailHandler();
-		emailHandler.addToSocialSDK();
-		UMWXHandler wxHandler = new UMWXHandler(this, "wx3d14f400726b7471");
-		wxHandler.addToSocialSDK();
-		UMWXHandler wxCircleHandler = new UMWXHandler(this, "wx3d14f400726b7471");
-		wxCircleHandler.setToCircle(true);
-		wxCircleHandler.addToSocialSDK();
-	}
 
-	public void share() {
-		mController.setShareContent("aaaaaaaaaaaaaaaaaa");
-		mController.openShare(this, new SnsPostListener() {
-
-			@Override
-			public void onStart() {
-
-			}
-
-			@Override
-			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-				// Toast.makeText(BaseActivity.this, "分享成功", 1).show();
-			}
-		});
-	}
 
 	public boolean isModeInCall = false;
 
@@ -555,7 +513,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 		mIsRegisterReceiver = false;
 	}
-	
+
 	/**
 	 * 
 	 * @param targetView
@@ -563,8 +521,7 @@ public class BaseActivity extends FragmentActivity {
 	 *            1,右下 2 左下 3上
 	 * @return
 	 */
-	public int[] getLocation(final View targetView, final View myView,
-			final int type) {
+	public int[] getLocation(final View targetView, final View myView, final int type) {
 		final int[] arrs = new int[4];
 		ViewTreeObserver vto2 = targetView.getViewTreeObserver();
 
@@ -577,8 +534,7 @@ public class BaseActivity extends FragmentActivity {
 				getWindowManager().getDefaultDisplay().getMetrics(metrics);
 				int mWidth = metrics.widthPixels;
 				int mHeight = metrics.heightPixels;
-				targetView.getViewTreeObserver().removeGlobalOnLayoutListener(
-						this);
+				targetView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 				targetView.getLocationOnScreen(arrs1);
 				arrs[0] = arrs1[0];
 				arrs[1] = arrs1[1];
@@ -588,20 +544,15 @@ public class BaseActivity extends FragmentActivity {
 				if (type == 1) {
 					setLayout(myView, arrs[0] + 10, arrs[1] + 10);
 				} else if (type == 2) {
-					setLayout(myView, arrs[0] - myView.getMeasuredWidth()
-							+ arrs[2] / 2, arrs[1]);
+					setLayout(myView, arrs[0] - myView.getMeasuredWidth() + arrs[2] / 2, arrs[1]);
 				} else if (type == 3) {
 
-					Log.d("CHEN", "mHeight ======" + mHeight
-							+ "     viewHeight===" + arrs[3]
-							+ "      myViewHeigth" + myView.getMeasuredHeight()
-							+ "   y==" + arrs[1]);
+					Log.d("CHEN", "mHeight ======" + mHeight + "     viewHeight===" + arrs[3] + "      myViewHeigth"
+							+ myView.getMeasuredHeight() + "   y==" + arrs[1]);
 					if (mHeight > 1280)
-						setLayout(myView, arrs[0],
-								arrs[1] - myView.getMeasuredHeight() - arrs[3]);
+						setLayout(myView, arrs[0], arrs[1] - myView.getMeasuredHeight() - arrs[3]);
 					else {
-						setLayout(myView, arrs[0],
-								arrs[1] - myView.getMeasuredHeight());
+						setLayout(myView, arrs[0], arrs[1] - myView.getMeasuredHeight());
 					}
 				}
 			}
@@ -613,13 +564,10 @@ public class BaseActivity extends FragmentActivity {
 	 * 设置控件所在的位置，并且不改变宽高， XY为绝对位置
 	 */
 	private void setLayout(View view, int x, int y) {
-		MarginLayoutParams margin = new MarginLayoutParams(
-				view.getLayoutParams());
+		MarginLayoutParams margin = new MarginLayoutParams(view.getLayoutParams());
 		margin.setMargins(x, y, 0, 0);
-		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-				margin);
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(margin);
 		view.setLayoutParams(layoutParams);
 	}
-
 
 }

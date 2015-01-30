@@ -191,6 +191,16 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		cameralHelper.setCallback(picCallback);
 		initComponent();
 		headerView = creatHeaderView();
+		headerView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				boxManager.hideSoftKeyboard();
+				if (mContentEdit.getText().length() == 0) {
+					initialSendIdAndName();
+				}
+			}
+		});
 		mListView.getRefreshableView().addHeaderView(headerView);
 		bindView();
 

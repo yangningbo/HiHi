@@ -122,22 +122,6 @@ public class ShareManager implements OnClickListener {
 
 	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
 
-//	public void shareContentToDy(String title, String info, String link, String picLink) {
-//		DamiInfo.spreadDynamic(6, "", title, picLink, link, info, new SimpleResponseListener(mActivity) {
-//
-//			@Override
-//			public void onSuccess(Object o) {
-//				// TODO Auto-generated method stub
-//				BaseNetBean data = (BaseNetBean) o;
-//				if (data.state != null && data.state.code == 0) {
-//					showToast(R.string.spread_success);
-//				} else {
-//					otherCondition(data.state, mActivity);
-//				}
-//			}
-//		});
-//	}
-
 	public void setShareContent(String img, String title, String content, String url) {
 		setShareContent(new UMImage(mActivity, img), title, content, url);
 	}
@@ -200,59 +184,6 @@ public class ShareManager implements OnClickListener {
 		showShareWindow(mActivity);
 	}
 
-	// public void shareContentRecommend(String title, String url) {
-	// String content = title + " : " + url;
-	// mController.setShareContent(content);
-	//
-	// QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mActivity,
-	// APPID_QQ, APPKEY_QQ);
-	// qZoneSsoHandler.addToSocialSDK();
-	// UMImage iconImage = new UMImage(mActivity, R.drawable.logo);
-	// QZoneShareContent qzoneContent = new QZoneShareContent();
-	// qzoneContent.setTitle(title);
-	// qzoneContent.setShareMedia(iconImage);
-	// qzoneContent.setTargetUrl(url);
-	// qzoneContent.setShareContent(content);
-	// mController.setShareMedia(qzoneContent);
-	//
-	// UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(mActivity, APPID_QQ,
-	// APPKEY_QQ);
-	// // qqSsoHandler.setTargetUrl(url);
-	// // qqSsoHandler.setTitle(title);
-	// qqSsoHandler.addToSocialSDK();
-	// mController.setShareMedia(iconImage);
-	// //
-	//
-	// WeiXinShareContent weixinContent = new WeiXinShareContent();
-	// weixinContent.setTargetUrl(url);
-	// weixinContent.setTitle(title);
-	// weixinContent.setShareMedia(iconImage);
-	// if (!TextUtils.isEmpty(content)) {
-	// weixinContent.setShareContent(content);
-	// }
-	// mController.setShareMedia(weixinContent);
-	//
-	// // 设置朋友圈分享的内容
-	// CircleShareContent circleMedia = new CircleShareContent();
-	// circleMedia.setTargetUrl(url);
-	// circleMedia.setTitle(title);
-	// circleMedia.setShareMedia(iconImage);
-	// if (!TextUtils.isEmpty(content)) {
-	// circleMedia.setShareContent(content);
-	// }
-	// mController.setShareMedia(circleMedia);
-	//
-	// // wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
-	// String appId = APPID_WECHAT;
-	// UMWXHandler wxHandler = new UMWXHandler(mActivity, appId);
-	// wxHandler.addToSocialSDK();
-	//
-	// UMWXHandler wxCircleHandler = new UMWXHandler(mActivity, appId);
-	// wxCircleHandler.setToCircle(true);
-	// wxCircleHandler.addToSocialSDK();
-	//
-	// showShareWindow(mActivity);
-	// }
 
 	public final static String APPID_QQ = "100424468";
 	public final static String APPKEY_QQ = "c7394704798a158208a74ab60104f0ba";
@@ -263,6 +194,9 @@ public class ShareManager implements OnClickListener {
 	private UMQQSsoHandler qqSsoHandler;
 
 	private void addHandler() {
+		
+		SinaSsoHandler sinaSsoHandler = new SinaSsoHandler();
+		sinaSsoHandler.addToSocialSDK();
 		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mActivity, APPID_QQ, APPKEY_QQ);
 		qZoneSsoHandler.addToSocialSDK();
 
