@@ -375,7 +375,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 						if (mLogin != null) {
 							mLogin.phone = etPhone.getText().toString();
 							DamiCommon.saveLoginResult(mContext, mLogin);
-							sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
 							User user = data.data;
 							if (user != null && !TextUtils.isEmpty(user.nextpage)
 									&& user.nextpage.equals("completeinfo")) {
@@ -383,6 +382,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 								RegisterActivity.this.finish();
 								return;
 							}
+							sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
 						}
 					} else {
 						showToast(R.string.modify_success);

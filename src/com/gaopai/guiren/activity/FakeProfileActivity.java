@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.InviteFriendActivity.InviteUrlResult;
@@ -54,6 +55,9 @@ public class FakeProfileActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.btn_invite:
+			if (!User.checkCanInvite(DamiCommon.getLoginResult(mContext), FakeProfileActivity.this)) {
+				return;
+			}
 			getInviteUrl(mContext, user.phone);
 			break;
 
@@ -75,8 +79,15 @@ public class FakeProfileActivity extends BaseActivity implements OnClickListener
 				InviteUrlResult data = (InviteUrlResult) o;
 				if (data.state != null && data.state.code == 0) {
 					String shareStr = mContext.getString(R.string.invite_str_1);
+					User mLogin = DamiCommon.getLoginResult(mContext);
+					if (mLogin != null) {
+						shareStr = String.format(mContext.getString(R.string.invite_str_fake),
+								User.getUserName(mLogin), mLogin.company, mLogin.post);
+					}
 					if (!TextUtils.isEmpty(data.data)) {
 						shareStr = shareStr + data.data;
+					} else {
+						return;
 					}
 					MyUtils.sendSms(mContext, phone, shareStr);
 				} else {
@@ -85,5 +96,4 @@ public class FakeProfileActivity extends BaseActivity implements OnClickListener
 			}
 		});
 	}
-
 }

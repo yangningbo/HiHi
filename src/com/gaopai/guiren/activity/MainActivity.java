@@ -270,13 +270,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 				startActivity(MyDynamicActivity.getIntent(mContext, mUser.uid));
 				break;
 			case R.id.slide_btn_invite_friend:
-				if (TextUtils.isEmpty(mUser.realname) || TextUtils.isEmpty(mUser.company)
-						|| TextUtils.isEmpty(mUser.post) || TextUtils.isEmpty(mUser.depa)
-						|| TextUtils.isEmpty(mUser.email) || TextUtils.isEmpty(mUser.phone)) {
-					showToast(R.string.please_finish_profile);
-					return;
+				if (User.checkCanInvite(mUser, MainActivity.this)) {
+					startActivity(InviteFriendActivity.class);
 				}
-				startActivity(InviteFriendActivity.class);
 				break;
 			case R.id.slide_btn_plus_v:
 				startActivity(ApplyActivity.class);

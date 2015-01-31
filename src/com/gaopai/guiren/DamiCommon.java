@@ -58,8 +58,8 @@ public class DamiCommon {
 	
 	public final static int BASE_INTEGRA = 1000;
 	// 30 * 24 * 60 * 60 * 1000
-//	public final static long BASE_GET_PHONE_INTERVAL = 2592000000L;
-	public final static long BASE_GET_PHONE_INTERVAL = 1L;
+	public final static long BASE_GET_PHONE_INTERVAL = 2592000000L;
+//	public final static long BASE_GET_PHONE_INTERVAL = 1L;
 
 	/**
 	 * 版本号文件存储常量

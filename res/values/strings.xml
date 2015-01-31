@@ -753,6 +753,7 @@
     <string name="invite_link">http://guirenhui.cn</string>
     <string name="invite_str_1">老友，最近很火的“讲后即焚移动会议专家”APP【贵人会】真心不错，您也来吧！【贵人会】      下载地址：</string>
     <string name="invite_str_2">Hi~朋友，这是我向您发起的加入「贵人会」邀请。她是一款“讲后即焚、分享真知灼见”的高端人士社交APP，欢迎您的加入。下载地址：</string>
+    <string name="invite_str_fake" formatted="false">Hi~朋友，我是%s，%s%s。这是我向您发起的加入「贵人会」邀请。她是一款“讲后即焚、分享真知灼见”的高端人士社交APP，欢迎您的加入。下载地址：</string>
 
     <!-- titlebar -->
     <string name="meeting">会议</string>
@@ -870,10 +871,11 @@
     <string name="spread_web">扩散连接</string>
     <string name="jump_over">略过</string>
     <string name="search_user">搜人脉</string>
-    
+
     <!-- fake profile -->
     <string name="friend_not_in_guiren">您的好友暂时还没有登录贵人会，赶快来邀请TA上线完善个人资料吧</string>
     <string name="invite_to_guiren">邀请出山</string>
     <string name="not_edit">尚未完善</string>
+    <string name="invite_add_fantancy_code">邀请TA加入贵人会将获得5点魅力值</string>
 
 </resources>

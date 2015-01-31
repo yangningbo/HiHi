@@ -89,7 +89,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	public static final String LOGIN_TYPE_WEIBO = "sina";
 	public static final String LOGIN_TYPE_WEIXIN = "weixin";
 
-
 	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
 
 	private IWXAPI wxApi;
@@ -121,7 +120,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		if (!TextUtils.isEmpty(action)) {
 			if (action.equals(WXEntryActivity.ACTION_LOGIN_WECHAT)) {
 				handleWxLogin(intent);
-			} 
+			}
 		}
 	}
 
@@ -389,7 +388,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		if (requestCode == REQUEST_BIND_PHONE) {
 			if (resultCode == RESULT_OK) {
 				this.finish();
-			} else if(resultCode == RegisterActivity.RESULT_FINISH_PROFILE) {
+			} else if (resultCode == RegisterActivity.RESULT_FINISH_PROFILE) {
 				setResult(RESULT_OK);
 				this.finish();
 				startActivity(ReverificationActivity.getIntent(mContext));
@@ -404,10 +403,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			final String head, final String password) {
 
 		String phone = getContacts();
-		if (TextUtils.isEmpty(phone)) {
-			showToast(R.string.login_need_contact);
-			return;
-		}
 		DamiInfo.getLogin(type, sex, id, nickName, head, password, phone, MyUtils.getVersionName(mContext), "Android",
 				new IResponseListener() {
 					@Override
@@ -422,7 +417,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 							if (!TextUtils.isEmpty(user.nextpage)) {
 								if (user.nextpage.equals("completeinfo")) {
 									startActivity(ReverificationActivity.getIntent(mContext));
-									loginSuccessAction(user);
+									DamiCommon.saveLoginResult(LoginActivity.this, user);
+									setResult(RESULT_OK);
+									LoginActivity.this.finish();
 								} else if (user.nextpage.equals("bindphone")) {
 									startActivityForResult(RegisterActivity.getIntent(mContext,
 											RegisterActivity.TYPE_BIND_PHONE, user), REQUEST_BIND_PHONE);

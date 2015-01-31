@@ -44,13 +44,17 @@ public class ContactAdapter extends CopyOfConnectionAdapter {
 			viewHolder.btnInvite = ViewUtil.findViewById(convertView, R.id.btn_invite);
 
 			viewHolder.tvUserName.setText(User.getUserName(user));
-			viewHolder.tvUserInfo.setText(User.getUserInfo(user));
+	
 			viewHolder.btnInvite.setTag(user.phone);
 			viewHolder.btnInvite.setOnClickListener(inviteClickListener);
 
 			viewHolder.layoutHeader.setImage(user.headsmall);
 			viewHolder.layoutHeader.setMVP(user.bigv == 1);
-
+			if (user.isguirenuser == 0) {
+				viewHolder.tvUserInfo.setText(R.string.invite_add_fantancy_code);
+			} else {
+				viewHolder.tvUserInfo.setText(User.getUserInfo(user));
+			}
 			viewHolder.btnInvite.setVisibility(user.isguirenuser == 0 ? View.VISIBLE : View.GONE);
 		} else { // Section
 			if (convertView == null) {

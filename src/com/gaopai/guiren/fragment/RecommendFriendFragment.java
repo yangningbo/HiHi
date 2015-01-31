@@ -172,6 +172,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 					user.followers = user.followers + bean.complete;
 					DamiCommon.saveLoginResult(act, user);
 					act.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+					act.sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
 					getActivity().finish();
 				} else {
 					this.otherCondition(data.state, getActivity());
@@ -187,6 +188,7 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		case R.id.btn_follow:
 			if (mAdapter.choseSet.size() == 0) {
 				// getBaseActivity().showToast(R.string.please_choose_add);
+				act.sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
 				getBaseActivity().finish();
 				return;
 			}

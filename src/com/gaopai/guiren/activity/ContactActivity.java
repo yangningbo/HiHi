@@ -24,14 +24,10 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
-import com.gaopai.guiren.activity.InviteFriendActivity.InviteUrlResult;
-import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.adapter.ContactAdapter;
 import com.gaopai.guiren.adapter.CopyOfConnectionAdapter.Item;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
-import com.gaopai.guiren.utils.Logger;
-import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -175,11 +171,11 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 					return;
 				}
 				User user = ((Item) mAdapter.getItem(pos)).user;
-//				if (user.isguirenuser == 0) {
-//					startActivity(FakeProfileActivity.getIntent(mContext, user));
-//				} else {
+				if (user.isguirenuser == 0) {
+					startActivity(FakeProfileActivity.getIntent(mContext, user));
+				} else {
 					startActivity(ProfileActivity.getIntent(mContext, user.uid));
-//				}
+				}
 			}
 		});
 
@@ -196,6 +192,12 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 		View view = mInflater.inflate(R.layout.layout_contact_header, null);
 		tvFansCount = ViewUtil.findViewById(view, R.id.tv_fans_count);
 		tvFansCount.setText(String.valueOf(mLogin.fansers));
+		TextView tvFans = (TextView) ViewUtil.findViewById(view, R.id.tv_fans_title);
+		if (isMyself) {
+			tvFans.setText(R.string.my_fans);
+		} else {
+			tvFans.setText(R.string.his_fans);
+		}
 		view.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -347,10 +349,13 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 	}
-	
+
 	private OnClickListener inviteClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			if (!User.checkCanInvite(mLogin, ContactActivity.this)) {
+				return;
+			}
 			String phone = (String) v.getTag();
 			if (TextUtils.isEmpty(phone)) {
 				return;

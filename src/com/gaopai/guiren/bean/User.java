@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.utils.MyTextUtils;
@@ -101,7 +102,7 @@ public class User implements Serializable {
 	public String weixin;
 
 	public int bigv;
-	public int iscontact;//1是通讯录 0不是通讯录
+	public int iscontact;// 1是通讯录 0不是通讯录
 	public int localType = 0;//
 
 	public List<SpreadBean> kuosanlist;
@@ -119,8 +120,9 @@ public class User implements Serializable {
 	public String nextpage;
 	public String url;
 	public String alertmessage;
-	
+
 	public int isguirenuser;
+
 	public class RoomIds implements Serializable {
 		@Expose
 		public String tribelist; // 用户所加入的部落id
@@ -211,9 +213,21 @@ public class User implements Serializable {
 		}
 		return name;
 	}
-	
+
 	public static String getUserInfo(User tUser) {
-		 return TextUtils.isEmpty(tUser.company) ? (TextUtils.isEmpty(tUser.post) ? "" : tUser.post) : (TextUtils
-					.isEmpty(tUser.post) ? tUser.company : tUser.company + "/" + tUser.post);
+		return TextUtils.isEmpty(tUser.company) ? (TextUtils.isEmpty(tUser.post) ? "" : tUser.post) : (TextUtils
+				.isEmpty(tUser.post) ? tUser.company : tUser.company + "/" + tUser.post);
+	}
+
+	public static boolean checkCanInvite(User mUser, BaseActivity activity) {
+		if (mUser == null) {
+			return false;
+		}
+		if (TextUtils.isEmpty(mUser.realname) || TextUtils.isEmpty(mUser.company) || TextUtils.isEmpty(mUser.post)
+				|| TextUtils.isEmpty(mUser.depa) || TextUtils.isEmpty(mUser.email) || TextUtils.isEmpty(mUser.phone)) {
+			activity.showToast(R.string.please_finish_profile);
+			return false;
+		}
+		return true;
 	}
 }

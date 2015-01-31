@@ -104,7 +104,7 @@ public class TitleBar extends ViewGroup {
 		mActivity = (BaseActivity) context;
 		dividerPaint = new Paint();
 		dividerPaint.setColor(getResources().getColor(R.color.titlebar_divider));
-		dividerPaint.setStrokeWidth(1f);
+		dividerPaint.setStrokeWidth(2f);
 		this.setId(R.id.action_bar);
 		this.setBackgroundColor(getResources().getColor(R.color.titlebar_background));
 		titleBarHeight = getResources().getDimensionPixelSize(R.dimen.title_bar);
