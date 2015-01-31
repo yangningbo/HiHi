@@ -74,11 +74,10 @@ import com.gaopai.guiren.wxapi.WXEntryActivity.WxUserInfo;
 public class DamiInfo implements Serializable {
 	private static final long serialVersionUID = 1651654562644564L;
 
-	// public static final String HOST =
-	// "http://guirenhui.vicp.cc:8081/index.php/";// 外网
-	public static final String HOST = "http://192.168.1.239:8081/index.php/";
+	public static final String HOST = "http://guirenhui.vicp.cc:8081/index.php/";// 外网
+	// public static final String HOST = "http://192.168.1.239:8081/index.php/";
 
-//	 public static final String HOST = "http://guirenhui.cn/index.php/";
+	// public static final String HOST = "http://guirenhui.cn/index.php/";
 
 	// public static final String HOST = "http://59.174.108.18:8081/index.php/";
 
@@ -2417,7 +2416,7 @@ public class DamiInfo implements Serializable {
 		String url = SERVER + "user/batFollow";
 		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BatFollowResult.class, listener);
 	}
-	
+
 	// 绑定手机号码
 	public static void bindPhone(String phone, String code, String realname, IResponseListener listener) {
 		Parameters bundle = new Parameters();
@@ -2425,7 +2424,7 @@ public class DamiInfo implements Serializable {
 		bundle.add("code", code);
 		bundle.add("realname", realname);
 		String url = SERVER + "user/bindphone";
-		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, BaseNetBean.class, listener);
+		request(url, bundle, Utility.HTTPMETHOD_POST, LOGIN_TYPE_NEED_LOGIN, LoginResult.class, listener);
 	}
 
 	/**

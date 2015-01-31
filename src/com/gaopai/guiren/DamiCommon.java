@@ -18,13 +18,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.gaopai.guiren.bean.CalenderPrompt;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.Version;
-import com.gaopai.guiren.utils.MyUtils;
 
 public class DamiCommon {
 	private static Boolean mIsNetWorkAvailable = false;
@@ -158,8 +155,10 @@ public class DamiCommon {
 
 		editor.commit();
 		
-		DamiCommon.setUid(user.uid);
-		DamiCommon.setToken(user.token);
+		if (user != null) {
+			DamiCommon.setUid(user.uid);
+			DamiCommon.setToken(user.token);
+		}
 	}
 
 	public static User getLoginResult(Context context) {

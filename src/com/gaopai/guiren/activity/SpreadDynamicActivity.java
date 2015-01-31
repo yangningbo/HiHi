@@ -127,10 +127,14 @@ public class SpreadDynamicActivity extends BaseActivity {
 		};
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
 		dynamicHelper.setCallback(dynamicCallback);
-		layoutDyContent.addView(parseView(dynamicHelper.getView(dyView, bean)));
+		dyView = dynamicHelper.getView(dyView, bean);
+		layoutDyContent.addView(parseView(dyView));
 	}
 
 	private View parseView(View source) {
+		if (source == null || source instanceof TextView) {
+			return source;
+		}
 		ImageView header = (ImageView) source.findViewById(R.id.iv_header);
 		TextView tvInfo = (TextView) source.findViewById(R.id.tv_user_name);
 		source.findViewById(R.id.tv_spread_words).setVisibility(View.GONE);
@@ -258,7 +262,8 @@ public class SpreadDynamicActivity extends BaseActivity {
 	};
 
 	private void bindDyView() {
-		layoutDyContent.addView(dynamicHelper.getView(dyView, bean));
+		layoutDyContent.removeAllViews();
+		layoutDyContent.addView(parseView(dynamicHelper.getView(dyView, bean)));
 	}
 
 	public static TypeHolder getUserSpreadHolder(User user) {
@@ -339,6 +344,7 @@ public class SpreadDynamicActivity extends BaseActivity {
 		jsonContent.voiceTime = messageInfo.voiceTime;
 		jsonContent.voiceUrl = messageInfo.voiceUrl;
 		jsonContent.tid = messageInfo.id;// trick
+		typeHolder.id = messageInfo.id;
 		return typeHolder;
 	}
 
@@ -385,6 +391,12 @@ public class SpreadDynamicActivity extends BaseActivity {
 		intent.putExtra(KEY_BEAN, typeHolder);
 		intent.putExtra(KEY_TYPE, TYPE_SPREAD_FIRST);
 		return intent;
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		dynamicHelper.stopPlayVoice();
 	}
 
 }

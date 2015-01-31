@@ -1,10 +1,7 @@
 package com.gaopai.guiren.activity;
 
-import java.util.UUID;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,12 +28,10 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatBaseActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.activity.share.ShareActivity;
-import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
-import com.gaopai.guiren.fragment.NotificationFragment;
 import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.MessageHelper;

@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -88,6 +90,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		Bundle bundle = new Bundle();
 		bundle.putInt("type", type);
 		fragment.setArguments(bundle);
+		fragment.setViewPager(viewPager);
 		return fragment;
 	}
 
@@ -190,6 +193,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 		private MeetingAdapter mAdapter;
 		private boolean isInitial = true;
 		private boolean isFirstTime = true;
+		private ViewPager viewPager;
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -198,6 +202,10 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			type = getArguments().getInt("type");
 			initListView();
 			return view;
+		}
+		
+		public void setViewPager(ViewPager viewPager) {
+			this.viewPager = viewPager;
 		}
 
 		private void initListView() {
@@ -261,17 +269,6 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			}
 		}
 
-		// @Override
-		// public void setUserVisibleHint(boolean isVisibleToUser) {
-		// super.setUserVisibleHint(isVisibleToUser);
-		// if (isVisibleToUser) {
-		// if (mListView != null && isInitial) {
-		// mListView.doPullRefreshing(true, 50);
-		// isInitial = false;
-		// }
-		// }
-		// }
-
 		public class MyResponseListener extends SimpleResponseListener {
 
 			public MyResponseListener(Context context) {
@@ -284,6 +281,16 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null && data.data.size() > 0) {
 						mAdapter.addAll(data.data);
+					} else if (isFirstTime && type == TYPE_ONGOING_MEETING) {
+						isFirstTime = false;
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								if (viewPager != null) {
+									viewPager.setCurrentItem(1);
+								}
+							}
+						}, 300);
 					}
 					if (data.pageInfo != null) {
 						isFull = (data.pageInfo.hasMore == 0);

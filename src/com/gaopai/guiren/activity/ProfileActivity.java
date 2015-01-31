@@ -683,8 +683,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private View parseDyView(TypeHolder typeHolder, View source) {
-		if (typeHolder.type == DynamicHelper.TYPE_SEND_DYNAMIC) {
-			source.findViewById(R.id.tv_spread_words).setVisibility(View.GONE);
+		View view = source.findViewById(R.id.tv_spread_words);
+		if (view != null) {
+			view.setVisibility(View.GONE);
 		}
 		return source;
 	}
@@ -846,8 +847,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			}
 			if (isFollowEachOther()) {
 				if (TextUtils.isEmpty(mUser.phone)) {// edit your suck profile
-				// changeContact(ChangeProfileActivity.TYPE_PHONE, mUser.phone,
-				// REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
+					// changeContact(ChangeProfileActivity.TYPE_PHONE,
+					// mUser.phone,
+					// REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE);
 					bindMyPhone();
 				} else {
 					MyUtils.makePhonecall(mContext, tUser.phone);
@@ -1081,7 +1083,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void bindMyPhone() {
-		startActivityForResult(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_RE_BIND_PHONE), REQUEST_BIND_PHONE);
+		startActivityForResult(RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_RE_BIND_PHONE, mUser),
+				REQUEST_BIND_PHONE);
 	}
 
 	private void changeContact(int type, String text) {
@@ -1141,7 +1144,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				bindContactView();
 				bindTopSectionView();
 			}
-			
+
 			if (requestCode == REQUEST_BIND_PHONE) {
 				tUser = DamiCommon.getLoginResult(this);
 				bindContactView();
@@ -1225,4 +1228,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			});
 		}
 	};
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		dynamicHelper.stopPlayVoice();
+	}
 }

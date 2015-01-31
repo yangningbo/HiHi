@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	private User mUser;
 
 	public final static int LOGIN_REQUEST = 29312;
-	public final static int SHOW_GUIDE_REQUEST = 6541;
+	public final static int REQUES_SHOW_GUIDE = 6541;
 	public final static int UNLOGIN_REQUEST = 1634365;
 	public final static int MSG_LOAD_ERROR = 11818;
 
@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	 * transition. At the same time, a timer with 3 seconds delay is set up to
 	 * hide welcome page and determine whether to show loginActivity (if token
 	 * has expired) or stay in this page. For the first choice, we won't hide
-	 * the welcome page until the loginActivity has run the method of
+	 * the welcome page until the loginActivity has run the method
 	 * onWindowFocusChanged which will send an Intent with ACTION_LOGIN_SHOW.
 	 */
 
@@ -571,7 +571,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		if (result != version) {
 			Intent intent = new Intent();
 			intent.setClass(MainActivity.this, GuideActivity.class);
-			startActivityForResult(intent, SHOW_GUIDE_REQUEST);
+			startActivityForResult(intent, REQUES_SHOW_GUIDE);
 			isShowGudie = true;
 		}
 		return isShowGudie;
@@ -603,7 +603,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 
-		case SHOW_GUIDE_REQUEST:
+		case REQUES_SHOW_GUIDE:
 			if (resultCode == RESULT_OK) {
 				if (TextUtils.isEmpty(DamiCommon.getToken(MainActivity.this))) {
 					Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);

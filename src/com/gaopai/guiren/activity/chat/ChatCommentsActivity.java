@@ -778,7 +778,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		case MessageType.VOICE:
 			if (mCurrentModel == MODE_TEXT) {
 				notHideViews(MessageType.TEXT);
-				tvText.setText(messageInfo.content);
+				if (TextUtils.isEmpty(messageInfo.content)) {
+					tvText.setText(R.string.voice_scheme);
+				} else {
+					tvText.setText(messageInfo.content);
+				}
 				break;
 			}
 			tvVoiceLength.setText(messageInfo.voiceTime + "''");

@@ -5,35 +5,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.bean.net.RegisterResult;
 import com.gaopai.guiren.bean.net.VerificationResult;
-import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -65,8 +61,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private int type;
 
 	private boolean isChecked = false;
-	
+
 	private User mLogin;
+	
+	public final static int RESULT_FINISH_PROFILE = 12;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +74,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.register));
 		type = getIntent().getIntExtra(KEY_TYPE, 0);
-		mLogin = (User) getIntent().getSerializableExtra("user");
+		mLogin = (User) getIntent().getSerializableExtra(KEY_USER);
 		initView();
 		mHandler = new Handler(getMainLooper()) {
 
@@ -363,24 +361,36 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void bindPhone() {
+		if (mLogin != null) {
+			DamiCommon.setUid(mLogin.uid);
+		}
 		DamiInfo.bindPhone(etPhone.getText().toString(), etVeryfication.getText().toString(), etName.getText()
 				.toString(), new SimpleResponseListener(mContext, R.string.request_internet_now) {
 			@Override
 			public void onSuccess(Object o) {
-				BaseNetBean data = (BaseNetBean) o;
+				LoginResult data = (LoginResult) o;
 				if (data.state != null && data.state.code == 0) {
 					if (type == TYPE_BIND_PHONE) {
 						showToast(R.string.bind_phone_success);
 						if (mLogin != null) {
+							mLogin.phone = etPhone.getText().toString();
 							DamiCommon.saveLoginResult(mContext, mLogin);
 							sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
+							User user = data.data;
+							if (user != null && !TextUtils.isEmpty(user.nextpage)
+									&& user.nextpage.equals("completeinfo")) {
+								RegisterActivity.this.setResult(RESULT_FINISH_PROFILE);
+								RegisterActivity.this.finish();
+								return;
+							}
 						}
 					} else {
 						showToast(R.string.modify_success);
+						User user = DamiCommon.getLoginResult(mContext);
+						user.phone = etPhone.getText().toString();
+						DamiCommon.saveLoginResult(mContext, user);
 					}
-					User user = DamiCommon.getLoginResult(mContext);
-					user.phone = etPhone.getText().toString();
-					DamiCommon.saveLoginResult(mContext, user);
+					RegisterActivity.this.finish();
 					RegisterActivity.this.setResult(RESULT_OK);
 				} else {
 					otherCondition(data.state, RegisterActivity.this);
@@ -394,6 +404,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		intent.putExtra(KEY_TYPE, type);
 		return intent;
 	}
+
 	public static Intent getIntent(Context context, int type, User user) {
 		Intent intent = new Intent(context, RegisterActivity.class);
 		intent.putExtra(KEY_TYPE, type);

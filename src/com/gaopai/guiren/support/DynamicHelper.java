@@ -692,7 +692,6 @@ public class DynamicHelper {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					palyedMessagTag = typeBean.id;
 					mPlayerWrapper.start(ChatMsgHelper.creatVoiceMsg(content.voiceUrl, typeBean.id));
 				}

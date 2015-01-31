@@ -15,7 +15,6 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Scroller;
-import android.widget.Toast;
 
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.utils.Logger;

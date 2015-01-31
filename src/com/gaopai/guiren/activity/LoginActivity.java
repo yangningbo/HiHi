@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import u.aly.ac;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -87,6 +89,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	public static final String LOGIN_TYPE_WEIBO = "sina";
 	public static final String LOGIN_TYPE_WEIXIN = "weixin";
 
+
 	protected UMSocialService mController = UMServiceFactory.getUMSocialService("com.gaopai.guiren");
 
 	private IWXAPI wxApi;
@@ -115,8 +118,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	protected void onReceive(Intent intent) {
 		super.onReceive(intent);
 		String action = intent.getAction();
-		if (action != null && action.equals(WXEntryActivity.ACTION_LOGIN_WECHAT)) {
-			handleWxLogin(intent);
+		if (!TextUtils.isEmpty(action)) {
+			if (action.equals(WXEntryActivity.ACTION_LOGIN_WECHAT)) {
+				handleWxLogin(intent);
+			} 
 		}
 	}
 
@@ -380,9 +385,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		} else {
 			removeProgressDialog();
 		}
+		Logger.d(this, "onActivityResult()");
 		if (requestCode == REQUEST_BIND_PHONE) {
 			if (resultCode == RESULT_OK) {
 				this.finish();
+			} else if(resultCode == RegisterActivity.RESULT_FINISH_PROFILE) {
+				setResult(RESULT_OK);
+				this.finish();
+				startActivity(ReverificationActivity.getIntent(mContext));
 			} else {
 				DamiCommon.removeUser(mContext);
 				FeatureFunction.stopService(mContext);
@@ -411,23 +421,16 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 							User user = data.data;
 							if (!TextUtils.isEmpty(user.nextpage)) {
 								if (user.nextpage.equals("completeinfo")) {
-									DamiCommon.saveLoginResult(LoginActivity.this, user);
-									sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
 									startActivity(ReverificationActivity.getIntent(mContext));
-									LoginActivity.this.finish();
-									return;
+									loginSuccessAction(user);
 								} else if (user.nextpage.equals("bindphone")) {
-									startActivityForResult(
-											RegisterActivity.getIntent(mContext, RegisterActivity.TYPE_BIND_PHONE),
-											REQUEST_BIND_PHONE);
-									return;
+									startActivityForResult(RegisterActivity.getIntent(mContext,
+											RegisterActivity.TYPE_BIND_PHONE, user), REQUEST_BIND_PHONE);
 								}
+								return;
 							}
-							DamiCommon.saveLoginResult(LoginActivity.this, user);
-							sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
 							goToRecomendPage();
-							setResult(RESULT_OK);
-							LoginActivity.this.finish();
+							loginSuccessAction(user);
 						} else {
 							if (data.state != null && data.state.code == 15) {
 								showDialog(null, data.data.alertmessage, new DialogInterface.OnClickListener() {
@@ -471,6 +474,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 					}
 				});
 
+	}
+
+	private void loginSuccessAction(User user) {
+		DamiCommon.saveLoginResult(LoginActivity.this, user);
+		sendBroadcast(new Intent(MainActivity.LOGIN_SUCCESS_ACTION));
+		setResult(RESULT_OK);
+		LoginActivity.this.finish();
 	}
 
 	private void goToRecomendPage() {
