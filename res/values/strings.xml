@@ -877,5 +877,7 @@
     <string name="not_edit">尚未完善</string>
     <string name="invite_add_fantancy_code">邀请TA加入贵人会将获得5点魅力值</string>
     <string name="can_not_unfollow_guiren_secreaty">不可取消对小秘书的关注哦</string>
+    
+    <string name="input_refuse_reason">输入拒绝理由</string>
 
 </resources>

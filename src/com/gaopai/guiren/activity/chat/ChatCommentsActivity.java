@@ -66,6 +66,7 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.MsgZanListResult;
+import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.MsgZanListResult.ZanBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
@@ -171,7 +172,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	private CameralHelper cameralHelper;
 
 	private View headerView;
-	
+
 	private ChatDetailFixedHeader layoutFixedHeader;
 
 	@Override
@@ -192,7 +193,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		initComponent();
 		headerView = creatHeaderView();
 		headerView.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				boxManager.hideSoftKeyboard();
@@ -315,23 +316,32 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		intentFilter.addAction(NotifyChatMessage.ACTION_CHANGE_VOICE_CONTENT);
 		intentFilter.addAction(ChatBaseActivity.ACTION_CHANGE_VOICE);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		intentFilter.addAction(ChatBaseActivity.ACTION_ZAN_MESSAGE);
+		intentFilter.addAction(ChatBaseActivity.ACTION_UNZAN_MESSAGE);
 		super.registerReceiver(intentFilter);
 	}
 
 	@Override
 	protected void onReceive(Intent intent) {
 		super.onReceive(intent);
-		if (intent.getAction().equals(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE)) {
+		if (intent == null) {
+			return;
+		}
+		String action = intent.getAction();
+		if (TextUtils.isEmpty(action)) {
+			return;
+		}
+		if (action.equals(NotifyChatMessage.ACTION_NOTIFY_CHAT_MESSAGE)) {
 			final MessageInfo msg = (MessageInfo) intent
 					.getSerializableExtra(NotifyChatMessage.EXTRAS_NOTIFY_CHAT_MESSAGE);
 			if (msg != null && msg.parentid.equals(messageInfo.id)) {
 				addNotifyMessage(msg);
 			}
-		} else if (PushChatMessage.ACTION_SEND_STATE.equals(intent.getAction())) {
+		} else if (PushChatMessage.ACTION_SEND_STATE.equals(action)) {
 			Log.d(TAG, "receiver:" + PushChatMessage.ACTION_SEND_STATE);
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra(PushChatMessage.EXTRAS_MESSAGE);
 			modifyMessageState(messageInfo);
-		} else if (NotifyChatMessage.ACTION_CHANGE_VOICE_CONTENT.equals(intent.getAction())) {
+		} else if (NotifyChatMessage.ACTION_CHANGE_VOICE_CONTENT.equals(action)) {
 			final MessageInfo temp = (MessageInfo) intent
 					.getSerializableExtra(NotifyChatMessage.EXTRAS_NOTIFY_CHAT_MESSAGE);
 			if (temp.parentid.equals("0")) {
@@ -348,11 +358,37 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 					}
 				}
 			}
-		} else if (intent.getAction().equals(ChatBaseActivity.ACTION_CHANGE_VOICE)) {
+		} else if (action.equals(ChatBaseActivity.ACTION_CHANGE_VOICE)) {
 			isChangeVoice = isAnony();
 			setChangeVoiceView(isChangeVoice);
-		} else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+		} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
 			stopPlayVoice();
+		} else if (ChatBaseActivity.ACTION_ZAN_MESSAGE.equals(action)) {
+			NotifiyVo notifiyVo = (NotifiyVo) intent.getSerializableExtra("notifiyVo");
+			if (notifiyVo == null) {
+				return;
+			}
+			MessageInfo messageInfo = notifiyVo.message;
+			if (messageInfo != null) {
+				User user = notifiyVo.user;
+				if (user != null) {
+					zanList.add(buildZanMessage(user.uid, getName()));
+					bindZanView();
+				}
+			}
+		} else if (ChatBaseActivity.ACTION_UNZAN_MESSAGE.equals(action)) {
+			NotifiyVo notifiyVo = (NotifiyVo) intent.getSerializableExtra("notifiyVo");
+			if (notifiyVo == null) {
+				return;
+			}
+			MessageInfo messageInfo = notifiyVo.message;
+			if (messageInfo != null) {
+				User user = notifiyVo.user;
+				if (user != null) {
+					removeZanMessage(user.uid);
+					bindZanView();
+				}
+			}
 		}
 	}
 
@@ -373,13 +409,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		viewChatText = mTitleBar.addRightImageView(imageId);
 		viewChatText.setId(R.id.ab_chat_text);
 		viewChatText.setOnClickListener(this);
-		if (isOnLooker) {
-			ViewUtil.findViewById(this, R.id.chat_box).setVisibility(View.GONE);
-		} else {
-			View view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
-			view.setId(R.id.ab_chat_more);
-			view.setOnClickListener(this);
-		}
+		// if (isOnLooker) {
+		// ViewUtil.findViewById(this, R.id.chat_box).setVisibility(View.GONE);
+		// } else {
+		View view = mTitleBar.addRightImageView(R.drawable.icon_chat_title_more);
+		view.setId(R.id.ab_chat_more);
+		view.setOnClickListener(this);
+		// }
 		mSwitchVoiceTextBtn = (Button) findViewById(R.id.chat_box_btn_switch_voice_text);
 		mSwitchVoiceTextBtn.setOnClickListener(this);
 
@@ -476,7 +512,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				layoutFixedHeader.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount, layoutCommentHeader, headerView);
+				layoutFixedHeader.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount,
+						layoutCommentHeader, headerView);
 			}
 		});
 
@@ -506,7 +543,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				commenterid = messageInfos.get(pos).from;
 				commenterName = messageInfos.get(pos).displayname;
 				reisanonymity = messageInfos.get(pos).isanonymity;
-				if(boxManager.isInTextMode()) {
+				if (boxManager.isInTextMode()) {
 					boxManager.switchToText(true);
 				}
 			}
@@ -573,7 +610,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		@Override
 		public void zanMessage(MessageInfo msg) {
 			updateZanCount(ChatCommentsActivity.this.messageInfo);
-			zanList.add(buildZanMessage());
+			zanList.add(buildZanMessage(mLogin.uid, getName()));
 			bindZanView();
 			sendNotify();
 		}
@@ -581,7 +618,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		@Override
 		public void unZanMessage(MessageInfo msg) {
 			updateZanCount(ChatCommentsActivity.this.messageInfo);
-			removeZanMessage();
+			removeZanMessage(mLogin.uid);
 			bindZanView();
 			sendNotify();
 		}
@@ -605,20 +642,19 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		}
 	};
 
-	private ZanBean buildZanMessage() {
+	private ZanBean buildZanMessage(String uid, String name) {
 		ZanBean zanBean = new ZanBean();
-		zanBean.displayname = getName();
-		zanBean.uid = mLogin.uid;
+		zanBean.displayname = name;
+		zanBean.uid = uid;
 		return zanBean;
 	}
 
-	private void removeZanMessage() {
+	private void removeZanMessage(String uid) {
 		for (int i = 0; i < zanList.size(); i++) {
-			if (zanList.get(i).uid.equals(mLogin.uid)) {
+			if (zanList.get(i).uid.equals(uid)) {
 				zanList.remove(i);
 				return;
 			}
-
 		}
 	}
 
@@ -685,7 +721,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		// view.findViewById(R.id.layout_msg_text_voice_holder);
 
 		tvCommentCount = (TextView) view.findViewById(R.id.chat_comment_count);
-		
+
 		tvZanCount = (TextView) view.findViewById(R.id.chat_zan_count);
 
 		zanCountLayout = (LinearLayout) view.findViewById(R.id.zan_count_layout);
@@ -697,14 +733,14 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		favoriteCountLayout = (LinearLayout) view.findViewById(R.id.favourite_count_layout);
 		favoriteCountBtn = (ImageView) view.findViewById(R.id.favorite_count_btn);
 
-		if (!isOnLooker) {
-			zanCountLayout.setOnClickListener(this);
-			zanCountBtn.setOnClickListener(this);
-			commentCountLayout.setOnClickListener(this);
-			commentCountBtn.setOnClickListener(this);
-			favoriteCountLayout.setOnClickListener(this);
-			favoriteCountBtn.setOnClickListener(this);
-		}
+		// if (!isOnLooker) {
+		zanCountLayout.setOnClickListener(this);
+		zanCountBtn.setOnClickListener(this);
+		commentCountLayout.setOnClickListener(this);
+		commentCountBtn.setOnClickListener(this);
+		favoriteCountLayout.setOnClickListener(this);
+		favoriteCountBtn.setOnClickListener(this);
+		// }
 
 		layoutZan = (ViewGroup) view.findViewById(R.id.ll_zan);
 		layoutCommentHeader = (ViewGroup) view.findViewById(R.id.layout_comment_header);
@@ -1586,7 +1622,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			mAdapter.notifyDataSetChanged();
 		}
 	}
-	
+
 	private void updateVoiceReadToDb(MessageInfo messageInfo) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 		MessageTable table = new MessageTable(db);
@@ -1601,13 +1637,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	public void showItemLongClickDialog(final MessageInfo messageInfo) {
 		final List<String> strList = new ArrayList<String>();
-//		strList.add(getString(R.string.comment));
+		// strList.add(getString(R.string.comment));
 		if (messageInfo.isfavorite == 1) {
 			strList.add(getString(R.string.cancel_favorite));
 		} else {
 			strList.add(getString(R.string.favorite));
 		}
-		
+
 		strList.add(getString(R.string.delete));
 
 		if (messageInfo.isAgree == 1) {

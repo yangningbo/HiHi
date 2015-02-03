@@ -51,9 +51,9 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 	private View.OnLongClickListener showMoreWindowClickListener = new View.OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
-			if (!isOnLooker) {
+//			if (!isOnLooker) {
 				showActionWindow(v);
-			}
+//			}
 			return true;
 		}
 	};

@@ -32,6 +32,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -146,14 +147,18 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 			break;
 		case REFUSE_CODE:
 			if (resultCode == RESULT_OK) {
+				if (data == null) {
+					return;
+				}
 				String uid = data.getStringExtra("uid");
-				if (!TextUtils.isEmpty(uid)) {
-					for (int i = 0; i < mUserList.size(); i++) {
-						if (mUserList.get(i).uid.equals(uid)) {
-							mUserList.remove(i);
-							mAdapter.notifyDataSetChanged();
-							break;
-						}
+				if (TextUtils.isEmpty(uid)) {
+					return;
+				}
+				for (int i = 0; i < mUserList.size(); i++) {
+					if (mUserList.get(i).uid.equals(uid)) {
+						mUserList.remove(i);
+						mAdapter.notifyDataSetChanged();
+						break;
 					}
 				}
 			}
@@ -176,8 +181,6 @@ public class ApplyListActivity extends BaseActivity implements OnClickListener {
 		private List<User> mData;
 		private Context mContext;
 		// private ImageLoader mImageLoader;
-		private int mType = 0;
-
 		public TribePersonAdapter(Context context, List<User> data, boolean isShowKickBtn) {
 			mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			mContext = context;

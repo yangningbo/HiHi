@@ -46,7 +46,7 @@ public class AddReasonActivity extends BaseActivity {
 	public static final int TYPE_REFUSE_JOIN_MEETING = 31;
 	public static final int TYPE_REFUSE_BECOME_HOST = 32;
 	public static final int TYPE_REFUSE_BECOME_GUEST = 33;
-	
+
 	public static final int TYPE_TO_JOIN_TRIBE = 40;
 
 	private int type = -1;
@@ -99,7 +99,7 @@ public class AddReasonActivity extends BaseActivity {
 			title = getString(R.string.seeking_contacts_reason);
 			hint = getString(R.string.communication);
 			break;
-			
+
 		case TYPE_REFUSE_COMUNICATION:
 			user = (User) getIntent().getSerializableExtra(KEY_USER);
 			messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGEINFO);
@@ -109,16 +109,29 @@ public class AddReasonActivity extends BaseActivity {
 
 		case TYPE_REFUSE_JOIN_TRIBE:
 			title = getString(R.string.refuse_add_into_tribe);
+			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
+			user = (User) getIntent().getSerializableExtra(KEY_USER);
+			hint = getString(R.string.input_refuse_reason);
+			break;
 		case TYPE_REFUSE_JOIN_MEETING:
 			title = getString(R.string.refuse_add_into_meeting);
+			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
+			user = (User) getIntent().getSerializableExtra(KEY_USER);
+			hint = getString(R.string.input_refuse_reason);
+			break;
 		case TYPE_REFUSE_BECOME_GUEST:
 			title = getString(R.string.refuse_become_guest);
+			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
+			user = (User) getIntent().getSerializableExtra(KEY_USER);
+			hint = getString(R.string.input_refuse_reason);
+			break;
 		case TYPE_REFUSE_BECOME_HOST:
 			title = getString(R.string.refuse_become_host);
 			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
 			user = (User) getIntent().getSerializableExtra(KEY_USER);
+			hint = getString(R.string.input_refuse_reason);
 			break;
-			
+
 		case TYPE_TO_JOIN_TRIBE:
 			title = getString(R.string.apply_into_tribe);
 			meetingId = getIntent().getStringExtra(KEY_MEETING_ID);
@@ -145,7 +158,7 @@ public class AddReasonActivity extends BaseActivity {
 				forMeeting(type);
 			}
 		});
-		resultListener = new SimpleResponseListener(mContext) {
+		resultListener = new SimpleResponseListener(mContext, R.string.request_internet_now) {
 
 			@Override
 			public void onSuccess(Object o) {
@@ -157,7 +170,11 @@ public class AddReasonActivity extends BaseActivity {
 						intent.putExtra(KEY_MESSAGEINFO, messageInfo);
 						setResult(RESULT_OK, intent);
 					} else {
-						setResult(RESULT_OK);
+						Intent intent = new Intent();
+						if (user != null) {
+							intent.putExtra("uid", user.uid);
+						}
+						setResult(RESULT_OK, intent);
 					}
 					AddReasonActivity.this.finish();
 				} else {
@@ -211,8 +228,7 @@ public class AddReasonActivity extends BaseActivity {
 			DamiInfo.seekingContacts(messageInfo.from, messageInfo.id, etAddReason.getText().toString(), resultListener);
 			break;
 		case TYPE_REFUSE_COMUNICATION:
-			DamiInfo.refuseSeekingContacts(user.uid, messageInfo.id, etAddReason.getText().toString(),
-					resultListener);
+			DamiInfo.refuseSeekingContacts(user.uid, messageInfo.id, etAddReason.getText().toString(), resultListener);
 			break;
 
 		case TYPE_REFUSE_JOIN_TRIBE:
@@ -227,11 +243,11 @@ public class AddReasonActivity extends BaseActivity {
 		case TYPE_REFUSE_BECOME_HOST:
 			DamiInfo.refuseHost(meetingId, user.uid, etAddReason.getText().toString(), resultListener);
 			break;
-			
+
 		case TYPE_TO_JOIN_TRIBE:
 			DamiInfo.applyTribe(meetingId, etAddReason.getText().toString(), resultListener);
 			break;
-			
+
 		default:
 			break;
 		}

@@ -329,7 +329,11 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		tempTribe.start = DateUtil.getTimeStamp(start) / 1000;
 		tempTribe.end = DateUtil.getTimeStamp(end) / 1000;
 		tempTribe.name = title;
-		tempTribe.logosmall = mFilePath;
+		if (TextUtils.isEmpty(mFilePath) && isEdit) {
+			tempTribe.logosmall = mMeeting.logosmall;
+		} else {
+			tempTribe.logosmall = mFilePath;
+		}
 		Intent intent = new Intent(mContext, MeetingDetailActivity.class);
 		intent.putExtra(MeetingDetailActivity.KEY_MEETING, tempTribe);
 		startActivity(intent);

@@ -6,7 +6,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -17,7 +16,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -34,6 +32,7 @@ import com.gaopai.guiren.bean.Identity;
 import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
+import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.NotifyMessageBean.ConversationInnerBean;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.TribeInfoBean;
@@ -136,7 +135,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		super.initAdapter(mAdapter);
 		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0));
 
-		if (!isOnLooker) {
+//		if (!isOnLooker) {
 			mListView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
 
 				@Override
@@ -146,7 +145,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 					return true;
 				}
 			});
-		}
+//		}
 
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 
@@ -656,15 +655,22 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				updateFavoriteCount(messageInfo);
 			}
 		} else if (ACTION_ZAN_MESSAGE.equals(action)) {
-			Log.e("CHEN", "notitySystemMessage4");
-			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
+			NotifiyVo notifiyVo = (NotifiyVo) intent.getSerializableExtra("notifiyVo");
+			if (notifiyVo == null) {
+				return;
+			}
+			MessageInfo messageInfo = notifiyVo.message;
 			if (messageInfo != null) {
-				updateZanCount(messageInfo);
+				updateZanCountFromNotify(messageInfo, true);
 			}
 		} else if (ACTION_UNZAN_MESSAGE.equals(action)) {
-			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
+			NotifiyVo notifiyVo = (NotifiyVo) intent.getSerializableExtra("notifiyVo");
+			if (notifiyVo == null) {
+				return;
+			}
+			MessageInfo messageInfo = notifiyVo.message;
 			if (messageInfo != null) {
-				updateZanCount(messageInfo);
+				updateZanCountFromNotify(messageInfo,false);
 			}
 		} else if (ACTION_COMMENT_OR_ZAN_OR_FAVOURITE.equals(action)) {
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");
@@ -804,10 +810,17 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	// count has been add one in SystemNotify, so need not update database
-	private void updateZanCount(MessageInfo messageInfo) {
+	private void updateZanCountFromNotify(MessageInfo messageInfo, boolean isAdd) {
 		MessageInfo target = getTargetMessageInfo(messageInfo);
 		if (target != null) {
-			target.agreeCount = messageInfo.agreeCount;
+			if (isAdd) {
+				target.agreeCount = target.agreeCount + 1;
+			} else {
+				target.agreeCount = target.agreeCount - 1;
+			}
+			if (target.agreeCount < 0) {
+				target.agreeCount = 0;
+			}
 			mAdapter.notifyDataSetChanged();
 		}
 	}

@@ -221,8 +221,9 @@ public class SystemNotifiy extends AbstractNotifiy {
 			case NotifiyType.MEETING_KICK_OUT:
 				msg = mContext.getString(R.string.you_have_been_kick_out_meeting);
 				identityTable.delete(notifiyVo.room.id);
-//				ConversationHelper.deleteItemAndUpadte(mContext, notifiyVo.room.id);
-				ConversationHelper.deleteChatItemAndUpadte(mContext,  notifiyVo.room.id, false);
+				// ConversationHelper.deleteItemAndUpadte(mContext,
+				// notifiyVo.room.id);
+				ConversationHelper.deleteChatItemAndUpadte(mContext, notifiyVo.room.id, false);
 				Intent kickMeetingIntent = new Intent(TribeActivity.ACTION_KICK_TRIBE);
 				kickMeetingIntent.putExtra("id", notifiyVo.room.id);
 				mContext.sendBroadcast(kickMeetingIntent);
@@ -329,7 +330,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 
 			case NotifiyType.UNFAVORITE_MESSAGE:
 				if (notifiyVo.user != null && notifiyVo.user.uid.equals(DamiCommon.getUid(mContext))) {
-					//do not notify me if I give this action.
+					// do not notify me if I give this action.
 					return;
 				}
 				MessageInfo unfavoriteMessage = messageTable.query(notifiyVo.message.tag);
@@ -345,42 +346,39 @@ public class SystemNotifiy extends AbstractNotifiy {
 					mContext.sendBroadcast(favoriteIntent);
 				}
 				return;
-			case NotifiyType.MESSAGE_ZAN_ADD:
+			case NotifiyType.MESSAGE_ZAN_ADD: {
 				if (notifiyVo.user != null && notifiyVo.user.uid.equals(DamiCommon.getUid(mContext))) {
-					//do not notify me if I give this action.
+					// do not notify me if I give this action.
 					return;
 				}
 				messageInfo = messageTable.query(notifiyVo.message.tag);
 				if (messageInfo != null) {
 					messageInfo.agreeCount++;
 					messageTable.updateAgreeCount(messageInfo);
-					Intent favoriteIntent = new Intent(ChatBaseActivity.ACTION_ZAN_MESSAGE);
-					favoriteIntent.putExtra("message", messageInfo);
-					mContext.sendBroadcast(favoriteIntent);
-				} else {
-					Intent favoriteIntent = new Intent(ChatBaseActivity.ACTION_ZAN_MESSAGE);
-					favoriteIntent.putExtra("message", notifiyVo.message);
-					mContext.sendBroadcast(favoriteIntent);
 				}
+				Intent favoriteIntent = new Intent(ChatBaseActivity.ACTION_ZAN_MESSAGE);
+				favoriteIntent.putExtra("notifiyVo", notifiyVo);
+				mContext.sendBroadcast(favoriteIntent);
 				return;
-			case NotifiyType.MESSAGE_ZAN_CANCEL:
+			}
+			case NotifiyType.MESSAGE_ZAN_CANCEL: {
 				if (notifiyVo.user != null && notifiyVo.user.uid.equals(DamiCommon.getUid(mContext))) {
-					//do not notify me if I give this action.
+					// do not notify me if I give this action.
 					return;
 				}
 				unfavoriteMessage = messageTable.query(notifiyVo.message.tag);
 				if (unfavoriteMessage != null) {
 					unfavoriteMessage.agreeCount--;
+					if (unfavoriteMessage.agreeCount < 0) {
+						unfavoriteMessage.agreeCount = 0;
+					}
 					messageTable.updateAgreeCount(unfavoriteMessage);
-					Intent favoriteIntent = new Intent(ChatBaseActivity.ACTION_UNZAN_MESSAGE);
-					favoriteIntent.putExtra("message", unfavoriteMessage);
-					mContext.sendBroadcast(favoriteIntent);
-				} else {
-					Intent favoriteIntent = new Intent(ChatBaseActivity.ACTION_UNZAN_MESSAGE);
-					favoriteIntent.putExtra("message", notifiyVo.message);
-					mContext.sendBroadcast(favoriteIntent);
 				}
+				Intent favoriteIntent = new Intent(ChatBaseActivity.ACTION_UNZAN_MESSAGE);
+				favoriteIntent.putExtra("notifiyVo", notifiyVo);
+				mContext.sendBroadcast(favoriteIntent);
 				return;
+			}
 			case NotifiyType.APPLY_BECOME_HOST:
 				msg = mContext.getString(R.string.apply_to_host);
 				NotifiyVo notifyMeeting1 = notifyTable.query(notifiyVo);
@@ -537,8 +535,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 			// Intent(HomeTab.REFRESH_NOTIFY_ACTION));
 			// mContext.sendBroadcast(new
 			// Intent(MainActivity.ACTION_UPDATE_NOTIFY_SESSION_COUNT));
-			
-			Logger.d(this, "f========notifySystemMessage");
+
 			mNotifyHelper.notifySystemMessage(msg, notifiyVo);
 		}
 	}
