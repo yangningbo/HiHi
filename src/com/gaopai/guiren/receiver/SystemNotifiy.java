@@ -241,25 +241,15 @@ public class SystemNotifiy extends AbstractNotifiy {
 						table.delete(notifyComment.mID, notifyComment.room);
 					}
 					notifyTable.deleteByID(notifyComment);
-					if (notifyComment.roomuser != null) {
-						Identity identity = identityTable.query(notifyComment.room.id);
-						if (identity == null) {
-							identityTable.insert(notifyComment.room.id, notifyComment.roomuser);
-						} else {
-							identityTable.update(notifyComment.room.id, notifyComment.roomuser);
-						}
-					}
-				} else {
-					if (notifiyVo.roomuser != null) {
-						Identity identity = identityTable.query(notifiyVo.room.id);
-						if (identity == null) {
-							identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
-						} else {
-							identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
-						}
-					}
+//					if (notifyComment.roomuser != null) {
+//						Identity identity = identityTable.query(notifyComment.room.id);
+//						if (identity == null) {
+//							identityTable.insert(notifyComment.room.id, notifyComment.roomuser);
+//						} else {
+//							identityTable.update(notifyComment.room.id, notifyComment.roomuser);
+//						}
+//					}
 				}
-				Logger.d(this, "f========comment");
 				break;
 			case NotifiyType.RECEIVE_REPORT_MSG:
 				msg = mContext.getString(R.string.receive_report_msg);
@@ -482,14 +472,14 @@ public class SystemNotifiy extends AbstractNotifiy {
 					}
 					notifyTable.deleteByID(notifyComment1);
 				}
-				if (notifiyVo.roomuser != null) {
-					Identity identity = identityTable.query(notifiyVo.room.id);
-					if (identity == null) {
-						identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
-					} else {
-						identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
-					}
-				}
+//				if (notifiyVo.roomuser != null) {
+//					Identity identity = identityTable.query(notifiyVo.room.id);
+//					if (identity == null) {
+//						identityTable.insert(notifiyVo.room.id, notifiyVo.roomuser);
+//					} else {
+//						identityTable.update(notifiyVo.room.id, notifiyVo.roomuser);
+//					}
+//				}
 				break;
 			default:
 				msg = notifiyVo.content;

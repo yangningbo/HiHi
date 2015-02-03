@@ -233,6 +233,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			} else {
 				hasIdentity = true;
 				mIdentity = identity;
+				Logger.d(this, "name = " + mIdentity.name + "  pic=" + mIdentity.head);
 			}
 		}
 	}
@@ -372,7 +373,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			if (messageInfo != null) {
 				User user = notifiyVo.user;
 				if (user != null) {
-					zanList.add(buildZanMessage(user.uid, getName()));
+					zanList.add(buildZanMessage(user.uid, user.realname));
 					bindZanView();
 				}
 			}

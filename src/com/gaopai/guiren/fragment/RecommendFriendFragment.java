@@ -71,16 +71,14 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 
 		mAdapter = new RecommendUserAdapter(act, new AddClickListener());
 		mListView.setAdapter(mAdapter);
-		// mListView.doPullRefreshing(true, 0);
-		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-				String uid = ((User) mAdapter.getItem(position)).uid;
-				startActivity(ProfileActivity.getIntent(act, uid));
-			}
-		});
+//		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//				String uid = ((User) mAdapter.getItem(position)).uid;
+//				startActivity(ProfileActivity.getIntent(act, uid));
+//			}
+//		});
 		mListView.doPullRefreshing(true, 0);
 	}
 

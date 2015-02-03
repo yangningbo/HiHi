@@ -19,10 +19,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -31,9 +33,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,7 +44,6 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
-import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.widget.photoview.PhotoView;
 import com.gaopai.guiren.widget.photoview.PhotoViewAttacher.OnViewTapListener;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -255,7 +253,8 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 		if (bitmap == null) {
 			return;
 		}
-		final String savePath = DamiApp.downloadPath + "savePic/" + System.currentTimeMillis() + ".png";
+		final String fileName = System.currentTimeMillis() + ".png";
+		final String savePath = DamiApp.downloadPath + "savePic/" + fileName;
 		File directory = new File(savePath).getParentFile();
 		if (!directory.exists()) {
 			directory.mkdirs();
@@ -278,6 +277,10 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 							showToast(getResources().getString(R.string.has_save_to_address) + savePath);
 						}
 					});
+					MediaStore.Images.Media.insertImage(mContext.getContentResolver(), savePath, fileName, null);
+					mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"
+							+ savePath)));
+
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} finally {
@@ -291,52 +294,6 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 				}
 			}
 		}).start();
-	}
-
-	private void savePic(String url) {
-		final String savePath = DamiApp.downloadPath + url.substring(url.lastIndexOf("/") + 1, url.length());
-		File saveFile = new File(savePath);
-		if (saveFile.exists()) {
-			showToast(R.string.has_save);
-		} else {
-			File directory = saveFile.getParentFile();
-			if (!directory.exists()) {
-				directory.mkdirs();
-			}
-			boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
-			if (!sdCardExist) {// 如果不存在SD卡，进行提示
-				showToast(R.string.cant_save_sdcard);
-				return;
-			}
-			FinalHttp fh = new FinalHttp();
-			fh.download(url, savePath, new AjaxCallBack<File>() {
-				@Override
-				public void onFailure(Throwable t, int errorNo, String strMsg) {
-					// TODO Auto-generated method stub
-					super.onFailure(t, errorNo, strMsg);
-					showToast(R.string.save_error);
-				}
-
-				@Override
-				public void onLoading(long count, long current) {
-					// TODO Auto-generated method stub
-					super.onLoading(count, current);
-				}
-
-				@Override
-				public void onStart() {
-					// TODO Auto-generated method stub
-					super.onStart();
-				}
-
-				@Override
-				public void onSuccess(File t) {
-					super.onSuccess(t);
-					showToast(getResources().getString(R.string.has_save_to_address) + DamiApp.downloadPath);
-				}
-
-			});
-		}
 	}
 
 }
