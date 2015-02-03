@@ -281,4 +281,16 @@ public class DynamicAdapter extends BaseAdapter {
 	public void stopPlayVoice() {
 		dynamicHelper.stopPlayVoice();
 	}
+	
+	public void replaceItem(TypeHolder typeHolder) {
+		for (TypeHolder bean : mData) {
+			if (bean.id.equals(typeHolder.id)) {
+				bean.commentlist = typeHolder.commentlist;
+				bean.zanList = typeHolder.zanList;
+				bean.isZan = typeHolder.isZan;
+				notifyDataSetChanged();
+				return;
+			}
+		}
+	}
 }

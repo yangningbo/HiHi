@@ -29,6 +29,7 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.BaseFragment;
 import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.activity.DynamicDetailActivity;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.NewDynamicActivity;
 import com.gaopai.guiren.adapter.DynamicAdapter;
@@ -136,7 +137,8 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 			}
 		});
 		registerReceiver(DynamicHelper.ACTION_REFRESH_DYNAMIC, Intent.ACTION_SCREEN_OFF,
-				MainActivity.LOGIN_SUCCESS_ACTION);
+				MainActivity.LOGIN_SUCCESS_ACTION, DynamicDetailActivity.ACTION_UPDATE_DYNAMIC_LIST,
+				MainActivity.ACTION_UPDATE_PROFILE);
 	}
 
 	private boolean isInitialed = false;
@@ -321,21 +323,36 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 	@Override
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
-		if (intent != null) {
-			String action = intent.getAction();
-			if (action.equals(DynamicHelper.ACTION_REFRESH_DYNAMIC)) {
-				String id = intent.getStringExtra("id");
-				mAdapter.deleteItem(id);
-			} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
-				mAdapter.stopPlayVoice();
-			} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
-				if (mAdapter != null) {
-					mAdapter.clear();
-					mAdapter.notifyDataSetChanged();
-					isInitialed = false;
-					mAdapter.updateUser();
-				}
+		if (intent == null) {
+			return;
+		}
+		String action = intent.getAction();
+		if (TextUtils.isEmpty(action)) {
+			return;
+		}
+		if (action.equals(DynamicHelper.ACTION_REFRESH_DYNAMIC)) {
+			String id = intent.getStringExtra("id");
+			mAdapter.deleteItem(id);
+		} else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+			mAdapter.stopPlayVoice();
+		} else if (action.equals(MainActivity.LOGIN_SUCCESS_ACTION)) {
+			if (mAdapter != null) {
+				mAdapter.clear();
+				mAdapter.notifyDataSetChanged();
+				/**
+				 * when user swipe to this interface, force to refresh the data,
+				 * see {@link #setUserVisibleHint}
+				 */
+				isInitialed = false;
+				mAdapter.updateUser();
 			}
+		} else if (action.equals(DynamicDetailActivity.ACTION_UPDATE_DYNAMIC_LIST)) {
+			TypeHolder bean = (TypeHolder) intent.getSerializableExtra(DynamicDetailActivity.KEY_TYPEHOLDER);
+			if (bean != null) {
+				mAdapter.replaceItem(bean);
+			}
+		} else if (action.equals(MainActivity.ACTION_UPDATE_PROFILE)) {
+			mAdapter.updateUser();
 		}
 	}
 

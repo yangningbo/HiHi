@@ -14,15 +14,15 @@
         android:textColor="@color/white" />
 
     <ScrollView
-        android:layout_above="@id/btn_confirm"
         android:layout_width="match_parent"
-        android:paddingBottom="@dimen/general_paading"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_confirm" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/general_paading"
             android:paddingLeft="@dimen/general_paading"
             android:paddingRight="@dimen/general_paading"
             android:paddingTop="@dimen/general_paading" >

@@ -372,6 +372,8 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			MessageInfo messageInfo = (MessageInfo) v.getTag();
+			messageInfo.sendState = MessageState.STATE_SENDING;
+			mAdapter.notifyDataSetChanged();
 			sendMessage(messageInfo);
 		}
 	};

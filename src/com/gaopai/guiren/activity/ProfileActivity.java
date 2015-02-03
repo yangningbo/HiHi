@@ -520,6 +520,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		tvPhone.setText(tUser.phone);
 		tvWeixin.setText(tUser.weixin);
 		tvWeibo.setText(tUser.weibo);
+		restoreTextDrawable(tvEmail);
+		restoreTextDrawable(tvPhone);
+		restoreTextDrawable(tvWeixin);
+		restoreTextDrawable(tvWeibo);
 
 		if (isSelf) {
 			return;
@@ -593,6 +597,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 		textView.setCompoundDrawablePadding(0);
 		((ViewGroup) textView.getParent()).setOnClickListener(null);
+	}
+
+	private void restoreTextDrawable(TextView textView) {
+		textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_right_arrow, 0);
+		textView.setCompoundDrawablePadding(0);
 	}
 
 	private void removeTextDrawableWithClick(TextView textView) {
@@ -934,6 +943,10 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		}
 		case R.id.layout_profile_bottom_follow:
 			if (isFollow()) {
+				if (tUser.uid.equals("1")) {
+					showToast(R.string.can_not_unfollow_guiren_secreaty);
+					return;
+				}
 				showCancelFollowDialog();
 				return;
 			}
@@ -987,17 +1000,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void openWeibo() {
-		// Intent intent = new Intent();
-		// ComponentName cmp = new ComponentName("com.sina.weibo",
-		// "com.sina.weibo.EditActivity");
-		// intent.setAction(Intent.ACTION_MAIN);
-		// intent.addCategory(Intent.CATEGORY_LAUNCHER);
-		// intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		// intent.setComponent(cmp);
-		// try {
-		// startActivityForResult(intent, 0);
-		// } catch (Exception e) {
-		// }
 		if (!TextUtils.isEmpty(tUser.weibo)) {
 			String url = "http://m.weibo.cn/n/" + tUser.weibo;
 			Intent intent = new Intent(this, WebActivity.class);
@@ -1060,19 +1062,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private void spreadUser() {
 		startActivity(SpreadDynamicActivity.getUserIntent(mContext, tUser));
-		// DamiInfo.spreadDynamic(5, tUser.uid, "", "", "", "", new
-		// SimpleResponseListener(mContext) {
-		// @Override
-		// public void onSuccess(Object o) {
-		// // TODO Auto-generated method stub
-		// BaseNetBean data = (BaseNetBean) o;
-		// if (data.state != null && data.state.code == 0) {
-		// showToast(R.string.spread_success);
-		// } else {
-		// otherCondition(data.state, ProfileActivity.this);
-		// }
-		// }
-		// });
 	}
 
 	private void startActivityWithUser(String key, Class clazz) {
@@ -1116,7 +1105,8 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			}
 			if (requestCode == REQUEST_CHANGE_PROFILE_IN_OTHER_INTERFACE) {
 				mUser = DamiCommon.getLoginResult(mContext);
-				getUserInfo();
+				// getUserInfo();
+				bindContactView();
 			}
 
 			if (requestCode == REQUEST_COMMENT) {

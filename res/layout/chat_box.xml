@@ -78,7 +78,7 @@
             android:layout_width="120dp"
             android:layout_height="38dp"
             android:layout_centerVertical="true"
-           android:layout_marginLeft="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@id/chat_box_btn_add"
             android:layout_toRightOf="@id/chat_box_btn_switch_voice_text"
@@ -188,6 +188,11 @@
 
     <View
         style="@style/general_thin_divider_in_white"
+        android:layout_below="@id/wrap_chatbox" />
+
+    <View
+        style="@style/general_thin_divider_in_white"
+        android:layout_alignParentTop="true"
         android:layout_below="@id/wrap_chatbox" />
 
 </RelativeLayout>

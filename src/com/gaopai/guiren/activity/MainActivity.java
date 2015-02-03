@@ -564,7 +564,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		boolean isShowGudie = false;
 		int result = DamiApp.getInstance().getPou().getInt(SPConst.KEY_GUIDE_START_PAGE, 0);
 		int version = FeatureFunction.getAppVersion(this);
+		Logger.d(this, "save version=" + result + "   current version=" + version);
 		if (result != version) {
+			layoutWelcome.setVisibility(View.GONE);
 			Intent intent = new Intent();
 			intent.setClass(MainActivity.this, GuideActivity.class);
 			startActivityForResult(intent, REQUES_SHOW_GUIDE);
@@ -579,7 +581,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		TextView viewDot = ViewUtil.findViewById(this, R.id.iv_count_4);
 		if (count > 0) {
 			viewDot.setVisibility(View.VISIBLE);
-			viewDot.setText(count < 99 ? String.valueOf(count) : count + "+");
+			viewDot.setText(count < 99 ? String.valueOf(count) : "99+");
 		} else {
 			viewDot.setVisibility(View.GONE);
 		}
@@ -714,30 +716,36 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}
 
-	public static void addTribe(Context context) {
+	// public static void addTribe(Context context) {
+	// User user = DamiCommon.getLoginResult(context);
+	// user.tribeCount = user.tribeCount + 1;
+	// DamiCommon.saveLoginResult(context, user);
+	// context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	// }
+	//
+	// public static void minusTribe(Context context) {
+	// User user = DamiCommon.getLoginResult(context);
+	// user.tribeCount = user.tribeCount - 1;
+	// DamiCommon.saveLoginResult(context, user);
+	// context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	// }
+	//
+	// public static void addMeeting(Context context) {
+	// User user = DamiCommon.getLoginResult(context);
+	// user.meetingCount = user.meetingCount + 1;
+	// DamiCommon.saveLoginResult(context, user);
+	// context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	// }
+	//
+	// public static void minusMeeting(Context context) {
+	// User user = DamiCommon.getLoginResult(context);
+	// user.meetingCount = user.meetingCount - 1;
+	// DamiCommon.saveLoginResult(context, user);
+	// context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	// }
+	public static void minusDynamic(Context context) {
 		User user = DamiCommon.getLoginResult(context);
-		user.tribeCount = user.tribeCount + 1;
-		DamiCommon.saveLoginResult(context, user);
-		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
-	}
-
-	public static void minusTribe(Context context) {
-		User user = DamiCommon.getLoginResult(context);
-		user.tribeCount = user.tribeCount - 1;
-		DamiCommon.saveLoginResult(context, user);
-		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
-	}
-
-	public static void addMeeting(Context context) {
-		User user = DamiCommon.getLoginResult(context);
-		user.meetingCount = user.meetingCount + 1;
-		DamiCommon.saveLoginResult(context, user);
-		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
-	}
-
-	public static void minusMeeting(Context context) {
-		User user = DamiCommon.getLoginResult(context);
-		user.meetingCount = user.meetingCount - 1;
+		user.dynamicCount = user.dynamicCount - 1;
 		DamiCommon.saveLoginResult(context, user);
 		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}

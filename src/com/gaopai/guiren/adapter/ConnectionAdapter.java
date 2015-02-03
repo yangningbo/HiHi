@@ -66,7 +66,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mLogin = DamiCommon.getLoginResult(mContext);
 	}
-	
+
 	public void updateUser() {
 		if (mLogin == null) {
 			return;
@@ -104,29 +104,35 @@ public class ConnectionAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		int type = getItemViewType(position);
 		TypeHolder typeBean = mData.get(position);
-		switch (type) {
+		try {
+			switch (type) {
+			case 0: {
+				if (convertView == null) {
+					convertView = inflateItemView(TYPE_GENERAL);
+				}
+				buildJoinView((ViewHolderGeneral) convertView.getTag(), typeBean, position, typeBean.type);
+				break;
+			}
 
-		case 0: {
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_GENERAL);
+			case 1: {
+				if (convertView == null) {
+					convertView = inflateItemView(TYPE_PIC_GENERAL);
+				}
+				buildPicGridView((ViewHolderPicGridGeneral) convertView.getTag(), typeBean, position, typeBean.type);
+				break;
 			}
-			buildJoinView((ViewHolderGeneral) convertView.getTag(), typeBean, position, typeBean.type);
-			break;
-		}
-
-		case 1: {
-			if (convertView == null) {
-				convertView = inflateItemView(TYPE_PIC_GENERAL);
+			case 2: {
+				if (convertView == null) {
+					convertView = buildErrorView();
+				}
+				return convertView;
 			}
-			buildPicGridView((ViewHolderPicGridGeneral) convertView.getTag(), typeBean, position, typeBean.type);
-			break;
-		}
-		case 2: {
-			if (convertView == null) {
-				convertView = buildErrorView();
 			}
-			return convertView;
+		} catch (Exception e) {
+			convertView = buildErrorView();
 		}
+		if (convertView == null) {
+			convertView = buildErrorView();
 		}
 		return convertView;
 	}
@@ -323,6 +329,9 @@ public class ConnectionAdapter extends BaseAdapter {
 		case TYPE_SOMEONE_SPREAD_USER:
 		case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
 		case TYPE_SOMEONE_FOLLOW_ME: {
+			if (typeHolder.jsoncontent == null) {
+				return 2;
+			}
 			if (typeHolder.jsoncontent.user != null && typeHolder.jsoncontent.user.size() == 1) {
 				return 0;
 			}

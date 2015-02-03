@@ -267,7 +267,7 @@ public class CopyOfConnectionAdapter extends BaseAdapter implements SectionIndex
 			}
 			List<User> users = new ArrayList<User>();
 			for (User user : mUserList) {
-				if (user.realname.contains(prefix.toString())) {
+				if (User.getUserName(user).contains(prefix.toString())) {
 					users.add(user);
 				}
 			}

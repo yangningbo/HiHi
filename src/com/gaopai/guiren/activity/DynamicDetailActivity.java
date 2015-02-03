@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,8 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 
 	private User user;
 
+	public final static String ACTION_UPDATE_DYNAMIC_LIST = "com.gaopai.guiren.intent.action.ACTION_UPDATE_DYNAMIC_LIST";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -64,7 +67,13 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_DETAIL);
 		dynamicHelper.setCallback(callback);
 		mTitleBar.setTitleText("动态详情");
-		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		mTitleBar.setLogo(R.drawable.selector_titlebar_back).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendUpdateBroadCast();
+				DynamicDetailActivity.this.finish();
+			}
+		});
 		View view = mTitleBar.addRightTextView(R.string.report);
 		view.setId(R.id.ab_report);
 		view.setOnClickListener(this);
@@ -83,6 +92,7 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 	protected void registerReceiver(IntentFilter intentFilter) {
 		super.registerReceiver(intentFilter);
 		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		intentFilter.addAction(MainActivity.ACTION_UPDATE_PROFILE);
 	}
 
 	public static Intent getIntent(Context context, String sid) {
@@ -102,7 +112,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 
 		@Override
 		public void onBindComment(TypeHolder typeHolder, com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon holder) {
-			// TODO Auto-generated method stub
 			dynamicHelper.buildCommonView((DynamicHelper.ViewHolderCommon) headerView.getTag(), typeBean);
 		}
 
@@ -110,7 +119,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		public void onBindCommenViewBottom(TypeHolder typeBean,
 				com.gaopai.guiren.support.DynamicHelper.ViewHolderCommon viewHolder, boolean isShowComment,
 				boolean isShowSpread, boolean isShowZan) {
-			// TODO Auto-generated method stub
 			if (isShowComment || isShowSpread || isShowZan) {
 				viewHolder.layoutCoverTop.setVisibility(View.VISIBLE);
 			} else {
@@ -160,7 +168,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 						initComponent();
 					} else {
 						typeBean = data.data;
-						// getHeaderView();
 						if (headerView instanceof TextView) {
 							return;
 						}
@@ -177,7 +184,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 
 			@Override
 			public void onFinish() {
-				// TODO Auto-generated method stub
 				super.onFinish();
 				mListView.onPullComplete();
 			}
@@ -186,7 +192,6 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void initComponent() {
-		// TODO Auto-generated method stub
 		etContent = (CustomEditText) findViewById(R.id.chat_box_edit_keyword);
 		etContent.setBackPressedListener(new BackPressedListener() {
 			@Override
@@ -376,8 +381,13 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 		// TODO Auto-generated method stub
 		if (intent != null) {
 			String action = intent.getAction();
+			if (TextUtils.isEmpty(action)) {
+				return;
+			}
 			if (action.equals(Intent.ACTION_SCREEN_OFF)) {
 				dynamicHelper.stopPlayVoice();
+			} else if (action.equals(MainActivity.ACTION_UPDATE_PROFILE)) {
+				dynamicHelper.updateUser();
 			}
 		}
 	}
@@ -386,5 +396,17 @@ public class DynamicDetailActivity extends BaseActivity implements OnClickListen
 	protected void onStop() {
 		super.onStop();
 		dynamicHelper.stopPlayVoice();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		sendUpdateBroadCast();
+	}
+
+	private void sendUpdateBroadCast() {
+		Intent intent = new Intent(ACTION_UPDATE_DYNAMIC_LIST);
+		intent.putExtra(KEY_TYPEHOLDER, typeBean);
+		sendBroadcast(intent);
 	}
 }

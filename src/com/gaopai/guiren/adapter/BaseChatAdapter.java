@@ -184,7 +184,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				voiceNotRead.setVisibility(View.VISIBLE);
 			}
 		}
-
+		showWaitProgressBar(messageInfo, viewHolder);
 		onBindView(viewHolder, messageInfo);
 		displayTime(viewHolder.tvChatTime, position);
 
@@ -224,7 +224,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			} else {
 				ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.ivPhoto, options,
 						viewHolder.wiatProgressBar);
-				showWaitProgressBar(messageInfo, viewHolder);
+			
 			}
 			viewHolder.layoutPicHolder.setTag(R.id.dy_photo_position, position);
 			viewHolder.layoutPicHolder.setOnClickListener(photoClickListener);
@@ -232,7 +232,6 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		case MessageType.VOICE:
 			if (mCurrentMode == MODE_VOICE) {
 				viewHolder.tvVoiceLength.setText(messageInfo.voiceTime + "''");
-				showWaitProgressBar(messageInfo, viewHolder);
 				viewHolder.layoutTextVoiceHolder.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -462,7 +461,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 				((ChatMainActivity) mContext).showVoiceModeToastAnimation();
 			}
 			mData.get(palyedPosition).isReadVoice = 1;
-
+			updateVoiceReadToDb(mData.get(palyedPosition));
 			notifyDataSetChanged();
 		}
 
@@ -476,7 +475,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 					MessageInfo messageInfo = mData.get(nextPosition);
 					if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0) {
 						palyedPosition = nextPosition;
-						updateVoiceReadToDb(messageInfo);
+				
 						mPlayerWrapper.start(messageInfo);
 						if (getListView().getFirstVisiblePosition() > palyedPosition
 								|| getListView().getLastVisiblePosition() < palyedPosition) {

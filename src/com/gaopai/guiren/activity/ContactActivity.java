@@ -1,6 +1,7 @@
 package com.gaopai.guiren.activity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
@@ -220,18 +221,27 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 		if (intent.getAction().equals(ACTION_UPDATE_LIST_ADD)) {
 			User user = (User) intent.getSerializableExtra("user");
 			if (user != null) {
-				if (type == TYPE_FOLLOWERS) {
+				if (type == TYPE_FOLLOWERS && isMyself && !isUserInList(user.uid)) {
 					mAdapter.addUser(user);
 				}
 			}
 		} else if (intent.getAction().equals(ACTION_UPDATE_LIST_DELETE)) {
 			String uid = intent.getStringExtra("uid");
 			if (uid != null) {
-				if (type == TYPE_FOLLOWERS) {
+				if (type == TYPE_FOLLOWERS && isMyself) {
 					mAdapter.removeUser(uid);
 				}
 			}
 		}
+	}
+
+	private boolean isUserInList(String uid) {
+		for (User user : mAdapter.mUserList) {
+			if (user.uid.equals(uid)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static Intent getDeleteBroadcastIntent(String uid) {
@@ -334,6 +344,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener {
 			if (isOpenSearch) {
 				btnSearch.setBackgroundResource(R.drawable.selector_titlebar_search);
 				btnSearch.setText("");
+				etSearch.setText("");
 				etSearch.setVisibility(View.GONE);
 				mTitleBar.titleTextBtn.setVisibility(View.VISIBLE);
 			} else {

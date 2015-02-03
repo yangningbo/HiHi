@@ -151,7 +151,7 @@ public class ReverificationActivity extends BaseActivity {
 	}
 
 	private String[] industries = new String[] { "电子商务", "移动互联网", "社交网络", "网络游戏", "大数据", "在线视频", "企业软件", "智能硬件", "金融业",
-			"投资", "汽车业", "奢侈品", "房地产", "其它" };
+			"投资", "汽车业", "奢侈品", "房地产", "媒体", "其它" };
 
 	private void showChoseIndustryDialog() {
 		showMutiDialog(null, industries, new DialogInterface.OnClickListener() {

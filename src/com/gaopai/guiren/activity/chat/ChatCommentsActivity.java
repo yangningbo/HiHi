@@ -1572,6 +1572,11 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		@Override
 		public void onStart() {
 			bindView();
+			if (speexPlayerWrapper.getMessageTag().equals(messageInfo.tag)) {
+				messageInfo.isReadVoice = 1;
+				updateVoiceReadToDb(messageInfo);
+				sendNotify();
+			}
 			mAdapter.notifyDataSetChanged();
 		}
 
@@ -1580,6 +1585,12 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			bindView();
 			mAdapter.notifyDataSetChanged();
 		}
+	}
+	
+	private void updateVoiceReadToDb(MessageInfo messageInfo) {
+		SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
+		MessageTable table = new MessageTable(db);
+		table.updateVoiceReadState(messageInfo.id);
 	}
 
 	private void sendNotify() {
@@ -1590,13 +1601,13 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 
 	public void showItemLongClickDialog(final MessageInfo messageInfo) {
 		final List<String> strList = new ArrayList<String>();
-		strList.add(getString(R.string.comment));
+//		strList.add(getString(R.string.comment));
 		if (messageInfo.isfavorite == 1) {
 			strList.add(getString(R.string.cancel_favorite));
 		} else {
 			strList.add(getString(R.string.favorite));
 		}
-		strList.add(getString(R.string.report));
+		
 		strList.add(getString(R.string.delete));
 
 		if (messageInfo.isAgree == 1) {
@@ -1612,9 +1623,10 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		}
 		if (!messageInfo.from.equals(DamiCommon.getUid(mContext))) {// 如果来自自己，则不交往，转发等
-			strList.add(getString(R.string.retrweet));
 			strList.add(getString(R.string.communication));
+			strList.add(getString(R.string.report));
 		}
+		strList.add(getString(R.string.retrweet));
 		String[] array = new String[1];
 		Dialog dialog = new AlertDialog.Builder(this)
 				.setItems((String[]) strList.toArray(array), new DialogInterface.OnClickListener() {

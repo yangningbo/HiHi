@@ -52,9 +52,9 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 
 	private MeetingAdapter mAdapter;
 
-	public static final int TYPE_ONGOING_MEETING = 0;
-	public static final int TYPE_PAST_MEETING = 1;
-	public static final int TYPE_MY_MEETING = 2;
+	public static final int TYPE_ONGOING_MEETING = 1;
+	public static final int TYPE_PAST_MEETING = 2;
+	public static final int TYPE_MY_MEETING = 3;
 
 	public final static String REFRESH_LIST_ACTION = "com.gaopai.guiren.intent.action.REFRESH_LIST_ACTION";
 
@@ -203,7 +203,7 @@ public class MeetingFragment extends BaseFragment implements OnClickListener {
 			initListView();
 			return view;
 		}
-		
+
 		public void setViewPager(ViewPager viewPager) {
 			this.viewPager = viewPager;
 		}

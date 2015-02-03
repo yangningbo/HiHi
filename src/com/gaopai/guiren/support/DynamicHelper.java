@@ -1054,6 +1054,7 @@ public class DynamicHelper {
 			public void onSuccess(Object o) {
 				BaseNetBean data = (BaseNetBean) o;
 				if (data.state != null && data.state.code == 0) {
+					MainActivity.minusDynamic(mContext);
 					callback.onDeleteItemSuccess(typeBean);
 				} else {
 					otherCondition(data.state, (Activity) mContext);

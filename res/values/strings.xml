@@ -381,7 +381,6 @@
         <item>人身攻击</item>
         <item>敏感信息</item>
         <item>恶意骚扰</item>
-        <item>其他</item>
     </string-array>
 
     <string name="more_comment_msg">更多评论</string>
@@ -877,5 +876,6 @@
     <string name="invite_to_guiren">邀请出山</string>
     <string name="not_edit">尚未完善</string>
     <string name="invite_add_fantancy_code">邀请TA加入贵人会将获得5点魅力值</string>
+    <string name="can_not_unfollow_guiren_secreaty">不可取消对小秘书的关注哦</string>
 
 </resources>

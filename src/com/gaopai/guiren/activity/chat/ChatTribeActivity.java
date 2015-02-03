@@ -161,6 +161,10 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				if (messageInfo.mIsShide == MessageState.MESSAGE_SHIDE) {
 					return;
 				}
+				if (messageInfo.sendState == MessageState.STATE_SENDING
+						|| messageInfo.sendState == MessageState.STATE_SEND_FAILED) {
+					return;
+				}
 				Intent intent = new Intent(ChatTribeActivity.this, ChatCommentsActivity.class);
 				intent.putExtra(ChatCommentsActivity.INTENT_CHATTYPE_KEY, mChatType);
 				intent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mTribe);
@@ -252,14 +256,13 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 	@Override
 	protected void getMessageListLocal(boolean isFirstTime) {
-		// TODO Auto-generated method stub
-		Logger.d(this, "tribe id=" + mTribe.id);
 		if (isFirstTime) {
+			if (isOnLooker) {
+				return;
+			}
 			initMessage(mTribe.id, mChatType);
 			if (mAdapter.getCount() == 0) {
-				if (!isOnLooker) {
-					addAndInsertMessage(isAnony());
-				}
+				addAndInsertMessage(isAnony());
 				loadMessage(mTribe.id, mChatType);
 			}
 		} else {
@@ -288,13 +291,13 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	public void showItemLongClickDialog(final MessageInfo messageInfo) {
 		final List<String> strList = new ArrayList<String>();
 		// strList.add(getString(R.string.comment));
+		strList.add(getString(R.string.delete));
 		if (messageInfo.isfavorite == 1) {
 			strList.add(getString(R.string.cancel_favorite));
 		} else {
 			strList.add(getString(R.string.favorite));
 		}
-		strList.add(getString(R.string.report));
-		strList.add(getString(R.string.delete));
+
 		if (messageInfo.fileType != MessageType.PICTURE) {
 			strList.add(getString(R.string.copy));
 		}
@@ -310,10 +313,12 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				strList.add(0, getString(R.string.mode_in_call));
 			}
 		}
-		if (!messageInfo.from.equals(DamiCommon.getUid(mContext))) {// 如果来自自己，则不交往，转发等
-			strList.add(getString(R.string.retrweet));
+		if (!messageInfo.from.equals(DamiCommon.getUid(mContext))) {// 如果来自自己，则不交往，举报
 			strList.add(getString(R.string.communication));
+			strList.add(getString(R.string.report));
+
 		}
+		strList.add(getString(R.string.retrweet));
 		String[] array = new String[1];
 		Dialog dialog = new AlertDialog.Builder(this)
 				.setItems((String[]) strList.toArray(array), new DialogInterface.OnClickListener() {
@@ -785,6 +790,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			target.agreeCount = messageInfo2.agreeCount;
 			target.isAgree = messageInfo2.isAgree;
 			target.isfavorite = messageInfo2.isfavorite;
+			target.isReadVoice = messageInfo2.isReadVoice;
 			mAdapter.notifyDataSetChanged();
 		}
 	}

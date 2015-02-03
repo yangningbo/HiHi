@@ -6,12 +6,14 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -429,6 +431,14 @@ public class MyFavoriteActivity extends BaseActivity {
 		public void onStop(boolean stopAutomatic) {
 			// TODO Auto-generated method stub
 			mAdapter.notifyDataSetChanged();
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (mPlayerWrapper != null) {
+			mPlayerWrapper.stop();
 		}
 	}
 }

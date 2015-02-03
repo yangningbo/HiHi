@@ -110,7 +110,7 @@ public class NotifySystemActivity extends BaseActivity {
 				// my tribe has passed
 				case NotifiyType.PASS_CREATE_TRIBE:
 					startActivity(TribeDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					// MainActivity.addTribe(mContext);
+//					MainActivity.addTribe(mContext);
 					break;
 
 				case NotifiyType.APPLY_ADD_TRIBE:
@@ -122,7 +122,7 @@ public class NotifySystemActivity extends BaseActivity {
 
 				// someone agree my apply
 				case NotifiyType.AGREE_ADD_TRIBE:
-					// MainActivity.addTribe(mContext);
+//					MainActivity.addTribe(mContext);
 
 				case NotifiyType.AGREE_INVITE_ADD_TRIBE:
 				case NotifiyType.DISAGREE_ADD_TRIBE:
@@ -139,7 +139,7 @@ public class NotifySystemActivity extends BaseActivity {
 
 				case NotifiyType.PASS_CREATE_MEETING:
 					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					// MainActivity.addMeeting(mContext);
+//					MainActivity.addMeeting(mContext);
 					break;
 
 				case NotifiyType.APPLY_ADD_MEETING:
@@ -150,7 +150,7 @@ public class NotifySystemActivity extends BaseActivity {
 					break;
 
 				case NotifiyType.AGREE_ADD_MEETING:
-					// MainActivity.addMeeting(mContext);
+//					MainActivity.addMeeting(mContext);
 
 				case NotifiyType.AGREE_INVITE_ADD_MEETING:
 				case NotifiyType.REFUSE_ADD_MEETING:
@@ -445,10 +445,10 @@ public class NotifySystemActivity extends BaseActivity {
 	private void agreeJoin(final int pos, final int type) {
 		if (type == 0) {// tribe
 			DamiInfo.agreeInvite(mNotifyList.get(pos).room.id, new MyListener(pos));
-			MainActivity.addTribe(mContext);
+//			MainActivity.addTribe(mContext);
 		} else if (type == 1) {// meeting
 			DamiInfo.agreeMeetingInvite(mNotifyList.get(pos).room.id, new MyListener(pos));
-			MainActivity.addMeeting(mContext);
+//			MainActivity.addMeeting(mContext);
 		} else if (type == 2) {
 			DamiInfo.agreeSeekingContacts(mNotifyList.get(pos).user.uid, mNotifyList.get(pos).message.id,
 					new MyListener(pos));

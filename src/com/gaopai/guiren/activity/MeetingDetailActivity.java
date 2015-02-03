@@ -620,7 +620,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				if (data.state != null && data.state.code == 0) {
 					getMeetingDetail();
 					sendBroadcast(ActionHolder.getExitIntent(mMeetingID, ActionHolder.ACTION_QUIT_MEETING));
-					MainActivity.minusMeeting(mContext);
+//					MainActivity.minusMeeting(mContext);
 					deleteConverstion();
 				} else {
 					otherCondition(data.state, MeetingDetailActivity.this);
@@ -657,7 +657,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			if (resultCode == RESULT_OK) {
 				MeetingDetailActivity.this.finish();
 				sendBroadcast(ActionHolder.getExitIntent(mMeetingID, ActionHolder.ACTION_CANCEL_MEETING));
-				MainActivity.minusMeeting(mContext);
+//				MainActivity.minusMeeting(mContext);
 				deleteConverstion();
 			}
 			break;

@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@drawable/selector_btn_dy_action"
-        android:drawableLeft="@drawable/icon_dy_action_spread"
+        android:drawableLeft="@drawable/icon_dy_action_ear"
         android:drawablePadding="5dp"
         android:padding="5dp"
         android:text="@string/voice_mode_in_cal"

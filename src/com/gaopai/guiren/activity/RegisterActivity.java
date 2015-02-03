@@ -362,6 +362,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 
 	private void bindPhone() {
 		if (mLogin != null) {
+			/**
+			 * 请求网络时会用到uid
+			 */
 			DamiCommon.setUid(mLogin.uid);
 		}
 		DamiInfo.bindPhone(etPhone.getText().toString(), etVeryfication.getText().toString(), etName.getText()

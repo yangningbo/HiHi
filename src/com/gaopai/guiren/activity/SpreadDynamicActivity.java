@@ -32,6 +32,7 @@ import com.gaopai.guiren.support.DynamicHelper.DyCallback;
 import com.gaopai.guiren.support.DynamicHelper.DySoftCallback;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.support.TextLimitWatcher;
+import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
@@ -291,7 +292,6 @@ public class SpreadDynamicActivity extends BaseActivity {
 	public static TypeHolder getMeetingSpreadHolder(Tribe tribe) {
 		TypeHolder typeHolder = getBaseTribeSpreadHolder(tribe);
 		typeHolder.type = DynamicHelper.TYPE_SPREAD_MEETING;
-		typeHolder.jsoncontent.time = String.valueOf(tribe.start);
 		return typeHolder;
 	}
 
@@ -300,7 +300,7 @@ public class SpreadDynamicActivity extends BaseActivity {
 		typeHolder.jsoncontent = new DynamicBean.JsonContent();
 		DynamicBean.JsonContent jsonContent = typeHolder.jsoncontent;
 
-		jsonContent.time = String.valueOf(tribe.start);
+		jsonContent.time = DateUtil.getCreatTimeFromSeconds(tribe.start, tribe.end);
 		jsonContent.name = tribe.name;
 		List<DynamicBean.GuestBean> guestBeans = new ArrayList<DynamicBean.GuestBean>();
 		if (tribe.member != null) {
@@ -310,6 +310,11 @@ public class SpreadDynamicActivity extends BaseActivity {
 				guestBean.uid = member.uid;
 				guestBeans.add(guestBean);
 			}
+		} else {
+			GuestBean guestBean = new GuestBean();
+			guestBean.realname = tribe.realname;
+			guestBean.uid = tribe.uid;
+			guestBeans.add(guestBean);
 		}
 		jsonContent.guest = guestBeans;
 		jsonContent.tid = tribe.id;

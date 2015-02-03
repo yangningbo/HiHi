@@ -249,8 +249,8 @@ public class TribeMemberActivity extends BaseActivity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			User user = list.get(position);
-			holder.mUserNameTextView.setText(user.realname);
-			holder.mContentTextView.setText(user.post);
+			holder.mUserNameTextView.setText(User.getUserName(user));
+			holder.mContentTextView.setText(User.getUserInfo(user));
 			ImageLoaderUtil.displayImage(user.headsmall, holder.mHeaderView, R.drawable.default_header);
 
 			if (type == TYPE_TRIBE_USER && isCreator) {
