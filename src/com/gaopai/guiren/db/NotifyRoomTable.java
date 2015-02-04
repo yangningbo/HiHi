@@ -24,6 +24,7 @@ public class NotifyRoomTable {
 	public static final String COLUMN_SAMLL_FACE = "samlllogo";
 	public static final String COLUMN_ATTACH_NAME = "attachName";
 	public static final String COLUMN_ATTACH_CONTENT = "attachContent";
+	public static final String COLUMN_ROLE = "role";
 	
 	public static final String COLUMN_INTEGER_TYPE = "integer";
 	public static final String COLUMN_TEXT_TYPE = "text";
@@ -48,6 +49,7 @@ public class NotifyRoomTable {
 			columnNameAndType.put(COLUMN_ATTACH_NAME, COLUMN_TEXT_TYPE);
 			columnNameAndType.put(COLUMN_SAMLL_FACE, COLUMN_TEXT_TYPE);
 			columnNameAndType.put(COLUMN_ATTACH_CONTENT, COLUMN_TEXT_TYPE);
+			columnNameAndType.put(COLUMN_ROLE, COLUMN_INTEGER_TYPE);
 			String primary_key = PRIMARY_KEY_TYPE + COLUMN_NOTIFY_ID + "," + COLUMN_ID + "," + COLUMN_LOGIN_ID + ")";
 
 			mSQLCreateWeiboInfoTable = SqlHelper.formCreateTableSqlString(TABLE_NAME, columnNameAndType, primary_key);
@@ -79,6 +81,7 @@ public class NotifyRoomTable {
 				allPromotionInfoValues.put(COLUMN_ATTACH_NAME, tribe.name);
 				allPromotionInfoValues.put(COLUMN_SAMLL_FACE, tribe.logosmall);
 				allPromotionInfoValues.put(COLUMN_ATTACH_CONTENT, tribe.content);
+				allPromotionInfoValues.put(COLUMN_ROLE, tribe.role);
 				//delete(tribe);
 				try {
 					mDBStore.insertOrThrow(TABLE_NAME, null, allPromotionInfoValues);
@@ -104,6 +107,7 @@ public class NotifyRoomTable {
 		allPromotionInfoValues.put(COLUMN_ATTACH_NAME, tribe.name);
 		allPromotionInfoValues.put(COLUMN_SAMLL_FACE, tribe.logosmall);
 		allPromotionInfoValues.put(COLUMN_ATTACH_CONTENT, tribe.content);
+		allPromotionInfoValues.put(COLUMN_ROLE, tribe.role);
 		
 		try {
 			mDBStore.update(TABLE_NAME, allPromotionInfoValues, COLUMN_NOTIFY_ID + "='" + notifyID + "' AND " + COLUMN_ID + " = '" + tribe.id + "' AND " + COLUMN_LOGIN_ID + "='" + DamiCommon.getUid(DamiApp.getInstance()) + "'", null);
@@ -122,6 +126,7 @@ public class NotifyRoomTable {
 		allPromotionInfoValues.put(COLUMN_LOGIN_ID, DamiCommon.getUid(DamiApp.getInstance()));
 		allPromotionInfoValues.put(COLUMN_ATTACH_NAME, tribe.name);
 		allPromotionInfoValues.put(COLUMN_ATTACH_CONTENT, tribe.content);
+		allPromotionInfoValues.put(COLUMN_ROLE, tribe.role);
 		delete(notifyID, tribe);
 		try {
 			mDBStore.insertOrThrow(TABLE_NAME, null, allPromotionInfoValues);
@@ -152,11 +157,13 @@ public class NotifyRoomTable {
 				int indexName = cursor.getColumnIndex(COLUMN_ATTACH_NAME);
 				int indexSamllFace = cursor.getColumnIndex(COLUMN_SAMLL_FACE);
 				int indexContent = cursor.getColumnIndex(COLUMN_ATTACH_CONTENT);
+				int indexRole = cursor.getColumnIndex(COLUMN_ROLE);
 				
 				tribe.id = cursor.getString(indexId);
 				tribe.name = cursor.getString(indexName);
 				tribe.logosmall = cursor.getString(indexSamllFace);
 				tribe.content = cursor.getString(indexContent);
+				tribe.role = cursor.getInt(indexRole);
 				
 				return tribe;
 			}
@@ -186,6 +193,7 @@ public class NotifyRoomTable {
 				int indexName = cursor.getColumnIndex(COLUMN_ATTACH_NAME);
 				int indexSamllFace = cursor.getColumnIndex(COLUMN_SAMLL_FACE);
 				int indexContent = cursor.getColumnIndex(COLUMN_ATTACH_CONTENT);
+				int indexRole = cursor.getColumnIndex(COLUMN_ROLE);
 				
 				do {
 					Tribe tribe = new Tribe();
@@ -193,6 +201,7 @@ public class NotifyRoomTable {
 					tribe.name = cursor.getString(indexName);
 					tribe.logosmall = cursor.getString(indexSamllFace);
 					tribe.content = cursor.getString(indexContent);
+					tribe.role = cursor.getInt(indexRole);
 					
 					allInfo.add(tribe);
 				} while (cursor.moveToNext());

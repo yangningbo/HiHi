@@ -92,206 +92,214 @@ public class NotifySystemActivity extends BaseActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-				mNotifyList.get(position).mReadState = 1;
-				SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
-				NotifyTable table = new NotifyTable(db);
-				table.update(mNotifyList.get(position));
-				adapter.notifyDataSetChanged();
-				// sendBroadcast(new Intent(HomeTab.REFRESH_NOTIFY_ACTION));
-				// mContext.sendBroadcast(new Intent(
-				// MainActivity.ACTION_UPDATE_NOTIFY_SESSION_COUNT));
-				switch (mNotifyList.get(position).type) {
+				try {
 
-				case NotifiyType.PASS_INVITE_CODE:
-					sendSMS(mNotifyList.get(position).phone, mNotifyList.get(position).code);
-					break;
+					mNotifyList.get(position).mReadState = 1;
+					SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
+					NotifyTable table = new NotifyTable(db);
+					table.update(mNotifyList.get(position));
+					adapter.notifyDataSetChanged();
+					// sendBroadcast(new Intent(HomeTab.REFRESH_NOTIFY_ACTION));
+					// mContext.sendBroadcast(new Intent(
+					// MainActivity.ACTION_UPDATE_NOTIFY_SESSION_COUNT));
+					switch (mNotifyList.get(position).type) {
 
-				// my tribe has passed
-				case NotifiyType.PASS_CREATE_TRIBE:
-					startActivity(TribeDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-//					MainActivity.addTribe(mContext);
-					break;
+					case NotifiyType.PASS_INVITE_CODE:
+						sendSMS(mNotifyList.get(position).phone, mNotifyList.get(position).code);
+						break;
 
-				case NotifiyType.APPLY_ADD_TRIBE:
-					Intent applyTribeIntent = new Intent(mContext, ApplyListActivity.class);
-					applyTribeIntent.putExtra("id", mNotifyList.get(position).room.id);
-					applyTribeIntent.putExtra("type", 0);
-					startActivity(applyTribeIntent);
-					break;
+					// my tribe has passed
+					case NotifiyType.PASS_CREATE_TRIBE:
+						startActivity(TribeDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						// MainActivity.addTribe(mContext);
+						break;
 
-				// someone agree my apply
-				case NotifiyType.AGREE_ADD_TRIBE:
-//					MainActivity.addTribe(mContext);
+					case NotifiyType.APPLY_ADD_TRIBE:
+						Intent applyTribeIntent = new Intent(mContext, ApplyListActivity.class);
+						applyTribeIntent.putExtra("id", mNotifyList.get(position).room.id);
+						applyTribeIntent.putExtra("type", 0);
+						startActivity(applyTribeIntent);
+						break;
 
-				case NotifiyType.AGREE_INVITE_ADD_TRIBE:
-				case NotifiyType.DISAGREE_ADD_TRIBE:
-				case NotifiyType.DISAGREE_INVITE_ADD_TRIBE:
-					startActivity(TribeDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
+					// someone agree my apply
+					case NotifiyType.AGREE_ADD_TRIBE:
+						// MainActivity.addTribe(mContext);
 
-				// someone invite me to join
-				case NotifiyType.INVITE_ADD_TRIBE:
-					if (mNotifyList.get(position).processed == 0) {
-						showActionDialog(position, 0);
+					case NotifiyType.AGREE_INVITE_ADD_TRIBE:
+					case NotifiyType.DISAGREE_ADD_TRIBE:
+					case NotifiyType.DISAGREE_INVITE_ADD_TRIBE:
+						startActivity(TribeDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+
+					// someone invite me to join
+					case NotifiyType.INVITE_ADD_TRIBE:
+						if (mNotifyList.get(position).processed == 0) {
+							showActionDialog(position, 0);
+						}
+						break;
+
+					case NotifiyType.PASS_CREATE_MEETING:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						// MainActivity.addMeeting(mContext);
+						break;
+
+					case NotifiyType.APPLY_ADD_MEETING:
+						Intent applyMeetingIntent = new Intent(mContext, ApplyListActivity.class);
+						applyMeetingIntent.putExtra("id", mNotifyList.get(position).room.id);
+						applyMeetingIntent.putExtra("type", 1);
+						startActivity(applyMeetingIntent);
+						break;
+
+					case NotifiyType.AGREE_ADD_MEETING:
+						// MainActivity.addMeeting(mContext);
+
+					case NotifiyType.AGREE_INVITE_ADD_MEETING:
+					case NotifiyType.REFUSE_ADD_MEETING:
+					case NotifiyType.REFUSE_INVITE_ADD_MEETING:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+
+					case NotifiyType.INVITE_ADD_MEETING:
+						if (mNotifyList.get(position).processed == 0) {
+							showActionDialog(position, 1);
+						}
+						break;
+
+					case NotifiyType.RECEIVE_REPORT_MSG:
+						Intent reportIntent = new Intent(mContext, ReportMsgActivity.class);
+						reportIntent.putExtra(ReportMsgActivity.KEY_TID, mNotifyList.get(position).room.id);
+						if (mNotifyList.get(position).message.type == 300) {
+							reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_MEETING);
+						} else {
+							reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_TRIBE);
+						}
+						Logger.d(this, "result=" + mNotifyList.get(position).message.type);
+						startActivity(reportIntent);
+						break;
+
+					case NotifiyType.BEEN_REPORTED_AGREE_REPORT_MSG:
+						if (mNotifyList.get(position).message.fileType == MessageType.PICTURE) {
+							List<MessageInfo> messageList = new ArrayList<MessageInfo>();
+							messageList.add(mNotifyList.get(position).message);
+							Intent pictureIntent = new Intent(mContext, ShowImagesActivity.class);
+							pictureIntent.putExtra("msgList", (Serializable) messageList);
+							startActivity(pictureIntent);
+						}
+						break;
+
+					// case NotifiyType.REFUSE_REPORT_MSG:
+					// if (mNotifyList.get(position).message.fileType ==
+					// MessageType.PICTURE) {
+					// List<MessageInfo> messageList = new
+					// ArrayList<MessageInfo>();
+					// messageList.add(mNotifyList.get(position).message);
+					// Intent pictureIntent = new Intent(mContext,
+					// ShowImagesActivity.class);
+					// pictureIntent.putExtra("msgList", (Serializable)
+					// messageList);
+					// startActivity(pictureIntent);
+					// }
+					// break;
+
+					case NotifiyType.TRIBE_KICK_OUT:
+						Intent tribeKickIntent = new Intent(mContext, TribeDetailActivity.class);
+						tribeKickIntent.putExtra("id", mNotifyList.get(position).room.id);
+
+						startActivity(tribeKickIntent);
+						break;
+
+					case NotifiyType.MEETING_KICK_OUT:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+
+					case NotifiyType.COMMENT_MESSAGE: // 受到评论
+					case NotifiyType.MESSAGE_ZAN_YOURS:// 消息被赞
+						Intent commentIntent = new Intent(mContext, ChatCommentsActivity.class);
+						commentIntent.putExtra(ChatCommentsActivity.INTENT_CHATTYPE_KEY,
+								mNotifyList.get(position).message.type);
+						commentIntent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mNotifyList.get(position).room);
+						// commentIntent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY,
+						// mNotifyList.get(position).roomuser);
+						commentIntent.putExtra(ChatCommentsActivity.INTENT_MESSAGE_KEY,
+								mNotifyList.get(position).message);
+						if (mNotifyList.get(position).room.role == -1) {
+							commentIntent.putExtra(ChatCommentsActivity.INTENT_SENCE_ONLOOK_KEY, true);
+						}
+						startActivity(commentIntent);
+						break;
+
+					case NotifiyType.SEEKING_CONTACTS:
+						if (mNotifyList.get(position).processed == 0) {
+							showActionDialog(position, 2);
+						}
+						break;
+
+					case NotifiyType.AGREE_SEEKING_CONTACTS:
+						if (mNotifyList.get(position).user != null) {
+							Intent privateIntent = new Intent(mContext, ProfileActivity.class);
+							privateIntent.putExtra(ProfileActivity.KEY_UID, mNotifyList.get(position).user.uid);
+							startActivity(privateIntent);
+						}
+						break;
+					case NotifiyType.APPLY_BECOME_HOST:
+						applyMeetingIntent = new Intent(mContext, ApplyListActivity.class);
+						applyMeetingIntent.putExtra("id", mNotifyList.get(position).room.id);
+						applyMeetingIntent.putExtra("type", 2);
+						startActivity(applyMeetingIntent);
+						break;
+					case NotifiyType.AGREE_BECOME_HOST:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.REFUSE_BECOME_HOST:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.APPLY_BECOME_GUEST:
+						applyMeetingIntent = new Intent(mContext, ApplyListActivity.class);
+						applyMeetingIntent.putExtra("id", mNotifyList.get(position).room.id);
+						applyMeetingIntent.putExtra("type", 3);
+						startActivity(applyMeetingIntent);
+						break;
+					case NotifiyType.AGREE_BECOME_GUEST:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.REFUSE_BECOME_GUEST:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.HOST_TO_GUEST:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.OTHER_DEAL_APPLY:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.BACK_TO_NORMAL:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.INVITE_TO_GUEST:
+						if (mNotifyList.get(position).processed == 0) {
+							showActionDialog(position, 3);
+						}
+						break;
+					case NotifiyType.INVITE_TO_HOST:
+						if (mNotifyList.get(position).processed == 0) {
+							showActionDialog(position, 4);
+						}
+						break;
+					case NotifiyType.AGREE_OR_REFUSE_HOST:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.AGREE_OR_REFUSE_GUEST:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+					case NotifiyType.HOSTOR_CHANGE_TIME:
+						startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
+						break;
+
+					default:
+						break;
 					}
-					break;
 
-				case NotifiyType.PASS_CREATE_MEETING:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-//					MainActivity.addMeeting(mContext);
-					break;
-
-				case NotifiyType.APPLY_ADD_MEETING:
-					Intent applyMeetingIntent = new Intent(mContext, ApplyListActivity.class);
-					applyMeetingIntent.putExtra("id", mNotifyList.get(position).room.id);
-					applyMeetingIntent.putExtra("type", 1);
-					startActivity(applyMeetingIntent);
-					break;
-
-				case NotifiyType.AGREE_ADD_MEETING:
-//					MainActivity.addMeeting(mContext);
-
-				case NotifiyType.AGREE_INVITE_ADD_MEETING:
-				case NotifiyType.REFUSE_ADD_MEETING:
-				case NotifiyType.REFUSE_INVITE_ADD_MEETING:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-
-				case NotifiyType.INVITE_ADD_MEETING:
-					if (mNotifyList.get(position).processed == 0) {
-						showActionDialog(position, 1);
-					}
-					break;
-
-				case NotifiyType.RECEIVE_REPORT_MSG:
-					Intent reportIntent = new Intent(mContext, ReportMsgActivity.class);
-					reportIntent.putExtra(ReportMsgActivity.KEY_TID, mNotifyList.get(position).room.id);
-					if (mNotifyList.get(position).message.type == 300) {
-						reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_MEETING);
-					} else {
-						reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_TRIBE);
-					}
-					Logger.d(this, "result=" + mNotifyList.get(position).message.type);
-					startActivity(reportIntent);
-					break;
-
-				case NotifiyType.BEEN_REPORTED_AGREE_REPORT_MSG:
-					if (mNotifyList.get(position).message.fileType == MessageType.PICTURE) {
-						List<MessageInfo> messageList = new ArrayList<MessageInfo>();
-						messageList.add(mNotifyList.get(position).message);
-						Intent pictureIntent = new Intent(mContext, ShowImagesActivity.class);
-						pictureIntent.putExtra("msgList", (Serializable) messageList);
-						startActivity(pictureIntent);
-					}
-					break;
-
-				// case NotifiyType.REFUSE_REPORT_MSG:
-				// if (mNotifyList.get(position).message.fileType ==
-				// MessageType.PICTURE) {
-				// List<MessageInfo> messageList = new ArrayList<MessageInfo>();
-				// messageList.add(mNotifyList.get(position).message);
-				// Intent pictureIntent = new Intent(mContext,
-				// ShowImagesActivity.class);
-				// pictureIntent.putExtra("msgList", (Serializable)
-				// messageList);
-				// startActivity(pictureIntent);
-				// }
-				// break;
-
-				case NotifiyType.TRIBE_KICK_OUT:
-					Intent tribeKickIntent = new Intent(mContext, TribeDetailActivity.class);
-					tribeKickIntent.putExtra("id", mNotifyList.get(position).room.id);
-
-					startActivity(tribeKickIntent);
-					break;
-
-				case NotifiyType.MEETING_KICK_OUT:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-
-				case NotifiyType.COMMENT_MESSAGE: // 受到评论
-				case NotifiyType.MESSAGE_ZAN_YOURS:// 消息被赞
-					Intent commentIntent = new Intent(mContext, ChatCommentsActivity.class);
-					commentIntent.putExtra(ChatCommentsActivity.INTENT_CHATTYPE_KEY,
-							mNotifyList.get(position).message.type);
-					commentIntent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mNotifyList.get(position).room);
-//					commentIntent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY, mNotifyList.get(position).roomuser);
-					commentIntent.putExtra(ChatCommentsActivity.INTENT_MESSAGE_KEY, mNotifyList.get(position).message);
-					if (mNotifyList.get(position).room.role == -1) {
-						commentIntent.putExtra(ChatCommentsActivity.INTENT_SENCE_ONLOOK_KEY, true);
-					}
-					startActivity(commentIntent);
-					break;
-
-				case NotifiyType.SEEKING_CONTACTS:
-					if (mNotifyList.get(position).processed == 0) {
-						showActionDialog(position, 2);
-					}
-					break;
-
-				case NotifiyType.AGREE_SEEKING_CONTACTS:
-					if (mNotifyList.get(position).user != null) {
-						Intent privateIntent = new Intent(mContext, ProfileActivity.class);
-						privateIntent.putExtra(ProfileActivity.KEY_UID, mNotifyList.get(position).user.uid);
-						startActivity(privateIntent);
-					}
-					break;
-				case NotifiyType.APPLY_BECOME_HOST:
-					applyMeetingIntent = new Intent(mContext, ApplyListActivity.class);
-					applyMeetingIntent.putExtra("id", mNotifyList.get(position).room.id);
-					applyMeetingIntent.putExtra("type", 2);
-					startActivity(applyMeetingIntent);
-					break;
-				case NotifiyType.AGREE_BECOME_HOST:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.REFUSE_BECOME_HOST:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.APPLY_BECOME_GUEST:
-					applyMeetingIntent = new Intent(mContext, ApplyListActivity.class);
-					applyMeetingIntent.putExtra("id", mNotifyList.get(position).room.id);
-					applyMeetingIntent.putExtra("type", 3);
-					startActivity(applyMeetingIntent);
-					break;
-				case NotifiyType.AGREE_BECOME_GUEST:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.REFUSE_BECOME_GUEST:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.HOST_TO_GUEST:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.OTHER_DEAL_APPLY:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.BACK_TO_NORMAL:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.INVITE_TO_GUEST:
-					if (mNotifyList.get(position).processed == 0) {
-						showActionDialog(position, 3);
-					}
-					break;
-				case NotifiyType.INVITE_TO_HOST:
-					if (mNotifyList.get(position).processed == 0) {
-						showActionDialog(position, 4);
-					}
-					break;
-				case NotifiyType.AGREE_OR_REFUSE_HOST:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.AGREE_OR_REFUSE_GUEST:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-				case NotifiyType.HOSTOR_CHANGE_TIME:
-					startActivity(MeetingDetailActivity.getIntent(mContext, mNotifyList.get(position).room.id));
-					break;
-
-				default:
-					break;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -448,10 +456,10 @@ public class NotifySystemActivity extends BaseActivity {
 	private void agreeJoin(final int pos, final int type) {
 		if (type == 0) {// tribe
 			DamiInfo.agreeInvite(mNotifyList.get(pos).room.id, new MyListener(pos));
-//			MainActivity.addTribe(mContext);
+			// MainActivity.addTribe(mContext);
 		} else if (type == 1) {// meeting
 			DamiInfo.agreeMeetingInvite(mNotifyList.get(pos).room.id, new MyListener(pos));
-//			MainActivity.addMeeting(mContext);
+			// MainActivity.addMeeting(mContext);
 		} else if (type == 2) {
 			DamiInfo.agreeSeekingContacts(mNotifyList.get(pos).user.uid, mNotifyList.get(pos).message.id,
 					new MyListener(pos));
