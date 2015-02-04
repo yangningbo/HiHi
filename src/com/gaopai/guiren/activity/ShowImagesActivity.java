@@ -46,10 +46,12 @@ import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.widget.photoview.PhotoView;
 import com.gaopai.guiren.widget.photoview.PhotoViewAttacher.OnViewTapListener;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.umeng.socialize.controller.impl.w;
 
 /**
  * 展示图片的界面，可以左右滑动
@@ -163,8 +165,6 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 			}
 			contentView.setTag(CURRENT_VISIBLE_PAGE);
 			PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
-			imageView.setMaxScale(10);
-			
 			if (imageView.getDrawable() != null) {
 				return;
 			}
@@ -207,7 +207,8 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 			url = "file://" + url;
 		}
 		Logger.d(this, "large2 = " + url);
-//		ImageLoaderUtil.displayImage(url, imageView, R.drawable.default_pic, true);
+		// ImageLoaderUtil.displayImage(url, imageView, R.drawable.default_pic,
+		// true);
 		ImageLoaderUtil.displayImage(url, imageView, new ImageLoadingListener() {
 			@Override
 			public void onLoadingStarted(String imageUri, View view) {
@@ -223,10 +224,15 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 
 			@Override
 			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-				// TODO Auto-generated method stub
-				Logger.d(this, "width="+loadedImage.getWidth()+"   height="+loadedImage.getHeight()+"    size="+loadedImage.getByteCount());
 				wait.setVisibility(View.INVISIBLE);
+				int width = loadedImage.getWidth();
+				int height = loadedImage.getHeight();
 				imageView.setVisibility(View.VISIBLE);
+				imageView.setMaxScale(10);
+				imageView.setMidScale(5);
+				if ((height > width ? height / width : width / height) > 10) {
+					imageView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+				}
 			}
 
 			@Override

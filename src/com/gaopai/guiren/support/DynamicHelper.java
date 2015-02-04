@@ -812,7 +812,7 @@ public class DynamicHelper {
 		viewHolder.tvMeetingGuest.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		// viewHolder.tvMeetingGuest.setText(MyTextUtils.addGuestUserList(jsonContent.guest,
 		// "嘉宾："));
-		viewHolder.tvMeetingGuest.setText(MyTextUtils.getSpannableString("嘉宾：",
+		viewHolder.tvMeetingGuest.setText(MyTextUtils.getSpannableString("主持人：",
 				MyTextUtils.addUserSpans(jsonContent.guest)));
 
 		viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
