@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,6 +35,8 @@ import com.gaopai.guiren.support.ImageCrop;
 import com.gaopai.guiren.support.TextLimitWatcher;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
+import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 
@@ -116,6 +119,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			return;
 		}
 		mTitleBar.setTitleText(R.string.edit_meeting);
+		ivHeader.setBackgroundColor(Color.TRANSPARENT);
 		ImageLoaderUtil.displayImage(mMeeting.logolarge, ivHeader, R.drawable.icon_default_meeting);
 		etTitle.setText(mMeeting.name);
 		if (mMeeting.type == 1) {
@@ -168,9 +172,19 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		showPasswordView();
 		tvPrivacySetting = ViewUtil.findViewById(this, R.id.tv_privacy_setting);
 		ivHeader = (ImageView) findViewById(R.id.iv_meeeting_header);
-
+		ivHeader.getLayoutParams().height = getHeaderHeight();
 		tvNumLimit = ViewUtil.findViewById(this, R.id.tv_num_limit);
 		etContent.addTextChangedListener(new TextLimitWatcher(tvNumLimit, 500));
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+	}
+
+	private int getHeaderHeight() {
+		int width = MyUtils.getScreenSize(this).widthPixels - MyUtils.dip2px(mContext, 20);
+		return (int) (width / 8f * 3);
 	}
 
 	@Override
@@ -239,6 +253,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 
 	private void setPic(Bitmap bitmap) {
 		ivHeader.setImageBitmap(bitmap);
+		ivHeader.setBackgroundColor(Color.TRANSPARENT);
 		btnUploadPic.setVisibility(View.GONE);
 		ViewUtil.findViewById(this, R.id.tv_add_pic_info).setVisibility(View.GONE);
 		ivHeader.setOnClickListener(this);

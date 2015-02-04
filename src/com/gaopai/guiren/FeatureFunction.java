@@ -190,7 +190,7 @@ public class FeatureFunction {
 					opt.inSampleSize = picHeight / width;
 				}
 			}
-
+			
 			// 这次再真正地生成一个有像素的，经过缩放了的bitmap
 			opt.inJustDecodeBounds = false;
 			bitmap = BitmapFactory.decodeFile(filename, opt);

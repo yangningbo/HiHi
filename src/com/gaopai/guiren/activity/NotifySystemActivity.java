@@ -218,6 +218,9 @@ public class NotifySystemActivity extends BaseActivity {
 					commentIntent.putExtra(ChatCommentsActivity.INTENT_TRIBE_KEY, mNotifyList.get(position).room);
 //					commentIntent.putExtra(ChatCommentsActivity.INTENT_IDENTITY_KEY, mNotifyList.get(position).roomuser);
 					commentIntent.putExtra(ChatCommentsActivity.INTENT_MESSAGE_KEY, mNotifyList.get(position).message);
+					if (mNotifyList.get(position).room.role == -1) {
+						commentIntent.putExtra(ChatCommentsActivity.INTENT_SENCE_ONLOOK_KEY, true);
+					}
 					startActivity(commentIntent);
 					break;
 

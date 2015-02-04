@@ -12,15 +12,15 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="120dp" >
+            android:layout_height="wrap_content" >
 
             <ImageView
                 android:id="@+id/iv_meeeting_header"
                 android:layout_width="fill_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:contentDescription="@string/desc"
-                android:scaleType="centerCrop" />
+                android:scaleType="fitCenter" />
 
             <Button
                 android:id="@+id/btn_upload_pic"
@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/btn_upload_pic"
                 android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
                 android:text="添加会议图片"
                 android:textColor="@color/general_text_gray" />
         </RelativeLayout>

@@ -206,6 +206,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 				final VerificationResult data = (VerificationResult) o;
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
+						showLongToast(data.data.code);
 					}
 				} else {
 					endCount();

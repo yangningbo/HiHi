@@ -135,17 +135,17 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		super.initAdapter(mAdapter);
 		ivDisturb.setImageLevel(spo.getInt(SPConst.getTribeUserId(mContext, mTribe.id), 0));
 
-//		if (!isOnLooker) {
-			mListView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
+		// if (!isOnLooker) {
+		mListView.getRefreshableView().setOnItemLongClickListener(new OnItemLongClickListener() {
 
-				@Override
-				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-					// TODO Auto-generated method stub
-					showItemLongClickDialog(messageInfos.get(position));
-					return true;
-				}
-			});
-//		}
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				showItemLongClickDialog(messageInfos.get(position));
+				return true;
+			}
+		});
+		// }
 
 		mListView.getRefreshableView().setOnItemClickListener(new OnItemClickListener() {
 
@@ -290,7 +290,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	public void showItemLongClickDialog(final MessageInfo messageInfo) {
 		final List<String> strList = new ArrayList<String>();
 		// strList.add(getString(R.string.comment));
-		strList.add(getString(R.string.delete));
+		if (!isOnLooker) {
+			strList.add(getString(R.string.delete));
+		}
 		if (messageInfo.isfavorite == 1) {
 			strList.add(getString(R.string.cancel_favorite));
 		} else {
@@ -430,6 +432,9 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	}
 
 	private boolean isAnony() {
+		if (isOnLooker) {
+			return true;
+		}
 		if (mChatType == CHAT_TYPE_MEETING && mTribe.role > 0) {
 			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
 		} else {
@@ -670,7 +675,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			}
 			MessageInfo messageInfo = notifiyVo.message;
 			if (messageInfo != null) {
-				updateZanCountFromNotify(messageInfo,false);
+				updateZanCountFromNotify(messageInfo, false);
 			}
 		} else if (ACTION_COMMENT_OR_ZAN_OR_FAVOURITE.equals(action)) {
 			MessageInfo messageInfo = (MessageInfo) intent.getSerializableExtra("message");

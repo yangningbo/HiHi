@@ -470,6 +470,7 @@
     <string name="add_in_tribe">加入圈子</string>
     <string name="onlooker_meeting">围观会议</string>
     <string name="onlooker_user_list">围观用户列表</string>
+    <string name="onlooker_user">围观用户</string>
     <string name="my_private_msg">我的私信</string>
     <string name="qr_code">二维码</string>
     <string name="add_meeting_person">参会阵容：</string>

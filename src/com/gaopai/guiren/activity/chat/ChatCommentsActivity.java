@@ -47,7 +47,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,8 +65,8 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.bean.MsgZanListResult;
-import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.MsgZanListResult.ZanBean;
+import com.gaopai.guiren.bean.NotifiyVo;
 import com.gaopai.guiren.bean.Tribe;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.ChatMessageBean;
@@ -103,7 +102,6 @@ import com.gaopai.guiren.view.ChatGridLayout;
 import com.gaopai.guiren.view.RecordDialog;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
-import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.widget.emotion.EmotionPicker;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -292,6 +290,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private boolean isAnony() {
+		if (isOnLooker) {
+			return true;
+		}
 		if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING && mTribe.role > 0) {
 			return spoAnony.getInt(SPConst.getSingleSpId(mContext, mTribe.id), 0) == 1;
 		} else {
@@ -1391,17 +1392,22 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		msg.title = mTribe.name;
 		msg.to = mTribe.id;
 		msg.parentid = messageInfo.id;
-		if (isAnony() && mIdentity != null) {
-			msg.displayname = mIdentity.name;
-			msg.headImgUrl = mIdentity.head;
-			msg.heroid = mIdentity.id;
+		if (isOnLooker) {
+			msg.displayname = getString(R.string.onlooker_user);
+//			msg.headImgUrl = mIdentity.head;
 			msg.isanonymity = 1;
 		} else {
-			msg.displayname = User.getUserName(mLogin);
-			msg.headImgUrl = mLogin.headsmall;
-			msg.isanonymity = 0;
+			if (isAnony() && mIdentity != null) {
+				msg.displayname = mIdentity.name;
+				msg.headImgUrl = mIdentity.head;
+				msg.heroid = mIdentity.id;
+				msg.isanonymity = 1;
+			} else {
+				msg.displayname = User.getUserName(mLogin);
+				msg.headImgUrl = mLogin.headsmall;
+				msg.isanonymity = 0;
+			}
 		}
-
 		msg.type = mChatType;
 
 		msg.commenterid = commenterid;
@@ -1411,6 +1417,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	}
 
 	private String getName() {
+		if (isOnLooker) {
+			return getString(R.string.onlooker_user);
+		}
 		if (isAnony() && mIdentity != null) {
 			return mIdentity.name;
 		} else {
@@ -1645,7 +1654,9 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			strList.add(getString(R.string.favorite));
 		}
 
-		strList.add(getString(R.string.delete));
+		if (!isOnLooker) {
+			strList.add(getString(R.string.delete));
+		}
 
 		if (messageInfo.isAgree == 1) {
 			strList.add(1, getString(R.string.cancel_zan));

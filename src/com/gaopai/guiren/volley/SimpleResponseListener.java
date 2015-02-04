@@ -92,6 +92,9 @@ public abstract class SimpleResponseListener implements IResponseListener {
 	public void showToast(String str) {
 		Toast.makeText(mContext, str, Toast.LENGTH_SHORT).show();
 	}
+	public void showLongToast(String str) {
+		Toast.makeText(mContext, str, Toast.LENGTH_LONG).show();
+	}
 
 	public void showoCodeExpiredToast(Activity mActivity) {
 		DamiCommon.saveLoginResult(mContext, null);
