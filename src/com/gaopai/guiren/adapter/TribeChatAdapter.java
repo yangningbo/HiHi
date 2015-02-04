@@ -5,12 +5,14 @@ import java.util.List;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
+import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 
 public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickListener {
@@ -61,7 +63,7 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 	private void showActionWindow(View anchor) {
 		MessageInfo messageInfo = (MessageInfo) anchor.getTag();
 		LayoutInflater mInflater = LayoutInflater.from(mContext);
-		View v = mInflater.inflate(R.layout.popup_chat_tribe_action, null);
+		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.popup_chat_tribe_action, null);
 
 		Button zan = (Button) v.findViewById(R.id.btn_zan);
 		zan.setTag(messageInfo);

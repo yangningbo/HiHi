@@ -21,16 +21,20 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore.MediaColumns;
 import android.telephony.TelephonyManager;
@@ -38,6 +42,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.gaopai.guiren.service.SnsService;
+import com.gaopai.guiren.utils.Logger;
 
 public class FeatureFunction {
 	private static final String TAG = "FeatureFunction";
@@ -168,6 +173,7 @@ public class FeatureFunction {
 		return retPath;
 	}
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public static Bitmap scalePicture(String filename) {
 		Bitmap bitmap = null;
 		try {
@@ -177,20 +183,34 @@ public class FeatureFunction {
 			int picWidth = opt.outWidth;
 			int picHeight = opt.outHeight;
 
-			int width = 1024;
+			int maxDimen = 800;
 
-			// isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
 			opt.inSampleSize = 1;
+			boolean longEnough = (picHeight > picWidth ? picHeight / picWidth : picWidth / picHeight) > 10;
+			if (longEnough) {
+				if (picWidth < picHeight) {
+					if (picWidth > maxDimen) {
+						opt.inSampleSize = picWidth / maxDimen;
+					}
+				} else {
+					if (picHeight > maxDimen) {
+						opt.inSampleSize = picHeight / maxDimen;
+					}
+				}
+				opt.inJustDecodeBounds = false;
+				return BitmapFactory.decodeFile(filename, opt);
+			}
+
 			if (picWidth > picHeight) {
-				if (picWidth > width) {
-					opt.inSampleSize = picWidth / width;
+				if (picWidth > maxDimen) {
+					opt.inSampleSize = picWidth / maxDimen;
 				}
 			} else {
-				if (picHeight > width) {
-					opt.inSampleSize = picHeight / width;
+				if (picHeight > maxDimen) {
+					opt.inSampleSize = picHeight / maxDimen;
 				}
 			}
-			
+
 			// 这次再真正地生成一个有像素的，经过缩放了的bitmap
 			opt.inJustDecodeBounds = false;
 			bitmap = BitmapFactory.decodeFile(filename, opt);
@@ -198,8 +218,8 @@ public class FeatureFunction {
 			int afterheight = bitmap.getHeight();
 			float con = 1.0f;
 			int bigger = afterheight > afterwidth ? afterheight : afterwidth;
-			if (bigger > width) {
-				con = (float) width / bigger;
+			if (bigger > maxDimen) {
+				con = (float) maxDimen / bigger;
 			}
 
 			bitmap = Bitmap.createScaledBitmap(bitmap, (int) (con * afterwidth), (int) (con * afterheight), true);
@@ -208,6 +228,48 @@ public class FeatureFunction {
 			e.printStackTrace();
 		}
 		return bitmap;
+	}
+
+	public static int getBytesPerPixel(Config config) {
+		if (config == Config.ARGB_8888) {
+			return 4;
+		} else if (config == Config.RGB_565) {
+			return 2;
+		} else if (config == Config.ARGB_4444) {
+			return 2;
+		} else if (config == Config.ALPHA_8) {
+			return 1;
+		}
+		return 1;
+	}
+
+	public static Bitmap decodeSampledBitmap(String path, int reqWidth, int reqHeight) {
+
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, options);
+
+		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+		Logger.d("====", "sample size=" + options.inSampleSize);
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeFile(path, options);
+	}
+
+	public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+			while ((halfHeight / inSampleSize) > reqHeight || (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+
+		return inSampleSize;
 	}
 
 	/**

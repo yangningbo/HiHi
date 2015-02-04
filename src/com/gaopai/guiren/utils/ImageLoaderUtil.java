@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -55,7 +56,7 @@ public class ImageLoaderUtil {
 		options = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.default_header)
 				.showImageOnLoading(R.drawable.default_header).showImageOnFail(R.drawable.default_header)
 				.resetViewBeforeLoading(false)
-				// 设置图片在下载前是否重置，复位
+				.imageScaleType(ImageScaleType.NONE)				
 				.cacheInMemory(true).cacheOnDisk(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 
 		options_normal = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.default_header)

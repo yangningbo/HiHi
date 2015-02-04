@@ -213,6 +213,7 @@
         </activity>
         <activity
             android:name="com.gaopai.guiren.activity.ShowImagesActivity"
+            android:hardwareAccelerated="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaopai.guiren.activity.RotateImageActivity"

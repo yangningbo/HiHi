@@ -32,6 +32,7 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiApp;
 import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.DamiInfo;
+import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
 import com.gaopai.guiren.bean.User;
@@ -285,8 +286,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 
 	private ImageView getImageView(final String url) {
 		ImageView imageView = new ImageView(mContext);
-		Bitmap bitmap = BitmapFactory.decodeFile(url);
-		imageView.setImageBitmap(bitmap);
+		imageView.setImageBitmap(FeatureFunction.decodeSampledBitmap(url, 200, 200));
 		android.view.ViewGroup.LayoutParams lp = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		imageView.setLayoutParams(lp);
@@ -308,6 +308,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		});
 		return imageView;
 	}
+
 
 	private CameralHelper.GetImageCallback callback = new CameralHelper.SimpleCallback() {
 		@Override

@@ -59,7 +59,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 
 	public final static int MODE_VOICE = 0;
 	public final static int MODE_TEXT = 1;
-	private int mCurrentMode = MODE_VOICE;
+	protected int mCurrentMode = MODE_VOICE;
 
 	private SpeexPlayerWrapper mPlayerWrapper;
 	// private int palyedPosition = -1;
@@ -224,7 +224,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			} else {
 				ImageLoaderUtil.displayImageByProgress("file://" + path, viewHolder.ivPhoto, options,
 						viewHolder.wiatProgressBar);
-			
+
 			}
 			viewHolder.layoutPicHolder.setTag(R.id.dy_photo_position, position);
 			viewHolder.layoutPicHolder.setOnClickListener(photoClickListener);
@@ -268,6 +268,10 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		} else {
 			viewHolder.wiatProgressBar.setVisibility(View.GONE);
 		}
+	}
+
+	public boolean isInTextMode() {
+		return mCurrentMode == MODE_TEXT;
 	}
 
 	private OnClickListener photoClickListener = new OnClickListener() {
@@ -475,7 +479,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 					MessageInfo messageInfo = mData.get(nextPosition);
 					if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0) {
 						palyedPosition = nextPosition;
-				
+
 						mPlayerWrapper.start(messageInfo);
 						if (getListView().getFirstVisiblePosition() > palyedPosition
 								|| getListView().getLastVisiblePosition() < palyedPosition) {

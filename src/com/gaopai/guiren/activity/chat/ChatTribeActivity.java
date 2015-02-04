@@ -299,7 +299,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			strList.add(getString(R.string.favorite));
 		}
 
-		if (messageInfo.fileType != MessageType.PICTURE) {
+		if (messageInfo.fileType == MessageType.TEXT
+				|| (messageInfo.fileType == MessageType.VOICE && mAdapter.isInTextMode())) {
 			strList.add(getString(R.string.copy));
 		}
 		if (messageInfo.isAgree == 1) {

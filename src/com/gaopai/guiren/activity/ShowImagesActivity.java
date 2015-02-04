@@ -13,6 +13,7 @@ import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.annotation.view.ViewInject;
 import net.tsz.afinal.http.AjaxCallBack;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import com.gaopai.guiren.bean.MessageInfo;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.widget.photoview.PhotoView;
 import com.gaopai.guiren.widget.photoview.PhotoViewAttacher.OnViewTapListener;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -53,6 +55,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
  * 展示图片的界面，可以左右滑动
  * 
  */
+@SuppressLint("NewApi")
 public class ShowImagesActivity extends BaseActivity implements OnClickListener {
 
 	@ViewInject(id = R.id.pager)
@@ -159,7 +162,9 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 				return;
 			}
 			contentView.setTag(CURRENT_VISIBLE_PAGE);
-			ImageView imageView = (ImageView) contentView.findViewById(R.id.image);
+			PhotoView imageView = (PhotoView) contentView.findViewById(R.id.image);
+			imageView.setMaxScale(10);
+			
 			if (imageView.getDrawable() != null) {
 				return;
 			}
@@ -194,13 +199,15 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 			return;
 		}
 		String url = list.get(position).imgUrlL;
+		Logger.d(this, "large = " + url);
 		if (TextUtils.isEmpty(url)) {
 			url = list.get(position).imgUrlS;
 		}
 		if (!url.startsWith("http://")) {
 			url = "file://" + url;
 		}
-
+		Logger.d(this, "large2 = " + url);
+//		ImageLoaderUtil.displayImage(url, imageView, R.drawable.default_pic, true);
 		ImageLoaderUtil.displayImage(url, imageView, new ImageLoadingListener() {
 			@Override
 			public void onLoadingStarted(String imageUri, View view) {
@@ -217,6 +224,7 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 			@Override
 			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 				// TODO Auto-generated method stub
+				Logger.d(this, "width="+loadedImage.getWidth()+"   height="+loadedImage.getHeight()+"    size="+loadedImage.getByteCount());
 				wait.setVisibility(View.INVISIBLE);
 				imageView.setVisibility(View.VISIBLE);
 			}

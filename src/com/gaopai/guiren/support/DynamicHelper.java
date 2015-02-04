@@ -757,7 +757,7 @@ public class DynamicHelper {
 			List<PicBean> list = (List<PicBean>) v.getTag();
 			int pos = (int) v.getTag(R.id.dy_photo_position);
 			for (PicBean picBean : list) {
-				messageInfos.add(ChatMsgHelper.creatPicMsg(picBean.imgUrlS, picBean.imgUrlL, ""));
+				messageInfos.add(ChatMsgHelper.creatPicMsg(picBean.imgUrlL, picBean.imgUrlL, ""));
 			}
 			Intent intent = new Intent(mContext, ShowImagesActivity.class);
 			intent.putExtra("msgList", (Serializable) messageInfos);

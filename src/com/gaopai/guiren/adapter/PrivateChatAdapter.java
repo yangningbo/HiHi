@@ -7,6 +7,7 @@ import android.content.Context;
 import android.text.ClipboardManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -47,7 +48,12 @@ public class PrivateChatAdapter extends BaseChatAdapter implements View.OnClickL
 	private void showActionWindow(View anchor) {
 		MessageInfo messageInfo = (MessageInfo) anchor.getTag();
 		LayoutInflater mInflater = LayoutInflater.from(mContext);
-		View v = mInflater.inflate(R.layout.popup_chat_private_action, null);
+		ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.popup_chat_private_action, null);
+		
+		if (messageInfo.fileType == MessageType.VOICE && mCurrentMode == MODE_VOICE) {
+			v.getChildAt(1).setVisibility(View.GONE);
+			v.getChildAt(2).setVisibility(View.GONE);
+		}
 
 		Button copy = (Button) v.findViewById(R.id.btn_copy);
 		copy.setTag(messageInfo.content);
