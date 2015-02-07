@@ -364,6 +364,12 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
     </style>
+    <style name="general_thin_divider_in_white_listview">
+        <item name="android:background">@color/general_divider_in_white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:id">@+id/divider</item>
+    </style>
 
     <style name="general_thin_divider_in_white_vertical">
         <item name="android:background">@color/general_divider_in_white</item>

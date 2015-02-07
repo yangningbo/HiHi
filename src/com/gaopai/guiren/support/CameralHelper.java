@@ -169,6 +169,14 @@ public class CameralHelper {
 			break;
 		}
 	}
+	
+	public void retriveUri(Uri uri) {
+		imageCrop.retriveUri(uri);
+	}
+	
+	public Uri getUri() {
+		return imageCrop.getUri();
+	}
 
 	private String cropPath;
 

@@ -31,6 +31,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		Logger.d(this, "save= null   " + (savedInstanceState == null));
 		initTitleBar();
 		setAbContentView(R.layout.activity_setting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
@@ -122,6 +123,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 		try {
 			mContext.startActivity(intent);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -162,5 +164,13 @@ public class SettingActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Logger.d(this, "onSaveInstanceState");
+	}
+	
+	
 
 }

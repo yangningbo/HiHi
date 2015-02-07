@@ -35,6 +35,8 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 	private String fid;
 	private boolean isMyself = false;
 
+	public final static int REQUEST_CREAT_MEETING = 69;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -163,9 +165,21 @@ public class MyMeetingActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ab_add:
-			startActivity(CreatMeetingActivity.class);
+			startActivityForResult(CreatMeetingActivity.class, REQUEST_CREAT_MEETING);
 			break;
 		default:
+			break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		case REQUEST_CREAT_MEETING:
+			if (resultCode == RESULT_OK) {
+				mListView.doPullRefreshing(true, 200);
+			}
 			break;
 		}
 	}

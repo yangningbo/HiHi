@@ -92,6 +92,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	private View layoutWelcome;
 
 	private Intent notifyItent;
+	
+	private boolean isLogin = false;
 
 	/**
 	 * Initialize the MainActivity will take a long time, so I chose to embed
@@ -106,11 +108,25 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Logger.d(this, "save= null   " + (savedInstanceState == null));
 		notifyItent = getIntent();
 		setContentView(R.layout.activity_main);
 		initComponent();
-		showWelcomePage();
-		showMainpage();
+		if (savedInstanceState != null) {
+			isLogin = savedInstanceState.getBoolean("isLogin");
+		}
+		if (!isLogin) {
+			showWelcomePage();
+			showMainpage();
+		} else {
+			onLoginSuccess();
+		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("isLogin", isLogin);
 	}
 
 	private void initComponent() {
@@ -324,6 +340,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			}
 			DamiCommon.setNetWorkState(isNetConnect);
 		} else if (ACTION_LOGIN_OUT.equals(action)) {
+			isLogin = false;
 			dragLayout.closeQuick();
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 			startActivityForResult(loginIntent, LOGIN_REQUEST);
@@ -504,6 +521,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void onLoginSuccess() {
+		isLogin = true;
 		layoutWelcome.setVisibility(View.GONE);
 		onNewIntent(notifyItent);
 		bindUserView();
@@ -730,12 +748,13 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	// context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	// }
 	//
-	// public static void addMeeting(Context context) {
-	// User user = DamiCommon.getLoginResult(context);
-	// user.meetingCount = user.meetingCount + 1;
-	// DamiCommon.saveLoginResult(context, user);
-	// context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
-	// }
+	public static void addMeeting(Context context) {
+		User user = DamiCommon.getLoginResult(context);
+		user.meetingCount = user.meetingCount + 1;
+		DamiCommon.saveLoginResult(context, user);
+		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+
 	//
 	// public static void minusMeeting(Context context) {
 	// User user = DamiCommon.getLoginResult(context);
@@ -748,6 +767,21 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		user.dynamicCount = user.dynamicCount - 1;
 		DamiCommon.saveLoginResult(context, user);
 		context.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+
+	public static void minusFavoriteCount(Context mContext) {
+		User user = DamiCommon.getLoginResult(mContext);
+		user.favoriteCount = user.favoriteCount - 1;
+		DamiCommon.saveLoginResult(mContext, user);
+		mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+	}
+	
+
+	public static void addFavoriteCount(Context mContext) {
+		User user = DamiCommon.getLoginResult(mContext);
+		user.favoriteCount = user.favoriteCount + 1;
+		DamiCommon.saveLoginResult(mContext, user);
+		mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}
 
 }

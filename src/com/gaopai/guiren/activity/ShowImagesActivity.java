@@ -199,16 +199,12 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 			return;
 		}
 		String url = list.get(position).imgUrlL;
-		Logger.d(this, "large = " + url);
 		if (TextUtils.isEmpty(url)) {
 			url = list.get(position).imgUrlS;
 		}
 		if (!url.startsWith("http://")) {
 			url = "file://" + url;
 		}
-		Logger.d(this, "large2 = " + url);
-		// ImageLoaderUtil.displayImage(url, imageView, R.drawable.default_pic,
-		// true);
 		ImageLoaderUtil.displayImage(url, imageView, new ImageLoadingListener() {
 			@Override
 			public void onLoadingStarted(String imageUri, View view) {

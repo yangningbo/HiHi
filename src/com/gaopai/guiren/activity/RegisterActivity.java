@@ -111,6 +111,8 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		cbAgreeGuiren.setOnClickListener(this);
 		tvAgreeGuiren = ViewUtil.findViewById(this, R.id.tv_agree_guiren);
 		tvAgreeGuiren.setOnClickListener(this);
+		
+		setAgreeGuirenChecked(true);
 
 		tvCountryCode.setText(countryCode);
 
@@ -128,6 +130,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			} else {
 				btnConfirm.setText(R.string.confirm_modify);
 				mTitleBar.setTitleText(R.string.re_bind_phone);
+				etName.setEnabled(false);
 			}
 			etPassword.setVisibility(View.GONE);
 			findViewById(R.id.layout_input_password).setVisibility(View.GONE);
@@ -137,7 +140,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			if (mLogin != null) {
 				etName.setText(User.getUserName(mLogin));
 			}
-			etName.setEnabled(false);
+			
 		}
 
 		etPhone.addTextChangedListener(new ViewUtil.SimpleWatcher() {
@@ -319,12 +322,16 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			startActivity(UserProtocalActivity.getIntent(mContext, 0));
 			return;
 		case R.id.cb_agree_guiren:
-			isChecked = !isChecked;
-			cbAgreeGuiren.setImageResource(isChecked ? R.drawable.icon_check_box_hook : R.drawable.transparent);
+			setAgreeGuirenChecked(!isChecked);
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private void setAgreeGuirenChecked(boolean isCheckedPara) {
+		isChecked = isCheckedPara;
+		cbAgreeGuiren.setImageResource(isChecked ? R.drawable.icon_check_box_hook : R.drawable.transparent);
 	}
 
 	private void confirm() {
@@ -348,12 +355,13 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			bindPhone();
 			return;
 		}
+		
 		if (TextUtils.isEmpty(password)) {
 			showToast(R.string.password_can_not_be_empty);
 			return;
 		}
 
-		if (TextUtils.isEmpty(etName.getText())) {
+		if (TextUtils.isEmpty(etName.getText()) && TYPE_REGISTER == type) {
 			showToast(R.string.name_can_not_be_empty);
 			return;
 		}

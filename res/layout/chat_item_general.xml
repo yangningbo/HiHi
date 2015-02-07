@@ -88,6 +88,8 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/desc"
+                    android:minHeight="50dp"
+                    android:minWidth="50dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/icon_welcom_background_0"
                     android:visibility="visible" />
@@ -98,6 +100,8 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/desc"
+                    android:minHeight="50dp"
+                    android:minWidth="50dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/icon_chat_img_left_cover"
                     android:visibility="visible" />

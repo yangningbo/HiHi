@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
@@ -133,61 +134,66 @@ public class SpreadDynamicActivity extends BaseActivity {
 	}
 
 	private View parseView(View source) {
-		if (source == null || source instanceof TextView) {
-			return source;
-		}
-		ImageView header = (ImageView) source.findViewById(R.id.iv_header);
-		TextView tvInfo = (TextView) source.findViewById(R.id.tv_user_name);
-		source.findViewById(R.id.tv_spread_words).setVisibility(View.GONE);
-		switch (bean.type) {
-		case DynamicHelper.TYPE_SEND_DYNAMIC:
-		case DynamicHelper.TYPE_SPREAD_OTHER_DYNAMIC:
-			String userName = bean.realname;
-			String uid = bean.uid;
-			String userInfo = DynamicHelper.getUserInfoStr(bean.company, bean.post);
-			header.setVisibility(View.VISIBLE);
-			source.setBackgroundColor(getResources().getColor(R.color.general_background_gray));
-			tvInfo.setVisibility(View.VISIBLE);
-			if (bean.isanonymous == 1) {
-				ImageLoaderUtil.displayImage(bean.defhead, header, R.drawable.default_header);
-				uid = "-1";
-				userInfo = "";
-				userName = getString(R.string.no_name);
-			} else {
-				ImageLoaderUtil.displayImage(bean.s_path, header, R.drawable.default_header);
+		try {
+			if (source == null || source instanceof LinearLayout) {
+				return source;
 			}
-			if (bean.bigv == 1 && bean.isanonymous == 0) {
-				tvInfo.setText(HeadView.getMvpName(mContext,
-						dynamicHelper.parseHeaderText(userName + HeadView.MVP_NAME_STR, uid, userInfo, null)));
-			} else {
-				tvInfo.setText(dynamicHelper.parseHeaderText(userName, uid, userInfo, null));
+			ImageView header = (ImageView) source.findViewById(R.id.iv_header);
+			TextView tvInfo = (TextView) source.findViewById(R.id.tv_user_name);
+			source.findViewById(R.id.tv_spread_words).setVisibility(View.GONE);
+			switch (bean.type) {
+			case DynamicHelper.TYPE_SEND_DYNAMIC:
+			case DynamicHelper.TYPE_SPREAD_OTHER_DYNAMIC:
+				String userName = bean.realname;
+				String uid = bean.uid;
+				String userInfo = DynamicHelper.getUserInfoStr(bean.company, bean.post);
+				header.setVisibility(View.VISIBLE);
+				source.setBackgroundColor(getResources().getColor(R.color.general_background_gray));
+				tvInfo.setVisibility(View.VISIBLE);
+				if (bean.isanonymous == 1) {
+					ImageLoaderUtil.displayImage(bean.defhead, header, R.drawable.default_header);
+					uid = "-1";
+					userInfo = "";
+					userName = getString(R.string.no_name);
+				} else {
+					ImageLoaderUtil.displayImage(bean.s_path, header, R.drawable.default_header);
+				}
+				if (bean.bigv == 1 && bean.isanonymous == 0) {
+					tvInfo.setText(HeadView.getMvpName(mContext,
+							dynamicHelper.parseHeaderText(userName + HeadView.MVP_NAME_STR, uid, userInfo, null)));
+				} else {
+					tvInfo.setText(dynamicHelper.parseHeaderText(userName, uid, userInfo, null));
+				}
+				break;
+			case DynamicHelper.TYPE_SPREAD_USER:
+			case DynamicHelper.TYPE_SPREAD_TRIBE:
+			case DynamicHelper.TYPE_SPREAD_MSG:
+			case DynamicHelper.TYPE_SPREAD_LINK: {
+				source.setPadding(0, 0, 0, 0);
+				header.setVisibility(View.GONE);
+				tvInfo.setVisibility(View.GONE);
+				MarginLayoutParams params = (MarginLayoutParams) ViewUtil.findViewById(source, R.id.rl_spread_holder)
+						.getLayoutParams();
+				params.setMargins(0, 0, 0, 0);
+				break;
 			}
-			break;
-		case DynamicHelper.TYPE_SPREAD_USER:
-		case DynamicHelper.TYPE_SPREAD_TRIBE:
-		case DynamicHelper.TYPE_SPREAD_MSG:
-		case DynamicHelper.TYPE_SPREAD_LINK: {
-			source.setPadding(0, 0, 0, 0);
-			header.setVisibility(View.GONE);
-			tvInfo.setVisibility(View.GONE);
-			MarginLayoutParams params = (MarginLayoutParams) ViewUtil.findViewById(source, R.id.rl_spread_holder)
-					.getLayoutParams();
-			params.setMargins(0, 0, 0, 0);
-			break;
-		}
-		case DynamicHelper.TYPE_SPREAD_MEETING: {
-			source.setPadding(0, 0, 0, 0);
-			header.setVisibility(View.GONE);
-			tvInfo.setVisibility(View.GONE);
-			MarginLayoutParams params = (MarginLayoutParams) ViewUtil.findViewById(source, R.id.layout_meeting_holder)
-					.getLayoutParams();
-			params.setMargins(0, 0, 0, 0);
-			break;
+			case DynamicHelper.TYPE_SPREAD_MEETING: {
+				source.setPadding(0, 0, 0, 0);
+				header.setVisibility(View.GONE);
+				tvInfo.setVisibility(View.GONE);
+				MarginLayoutParams params = (MarginLayoutParams) ViewUtil.findViewById(source,
+						R.id.layout_meeting_holder).getLayoutParams();
+				params.setMargins(0, 0, 0, 0);
+				break;
+			}
+
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		default:
-			break;
-		}
 		return source;
 	}
 
@@ -397,7 +403,7 @@ public class SpreadDynamicActivity extends BaseActivity {
 		intent.putExtra(KEY_TYPE, TYPE_SPREAD_FIRST);
 		return intent;
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();

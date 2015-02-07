@@ -1,20 +1,18 @@
 package com.gaopai.guiren.fragment;
 
-import u.aly.ac;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -38,6 +36,7 @@ import com.gaopai.guiren.bean.dynamic.DynamicBean.TypeHolder;
 import com.gaopai.guiren.support.DynamicHelper;
 import com.gaopai.guiren.support.chat.ChatBoxManager;
 import com.gaopai.guiren.support.view.CustomEditText;
+import com.gaopai.guiren.support.view.HandleTouchLinearLayout;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -46,7 +45,6 @@ import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 import com.gaopai.guiren.widget.emotion.EmotionPicker;
-import com.umeng.socialize.net.t;
 
 public class DynamicFragment extends BaseFragment implements OnClickListener {
 
@@ -73,7 +71,16 @@ public class DynamicFragment extends BaseFragment implements OnClickListener {
 		return mView;
 	}
 
+	private OnTouchListener hideKeyboardListener = new OnTouchListener() {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			hideChatBox();
+			return false;
+		}
+	};
+
 	private void initView(View view) {
+		((HandleTouchLinearLayout) mListView).setActionDownTouchListener(hideKeyboardListener);
 		mListView.setPullLoadEnabled(true);
 		mListView.setPullRefreshEnabled(true);
 		mListView.setScrollLoadEnabled(false);

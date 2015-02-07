@@ -90,7 +90,7 @@ public class ChatMsgDataHelper {
 					messageInfo.isfavorite = 1;
 					updateFavoriteCountToDb(messageInfo);
 					callback.favoriteMessage(messageInfo);
-					addFavoriteCount();
+					MainActivity.addFavoriteCount(mContext);
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}
@@ -103,19 +103,7 @@ public class ChatMsgDataHelper {
 		}
 	}
 
-	public void addFavoriteCount() {
-		User user = DamiCommon.getLoginResult(mContext);
-		user.favoriteCount = user.favoriteCount + 1;
-		DamiCommon.saveLoginResult(mContext, user);
-		mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
-	}
 
-	public void minusFavoriteCount() {
-		User user = DamiCommon.getLoginResult(mContext);
-		user.favoriteCount = user.favoriteCount - 1;
-		DamiCommon.saveLoginResult(mContext, user);
-		mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
-	}
 
 	public void unFavoriteMessage(final MessageInfo messageInfo) {
 		if (mTribe == null || messageInfo == null) {
@@ -134,7 +122,7 @@ public class ChatMsgDataHelper {
 					messageInfo.isfavorite = 0;
 					updateFavoriteCountToDb(messageInfo);
 					callback.unFavoriteMessage(messageInfo);
-					minusFavoriteCount();
+					MainActivity.minusFavoriteCount(mContext);
 				} else {
 					otherCondition(data.state, (Activity) mContext);
 				}

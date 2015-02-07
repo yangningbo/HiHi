@@ -977,36 +977,54 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
-	private void sendEmail(String email) {
-		Intent data = new Intent(Intent.ACTION_SENDTO);
-		data.setData(Uri.parse("mailto:" + email));
-		try {
-			startActivity(data);
-		} catch (Exception e) {
-		}
+	private void sendEmail(final String email) {
+		showDialog("确定发送邮件？", null, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent data = new Intent(Intent.ACTION_SENDTO);
+				data.setData(Uri.parse("mailto:" + email));
+				try {
+					startActivity(data);
+				} catch (Exception e) {
+				}
+			}
+		});
+
 	}
 
 	private void openWeixin() {
-		Intent intent = new Intent();
-		ComponentName cmp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI");
-		intent.setAction(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_LAUNCHER);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.setComponent(cmp);
-		try {
-			startActivityForResult(intent, 0);
-		} catch (Exception e) {
-		}
+		showDialog("确定打开微信？", null, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent = new Intent();
+				ComponentName cmp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI");
+				intent.setAction(Intent.ACTION_MAIN);
+				intent.addCategory(Intent.CATEGORY_LAUNCHER);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.setComponent(cmp);
+				try {
+					startActivityForResult(intent, 0);
+				} catch (Exception e) {
+					showToast("请安装微信");
+				}
+			}
+		});
+
 	}
 
 	private void openWeibo() {
-		if (!TextUtils.isEmpty(tUser.weibo)) {
-			String url = "http://m.weibo.cn/n/" + tUser.weibo;
-			Intent intent = new Intent(this, WebActivity.class);
-			intent.putExtra("url", url);
-			intent.putExtra("type", 2);
-			startActivity(intent);
-		}
+		showDialog("确定打开微博？", null, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (!TextUtils.isEmpty(tUser.weibo)) {
+					String url = "http://m.weibo.cn/n/" + tUser.weibo;
+					Intent intent = new Intent(ProfileActivity.this, WebActivity.class);
+					intent.putExtra("url", url);
+					intent.putExtra("type", 2);
+					startActivity(intent);
+				}
+			}
+		});
 	}
 
 	private void followUser() {

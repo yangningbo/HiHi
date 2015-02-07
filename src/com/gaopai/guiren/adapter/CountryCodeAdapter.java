@@ -111,7 +111,7 @@ public class CountryCodeAdapter extends BaseAdapter implements SectionIndexer {
 				}
 			}
 		}
-		return 0;
+		return -1;
 	}
 
     @Override

@@ -3,6 +3,7 @@ package com.gaopai.guiren.widget.photoview;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class Compat {
 	
@@ -15,5 +16,4 @@ public class Compat {
 			view.postDelayed(runnable, SIXTY_FPS_INTERVAL);
 		}
 	}
-
 }

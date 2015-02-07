@@ -154,6 +154,9 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			User user = (User) v.getTag();
+			if (user.iscontact == 1) {
+				return;
+			}
 			mAdapter.addIdToChoseSet(user.uid);
 		}
 	}

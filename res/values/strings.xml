@@ -335,7 +335,7 @@
     <string name="exit_tribe">退出圈子</string>
     <string name="apply_into_tribe">申请加入圈子</string>
     <string name="deal_with_add_tribe_apply">处理加圈子申请</string>
-    <string name="deal_with_report_info">处理举报信息</string>
+    <string name="deal_with_report_info">处理举报消息</string>
     <string name="receive_message_and_notify">接收消息并提醒</string>
     <string name="display_message_count">不提醒仅显示数目</string>
     <string name="tribe_detail">圈子详情</string>
@@ -692,7 +692,7 @@
 
     <!-- login  register -->
     <string name="register">注册</string>
-    <string name="modify">修改密码</string>
+    <string name="modify">重置密码</string>
     <string name="bind_phone">绑定手机号</string>
     <string name="re_bind_phone">修改手机号</string>
     <string name="third_party_login">第三方登录账号</string>
@@ -734,7 +734,7 @@
     <string name="china_full_name">中华人民共和国</string>
     <string name="please_agree_guiren_first">请先同意贵人会服务条款</string>
     <string name="gree_guiren_protocol">我同意贵人会服务条款</string>
-    <string name="need_help_in_register">填写中如果有问题，请关注微信号：guirenhui</string>
+    <string name="need_help_in_register">填写中如果有问题，请关注微信号：guirenhui111</string>
     <string name="bind_phone_success">绑定成功</string>
 
     <!-- send dynamic -->
@@ -820,7 +820,7 @@
     <string name="request_share_url">正在获取分享地址&#8230;</string>
     <string name="you_are_not_allowed_to_see_profile">对方已设置隐私保护</string>
     <string name="no_tags">暂无标签</string>
-    <string name="alarm_meeting_is_on_going">大人会议已开始，请速速就座！</string>
+    <string name="alarm_meeting_is_on_going">大人会议即将开始，请速速就座！</string>
     <string name="user_real_name">使用实名</string>
     <string name="user_anony_name">使用匿名</string>
     <string name="switch_use_real_name_mode">已切换至实名模式</string>
@@ -840,6 +840,7 @@
     <string name="now_loading">正在加载&#8230;</string>
     <string name="loading_error_click_retry">加载出错，点击重试</string>
     <string name="meeting_is_start">会议已开始</string>
+    <string name="meeting_is_over">会议已结束</string>
     <string name="enter_app">进入贵人</string>
     <string name="meeting_is_checking">正在进行审核</string>
     <string name="meeting_not_pass_checking">会议没有通过审核</string>

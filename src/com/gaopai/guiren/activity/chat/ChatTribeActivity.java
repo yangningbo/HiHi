@@ -140,8 +140,11 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-				showItemLongClickDialog(messageInfos.get(position));
+				MessageInfo messageInfo = messageInfos.get(position);
+				if (messageInfo.mIsShide == MessageState.MESSAGE_SHIDE) {
+					return true;
+				}
+				showItemLongClickDialog(messageInfo);
 				return true;
 			}
 		});
@@ -627,7 +630,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				}
 			}
 
-		} else if (action.equals(ACTION_KICK_TRIBE)) {
+		} else if (action.equals(ACTION_KICK_TRIBE)) {//send by SystemNotify
 			String id = intent.getStringExtra("id");
 			if (!TextUtils.isEmpty(id)) {
 				if (id.equals(mTribe.id)) {
@@ -636,7 +639,6 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 					} else if (mChatType == CHAT_TYPE_MEETING) {
 						destoryDialog(mContext.getString(R.string.you_have_been_removed_from_meeting));
 					}
-					deleteConverstion();
 				}
 			}
 

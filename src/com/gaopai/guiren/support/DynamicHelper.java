@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView.RecyclerListener;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -652,7 +653,6 @@ public class DynamicHelper {
 		if (convertView == null) {
 			convertView = buildErrorView();
 		}
-		Logger.time(this, " type=" + typeBean.type + "  getView");
 		return convertView;
 	}
 
@@ -812,7 +812,7 @@ public class DynamicHelper {
 		viewHolder.tvMeetingGuest.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
 		// viewHolder.tvMeetingGuest.setText(MyTextUtils.addGuestUserList(jsonContent.guest,
 		// "嘉宾："));
-		viewHolder.tvMeetingGuest.setText(MyTextUtils.getSpannableString("主持人：",
+		viewHolder.tvMeetingGuest.setText(MyTextUtils.getSpannableString("嘉宾：",
 				MyTextUtils.addUserSpans(jsonContent.guest)));
 
 		viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
@@ -837,7 +837,6 @@ public class DynamicHelper {
 		switch (typeBean.type) {
 		case TYPE_SPREAD_LINK:
 			ImageLoaderUtil.displayImage(jsonContent.image, viewHolder.ivHeader1, R.drawable.logo_help);
-			Picasso.with(mContext).load(jsonContent.image);
 			viewHolder.tvTitle1.setText(jsonContent.title);
 			viewHolder.tvInfo1.setText(jsonContent.desc);
 			viewHolder.layoutHolder.setOnClickListener(new OnClickListener() {
@@ -891,15 +890,13 @@ public class DynamicHelper {
 		return TextUtils.isEmpty(company) ? (TextUtils.isEmpty(post) ? "" : post) : (TextUtils.isEmpty(post) ? company
 				: company + "/" + post);
 	}
-
-	public TextView buildErrorView() {
-		TextView tvDyCount = new TextView(mContext);
-		tvDyCount.setTextColor(mContext.getResources().getColor(R.color.general_text_gray));
-		int padding = MyUtils.dip2px(mContext, 5);
-		tvDyCount.setPadding(3 * padding, padding, 3 * padding, padding);
-		tvDyCount.setGravity(Gravity.CENTER);
-		tvDyCount.setText("数据出现错误...");
-		return tvDyCount;
+	
+	public View buildErrorView() {
+		LinearLayout layout = new LinearLayout(mContext);
+		AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
+		layout.setLayoutParams(layoutParams);
+		return layout;
 	}
 
 	public void buildCommonView(ViewHolderCommon viewHolder, TypeHolder typeBean) {

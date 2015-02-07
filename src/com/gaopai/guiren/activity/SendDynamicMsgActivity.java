@@ -187,7 +187,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			return;
 		}
 
-		DamiInfo.sendDynamic(etDynamicMsg.getText().toString(), fileList, isHideName, tags, new SimpleResponseListener(
+		DamiInfo.sendDynamic(etDynamicMsg.getText().toString().trim(), fileList, isHideName, tags, new SimpleResponseListener(
 				mContext, R.string.send_now) {
 
 			@Override

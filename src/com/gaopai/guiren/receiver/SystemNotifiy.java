@@ -33,6 +33,7 @@ import com.gaopai.guiren.fragment.MeetingFragment;
 import com.gaopai.guiren.service.SnsService;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.NotifyHelper;
+import com.gaopai.guiren.support.alarm.MeetingAlarmHelper;
 import com.gaopai.guiren.utils.Logger;
 
 public class SystemNotifiy extends AbstractNotifiy {
@@ -58,7 +59,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 			NotifyUserTable userTable = new NotifyUserTable(db);
 			NotifyRoomTable table = new NotifyRoomTable(db);
 			NotifyMessageTable notifyMessageTable = new NotifyMessageTable(db);
-			TribeTable tribeTable = new TribeTable(db);
+//			TribeTable tribeTable = new TribeTable(db);
 			MessageTable messageTable = new MessageTable(db);
 			IdentityTable identityTable = new IdentityTable(db);
 			String msg = "";
@@ -101,7 +102,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 			case NotifiyType.PASS_CREATE_TRIBE:
 				msg = mContext.getString(R.string.pass_create_tribe);
 				notifiyVo.room.isjoin = 1;
-				tribeTable.insert(notifiyVo.room);
+//				tribeTable.insert(notifiyVo.room);
 				// mContext.sendBroadcast(new
 				// Intent(TribeTab.UPDATE_COUNT_ACTION));
 				break;
@@ -128,7 +129,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 			case NotifiyType.AGREE_ADD_TRIBE:
 				msg = mContext.getString(R.string.agree_apply_add_tribe);
 				notifiyVo.room.isjoin = 1;
-				tribeTable.insert(notifiyVo.room);
+//				tribeTable.insert(notifiyVo.room);
 				Intent applyTribeIntent = new Intent(TribeDetailActivity.ACTION_AGREE_ADD_TRIBE);
 				applyTribeIntent.putExtra("id", notifiyVo.room.id);
 				mContext.sendBroadcast(applyTribeIntent);
@@ -159,6 +160,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 				msg = mContext.getString(R.string.pass_create_meeting);
 				applyTribeIntent = new Intent(MeetingDetailActivity.ACTION_AGREE_ADD_MEETING);
 				applyTribeIntent.putExtra("id", notifiyVo.room.id);
+				MeetingAlarmHelper.setAlarmForMeeting(mContext, notifiyVo.room);
 				mContext.sendBroadcast(applyTribeIntent);
 				break;
 
@@ -169,7 +171,8 @@ public class SystemNotifiy extends AbstractNotifiy {
 			case NotifiyType.TRIBE_KICK_OUT:
 				identityTable.delete(notifiyVo.room.id);
 				msg = mContext.getString(R.string.you_have_been_kick_out_tribe);
-				messageTable.deleteRecord(notifiyVo.room.id);
+//				messageTable.deleteRecord(notifiyVo.room.id);
+				ConversationHelper.deleteChatItemAndUpadte(mContext, notifiyVo.room.id, false);
 				Intent kickIntent = new Intent(TribeActivity.ACTION_KICK_TRIBE);
 				kickIntent.putExtra("id", notifiyVo.room.id);
 				mContext.sendBroadcast(kickIntent);
@@ -194,6 +197,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 				msg = mContext.getString(R.string.agree_apply_add_meeting);
 				Intent applyIntent = new Intent(MeetingDetailActivity.ACTION_AGREE_ADD_MEETING);
 				applyIntent.putExtra("id", notifiyVo.room.id);
+				MeetingAlarmHelper.setAlarmForMeeting(mContext, notifiyVo.room);
 				mContext.sendBroadcast(applyIntent);
 				mContext.sendBroadcast(new Intent(MeetingFragment.REFRESH_LIST_ACTION));
 				break;
@@ -208,6 +212,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 
 			case NotifiyType.AGREE_INVITE_ADD_MEETING:
 				msg = mContext.getString(R.string.agree_invite_add_meeting);
+				MeetingAlarmHelper.setAlarmForMeeting(mContext, notifiyVo.room);
 				applyIntent = new Intent(MeetingDetailActivity.ACTION_AGREE_ADD_MEETING);
 				applyIntent.putExtra("id", notifiyVo.room.id);
 				mContext.sendBroadcast(applyIntent);
@@ -223,6 +228,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 				identityTable.delete(notifiyVo.room.id);
 				// ConversationHelper.deleteItemAndUpadte(mContext,
 				// notifiyVo.room.id);
+				MeetingAlarmHelper.cancelMeetingAlarm(mContext, notifiyVo.room);
 				ConversationHelper.deleteChatItemAndUpadte(mContext, notifiyVo.room.id, false);
 				Intent kickMeetingIntent = new Intent(TribeActivity.ACTION_KICK_TRIBE);
 				kickMeetingIntent.putExtra("id", notifiyVo.room.id);
@@ -452,10 +458,12 @@ public class SystemNotifiy extends AbstractNotifiy {
 				msg = notifiyVo.content;
 				applyIntent = new Intent(MeetingDetailActivity.ACTION_AGREE_ADD_MEETING);
 				applyIntent.putExtra("id", notifiyVo.room.id);
+				MeetingAlarmHelper.setAlarmForMeeting(mContext, notifiyVo.room);
 				mContext.sendBroadcast(applyIntent);
 				break;
 			case NotifiyType.HOSTOR_CANCEL_MEETING:
 				msg = notifiyVo.content;
+				MeetingAlarmHelper.cancelMeetingAlarm(mContext, notifiyVo.room);
 				mContext.sendBroadcast(new Intent(MeetingFragment.REFRESH_LIST_ACTION));
 				mContext.sendBroadcast(new Intent(MeetingDetailActivity.ACTION_MEETING_CANCEL));
 				break;

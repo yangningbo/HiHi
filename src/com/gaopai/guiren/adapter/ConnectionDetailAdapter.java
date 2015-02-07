@@ -77,14 +77,14 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "关注了你"));
 		} else if (typeBean.type == ConnectionAdapter.TYPE_SOMEONE_I_FOLLOW_FOLLOW) {
-			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 		}
 
 		viewHolder.layoutHeader.setImage(user.headsmall);
 		viewHolder.layoutHeader.setMVP(user.bigv == 1);
-		
+
 		viewHolder.tvUserName.setText(user.realname);
 		viewHolder.tvUserInfo.setText(user.company);
 		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));

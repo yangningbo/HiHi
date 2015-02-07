@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
+import com.gaopai.guiren.activity.NotifySystemActivity;
 import com.gaopai.guiren.activity.WebActivity;
 import com.gaopai.guiren.activity.chat.ChatMessageActivity;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
@@ -61,16 +62,16 @@ public class NotifyHelper {
 	}
 
 	public boolean isNeedNotify() {
-		if (po.getInt(SPConst.KEY_AVOID_DISTURB_TIME_SEGMENT, 0) == 0) {
+		if (po.getInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_TIME_SEGMENT), 0) == 0) {
 			return true;
 		}
 		Calendar calendar = Calendar.getInstance();
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		int minute = calendar.get(Calendar.MINUTE);
-		int fromHour = po.getInt(SPConst.KEY_AVOID_DISTURB_HOUR_FROM, 0);
-		int fromMinute = po.getInt(SPConst.KEY_AVOID_DISTURB_MINUTE_FROM, 0);
-		int toHour = po.getInt(SPConst.KEY_AVOID_DISTURB_HOUR_TO, 0);
-		int toMinute = po.getInt(SPConst.KEY_AVOID_DISTURB_MINUTE_TO, 0);
+		int fromHour = po.getInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_HOUR_FROM), 0);
+		int fromMinute = po.getInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_MINUTE_FROM), 0);
+		int toHour = po.getInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_HOUR_TO), 0);
+		int toMinute = po.getInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_MINUTE_TO), 0);
 		if (fromHour == 0 && fromMinute == 0 && toHour == 0 && toMinute == 0) {
 			return true;
 		}
@@ -81,25 +82,26 @@ public class NotifyHelper {
 	}
 
 	public boolean isPlayRingtone() {
-		return po.getInt(SPConst.KEY_NOTIFY_PLAY_RINGTONES, 1) == 1;
+		return po.getInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_NOTIFY_PLAY_RINGTONES), 1) == 1;
 	}
 
 	public boolean isVibrate() {
-		return po.getInt(SPConst.KEY_NOTIFY_VIBRATE, 1) == 1;
+		return po.getInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_NOTIFY_VIBRATE), 1) == 1;
 	}
 
 	public boolean isDamiNotify() {
-		return po.getInt(SPConst.KEY_NOTIFY_DAMI, 1) == 1;
+		return po.getInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_NOTIFY_DAMI), 1) == 1;
+
 	}
 
 	public static void saveNotificationTime(Context context, long time) {
 		PreferenceOperateUtils po = new PreferenceOperateUtils(context);
-		po.setLong(SPConst.KEY_NOTIFICATION_TIME, time);
+		po.setLong(SPConst.getNotifySettingKey(context, SPConst.KEY_NOTIFICATION_TIME), time);
 	}
 
 	public static long getNotificationTime(Context context) {
 		PreferenceOperateUtils po = new PreferenceOperateUtils(context);
-		return po.getLong(SPConst.KEY_NOTIFICATION_TIME, 0L);
+		return po.getLong(SPConst.getNotifySettingKey(context, SPConst.KEY_NOTIFICATION_TIME), 0L);
 	}
 
 	private void init() {
@@ -210,11 +212,13 @@ public class NotifyHelper {
 		init();
 		if (isActivityTop(mContext, ".activity.NotifySystemActivity")) {
 			ConversationHelper.saveToLastMsgList(notifiyVo, mContext, true);
+			mContext.sendBroadcast(new Intent(NotifySystemActivity.ACTION_SYSTEM_NOTIFY));
 			return;
 		} else {
 			ConversationHelper.saveToLastMsgList(notifiyVo, mContext, false);
 		}
 		mContext.sendBroadcast(new Intent(NotificationFragment.ACTION_MSG_NOTIFY));
+		mContext.sendBroadcast(new Intent(NotifySystemActivity.ACTION_SYSTEM_NOTIFY));
 		if (!isNeedNotify()) {
 			return;
 		}

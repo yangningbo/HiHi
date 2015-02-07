@@ -19,19 +19,6 @@
         android:layout_height="wrap_content"
         android:visibility="visible" >
 
-        <LinearLayout
-            android:id="@+id/grid_enter_meeting"
-            style="@style/meeting_detail_more_layout" >
-
-            <ImageView
-                style="@style/meeting_detail_more_img"
-                android:src="@drawable/icon_meeting_detail_emter_meeting" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/enter_meeting" />
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/grid_invite_to_meeting"
@@ -117,6 +104,22 @@
                 android:singleLine="true"
                 android:text="@string/deal_apply_host" />
         </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/grid_deal_msg_report"
+            style="@style/meeting_detail_more_layout" >
+
+            <ImageView
+                style="@style/meeting_detail_more_img"
+                android:src="@drawable/icon_meeting_detail_deal_apply_host" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/deal_with_report_info" />
+        </LinearLayout>
+        
 
         <LinearLayout
             android:id="@+id/grid_modify_meeting"

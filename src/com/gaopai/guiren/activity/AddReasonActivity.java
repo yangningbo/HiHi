@@ -96,8 +96,8 @@ public class AddReasonActivity extends BaseActivity {
 
 		case TYPE_WAHT_COMUNICATION:
 			messageInfo = (MessageInfo) getIntent().getSerializableExtra(KEY_MESSAGEINFO);
-			title = getString(R.string.seeking_contacts_reason);
-			hint = getString(R.string.communication);
+			title = getString(R.string.communication);
+			hint = getString(R.string.seeking_contacts_reason);
 			break;
 
 		case TYPE_REFUSE_COMUNICATION:

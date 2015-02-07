@@ -277,7 +277,7 @@ public class SearchActivity extends BaseActivity implements OnClickListener {
 
 	private void setEmptyListview() {
 		TextView tv = new TextView(this);
-		tv.setText("未搜相关信息");
+		tv.setText("未搜到相关信息");
 		tv.setGravity(Gravity.CENTER);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		addContentView(tv, params);

@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,6 +61,8 @@ public class NotifySystemActivity extends BaseActivity {
 
 	private List<NotifiyVo> mNotifyList;
 	private final static int REFUSE_SEEKING_CONTACTS_REQUEST = 1111;
+	public final static String ACTION_SYSTEM_NOTIFY = "com.gaopai.guiren.intent.action.ACTION_SYSTEM_NOTIFY";
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,26 @@ public class NotifySystemActivity extends BaseActivity {
 		ConversationHelper.resetCountAndRefresh(mContext, "-1");
 		NotifyHelper.clearSysNotification(mContext);
 	}
+	
+	
+
+	@Override
+	protected void registerReceiver(IntentFilter intentFilter) {
+		super.registerReceiver(intentFilter);
+		intentFilter.addAction(ACTION_SYSTEM_NOTIFY);
+	}
+
+	@Override
+	protected void onReceive(Intent intent) {
+		if (intent == null || TextUtils.isEmpty(intent.getAction())) {
+			return;
+		}
+		if (intent.getAction().equals(ACTION_SYSTEM_NOTIFY)) {
+			getDataFromDb();
+		}
+	}
+
+
 
 	private void init() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
@@ -363,6 +386,7 @@ public class NotifySystemActivity extends BaseActivity {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();
 		NotifyTable table = new NotifyTable(db);
 		mNotifyList = table.query();
+		adapter.mData.clear();
 		adapter.addAll(mNotifyList);
 	}
 

@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -31,6 +32,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.FeatureFunction;
 import com.gaopai.guiren.R;
 
@@ -263,6 +265,11 @@ public class MyUtils {
 		return dm;
 	}
 
+	public static int sp2px(Context context, float spValue) {
+		final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+		return (int) (spValue * fontScale + 0.5f);
+	}
+
 	/**
 	 * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
 	 */
@@ -394,8 +401,8 @@ public class MyUtils {
 		long size = getFolderSize(FeatureFunction.getExternalCacheDir(context).getAbsolutePath());
 		kb = (int) (size / 1024);
 		mb = kb / 1024;
-		DecimalFormat decimalFormat=new DecimalFormat("0.00");
-		return decimalFormat.format(mb + (kb - mb * 1024)/1024f);
+		DecimalFormat decimalFormat = new DecimalFormat("0.00");
+		return decimalFormat.format(mb + (kb - mb * 1024) / 1024f);
 	}
 
 	public static long getFolderSize(String dir) {
@@ -415,17 +422,23 @@ public class MyUtils {
 
 		return size;
 	}
-	
-	public static void makePhonecall(Context context, String phone) {
-		Intent Telintent = new Intent();
-		Telintent.setAction(Intent.ACTION_CALL);
-		Telintent.setData(Uri.parse("tel:" + phone));
-		try {
-			context.startActivity(Telintent);
-		} catch (Exception e) {
-		}
+
+	public static void makePhonecall(final Context context, final String phone) {
+		((BaseActivity) context).showDialog("确定拨打电话？", null, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent Telintent = new Intent();
+				Telintent.setAction(Intent.ACTION_CALL);
+				Telintent.setData(Uri.parse("tel:" + phone));
+				try {
+					context.startActivity(Telintent);
+				} catch (Exception e) {
+				}
+			}
+		});
 	}
-	
+
 	public static void sendSms(Context context, String phoneNum, String content) {
 		Uri uri = Uri.parse("smsto:" + phoneNum);
 		Intent it = new Intent(Intent.ACTION_SENDTO, uri);

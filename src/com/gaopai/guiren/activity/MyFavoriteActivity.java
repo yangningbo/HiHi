@@ -144,6 +144,8 @@ public class MyFavoriteActivity extends BaseActivity {
 				showToast(R.string.cancel_favorite_success);
 				mFavoriteList.remove(position);
 				mAdapter.notifyDataSetChanged();
+				MainActivity.minusFavoriteCount(mContext);
+				
 			} else {
 				otherCondition(data.state, MyFavoriteActivity.this);
 			}
@@ -324,10 +326,7 @@ public class MyFavoriteActivity extends BaseActivity {
 			final String path = messageInfo.imgUrlS.trim();
 			int width = (int) (MyUtils.dip2px(mContext, messageInfo.imgWidth) * 0.7);
 			int height = (int) (MyUtils.dip2px(mContext, messageInfo.imgHeight) * 0.7);
-			viewHolder.ivPhoto.getLayoutParams().height = height;
-			viewHolder.ivPhoto.getLayoutParams().width = width;
-			viewHolder.ivPhotoCover.getLayoutParams().height = height;
-			viewHolder.ivPhotoCover.getLayoutParams().width = width;
+			setPicDimen(viewHolder.ivPhoto, viewHolder.ivPhotoCover, height, width);
 
 			ImageLoaderUtil.displayImage(path, viewHolder.ivPhoto, R.drawable.default_pic);
 			if (path.startsWith("http://")) {
@@ -357,6 +356,20 @@ public class MyFavoriteActivity extends BaseActivity {
 			}
 			break;
 		}
+	}
+	
+	private void setPicDimen(View pic, View picCover, int height, int width) {
+		float dimen = (float) MyUtils.dip2px(mContext, 40);
+		float ratio = 1.0f;
+		if (height < dimen && width < dimen) {
+			ratio = (height > width) ? dimen / height : dimen / width;
+		}
+		int finalHeight = (int) (height * ratio);
+		int finalWidth = (int) (width * ratio);
+		pic.getLayoutParams().height = finalHeight;
+		pic.getLayoutParams().width = finalWidth;
+		picCover.getLayoutParams().height = finalHeight;
+		picCover.getLayoutParams().width = finalWidth;
 	}
 
 	private OnClickListener photoClickListener = new OnClickListener() {

@@ -230,6 +230,7 @@ public class TitleBar extends ViewGroup {
 		TextView btn = new TextView(mContext);
 		btn.setText(text);
 		btn.setGravity(Gravity.CENTER);
+		btn.setTextSize(17);
 		btn.setTextColor(getResources().getColor(R.color.title_right_text_color));
 		layoutParamsWF.rightMargin = MyUtils.dip2px(mContext, 10);
 		rightLayout.addView(btn, layoutParamsWF);

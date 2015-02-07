@@ -371,7 +371,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				return;
 			}
 			MessageInfo messageInfo = notifiyVo.message;
-			if (messageInfo != null) {
+			if (messageInfo != null && messageInfo.id.equals(ChatCommentsActivity.this.messageInfo.id)) {
 				User user = notifiyVo.user;
 				if (user != null) {
 					zanList.add(buildZanMessage(user.uid, user.realname));
@@ -384,7 +384,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				return;
 			}
 			MessageInfo messageInfo = notifiyVo.message;
-			if (messageInfo != null) {
+			if (messageInfo != null && messageInfo.id.equals(ChatCommentsActivity.this.messageInfo.id)) {
 				User user = notifiyVo.user;
 				if (user != null) {
 					removeZanMessage(user.uid);
@@ -1042,10 +1042,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				int width = (int) (MyUtils.dip2px(mContext, commentInfo.imgWidth) * 0.7);
 				int height = (int) (MyUtils.dip2px(mContext, commentInfo.imgHeight) * 0.7);
 
-				viewHolder.ivPhoto.getLayoutParams().width = width;
-				viewHolder.ivPhoto.getLayoutParams().height = height;
-				viewHolder.ivPhotoCover.getLayoutParams().width = width;
-				viewHolder.ivPhotoCover.getLayoutParams().height = height;
+				setPicDimen(viewHolder.ivPhoto, viewHolder.ivPhotoCover, height, width);
 				final String path = commentInfo.imgUrlS;
 				if (path.startsWith("http://")) {
 					ImageLoaderUtil.displayImageByProgress(path, viewHolder.ivPhoto, options, viewHolder.progressBar);
@@ -1068,6 +1065,20 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				break;
 			}
 			return convertView;
+		}
+
+		private void setPicDimen(View pic, View picCover, int height, int width) {
+			float dimen = (float) MyUtils.dip2px(mContext, 40);
+			float ratio = 1.0f;
+			if (height < dimen && width < dimen) {
+				ratio = (height > width) ? dimen / height : dimen / width;
+			}
+			int finalHeight = (int) (height * ratio);
+			int finalWidth = (int) (width * ratio);
+			pic.getLayoutParams().height = finalHeight;
+			pic.getLayoutParams().width = finalWidth;
+			picCover.getLayoutParams().height = finalHeight;
+			picCover.getLayoutParams().width = finalWidth;
 		}
 
 		private void notHideViews(ViewHolder viewHolder, MessageInfo messageInfo) {
@@ -1394,7 +1405,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		msg.parentid = messageInfo.id;
 		if (isOnLooker) {
 			msg.displayname = getString(R.string.onlooker_user);
-//			msg.headImgUrl = mIdentity.head;
+			// msg.headImgUrl = mIdentity.head;
 			msg.isanonymity = 1;
 		} else {
 			if (isAnony() && mIdentity != null) {

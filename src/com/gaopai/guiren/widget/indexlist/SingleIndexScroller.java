@@ -17,6 +17,7 @@
 package com.gaopai.guiren.widget.indexlist;
 
 import com.gaopai.guiren.R;
+import com.gaopai.guiren.utils.Logger;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -81,7 +82,7 @@ public class SingleIndexScroller extends View {
 
 		Paint indexbarPaint = new Paint();
 		indexbarPaint.setColor(Color.TRANSPARENT);
-//		indexbarPaint.setAlpha((int) (64 * mAlphaRate));
+		// indexbarPaint.setAlpha((int) (64 * mAlphaRate));
 		indexbarPaint.setAntiAlias(true);
 		canvas.drawRect(mIndexbarRect, indexbarPaint);
 		if (mSections != null && mSections.length > 0) {
@@ -111,31 +112,27 @@ public class SingleIndexScroller extends View {
 		case MotionEvent.ACTION_DOWN:
 			// If down event occurs inside index bar region, start indexing
 			setState(STATE_SHOWN);
-			mAlphaRate = 0.5f;
-			mCurrentSection = getSectionByPoint(ev.getY());
-			mListView.setCurrentSection(mCurrentSection);
-			newSelection = mIndexer.getPositionForSection(mCurrentSection);
-			if (newSelection > -1) {
-				oldSelection = newSelection;
-				mListView.setSelection(newSelection+mListView.getHeaderViewsCount());
-				invalidate();
-			}
-			return true;
 		case MotionEvent.ACTION_MOVE:
-			mCurrentSection = getSectionByPoint(ev.getY());
-			mAlphaRate = 0.5f;
-			mListView.setCurrentSection(mCurrentSection);
-			newSelection = mIndexer.getPositionForSection(mCurrentSection);
-			selection = (newSelection == -1) ? oldSelection : newSelection;
-			oldSelection = selection;
-			mListView.setSelection(selection+mListView.getHeaderViewsCount());
+			showMoveAction(ev);
 			return true;
 		case MotionEvent.ACTION_UP:
 			hide();
 			break;
 		}
-
 		return false;
+	}
+	
+	private void showMoveAction(MotionEvent ev) {
+		mCurrentSection = getSectionByPoint(ev.getY());
+		mAlphaRate = 0.5f;
+		mListView.setCurrentSection(mCurrentSection);
+		newSelection = mIndexer.getPositionForSection(mCurrentSection);
+		if (newSelection > -1) {
+			oldSelection = newSelection;
+			mListView.setSelection(oldSelection + mListView.getHeaderViewsCount());
+		} else {
+			mListView.invalidate();
+		}
 	}
 
 	public void hide() {

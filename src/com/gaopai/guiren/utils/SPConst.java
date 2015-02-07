@@ -24,12 +24,20 @@ public class SPConst {
 	public final static String KEY_NOTIFY_VIBRATE = "notify_vibrate";
 	public final static String KEY_NOTIFY_DAMI = "notify_dami";
 
+	public final static String getNotifySettingKey(Context context, String key) {
+		return DamiCommon.getUid(context) + key;
+	}
+
 	// default
 	public final static String KEY_HAS_NOTIFICATION = "has_notification";
 	public final static String KEY_GUIDE_USE_REAL_NAME = "use_real_name";
 	public final static String KEY_GUIDE_START_PAGE = "guide_start_page";
 	public final static String KEY_SHOW_RECOMMEND_PAGE = "show_rec_page";
 	public final static String KEY_READ_PHONE_NUM_TIME = "read_phone_num_time";
+
+	public static String getCompositeKey(String id, String key) {
+		return id + key;
+	}
 
 	public static String getRecKey(Context context) {
 		return DamiCommon.getUid(context) + KEY_SHOW_RECOMMEND_PAGE;

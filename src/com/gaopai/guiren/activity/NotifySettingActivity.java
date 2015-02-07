@@ -49,7 +49,7 @@ public class NotifySettingActivity extends BaseActivity implements OnClickListen
 	private int mHourTo;
 	private int mMinuteFrom;
 	private int mMinuteTo;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -90,7 +90,7 @@ public class NotifySettingActivity extends BaseActivity implements OnClickListen
 			}
 		});
 	}
-	
+
 	private void showErrorView() {
 		showErrorView(new OnClickListener() {
 			@Override
@@ -100,7 +100,7 @@ public class NotifySettingActivity extends BaseActivity implements OnClickListen
 			}
 		});
 	}
-	
+
 	private void bindView() {
 		// TODO Auto-generated method stub
 		saveDataInSp();
@@ -152,14 +152,14 @@ public class NotifySettingActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void saveDataInSp() {
-		spo.setInt(SPConst.KEY_AVOID_DISTURB_TIME_SEGMENT ,settingBean.dnd);
-		spo.setInt(SPConst.KEY_AVOID_DISTURB_HOUR_FROM ,settingBean.dndH_begin);
-		spo.setInt(SPConst.KEY_AVOID_DISTURB_MINUTE_FROM ,settingBean.dndM_begin);
-		spo.setInt(SPConst.KEY_AVOID_DISTURB_HOUR_TO ,settingBean.dndH_end);
-		spo.setInt(SPConst.KEY_AVOID_DISTURB_MINUTE_TO ,settingBean.dndM_end);
-		spo.setInt(SPConst.KEY_NOTIFY_PLAY_RINGTONES ,settingBean.ringtones);
-		spo.setInt(SPConst.KEY_NOTIFY_VIBRATE ,settingBean.shake);
-		spo.setInt(SPConst.KEY_NOTIFY_DAMI ,settingBean.dami);
+		spo.setInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_TIME_SEGMENT), settingBean.dnd);
+		spo.setInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_HOUR_FROM), settingBean.dndH_begin);
+		spo.setInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_MINUTE_FROM), settingBean.dndM_begin);
+		spo.setInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_HOUR_TO), settingBean.dndH_end);
+		spo.setInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_AVOID_DISTURB_MINUTE_TO), settingBean.dndM_end);
+		spo.setInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_NOTIFY_PLAY_RINGTONES), settingBean.ringtones);
+		spo.setInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_NOTIFY_VIBRATE), settingBean.shake);
+		spo.setInt(SPConst.getNotifySettingKey(mContext, SPConst.KEY_NOTIFY_DAMI), settingBean.dami);
 	}
 
 	@Override

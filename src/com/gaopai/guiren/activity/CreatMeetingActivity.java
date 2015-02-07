@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -88,6 +89,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		initTitleBar();
+		Logger.d(this, "savedInstanceState=null" + (savedInstanceState == null));
 		setAbContentView(R.layout.activity_creat_meeting);
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		mTitleBar.setTitleText(getString(R.string.create_meeting));
@@ -110,7 +112,23 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 				mFilePath = path;
 			}
 		});
+		if (savedInstanceState != null) {
+			cameralHelper.retriveUri((Uri) savedInstanceState.getParcelable("uri"));
+		}
 	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable("uri", cameralHelper.getUri());
+	}
+
+	private OnClickListener backPressedClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+
+		}
+	};
 
 	private void bindView() {
 		// TODO Auto-generated method stub
@@ -424,11 +442,13 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 					String str = getString(R.string.create_success_and_wait);
 					if (isEdit) {
 						str = getString(R.string.edit_success);
+					} else {
+						MainActivity.addMeeting(mContext);
 					}
 					showToast(str);
-					if (isEdit) {
-						setResult(RESULT_OK);
-					}
+					// if (isEdit) {
+					setResult(RESULT_OK);
+					// }
 					CreatMeetingActivity.this.finish();
 				} else {
 					this.otherCondition(data.state, CreatMeetingActivity.this);
@@ -444,4 +464,14 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 		}
 	}
 
+	// private boolean shouldRefreshMyMeetingList = false;
+	// @Override
+	// public void onBackPressed() {
+	// if (shouldRefreshMyMeetingList) {
+	// setResult(RESULT_OK);
+	// }
+	// super.onBackPressed();
+	// }
+	//
+	//
 }

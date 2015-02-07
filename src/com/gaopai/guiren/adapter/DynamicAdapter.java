@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -212,7 +213,17 @@ public class DynamicAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		DynamicBean.TypeHolder typeBean = mData.get(position);
-		return dynamicHelper.getView(convertView, typeBean);
+		View view = dynamicHelper.getView(convertView, typeBean);
+		if (view instanceof LinearLayout) {
+			parent.post(new Runnable() {
+				@Override
+				public void run() {
+					mData.remove(position);
+					notifyDataSetChanged();
+				}
+			});
+		}
+		return view;
 	}
 
 	@Override
@@ -281,7 +292,7 @@ public class DynamicAdapter extends BaseAdapter {
 	public void stopPlayVoice() {
 		dynamicHelper.stopPlayVoice();
 	}
-	
+
 	public void replaceItem(TypeHolder typeHolder) {
 		for (TypeHolder bean : mData) {
 			if (bean.id.equals(typeHolder.id)) {

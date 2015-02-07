@@ -3,6 +3,7 @@ package com.gaopai.guiren.adapter;
 import java.io.Serializable;
 import java.util.List;
 
+import android.R.integer;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -180,7 +181,8 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		} else {
 			View voiceNotRead = ((ViewHolderLeft) viewHolder).ivVoiceNotRead;
 			voiceNotRead.setVisibility(View.GONE);
-			if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0 && mCurrentMode == MODE_VOICE) {
+			if (messageInfo.fileType == MessageType.VOICE && messageInfo.isReadVoice == 0 && mCurrentMode == MODE_VOICE
+					&& messageInfo.mIsShide != 1) {
 				voiceNotRead.setVisibility(View.VISIBLE);
 			}
 		}
@@ -214,10 +216,7 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 			final String path = messageInfo.imgUrlS.trim();
 			int width = (int) (MyUtils.dip2px(mContext, messageInfo.imgWidth) * 0.7);
 			int height = (int) (MyUtils.dip2px(mContext, messageInfo.imgHeight) * 0.7);
-			viewHolder.ivPhoto.getLayoutParams().height = height;
-			viewHolder.ivPhoto.getLayoutParams().width = width;
-			viewHolder.ivPhotoCover.getLayoutParams().height = height;
-			viewHolder.ivPhotoCover.getLayoutParams().width = width;
+			setPicDimen(viewHolder.ivPhoto, viewHolder.ivPhotoCover, height, width);
 			Logger.d(this, "path=" + path);
 			if (path.startsWith("http://")) {
 				ImageLoaderUtil.displayImageByProgress(path, viewHolder.ivPhoto, options, viewHolder.wiatProgressBar);
@@ -258,6 +257,20 @@ public abstract class BaseChatAdapter extends BaseAdapter {
 		default:
 			break;
 		}
+	}
+
+	private void setPicDimen(View pic, View picCover, int height, int width) {
+		float dimen = (float) MyUtils.dip2px(mContext, 40);
+		float ratio = 1.0f;
+		if (height < dimen && width < dimen) {
+			ratio = (height > width) ? dimen / height : dimen / width;
+		}
+		int finalHeight = (int) (height * ratio);
+		int finalWidth = (int) (width * ratio);
+		pic.getLayoutParams().height = finalHeight;
+		pic.getLayoutParams().width = finalWidth;
+		picCover.getLayoutParams().height = finalHeight;
+		picCover.getLayoutParams().width = finalWidth;
 	}
 
 	protected abstract void onBindView(ViewHolder viewHolder, MessageInfo messageInfo);

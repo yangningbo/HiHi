@@ -12,13 +12,15 @@ import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.chat.ChatTribeActivity;
 import com.gaopai.guiren.bean.MessageInfo;
+import com.gaopai.guiren.bean.MessageState;
 import com.gaopai.guiren.bean.MessageType;
 import com.gaopai.guiren.media.SpeexPlayerWrapper;
 
 public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickListener {
 	private boolean isOnLooker = false;
 
-	public TribeChatAdapter(Context context, SpeexPlayerWrapper playerWrapper, List<MessageInfo> messageInfos, boolean isOnLooker) {
+	public TribeChatAdapter(Context context, SpeexPlayerWrapper playerWrapper, List<MessageInfo> messageInfos,
+			boolean isOnLooker) {
 		super(context, playerWrapper, messageInfos);
 		this.isOnLooker = isOnLooker;
 	}
@@ -53,9 +55,11 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 	private View.OnLongClickListener showMoreWindowClickListener = new View.OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
-//			if (!isOnLooker) {
-				showActionWindow(v);
-//			}
+			MessageInfo messageInfo = (MessageInfo) v.getTag();
+			if (messageInfo.mIsShide == MessageState.MESSAGE_SHIDE) {
+				return true;
+			}
+			showActionWindow(v);
 			return true;
 		}
 	};

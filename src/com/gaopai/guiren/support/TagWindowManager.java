@@ -14,7 +14,6 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -25,15 +24,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.TagBean;
-import com.gaopai.guiren.bean.User;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
-import com.gaopai.guiren.utils.MyTextUtils.NameLengthFilter;
 import com.gaopai.guiren.view.FlowLayout;
+import com.gaopai.guiren.view.FlowLayout.OnHeightChangedListener;
 
 public class TagWindowManager implements OnClickListener {
 
@@ -83,6 +83,12 @@ public class TagWindowManager implements OnClickListener {
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		View view = mInflater.inflate(R.layout.popup_window_add_tags, null);
 		flowTagsAdd = (FlowLayout) view.findViewById(R.id.flow_tags_add);
+		flowTagsAdd.setOnHeightChangedListener(new OnHeightChangedListener() {
+			@Override
+			public void onHeightChanged() {
+				((ScrollView) flowTagsAdd.getParent()).scrollTo(0, flowTagsAdd.getHeight());				
+			}
+		});
 		setTagTransition(flowTagsAdd, mContext);
 		FlowLayout flowTagsRec = (FlowLayout) view.findViewById(R.id.flow_tags_recommend);
 		etTags = (EditText) view.findViewById(R.id.et_tags);
@@ -223,7 +229,7 @@ public class TagWindowManager implements OnClickListener {
 			break;
 		}
 	}
-
+	
 	private boolean checkIsTagInList(String tag) {
 		for (int i = 0, count = flowTagsAdd.getChildCount(); i < count; i++) {
 			String str = getText((ViewGroup) flowTagsAdd.getChildAt(i));
@@ -286,7 +292,9 @@ public class TagWindowManager implements OnClickListener {
 			// TODO Auto-generated method stub
 			String text = (String) v.getTag();
 			if (!checkIsTagInList(text)) {
+				Logger.d(this, "flowTagsAdd height="+flowTagsAdd.getHeight());
 				flowTagsAdd.addView(creatTagWithDeleteDefault(text), flowTagsAdd.getTextLayoutParams());
+				Logger.d(this, "flowTagsAdd height1="+flowTagsAdd.getHeight());
 			}
 		}
 	};
@@ -314,7 +322,11 @@ public class TagWindowManager implements OnClickListener {
 			button.setOnClickListener(listener);
 		} else {
 			button.setVisibility(View.GONE);
-			v.setOnClickListener(listener);
+			if (listener == null) {
+				v.setEnabled(false);
+			} else {
+				v.setOnClickListener(listener);
+			}
 		}
 		v.setTag(text);
 		return v;
@@ -331,7 +343,11 @@ public class TagWindowManager implements OnClickListener {
 			button.setOnClickListener(listener);
 		} else {
 			button.setVisibility(View.GONE);
-			v.setOnClickListener(listener);
+			if (listener == null) {
+				v.setEnabled(false);
+			} else {
+				v.setOnClickListener(listener);
+			}
 		}
 		v.setTag(text);
 		return v;

@@ -39,6 +39,7 @@ import com.gaopai.guiren.support.MessageHelper.DeleteCallback;
 import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.support.ShareManager.CallDyback;
 import com.gaopai.guiren.support.alarm.AlarmReceiver;
+import com.gaopai.guiren.support.alarm.MeetingAlarmHelper;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
 import com.gaopai.guiren.utils.Logger;
@@ -405,11 +406,12 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		case R.id.grid_notify_meeting_start: {
 			if (isAlarm()) {
-				cancelMeetingAlarm();
+				MeetingAlarmHelper.cancelMeetingAlarm(mContext, mMeeting);
+				showToast(R.string.switch_meeting_start_alarm_off);
 			} else {
-				setAlarmForMeeting();
+				MeetingAlarmHelper.setAlarmForMeeting(mContext, mMeeting);
+				showToast(R.string.switch_meeting_start_alarm_on);
 			}
-			changeAlarm(v);
 			break;
 		}
 		case R.id.grid_avoid_disturb: {
@@ -483,6 +485,13 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 				}
 			});
 			break;
+		case R.id.grid_deal_msg_report: {
+			Intent reportIntent = new Intent(mContext, ReportMsgActivity.class);
+			reportIntent.putExtra(ReportMsgActivity.KEY_TID, mMeetingID);
+			reportIntent.putExtra(ReportMsgActivity.KEY_TYPE, ReportMsgActivity.TYPE_MEETING);
+			startActivity(reportIntent);
+		}
+			break;
 		default:
 			break;
 		}
@@ -538,33 +547,40 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		// });
 	}
 
-	private void setAlarmForMeeting() {
-		if (isMeetingStart()) {
-			showToast(R.string.meeting_is_start);
-			return;
-		}
-		Intent intent = new Intent(MeetingDetailActivity.this, AlarmReceiver.class); // 创建Intent对象
-		intent.putExtra("id", mMeeting.id);
-		intent.setAction(this.getPackageName() + ".meeting." + mMeeting.id);
-		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 199823, intent, 0);
-		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Logger.d(this, "current=" + System.currentTimeMillis() + "   diff="
-				+ (System.currentTimeMillis() - mMeeting.start * 1000) / 1000);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, mMeeting.start * 1000, pi); // 设置闹钟，当前时间就唤醒
-	}
-
-	private void cancelMeetingAlarm() {
-		if (isMeetingStart()) {
-			showToast(R.string.meeting_is_start);
-			return;
-		}
-		Intent intent = new Intent(MeetingDetailActivity.this, AlarmReceiver.class); // 创建Intent对象
-		intent.setAction(this.getPackageName() + ".meeting." + mMeetingID);
-		PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this, 199823, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT); // 创建PendingIntent
-		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		alarmManager.cancel(pi);
-	}
+	// private void setAlarmForMeeting() {
+	// if (isMeetingStart()) {
+	// showToast(R.string.meeting_is_start);
+	// return;
+	// }
+	// Intent intent = new Intent(MeetingDetailActivity.this,
+	// AlarmReceiver.class); // 创建Intent对象
+	// intent.putExtra("id", mMeeting.id);
+	// intent.setAction(this.getPackageName() + ".meeting." + mMeeting.id);
+	// PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this,
+	// 199823, intent, 0);
+	// AlarmManager alarmManager = (AlarmManager)
+	// getSystemService(Context.ALARM_SERVICE);
+	// Logger.d(this, "current=" + System.currentTimeMillis() + "   diff="
+	// + (System.currentTimeMillis() - mMeeting.start * 1000) / 1000);
+	// alarmManager.set(AlarmManager.RTC_WAKEUP, mMeeting.start * 1000, pi); //
+	// 设置闹钟，当前时间就唤醒
+	// }
+	//
+	// private void cancelMeetingAlarm() {
+	// if (isMeetingStart()) {
+	// showToast(R.string.meeting_is_start);
+	// return;
+	// }
+	// Intent intent = new Intent(MeetingDetailActivity.this,
+	// AlarmReceiver.class); // 创建Intent对象
+	// intent.setAction(this.getPackageName() + ".meeting." + mMeetingID);
+	// PendingIntent pi = PendingIntent.getBroadcast(MeetingDetailActivity.this,
+	// 199823, intent,
+	// PendingIntent.FLAG_UPDATE_CURRENT); // 创建PendingIntent
+	// AlarmManager alarmManager = (AlarmManager)
+	// getSystemService(Context.ALARM_SERVICE);
+	// alarmManager.cancel(pi);
+	// }
 
 	private boolean isAlarm() {
 		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM);
@@ -625,6 +641,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 					sendBroadcast(ActionHolder.getExitIntent(mMeetingID, ActionHolder.ACTION_QUIT_MEETING));
 					// MainActivity.minusMeeting(mContext);
 					deleteConverstion();
+					MeetingAlarmHelper.cancelMeetingAlarm(mContext, mMeeting);
 				} else {
 					otherCondition(data.state, MeetingDetailActivity.this);
 				}
@@ -750,16 +767,16 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 	}
 
-	private void changeAlarm(View v) {
-		boolean isAlarm = isAlarm();
-		setAlarm(!isAlarm);
-		if (isAlarm) {
-			showToast(R.string.switch_meeting_start_alarm_off);
-		} else {
-			showToast(R.string.switch_meeting_start_alarm_on);
-		}
-		setAlarm(v);
-	}
+//	private void changeAlarm(View v) {
+//		boolean isAlarm = isAlarm();
+//		setAlarm(!isAlarm);
+//		if (isAlarm) {
+//			showToast(R.string.switch_meeting_start_alarm_off);
+//		} else {
+//			showToast(R.string.switch_meeting_start_alarm_on);
+//		}
+//		setAlarm(v);
+//	}
 
 	private void setAlarm(View v) {
 		boolean isAlarm = isAlarm();
@@ -826,7 +843,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			viewGroup = (ViewGroup) mInflater.inflate(R.layout.grid_meeting_more_faqiren, null);
 			view = viewGroup.findViewById(R.id.btn_hide_grid);
 			view.setOnClickListener(this);
-			view = viewGroup.findViewById(R.id.grid_enter_meeting);
+			view = viewGroup.findViewById(R.id.grid_deal_msg_report);
 			view.setOnClickListener(this);
 			view = viewGroup.findViewById(R.id.grid_invite_to_meeting);
 			view.setOnClickListener(this);

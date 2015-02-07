@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView
+    <com.gaopai.guiren.support.view.HandleTouchLinearLayout
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="0.0dip"
         android:layout_weight="1.0"
         android:background="@color/white" >
-    </com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView>
+    </com.gaopai.guiren.support.view.HandleTouchLinearLayout>
 
     <include
         android:id="@id/chat_box"

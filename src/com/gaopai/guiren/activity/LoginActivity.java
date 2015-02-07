@@ -402,11 +402,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	private void getLogin(final String type, final String sex, final String id, final String nickName,
 			final String head, final String password) {
 
-		String phone = getContacts();
+		String phone = getContacts(id);
 		DamiInfo.getLogin(type, sex, id, nickName, head, password, phone, MyUtils.getVersionName(mContext), "Android",
 				new IResponseListener() {
 					@Override
 					public void onSuccess(Object o) {
+						DamiApp.getInstance()
+								.getPou()
+								.setLong(SPConst.getCompositeKey(id, SPConst.KEY_READ_PHONE_NUM_TIME),
+										System.currentTimeMillis());
 						final LoginResult data = (LoginResult) o;
 						if (data.state != null && data.state.code == 0) {
 							if (data.data == null) {
@@ -492,11 +496,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		return DamiApp.getInstance().getPou().getBoolean(SPConst.getRecKey(mContext), true);
 	}
 
-	private String getContacts() {
-		long lastTime = DamiApp.getInstance().getPou().getLong(SPConst.KEY_READ_PHONE_NUM_TIME, 0L);
-
+	private String getContacts(String keyId) {
+		long lastTime = DamiApp.getInstance().getPou()
+				.getLong(SPConst.getCompositeKey(keyId, SPConst.KEY_READ_PHONE_NUM_TIME), 0L);
 		if (System.currentTimeMillis() - lastTime < DamiCommon.BASE_GET_PHONE_INTERVAL) {
-			DamiApp.getInstance().getPou().setLong(SPConst.KEY_READ_PHONE_NUM_TIME, System.currentTimeMillis());
 			return "";
 		}
 		DamiApp.getInstance().getPou().setLong(SPConst.KEY_READ_PHONE_NUM_TIME, System.currentTimeMillis());

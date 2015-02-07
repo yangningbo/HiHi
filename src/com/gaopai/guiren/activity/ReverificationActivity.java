@@ -51,7 +51,9 @@ public class ReverificationActivity extends BaseActivity {
 		setAbContentView(R.layout.activity_verification_profile);
 		type = getIntent().getIntExtra("type", TYPE_NORMAL);
 		mUser = DamiCommon.getLoginResult(this);
-		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		if (type == TYPE_NORMAL) {
+			mTitleBar.setLogo(R.drawable.selector_titlebar_back);
+		}
 		mTitleBar.setTitleText(R.string.click_verify);
 		if (type == 1) {
 			mTitleBar.addRightTextView(R.string.jump_over).setOnClickListener(new OnClickListener() {

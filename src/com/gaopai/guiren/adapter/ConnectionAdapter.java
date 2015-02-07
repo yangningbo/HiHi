@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import com.gaopai.guiren.fragment.ConnectionFragment;
 import com.gaopai.guiren.support.view.HeadView;
 import com.gaopai.guiren.utils.DateUtil;
 import com.gaopai.guiren.utils.ImageLoaderUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.MyGridLayout;
@@ -52,6 +55,7 @@ public class ConnectionAdapter extends BaseAdapter {
 	private static final int TYPE_BE_FRIENDS = 0;
 	private static final int TYPE_GENERAL = 1;
 	private static final int TYPE_PIC_GENERAL = 2;
+	private static final int TYPE_OTHER = 3;
 
 	private com.gaopai.guiren.bean.User mLogin;
 
@@ -102,8 +106,10 @@ public class ConnectionAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		Logger.d(this, "position =" + position + "  content=" + mData.get(position).jsoncontent);
 		int type = getItemViewType(position);
 		TypeHolder typeBean = mData.get(position);
+
 		try {
 			switch (type) {
 			case 0: {
@@ -123,28 +129,39 @@ public class ConnectionAdapter extends BaseAdapter {
 			}
 			case 2: {
 				if (convertView == null) {
-					convertView = buildErrorView();
+					convertView = handleErrorView(position, parent);
 				}
 				return convertView;
 			}
 			}
 		} catch (Exception e) {
-			convertView = buildErrorView();
+			e.printStackTrace();
+			convertView = handleErrorView(position, parent);
 		}
 		if (convertView == null) {
-			convertView = buildErrorView();
+			convertView = handleErrorView(position, parent);
 		}
 		return convertView;
 	}
 
-	public TextView buildErrorView() {
-		TextView tvDyCount = new TextView(mContext);
-		tvDyCount.setTextColor(mContext.getResources().getColor(R.color.general_text_gray));
-		int padding = MyUtils.dip2px(mContext, 5);
-		tvDyCount.setPadding(3 * padding, padding, 3 * padding, padding);
-		tvDyCount.setGravity(Gravity.CENTER);
-		tvDyCount.setText("数据出现错误...");
-		return tvDyCount;
+	public View handleErrorView(final int position, View parent) {
+		View convertView = buildErrorView();
+		parent.post(new Runnable() {
+			@Override
+			public void run() {
+				mData.remove(position);
+				notifyDataSetChanged();
+			}
+		});
+		return convertView;
+	}
+
+	public View buildErrorView() {
+		LinearLayout layout = new LinearLayout(mContext);
+		AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
+		layout.setLayoutParams(layoutParams);
+		return layout;
 	}
 
 	private void goToUserActivity(String uid) {
@@ -165,7 +182,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		if (type == TYPE_SOMEONE_FOLLOW_ME) {
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList), "关注了你"));
 		} else if (type == TYPE_SOMEONE_I_FOLLOW_FOLLOW) {
-			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
 					MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList))));
 		}
@@ -243,7 +260,7 @@ public class ConnectionAdapter extends BaseAdapter {
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "关注了你"));
 			break;
 		case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
-			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 			break;
@@ -252,7 +269,7 @@ public class ConnectionAdapter extends BaseAdapter {
 				viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您扩散了一条人脉",
 						MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 			} else {
-				viewHolder.tvTitle.setText(MyTextUtils.getSpannableString("您的好友",
+				viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 						MyTextUtils.addSingleUserSpan(content.realname, content.uid), "扩散了一条人脉",
 						MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 			}

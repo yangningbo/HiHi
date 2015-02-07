@@ -154,12 +154,16 @@ public class ShareManager implements OnClickListener {
 			weixinContent.setTitle(title);
 		}
 
-		if (!TextUtils.isEmpty(content)) {
-			circleMedia.setShareContent(content);
-			weixinContent.setShareContent(content);
-			qzoneContent.setShareContent(content);
-			mController.setShareContent(content);
+		if (TextUtils.isEmpty(content)) {
+			content = url;
+		} else if (!content.contains(url)) {
+			content = content + url;
 		}
+		circleMedia.setShareContent(content);
+		weixinContent.setShareContent(content);
+		qzoneContent.setShareContent(content);
+		mController.setShareContent(content);
+
 		mController.setShareMedia(circleMedia);
 		mController.setShareMedia(weixinContent);
 		mController.setShareMedia(qzoneContent);
@@ -179,22 +183,23 @@ public class ShareManager implements OnClickListener {
 		setShareContent(image, title, content, url);
 		showShareWindow(mActivity);
 	}
+
 	public void shareWebLink(String title, int image, String content, String url) {
 		setShareContent(image, title, content, url);
 		showShareWindow(mActivity);
 	}
 
-
 	public final static String APPID_QQ = "100424468";
 	public final static String APPKEY_QQ = "c7394704798a158208a74ab60104f0ba";
-//	public final static String APPID_WECHAT = "wx3d14f400726b7471";
-//	public final static String APPSECRET_WECHAT = "828653a1ee0829d6e3e13f6ba2aeda85";
+	// public final static String APPID_WECHAT = "wx3d14f400726b7471";
+	// public final static String APPSECRET_WECHAT =
+	// "828653a1ee0829d6e3e13f6ba2aeda85";
 	public final static String APPID_WECHAT = "wx68ac0fad4eac8a24";
 	public final static String APPSECRET_WECHAT = "441650f67e7ef862e33098c459ee2122";
 	private UMQQSsoHandler qqSsoHandler;
 
 	private void addHandler() {
-		
+
 		SinaSsoHandler sinaSsoHandler = new SinaSsoHandler();
 		sinaSsoHandler.addToSocialSDK();
 		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(mActivity, APPID_QQ, APPKEY_QQ);
