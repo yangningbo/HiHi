@@ -17,6 +17,7 @@ import com.gaopai.guiren.bean.MsgConfigResult;
 import com.gaopai.guiren.bean.MsgConfigResult.MsgConfigBean;
 import com.gaopai.guiren.bean.net.BaseNetBean;
 import com.gaopai.guiren.utils.DateUtil;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -251,8 +252,10 @@ public class NotifySettingActivity extends BaseActivity implements OnClickListen
 				showToast(R.string.choose_time_error);
 				return;
 			}
-			setPrivacy(settingBean.dnd, mHourFrom, mMinuteFrom, mHourTo, mMinuteTo, settingBean.ringtones,
-					settingBean.shake, settingBean.dami);
+			if (view.isShown()) {//avoid being called twice
+				setPrivacy(settingBean.dnd, mHourFrom, mMinuteFrom, mHourTo, mMinuteTo, settingBean.ringtones,
+						settingBean.shake, settingBean.dami);
+			}
 
 		}
 	};

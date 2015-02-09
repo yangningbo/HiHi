@@ -418,6 +418,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 								return;
 							}
 							User user = data.data;
+//							if (Logger.debug) {
+//								user.nextpage = "bindphone";
+//							}
 							if (!TextUtils.isEmpty(user.nextpage)) {
 								if (user.nextpage.equals("completeinfo")) {
 									startActivity(ReverificationActivity.getIntent(mContext));
@@ -430,8 +433,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 								}
 								return;
 							}
-							goToRecomendPage();
 							loginSuccessAction(user);
+							goToRecomendPage();
 						} else {
 							if (data.state != null && data.state.code == 15) {
 								showDialog(null, data.data.alertmessage, new DialogInterface.OnClickListener() {

@@ -65,6 +65,7 @@ public class ReverificationActivity extends BaseActivity {
 			});
 		}
 		etName = (EditText) findViewById(R.id.et_real_name);
+		etName.setFilters(MyTextUtils.creatTextLengthFilter(15));
 		etCompany = (EditText) findViewById(R.id.et_company);
 		etIndustry = (TextView) findViewById(R.id.et_industry);
 		etJob = (EditText) findViewById(R.id.et_job);

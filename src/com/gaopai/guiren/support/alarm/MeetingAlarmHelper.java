@@ -18,8 +18,12 @@ public class MeetingAlarmHelper {
 	 * 1, meeting has passed 
 	 * 2, join meeting success 
 	 * 3, reset meeting start time
+	 * 4, agree join meeting, agree be guest or zhuchiren
 	 */
 	public static void setAlarmForMeeting(Context context, Tribe mMeeting) {
+		if (mMeeting == null) {
+			 return;
+		}
 		if (mMeeting.start * 1000 < System.currentTimeMillis()) {
 			if (context instanceof BaseActivity) {
 				((BaseActivity) context).showToast(R.string.meeting_is_start);
@@ -28,7 +32,8 @@ public class MeetingAlarmHelper {
 		}
 		setAlarm(context, true, mMeeting.id);
 		Intent intent = new Intent(context, AlarmReceiver.class); // 创建Intent对象
-		intent.putExtra("id", mMeeting.id);
+		intent.putExtra("id", "aaaaaaaaaaaaaaaaaa");
+		intent.putExtra("name", mMeeting.name);
 		intent.setAction(context.getPackageName() + ".meeting." + mMeeting.id);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 199823, intent, 0);
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -46,6 +51,9 @@ public class MeetingAlarmHelper {
 	 * 2, has been kicked out of meeting
 	 */
 	public static void cancelMeetingAlarm(Context context, Tribe mMeeting) {
+		if (mMeeting == null) {
+			 return;
+		}
 		if (mMeeting.end * 1000 < System.currentTimeMillis()) {
 			if (context instanceof BaseActivity) {
 				((BaseActivity) context).showToast(R.string.meeting_is_over);
@@ -55,7 +63,7 @@ public class MeetingAlarmHelper {
 		setAlarm(context, false, mMeeting.id);
 		Intent intent = new Intent(context, AlarmReceiver.class); // 创建Intent对象
 		intent.setAction(context.getPackageName() + ".meeting." + mMeeting.id);
-		PendingIntent pi = PendingIntent.getBroadcast(context, 199823, intent, PendingIntent.FLAG_UPDATE_CURRENT); // 创建PendingIntent
+		PendingIntent pi = PendingIntent.getBroadcast(context, 199823, intent, 0); // 创建PendingIntent
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(pi);
 	}

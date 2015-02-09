@@ -86,7 +86,7 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 		viewHolder.layoutHeader.setMVP(user.bigv == 1);
 
 		viewHolder.tvUserName.setText(user.realname);
-		viewHolder.tvUserInfo.setText(user.company);
+		viewHolder.tvUserInfo.setText(com.gaopai.guiren.bean.User.getUserInfo(user.company, user.post));
 		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));
 
 		viewHolder.rlInfoLayout.setTag(user.uid);

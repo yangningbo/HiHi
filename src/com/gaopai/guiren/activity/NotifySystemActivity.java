@@ -43,6 +43,7 @@ import com.gaopai.guiren.db.NotifyUserTable;
 import com.gaopai.guiren.receiver.NotifySystemMessage;
 import com.gaopai.guiren.support.ConversationHelper;
 import com.gaopai.guiren.support.NotifyHelper;
+import com.gaopai.guiren.support.alarm.MeetingAlarmHelper;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -63,7 +64,6 @@ public class NotifySystemActivity extends BaseActivity {
 	private final static int REFUSE_SEEKING_CONTACTS_REQUEST = 1111;
 	public final static String ACTION_SYSTEM_NOTIFY = "com.gaopai.guiren.intent.action.ACTION_SYSTEM_NOTIFY";
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,8 +74,6 @@ public class NotifySystemActivity extends BaseActivity {
 		ConversationHelper.resetCountAndRefresh(mContext, "-1");
 		NotifyHelper.clearSysNotification(mContext);
 	}
-	
-	
 
 	@Override
 	protected void registerReceiver(IntentFilter intentFilter) {
@@ -92,8 +90,6 @@ public class NotifySystemActivity extends BaseActivity {
 			getDataFromDb();
 		}
 	}
-
-
 
 	private void init() {
 		mTitleBar.setLogo(R.drawable.selector_titlebar_back);
@@ -482,20 +478,21 @@ public class NotifySystemActivity extends BaseActivity {
 			DamiInfo.agreeInvite(mNotifyList.get(pos).room.id, new MyListener(pos));
 			// MainActivity.addTribe(mContext);
 		} else if (type == 1) {// meeting
-			DamiInfo.agreeMeetingInvite(mNotifyList.get(pos).room.id, new MyListener(pos));
+			DamiInfo.agreeMeetingInvite(mNotifyList.get(pos).room.id, new MyListener(pos, type));
 			// MainActivity.addMeeting(mContext);
 		} else if (type == 2) {
 			DamiInfo.agreeSeekingContacts(mNotifyList.get(pos).user.uid, mNotifyList.get(pos).message.id,
 					new MyListener(pos));
 		} else if (type == 3) {// 嘉宾
-			DamiInfo.chargeinvite(mNotifyList.get(pos).room.id, "3", "1", new MyListener(pos));
+			DamiInfo.chargeinvite(mNotifyList.get(pos).room.id, "3", "1", new MyListener(pos, type));
 		} else if (type == 4) {// 主持人
-			DamiInfo.chargeinvite(mNotifyList.get(pos).room.id, "2", "1", new MyListener(pos));
+			DamiInfo.chargeinvite(mNotifyList.get(pos).room.id, "2", "1", new MyListener(pos, type));
 		}
 	}
 
 	class MyListener extends SimpleResponseListener {
 		private int postion;
+		private int type;
 
 		public MyListener(Context context) {
 			super(context);
@@ -508,6 +505,13 @@ public class NotifySystemActivity extends BaseActivity {
 		public MyListener(int pos) {
 			super(mContext, getString(R.string.request_internet_now));
 			postion = pos;
+			this.type = 0;
+		}
+
+		public MyListener(int pos, int type) {
+			super(mContext, getString(R.string.request_internet_now));
+			postion = pos;
+			this.type = type;
 		}
 
 		@Override
@@ -521,6 +525,9 @@ public class NotifySystemActivity extends BaseActivity {
 			SQLiteDatabase db = DBHelper.getInstance(mContext).getWritableDatabase();
 			NotifyTable table = new NotifyTable(db);
 			table.update(mNotifyList.get(postion));
+			if (type == 1 || type == 3 || type == 4) {
+				MeetingAlarmHelper.setAlarmForMeeting(mContext, mNotifyList.get(postion).room);
+			}
 		}
 	}
 

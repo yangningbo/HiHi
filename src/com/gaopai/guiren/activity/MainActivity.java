@@ -86,13 +86,14 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	public static final String ACTION_CHAT_PRIVATE = "com.guiren.intent.action.ACTION_CHAT_PRIVATE";
 	public static final String ACTION_CHAT_TRIBE = "com.guiren.intent.action.ACTION_CHAT_TRIBE";
 	public static final String ACTION_NOTIFY_SYSTEM = "com.guiren.intent.action.ACTION_NOTIFY_SYSTEM";
+	public static final String ACTION_NOTIFY_MEETING_START = "com.guiren.intent.action.ACTION_NOTIFY_MEETING_START";
 
 	public static final String ACTION_LOGIN_SHOW = "com.guiren.intent.action.ACTION_LOGIN_SHOW";
 
 	private View layoutWelcome;
 
 	private Intent notifyItent;
-	
+
 	private boolean isLogin = false;
 
 	/**
@@ -122,7 +123,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 			onLoginSuccess();
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -373,6 +374,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		} else if (ACTION_NOTIFY_SYSTEM.equals(action)) {
 			intent.setClass(mContext, NotifySystemActivity.class);
 			mContext.startActivity(intent);
+		} else if (ACTION_NOTIFY_MEETING_START.equals(action)) {
+			String tid = intent.getStringExtra("id");
+			if (!TextUtils.isEmpty(tid)) {
+				mContext.startActivity(MeetingDetailActivity.getAlarmIntent(mContext, tid));
+			}
 		}
 	}
 
@@ -775,7 +781,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		DamiCommon.saveLoginResult(mContext, user);
 		mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 	}
-	
 
 	public static void addFavoriteCount(Context mContext) {
 		User user = DamiCommon.getLoginResult(mContext);

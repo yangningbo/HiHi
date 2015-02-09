@@ -246,6 +246,11 @@ public class MyTextUtils {
 	public static InputFilter[] tagTextFilters = { new MyTextUtils.NameLengthFilter(NameLengthFilter.TAG_LENGTH) };
 	public static InputFilter[] tagEditFilters = { new MyTextUtils.NameLengthFilter(NameLengthFilter.TAG_LENGTH, true) };
 
+	public static InputFilter[] creatTextLengthFilter(int len) {
+		InputFilter[] inputFilters = { new MyTextUtils.NameLengthFilter(len, true) };
+		return inputFilters;
+	}
+
 	public static class NameLengthFilter implements InputFilter {
 		public static final int TAG_LENGTH = 10;
 		int MAX_EN;
@@ -267,7 +272,8 @@ public class MyTextUtils {
 		public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 			if (isEdit) {
 				int destCount = dest.toString().length() + getChineseCount(dest.toString());
-//				int sourceCount = source.toString().length() + getChineseCount(source.toString());
+				// int sourceCount = source.toString().length() +
+				// getChineseCount(source.toString());
 				return source.toString().subSequence(0, getLimitStr(source.toString(), MAX_EN - destCount));
 			} else {
 				return source.toString().subSequence(0, getLimitStr(source.toString(), MAX_EN));
@@ -286,11 +292,11 @@ public class MyTextUtils {
 			return count;
 		}
 	}
-	
+
 	public static boolean isChinese(char c) {
 		return '\u4e00' <= c && c <= '\u9fa5';
 	}
-	
+
 	public static int getLimitStr(String str, int desiredLen) {
 		int length = str.length();
 		int resultLen = 0;
@@ -315,7 +321,7 @@ public class MyTextUtils {
 	}
 
 	public static String getSubString(String paramString, int len) {
-		return paramString.substring(0, getLimitStr(paramString, 2*len));
+		return paramString.substring(0, getLimitStr(paramString, 2 * len));
 	}
 
 	public static int length(String paramString) {
