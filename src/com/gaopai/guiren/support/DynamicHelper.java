@@ -115,9 +115,6 @@ public class DynamicHelper {
 	}
 
 	public void updateUser() {
-		if (user == null) {
-			return;
-		}
 		user = DamiCommon.getLoginResult(mContext);
 	}
 

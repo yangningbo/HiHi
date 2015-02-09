@@ -71,9 +71,6 @@ public class DynamicAdapter extends BaseAdapter {
 	}
 
 	public void updateUser() {
-		if (user == null) {
-			return;
-		}
 		user = DamiCommon.getLoginResult(mContext);
 		if (dynamicHelper != null) {
 			dynamicHelper.updateUser();

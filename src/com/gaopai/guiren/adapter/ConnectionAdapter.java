@@ -36,6 +36,7 @@ import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.MyGridLayout;
+import com.umeng.socialize.net.u;
 
 public class ConnectionAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;
@@ -72,9 +73,6 @@ public class ConnectionAdapter extends BaseAdapter {
 	}
 
 	public void updateUser() {
-		if (mLogin == null) {
-			return;
-		}
 		mLogin = DamiCommon.getLoginResult(mContext);
 	}
 
@@ -285,7 +283,7 @@ public class ConnectionAdapter extends BaseAdapter {
 		viewHolder.layoutHeader.setMVP(user.bigv == 1);
 
 		viewHolder.tvUserName.setText(user.realname);
-		viewHolder.tvUserInfo.setText(user.company);
+		viewHolder.tvUserInfo.setText(com.gaopai.guiren.bean.User.getUserInfo(user.company, user.post));
 		viewHolder.tvDateInfo.setText(DateUtil.getHumanReadTime(Long.valueOf(typeBean.addtime)));
 
 		viewHolder.rlInfoLayout.setTag(user.uid);
@@ -302,6 +300,7 @@ public class ConnectionAdapter extends BaseAdapter {
 			user.realname = content.realname;
 			user.company = content.company;
 			user.uid = content.uid;
+			user.bigv = content.bigv;
 		}
 		return user;
 	}

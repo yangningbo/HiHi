@@ -26,6 +26,7 @@ import com.gaopai.guiren.bean.BatFollowResult;
 import com.gaopai.guiren.bean.BatFollowResult.BatFollowBean;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.UserList;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.ViewUtil;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
@@ -106,9 +107,8 @@ public class RecommendFriendFragment extends BaseFragment implements OnClickList
 			}
 
 		});
-
 	}
-
+	
 	private List<User> parseUserList(List<User> sourceList) {
 		List<User> resultList = new ArrayList<User>();
 		int contactVipLen = 0;

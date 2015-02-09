@@ -94,6 +94,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 			}
 		});
 		if (savedInstanceState != null) {
+			cameralHelper.retriveCropPath(savedInstanceState.getString("cropPath"));
 			cameralHelper.retriveUri((Uri) savedInstanceState.getParcelable("uri"));
 		}
 	}
@@ -101,6 +102,7 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putString("cropPath", cameralHelper.getCropPath());
 		outState.putParcelable("uri", cameralHelper.getUri());
 	}
 

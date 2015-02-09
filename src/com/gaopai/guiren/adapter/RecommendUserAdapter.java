@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Set;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
@@ -131,7 +130,9 @@ public class RecommendUserAdapter extends BaseAdapter {
 		holder.tvUserName.setText(user.realname);
 		holder.tvUserInfo.setText(User.getUserInfo(user));
 		holder.tvRecommendInfo.setVisibility(View.VISIBLE);
+		holder.layoutHeader.setMVP(false);
 		if (user.bigv == 1) {
+			holder.layoutHeader.setMVP(true);
 			holder.tvRecommendInfo.setText("来自：贵人汇VIP用户");
 		} else if (user.iscontact == 1) {
 			holder.tvRecommendInfo.setText("来自：您的通讯录朋友");

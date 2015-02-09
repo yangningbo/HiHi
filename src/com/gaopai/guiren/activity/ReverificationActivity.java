@@ -18,6 +18,7 @@ import com.gaopai.guiren.DamiInfo;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.User;
 import com.gaopai.guiren.bean.net.BaseNetBean;
+import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyTextUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.utils.ViewUtil;
@@ -55,7 +56,7 @@ public class ReverificationActivity extends BaseActivity {
 			mTitleBar.setLogo(R.drawable.selector_titlebar_back);
 		}
 		mTitleBar.setTitleText(R.string.click_verify);
-		if (type == 1) {
+		if (type == TYPE_SHORT_OF_INTEGRA) {
 			mTitleBar.addRightTextView(R.string.jump_over).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -138,6 +139,7 @@ public class ReverificationActivity extends BaseActivity {
 	}
 
 	private void goToRecomendPage() {
+		Logger.d(this, "rec = " + showRecomendPage());
 		if (showRecomendPage()) {
 			DamiApp.getInstance().getPou().setBoolean(SPConst.getRecKey(mContext), false);
 			Intent intent = new Intent(ReverificationActivity.this, RecommendActivity.class);

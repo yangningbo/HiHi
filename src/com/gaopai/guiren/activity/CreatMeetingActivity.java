@@ -113,6 +113,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			}
 		});
 		if (savedInstanceState != null) {
+			cameralHelper.retriveCropPath(savedInstanceState.getString("cropPath"));
 			cameralHelper.retriveUri((Uri) savedInstanceState.getParcelable("uri"));
 		}
 	}
@@ -120,6 +121,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putString("cropPath", cameralHelper.getCropPath());
 		outState.putParcelable("uri", cameralHelper.getUri());
 	}
 

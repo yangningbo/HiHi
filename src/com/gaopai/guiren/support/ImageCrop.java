@@ -16,8 +16,8 @@ import android.text.TextUtils;
 
 public class ImageCrop {
 	public static final int REQUEST_CROP_IMG = 199;
-	public static final int MEETING_WIDTH = 64;
-	public static final int MEETING_HEIGHT = 24;
+	public static final int MEETING_WIDTH = 640;
+	public static final int MEETING_HEIGHT = 240;
 
 	public static final int HEADER_WIDTH = 300;
 	public static final int HEADER_HEIGHT = 300;
@@ -59,10 +59,10 @@ public class ImageCrop {
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
-		intent.putExtra("aspectX", 1);
-		intent.putExtra("aspectY", 1);
-		intent.putExtra("outputX", 40);
-		intent.putExtra("outputY", 40);
+		intent.putExtra("aspectX", outputX);
+		intent.putExtra("aspectY", outputY);
+		intent.putExtra("outputX", outputX);
+		intent.putExtra("outputY", outputY);
 		intent.putExtra("scale", true);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 		intent.putExtra("return-data", false);

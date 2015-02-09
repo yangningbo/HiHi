@@ -219,6 +219,11 @@ public class User implements Serializable {
 				.isEmpty(tUser.post) ? tUser.company : tUser.company + "/" + tUser.post);
 	}
 
+	public static String getUserInfo(String company, String post) {
+		return TextUtils.isEmpty(company) ? (TextUtils.isEmpty(post) ? "" : post) : (TextUtils.isEmpty(post) ? company
+				: company + "/" + post);
+	}
+
 	public static boolean checkCanInvite(User mUser, BaseActivity activity) {
 		if (mUser == null) {
 			return false;
