@@ -174,6 +174,14 @@ public class CameralHelper {
 		imageCrop.retriveUri(uri);
 	}
 	
+	public void retriveCropPath(String path) {
+		this.cropPath = path;
+	}
+	
+	public String getCropPath() {
+		return cropPath;
+	}
+	
 	public Uri getUri() {
 		return imageCrop.getUri();
 	}

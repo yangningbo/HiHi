@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -92,7 +93,17 @@ public class CreatTribeActivity extends BaseActivity implements OnClickListener 
 				setPic(path);
 			}
 		});
+		if (savedInstanceState != null) {
+			cameralHelper.retriveUri((Uri) savedInstanceState.getParcelable("uri"));
+		}
 	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable("uri", cameralHelper.getUri());
+	}
+
 
 	private void bindEditView() {
 		mTitleBar.setTitleText(R.string.edit_tribe);

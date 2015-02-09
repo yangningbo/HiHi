@@ -1,5 +1,6 @@
 package com.gaopai.guiren.activity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -141,8 +142,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		initTitleBar(false);
 		setAbContentView(R.layout.activity_profile);
-		addLoadingView();
-		showLoadingView();
+
 		tuid = getIntent().getStringExtra(KEY_UID);
 		if (TextUtils.isEmpty(tuid)) {
 			Uri data = getIntent().getData();
@@ -161,9 +161,33 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		dynamicHelper = new DynamicHelper(mContext, DynamicHelper.DY_PROFILE);
 		dynamicHelper.setCallback(dynamicCallback);
 		cameralHelper = new CameralHelper(this);
+		cameralHelper.setCallback(callback);
+		cameralHelper.setOption(new Option(1, true, ImageCrop.HEADER_WIDTH, ImageCrop.HEADER_HEIGHT));
 		tagWindowManager = new TagWindowManager(this, isSelf, tagCallback);
-		getUserInfo();
-		getRecTags();
+		if (savedInstanceState != null) {
+			cameralHelper.retriveUri((Uri) savedInstanceState.getParcelable("uri"));
+			cameralHelper.retriveCropPath(savedInstanceState.getString("cropPath"));
+			tUser = (User) savedInstanceState.getSerializable("tUser");
+			recTagList = (List<TagBean>) savedInstanceState.getSerializable("recTagList");
+			onGetUserDataSuccess();
+		} else {
+			addLoadingView();
+			showLoadingView();
+			getUserInfo();
+			getRecTags();
+		}
+
+ 
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable("uri", cameralHelper.getUri());
+		outState.putString("cropPath", cameralHelper.getCropPath());
+		outState.putSerializable("tUser", tUser);
+		outState.putSerializable("recTagList", (Serializable) recTagList);
+		
 	}
 
 	@Override
@@ -221,11 +245,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				if (data.state != null && data.state.code == 0) {
 					if (data.data != null) {
 						showContent();
-						tUser = data.data;
-						tUser.realname = User.getUserName(tUser);
 						updateUserInfo(data.data);
-						tagWindowManager.setTagList(tUser.tag);
-						bindView();
+						tUser = data.data;
+						onGetUserDataSuccess();
 					}
 				} else {
 					showErrorView();
@@ -238,6 +260,12 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 				showErrorView();
 			}
 		});
+	}
+	
+	private void onGetUserDataSuccess() {
+		tUser.realname = User.getUserName(tUser);
+		tagWindowManager.setTagList(tUser.tag);
+		bindView();
 	}
 
 	private void updateUserInfo(User user) {
@@ -1211,8 +1239,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
 	private void changeHeadImg() {
 		headerImage = "";
-		cameralHelper.setCallback(callback);
-		cameralHelper.setOption(new Option(1, true, ImageCrop.HEADER_WIDTH, ImageCrop.HEADER_HEIGHT));
+
 		cameralHelper.showDefaultSelectDialog(getString(R.string.set_header));
 	}
 

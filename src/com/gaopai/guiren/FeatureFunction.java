@@ -175,59 +175,6 @@ public class FeatureFunction {
 
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public static Bitmap scalePicture(String filename) {
-//		Bitmap bitmap = null;
-//		try {
-//			BitmapFactory.Options opt = new BitmapFactory.Options();
-//			opt.inJustDecodeBounds = true;
-//			bitmap = BitmapFactory.decodeFile(filename, opt);
-//			int picWidth = opt.outWidth;
-//			int picHeight = opt.outHeight;
-//
-//			int maxDimen = 800;
-//
-//			opt.inSampleSize = 1;
-//			boolean longEnough = (picHeight > picWidth ? picHeight / picWidth : picWidth / picHeight) > 10;
-//			if (longEnough) {
-//				if (picWidth < picHeight) {
-//					if (picWidth > maxDimen) {
-//						opt.inSampleSize = picWidth / maxDimen;
-//					}
-//				} else {
-//					if (picHeight > maxDimen) {
-//						opt.inSampleSize = picHeight / maxDimen;
-//					}
-//				}
-//				opt.inJustDecodeBounds = false;
-//				return BitmapFactory.decodeFile(filename, opt);
-//			}
-//
-//			if (picWidth > picHeight) {
-//				if (picWidth > maxDimen) {
-//					opt.inSampleSize = picWidth / maxDimen;
-//				}
-//			} else {
-//				if (picHeight > maxDimen) {
-//					opt.inSampleSize = picHeight / maxDimen;
-//				}
-//			}
-//
-//			// 这次再真正地生成一个有像素的，经过缩放了的bitmap
-//			opt.inJustDecodeBounds = false;
-//			bitmap = BitmapFactory.decodeFile(filename, opt);
-//			int afterwidth = bitmap.getWidth();
-//			int afterheight = bitmap.getHeight();
-//			float con = 1.0f;
-//			int bigger = afterheight > afterwidth ? afterheight : afterwidth;
-//			if (bigger > maxDimen) {
-//				con = (float) maxDimen / bigger;
-//			}
-//
-//			bitmap = Bitmap.createScaledBitmap(bitmap, (int) (con * afterwidth), (int) (con * afterheight), true);
-//		} catch (Exception e) {
-//			// TODO: handle exception]
-//			e.printStackTrace();
-//		}
-//		return bitmap;
 		Bitmap bitmap = null;
 		try {
 			BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -236,17 +183,31 @@ public class FeatureFunction {
 			int picWidth = opt.outWidth;
 			int picHeight = opt.outHeight;
 
-			int width = 1024;
+			int maxDimen = 800;
 
-			// isSampleSize是表示对图片的缩放程度，比如值为2图片的宽度和高度都变为以前的1/2
 			opt.inSampleSize = 1;
+			boolean longEnough = (picHeight > picWidth ? picHeight / picWidth : picWidth / picHeight) > 10;
+			if (longEnough) {
+				if (picWidth < picHeight) {
+					if (picWidth > maxDimen) {
+						opt.inSampleSize = picWidth / maxDimen;
+					}
+				} else {
+					if (picHeight > maxDimen) {
+						opt.inSampleSize = picHeight / maxDimen;
+					}
+				}
+				opt.inJustDecodeBounds = false;
+				return BitmapFactory.decodeFile(filename, opt);
+			}
+
 			if (picWidth > picHeight) {
-				if (picWidth > width) {
-					opt.inSampleSize = picWidth / width;
+				if (picWidth > maxDimen) {
+					opt.inSampleSize = picWidth / maxDimen;
 				}
 			} else {
-				if (picHeight > width) {
-					opt.inSampleSize = picHeight / width;
+				if (picHeight > maxDimen) {
+					opt.inSampleSize = picHeight / maxDimen;
 				}
 			}
 
@@ -257,8 +218,8 @@ public class FeatureFunction {
 			int afterheight = bitmap.getHeight();
 			float con = 1.0f;
 			int bigger = afterheight > afterwidth ? afterheight : afterwidth;
-			if (bigger > width) {
-				con = (float) width / bigger;
+			if (bigger > maxDimen) {
+				con = (float) maxDimen / bigger;
 			}
 
 			bitmap = Bitmap.createScaledBitmap(bitmap, (int) (con * afterwidth), (int) (con * afterheight), true);
