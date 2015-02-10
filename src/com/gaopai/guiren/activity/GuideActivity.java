@@ -26,6 +26,7 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.R.drawable;
 import com.gaopai.guiren.adapter.FunctionPagerAdapter;
 import com.gaopai.guiren.utils.MyUtils;
+import com.gaopai.guiren.utils.PreferenceOperateUtils;
 import com.gaopai.guiren.utils.SPConst;
 import com.gaopai.guiren.view.ViewPager;
 import com.gaopai.guiren.view.ViewPager.OnPageChangeListener;
@@ -47,19 +48,18 @@ public class GuideActivity extends Activity implements OnPageChangeListener {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.once_scroll);
 		OnceScroll onceScroll = (OnceScroll) findViewById(R.id.once_scroll);
 		onceScroll.setCallback(new Callback() {
-			
+
 			@Override
 			public void onClick() {
 				goActivity();
 			}
 		});
-//		imgArray = getResources().getStringArray(R.array.function_array);
-//		initData();
+		// imgArray = getResources().getStringArray(R.array.function_array);
+		// initData();
 		saveGuideVersion();
 	}
 
@@ -69,7 +69,10 @@ public class GuideActivity extends Activity implements OnPageChangeListener {
 	 */
 	private void saveGuideVersion() {
 		int version = FeatureFunction.getAppVersion(this);
-		DamiApp.getInstance().getPou().setInt(SPConst.KEY_GUIDE_START_PAGE, version);
+		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_DEFAULT);
+		po.setInt(SPConst.KEY_GUIDE_START_PAGE, version);
+		// DamiApp.getInstance().getPou().setInt(SPConst.KEY_GUIDE_START_PAGE,
+		// version);
 	}
 
 	/**
@@ -85,8 +88,7 @@ public class GuideActivity extends Activity implements OnPageChangeListener {
 	 * 初始化图片，并绑定到ViewPager上</br> 在最后一张图片上设置跳转监听
 	 */
 	private void initData() {
-		LayoutParams mParams = new LayoutParams(
-				android.view.ViewGroup.LayoutParams.FILL_PARENT,
+		LayoutParams mParams = new LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT,
 				android.view.ViewGroup.LayoutParams.FILL_PARENT);
 		List<View> views = new ArrayList<View>();
 		for (int i = 0; i < imgArray.length; i++) {
@@ -139,8 +141,7 @@ public class GuideActivity extends Activity implements OnPageChangeListener {
 
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
-		if (event.getAction() == KeyEvent.ACTION_DOWN
-				&& event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 			return true;
 		}
 		return super.dispatchKeyEvent(event);
@@ -158,8 +159,7 @@ public class GuideActivity extends Activity implements OnPageChangeListener {
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
-		if (mViewPager.getRelationX() > 0 && mPosition == imgArray.length - 1
-				&& state == 2) {
+		if (mViewPager.getRelationX() > 0 && mPosition == imgArray.length - 1 && state == 2) {
 			goActivity();
 		}
 	}

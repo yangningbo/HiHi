@@ -418,9 +418,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 								return;
 							}
 							User user = data.data;
-//							if (Logger.debug) {
-//								user.nextpage = "bindphone";
-//							}
 							if (!TextUtils.isEmpty(user.nextpage)) {
 								if (user.nextpage.equals("completeinfo")) {
 									startActivity(ReverificationActivity.getIntent(mContext));

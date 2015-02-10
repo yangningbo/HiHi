@@ -109,11 +109,13 @@ public class ReverificationActivity extends BaseActivity {
 							mUser.weixin = weixin;
 							mUser.weibo = weibo;
 							DamiCommon.saveLoginResult(mContext, mUser);
+							
+							Logger.d(this, DamiCommon.getLoginResult(ReverificationActivity.this).realname);
 							if (type == TYPE_SHORT_OF_INTEGRA) {
 								goToRecomendPage();
 								return;
 							}
-							sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+//							sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 							setResult(RESULT_OK);
 							ReverificationActivity.this.finish();
 						} else {

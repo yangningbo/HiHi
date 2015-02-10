@@ -26,7 +26,7 @@ public class HandleTouchLinearLayout extends PullToRefreshListView {
 						actionDownListener.onTouch(HandleTouchLinearLayout.this, ev);
 					}
 				}
-			}, 300);
+			}, 0);
 
 		}
 		return super.dispatchTouchEvent(ev);

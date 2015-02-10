@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		}
 		if (!isLogin) {
 			showWelcomePage();
-			showMainpage();
+			showMainpageOnTime();
 		} else {
 			onLoginSuccess();
 		}
@@ -161,7 +161,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		return getResources().getDrawable(id);
 	}
 
-	public void showMainpage() {
+	public void showMainpageOnTime() {
 		Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
 			@Override
@@ -343,6 +343,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		} else if (ACTION_LOGIN_OUT.equals(action)) {
 			isLogin = false;
 			dragLayout.closeQuick();
+			getIntent().setAction(null);
 			Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
 			startActivityForResult(loginIntent, LOGIN_REQUEST);
 		} else if (LOGIN_SUCCESS_ACTION.equals(action)) {
@@ -586,7 +587,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	private boolean startGuidePage() {
 		boolean isShowGudie = false;
-		int result = DamiApp.getInstance().getPou().getInt(SPConst.KEY_GUIDE_START_PAGE, 0);
+		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_DEFAULT);
+		// int result = DamiApp.getPo().getInt(SPConst.KEY_GUIDE_START_PAGE, 0);
+		int result = po.getInt(SPConst.KEY_GUIDE_START_PAGE, 0);
 		int version = FeatureFunction.getAppVersion(this);
 		Logger.d(this, "save version=" + result + "   current version=" + version);
 		if (result != version) {

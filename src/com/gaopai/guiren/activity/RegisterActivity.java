@@ -386,8 +386,8 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 						showToast(R.string.bind_phone_success);
 						if (mLogin != null) {
 							mLogin.phone = etPhone.getText().toString();
-							DamiCommon.saveLoginResult(mContext, mLogin);
 							User user = data.data;
+							DamiCommon.saveLoginResult(mContext, user);
 							if (user != null && !TextUtils.isEmpty(user.nextpage)
 									&& user.nextpage.equals("completeinfo")) {
 								RegisterActivity.this.setResult(RESULT_FINISH_PROFILE);

@@ -1,6 +1,8 @@
 package com.gaopai.guiren.activity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.Dialog;
@@ -8,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -92,8 +95,27 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		});
 		initViews();
 		cameralHelper = new CameralHelper(this);
+		cameralHelper.setCallback(callback);
 		getTags();
 		showGuideDialog_chat(tvUseRealName);
+
+		if (savedInstanceState != null) {
+			picList = (List<String>) savedInstanceState.getSerializable("picList");
+			setImageFromPictureList(picList);
+			List<String> tagList = (List<String>) savedInstanceState.getSerializable("tagList");
+			setTagFromList(tagList);
+			isHideName = savedInstanceState.getInt("isHideName");
+			changeIsHideName(isHideName);
+		}
+		System.gc();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putSerializable("picList", (Serializable) picList);
+		outState.putSerializable("tagList", (Serializable) getTagList());
+		outState.putInt("isHideName", isHideName);
 	}
 
 	@Override
@@ -187,33 +209,33 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			return;
 		}
 
-		DamiInfo.sendDynamic(etDynamicMsg.getText().toString().trim(), fileList, isHideName, tags, new SimpleResponseListener(
-				mContext, R.string.send_now) {
+		DamiInfo.sendDynamic(etDynamicMsg.getText().toString().trim(), fileList, isHideName, tags,
+				new SimpleResponseListener(mContext, R.string.send_now) {
 
-			@Override
-			public void onSuccess(Object o) {
-				// TODO Auto-generated method stub
-				SendDynamicResult data = (SendDynamicResult) o;
-				if (data.state != null && data.state.code == 0) {
-					showToast(R.string.send_success);
+					@Override
+					public void onSuccess(Object o) {
+						// TODO Auto-generated method stub
+						SendDynamicResult data = (SendDynamicResult) o;
+						if (data.state != null && data.state.code == 0) {
+							showToast(R.string.send_success);
 
-					User user = DamiCommon.getLoginResult(mContext);
-					user.dynamicCount = user.dynamicCount + 1;
-					DamiCommon.saveLoginResult(mContext, user);
-					mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+							User user = DamiCommon.getLoginResult(mContext);
+							user.dynamicCount = user.dynamicCount + 1;
+							DamiCommon.saveLoginResult(mContext, user);
+							mContext.sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 
-					SendDynamicMsgActivity.this.finish();
-				} else {
-					otherCondition(data.state, SendDynamicMsgActivity.this);
-				}
-			}
+							SendDynamicMsgActivity.this.finish();
+						} else {
+							otherCondition(data.state, SendDynamicMsgActivity.this);
+						}
+					}
 
-			@Override
-			public void onFinish() {
-				// TODO Auto-generated method stub
-				super.onFinish();
-			}
-		});
+					@Override
+					public void onFinish() {
+						// TODO Auto-generated method stub
+						super.onFinish();
+					}
+				});
 	}
 
 	private List<String> getTagList() {
@@ -256,6 +278,14 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		}
 	}
 
+	private void setTagFromList(List<String> tagList) {
+		flowLayout.removeAllViews();
+		for (String string : tagList) {
+			flowLayout.addView(TagWindowManager.creatTag(string, tagDeleteClickListener, mInflater, true),
+					flowLayout.getTextLayoutParams());
+		}
+	}
+
 	private void changeIsHideName(int isHide) {
 		int drawbale = (isHide == 0) ? R.drawable.icon_send_dy_real_name : R.drawable.icon_send_dy_nick_name;
 		tvUseRealName.setCompoundDrawablesWithIntrinsicBounds(drawbale, 0, 0, 0);
@@ -284,6 +314,16 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		picGrid.addView(getImageView(file), picGrid.getChildCount() - 1);
 	}
 
+	private void setImageFromPictureList(List<String> picList) {
+		if (picList == null) {
+			return;
+		}
+		picGrid.removeAllViews();
+		for (String path : picList) {
+			picGrid.addView(getImageView(path), picGrid.getChildCount() - 1);
+		}
+	}
+
 	private ImageView getImageView(final String url) {
 		ImageView imageView = new ImageView(mContext);
 		imageView.setImageBitmap(FeatureFunction.decodeSampledBitmap(url, 200, 200));
@@ -308,7 +348,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		});
 		return imageView;
 	}
-
 
 	private CameralHelper.GetImageCallback callback = new CameralHelper.SimpleCallback() {
 		@Override

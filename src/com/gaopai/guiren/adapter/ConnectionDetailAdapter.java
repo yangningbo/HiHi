@@ -80,6 +80,15 @@ public class ConnectionDetailAdapter extends BaseAdapter {
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
+		} else if (typeBean.type == ConnectionAdapter.TYPE_SOMEONE_JOIN_MY_MEETING) {
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addSingleUserSpan(user.realname,
+					user.uid), "加入了您的会议", MyTextUtils.addSingleMeetingSpan("「" + typeBean.jsoncontent.roomname + "」",
+					typeBean.jsoncontent.roomid)));
+
+		} else if (typeBean.type == ConnectionAdapter.TYPE_SOMEONE_JOIN_MY_TRIBE) {
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addSingleUserSpan(user.realname,
+					user.uid), "加入了您的圈子", MyTextUtils.addSingleTribeSpan("「" + typeBean.jsoncontent.roomname + "」",
+					typeBean.jsoncontent.roomid)));
 		}
 
 		viewHolder.layoutHeader.setImage(user.headsmall);

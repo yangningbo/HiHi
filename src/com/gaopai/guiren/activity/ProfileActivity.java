@@ -201,7 +201,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
 		User user = DamiCommon.getLoginResult(this);
-		Logger.d(this, intent.getAction() + user.realname);
+		if (user == null) {
+			return;
+		}
 		if (intent != null) {
 			String action = intent.getAction();
 			if (action.equals(Intent.ACTION_SCREEN_OFF)) {

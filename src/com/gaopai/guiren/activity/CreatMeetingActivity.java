@@ -116,6 +116,7 @@ public class CreatMeetingActivity extends BaseActivity implements OnClickListene
 			cameralHelper.retriveCropPath(savedInstanceState.getString("cropPath"));
 			cameralHelper.retriveUri((Uri) savedInstanceState.getParcelable("uri"));
 		}
+		System.gc();
 	}
 
 	@Override

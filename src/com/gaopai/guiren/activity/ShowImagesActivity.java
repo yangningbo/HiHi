@@ -280,7 +280,7 @@ public class ShowImagesActivity extends BaseActivity implements OnClickListener 
 				FileOutputStream fileOutputStream = null;
 				try {
 					fileOutputStream = new FileOutputStream(savePath);
-					bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+					bitmap.compress(Bitmap.CompressFormat.JPEG, 75, fileOutputStream);
 					new Handler(Looper.getMainLooper()).post(new Runnable() {
 						@Override
 						public void run() {

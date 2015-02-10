@@ -174,15 +174,29 @@ public class ConnectionAdapter extends BaseAdapter {
 	private void buildPicGridView(ViewHolderPicGridGeneral viewHolder, TypeHolder typeBean, int position, int type) {
 		viewHolder.ivHeader.setImageResource(R.drawable.icon_connection_default);
 
-		JsonContent jsonContent = typeBean.jsoncontent;
-		List<User> userList = jsonContent.user;
+		JsonContent content = typeBean.jsoncontent;
+		List<User> userList = content.user;
 		viewHolder.tvTitle.setOnTouchListener(MyTextUtils.mTextOnTouchListener);
-		if (type == TYPE_SOMEONE_FOLLOW_ME) {
+		switch (type) {
+		case TYPE_SOMEONE_FOLLOW_ME:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList), "关注了你"));
-		} else if (type == TYPE_SOMEONE_I_FOLLOW_FOLLOW) {
+			break;
+		case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
 					MyTextUtils.addSingleUserSpan(typeBean.realname, typeBean.uid), "关注了",
 					MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(userList))));
+			break;
+		case TYPE_SOMEONE_JOIN_MY_MEETING:
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(content.user),
+					"加入了您的会议", MyTextUtils.addSingleMeetingSpan("「" + content.roomname + "」", content.roomid)));
+			break;
+		case TYPE_SOMEONE_JOIN_MY_TRIBE:
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(content.user),
+					"加入了您的圈子", MyTextUtils.addSingleTribeSpan("「" + content.roomname + "」", content.roomid)));
+			break;
+
+		default:
+			break;
 		}
 		viewHolder.tvViewDetail.setVisibility(View.GONE);
 		if (userList != null && userList.size() > 0) {
@@ -244,14 +258,12 @@ public class ConnectionAdapter extends BaseAdapter {
 					MyTextUtils.addSingleUserSpan(user.realname, user.uid)));
 			break;
 		case TYPE_SOMEONE_JOIN_MY_MEETING:
-			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
-					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了您的会议",
-					MyTextUtils.addSingleMeetingSpan("「" + content.roomname + "」", content.roomid)));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(content.user),
+					"加入了您的会议", MyTextUtils.addSingleMeetingSpan("「" + content.roomname + "」", content.roomid)));
 			break;
 		case TYPE_SOMEONE_JOIN_MY_TRIBE:
-			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
-					MyTextUtils.addSingleUserSpan(user.realname, user.uid), "加入了您的圈子",
-					MyTextUtils.addSingleTribeSpan("「" + content.roomname + "」", content.roomid)));
+			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(MyTextUtils.addUserSpans(content.user),
+					"加入了您的圈子", MyTextUtils.addSingleTribeSpan("「" + content.roomname + "」", content.roomid)));
 			break;
 		case TYPE_SOMEONE_FOLLOW_ME:
 			viewHolder.tvTitle.setText(MyTextUtils.getSpannableString(
@@ -334,9 +346,16 @@ public class ConnectionAdapter extends BaseAdapter {
 	public int getItemViewType(int position) {
 		// return mData.get(position).type - 1;
 		TypeHolder typeHolder = mData.get(position);
+		if (typeHolder.jsoncontent == null) {
+			return 2;
+		}
 		switch (typeHolder.type) {
 		case TYPE_SOMEONE_JOIN_MY_MEETING:
 		case TYPE_SOMEONE_JOIN_MY_TRIBE:
+			if (typeHolder.jsoncontent.user != null && typeHolder.jsoncontent.user.size() == 1) {
+				return 0;
+			}
+			return 1;
 		case TYPE_WEIBO_USER_JOIN:
 		case TYPE_PHONE_USER_JOIN:
 		case TYPE_SYS_REC_USER: {
@@ -345,9 +364,6 @@ public class ConnectionAdapter extends BaseAdapter {
 		case TYPE_SOMEONE_SPREAD_USER:
 		case TYPE_SOMEONE_I_FOLLOW_FOLLOW:
 		case TYPE_SOMEONE_FOLLOW_ME: {
-			if (typeHolder.jsoncontent == null) {
-				return 2;
-			}
 			if (typeHolder.jsoncontent.user != null && typeHolder.jsoncontent.user.size() == 1) {
 				return 0;
 			}
