@@ -881,5 +881,6 @@
     <string name="can_not_unfollow_guiren_secreaty">不可取消对小秘书的关注哦</string>
     
     <string name="input_refuse_reason">输入拒绝理由</string>
+    <string name="nine_pic_is_max">最多可上传9张图片</string>
 
 </resources>

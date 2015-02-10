@@ -212,7 +212,7 @@ public class SystemNotifiy extends AbstractNotifiy {
 
 			case NotifiyType.AGREE_INVITE_ADD_MEETING:
 				msg = mContext.getString(R.string.agree_invite_add_meeting);
-				MeetingAlarmHelper.setAlarmForMeeting(mContext, notifiyVo.room);
+//				MeetingAlarmHelper.setAlarmForMeeting(mContext, notifiyVo.room);
 				applyIntent = new Intent(MeetingDetailActivity.ACTION_AGREE_ADD_MEETING);
 				applyIntent.putExtra("id", notifiyVo.room.id);
 				mContext.sendBroadcast(applyIntent);

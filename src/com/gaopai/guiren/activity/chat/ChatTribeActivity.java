@@ -141,7 +141,8 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				MessageInfo messageInfo = messageInfos.get(position);
-				if (messageInfo.mIsShide == MessageState.MESSAGE_SHIDE) {
+				if (messageInfo.mIsShide == MessageState.MESSAGE_SHIDE
+						|| messageInfo.sendState == MessageState.STATE_SEND_FAILED) {
 					return true;
 				}
 				showItemLongClickDialog(messageInfo);
@@ -630,7 +631,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				}
 			}
 
-		} else if (action.equals(ACTION_KICK_TRIBE)) {//send by SystemNotify
+		} else if (action.equals(ACTION_KICK_TRIBE)) {// send by SystemNotify
 			String id = intent.getStringExtra("id");
 			if (!TextUtils.isEmpty(id)) {
 				if (id.equals(mTribe.id)) {

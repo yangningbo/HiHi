@@ -115,7 +115,7 @@ public class ReverificationActivity extends BaseActivity {
 								goToRecomendPage();
 								return;
 							}
-//							sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
+							sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_PROFILE));
 							setResult(RESULT_OK);
 							ReverificationActivity.this.finish();
 						} else {

@@ -104,6 +104,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			setImageFromPictureList(picList);
 			List<String> tagList = (List<String>) savedInstanceState.getSerializable("tagList");
 			setTagFromList(tagList);
+			cameralHelper.retriveTempPicName(savedInstanceState.getString("tempPic"));
 			isHideName = savedInstanceState.getInt("isHideName");
 			changeIsHideName(isHideName);
 		}
@@ -115,6 +116,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("picList", (Serializable) picList);
 		outState.putSerializable("tagList", (Serializable) getTagList());
+		outState.putString("tempPic", cameralHelper.getTempPicName());
 		outState.putInt("isHideName", isHideName);
 	}
 
@@ -265,6 +267,10 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 			break;
 		case R.id.btn_camera:
 			// showMoreWindow();
+			if (picList.size() >= 9) {
+				showToast(R.string.nine_pic_is_max);
+				return;
+			}
 			cameralHelper.setCallback(callback);
 			cameralHelper.showDefaultSelectDialog(null);
 
@@ -318,7 +324,6 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		if (picList == null) {
 			return;
 		}
-		picGrid.removeAllViews();
 		for (String path : picList) {
 			picGrid.addView(getImageView(path), picGrid.getChildCount() - 1);
 		}

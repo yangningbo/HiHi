@@ -1,6 +1,7 @@
 package com.gaopai.guiren.activity.chat;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -85,7 +86,17 @@ public abstract class ChatBaseActivity extends BaseActivity {
 		if (messageInfos == null) {
 			messageInfos = new ArrayList<MessageInfo>();
 		}
+		if (savedInstanceState != null) {
+			cameralHelper.retriveTempPicName(savedInstanceState.getString("tempPic"));
+		}
 	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("tempPic", cameralHelper.getTempPicName());
+	}
+
 
 	protected void initAdapter(BaseChatAdapter chatAdapter) {
 		mAdapter = chatAdapter;
@@ -222,6 +233,7 @@ public abstract class ChatBaseActivity extends BaseActivity {
 			}
 		} else if (type == MessageType.PICTURE) {
 			msg.imgUrlS = filePath;
+			msg.imgUrlL = filePath;
 			Point point = ChatMsgHelper.sizeOfPic(filePath);
 			msg.imgWidth = point.x;
 			msg.imgHeight = point.y;
@@ -299,8 +311,8 @@ public abstract class ChatBaseActivity extends BaseActivity {
 					 * may lead to a new http request. Just save the information
 					 * into database and fetch from Internet next time.
 					 */
-					 tempInfo.imgUrlS = messageInfo.imgUrlS;
-					 tempInfo.imgUrlL = messageInfo.imgUrlL;
+//					 tempInfo.imgUrlS = messageInfo.imgUrlS;
+//					 tempInfo.imgUrlL = messageInfo.imgUrlL;
 					 tempInfo.imgWidth = messageInfo.imgWidth;
 					 tempInfo.imgHeight = messageInfo.imgHeight;
 					tempInfo.voiceUrl = messageInfo.voiceUrl;

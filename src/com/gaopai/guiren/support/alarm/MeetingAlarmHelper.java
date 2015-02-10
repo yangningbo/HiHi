@@ -32,7 +32,6 @@ public class MeetingAlarmHelper {
 		}
 		setAlarm(context, true, mMeeting.id);
 		Intent intent = new Intent(context, AlarmReceiver.class); // 创建Intent对象
-		intent.putExtra("id", "aaaaaaaaaaaaaaaaaa");
 		intent.putExtra("name", mMeeting.name);
 		intent.setAction(context.getPackageName() + ".meeting." + mMeeting.id);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 199823, intent, 0);
@@ -69,7 +68,7 @@ public class MeetingAlarmHelper {
 	}
 	
 	public static void setAlarm(Context mContext, boolean isAlarm, String mMeetingID) {
-		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM);
+		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM, SPConst.getMode());
 		po.setBoolean(SPConst.getSingleSpId(mContext, mMeetingID), isAlarm);
 	}
 }

@@ -62,7 +62,7 @@ public class NotifiyType {
 	public static final int REFUSE_ADD_MEETING = 34;
 	/** 邀请加入会议*/
 	public static final int INVITE_ADD_MEETING = 35;
-	/** 同意邀请加入会议*/
+	/** someone 同意 my 邀请加入会议*/
 	public static final int AGREE_INVITE_ADD_MEETING = 36;
 	/** 不同意邀请加入会议*/
 	public static final int REFUSE_INVITE_ADD_MEETING = 37;

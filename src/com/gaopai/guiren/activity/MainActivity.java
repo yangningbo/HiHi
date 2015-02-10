@@ -604,7 +604,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	public void showNotificationDot() {
 		PreferenceOperateUtils operateUtils = new PreferenceOperateUtils(this);
-		int count = operateUtils.getInt(SPConst.KEY_HAS_NOTIFICATION, 0);
+		int count = operateUtils.getInt(SPConst.getCompositeKey(mUser.uid, SPConst.KEY_HAS_NOTIFICATION), 0);
 		TextView viewDot = ViewUtil.findViewById(this, R.id.iv_count_4);
 		if (count > 0) {
 			viewDot.setVisibility(View.VISIBLE);
@@ -612,6 +612,13 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		} else {
 			viewDot.setVisibility(View.GONE);
 		}
+	}
+
+	public User getUser() {
+		if (mUser != null) {
+			return mUser;
+		}
+		return DamiCommon.getLoginResult(mContext);
 	}
 
 	@Override

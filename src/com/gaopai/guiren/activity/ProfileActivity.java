@@ -169,6 +169,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			cameralHelper.retriveCropPath(savedInstanceState.getString("cropPath"));
 			tUser = (User) savedInstanceState.getSerializable("tUser");
 			recTagList = (List<TagBean>) savedInstanceState.getSerializable("recTagList");
+			cameralHelper.retriveTempPicName(savedInstanceState.getString("tempPic"));
 			onGetUserDataSuccess();
 		} else {
 			addLoadingView();
@@ -177,7 +178,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			getRecTags();
 		}
 
- 
 	}
 
 	@Override
@@ -186,8 +186,9 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 		outState.putParcelable("uri", cameralHelper.getUri());
 		outState.putString("cropPath", cameralHelper.getCropPath());
 		outState.putSerializable("tUser", tUser);
+		outState.putString("tempPic", cameralHelper.getTempPicName());
 		outState.putSerializable("recTagList", (Serializable) recTagList);
-		
+
 	}
 
 	@Override
@@ -201,6 +202,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 	protected void onReceive(Intent intent) {
 		// TODO Auto-generated method stub
 		User user = DamiCommon.getLoginResult(this);
+		Logger.d(this, "onReceive   user=null" + (user == null));
 		if (user == null) {
 			return;
 		}
@@ -263,7 +265,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 	}
-	
+
 	private void onGetUserDataSuccess() {
 		tUser.realname = User.getUserName(tUser);
 		tagWindowManager.setTagList(tUser.tag);
@@ -1146,6 +1148,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 			cameralHelper.onActivityResult(requestCode, resultCode, intent);
 			if (requestCode == REQUEST_CHANGE_PROFILE) {
 				tUser = DamiCommon.getLoginResult(this);
+				Logger.d(this, "onActivityResult   user=null" + (tUser == null));
 				tvEmail.setText(tUser.email);
 				tvPhone.setText(tUser.phone);
 				tvWeixin.setText(tUser.weixin);

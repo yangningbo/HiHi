@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.TextView;
 
 import com.gaopai.guiren.BaseFragment;
+import com.gaopai.guiren.DamiCommon;
 import com.gaopai.guiren.R;
 import com.gaopai.guiren.activity.MainActivity;
 import com.gaopai.guiren.activity.NotifySystemActivity;
@@ -169,7 +171,8 @@ public class NotificationFragment extends BaseFragment {
 
 	private void setNotification(int count) {
 		PreferenceOperateUtils spo = new PreferenceOperateUtils(getActivity());
-		spo.setInt(SPConst.KEY_HAS_NOTIFICATION, count);
+		spo.setInt(SPConst.getCompositeKey(((MainActivity) getActivity()).getUser().uid, SPConst.KEY_HAS_NOTIFICATION),
+				count);
 		((MainActivity) getActivity()).showNotificationDot();
 	}
 
@@ -201,5 +204,4 @@ public class NotificationFragment extends BaseFragment {
 			}
 		}
 	}
-
 }

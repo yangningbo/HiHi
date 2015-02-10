@@ -40,6 +40,10 @@ public class PreferenceOperateUtils {
 		this(context, context.getSharedPreferences(filename, Context.MODE_WORLD_WRITEABLE));
 	}
 
+	public PreferenceOperateUtils(Context context, String filename, int mode) {
+		this(context, context.getSharedPreferences(filename, mode));
+	}
+
 	/**
 	 * 通过SharedPreferences创建 SharedPreferences
 	 * 

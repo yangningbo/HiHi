@@ -7,29 +7,23 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import u.aly.ac;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.gaopai.guiren.BaseActivity;
 import com.gaopai.guiren.DamiApp;
@@ -40,8 +34,6 @@ import com.gaopai.guiren.R;
 import com.gaopai.guiren.bean.BaseInfo;
 import com.gaopai.guiren.bean.LoginResult;
 import com.gaopai.guiren.bean.User;
-import com.gaopai.guiren.db.DBHelper;
-import com.gaopai.guiren.db.MessageTable;
 import com.gaopai.guiren.support.ShareManager;
 import com.gaopai.guiren.utils.Logger;
 import com.gaopai.guiren.utils.MyUtils;
@@ -300,6 +292,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		@Override
 		public void onCancel() {
 			showToast(R.string.login_error);
+			removeProgressDialog();
 		}
 
 		@Override
@@ -502,7 +495,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		if (System.currentTimeMillis() - lastTime < DamiCommon.BASE_GET_PHONE_INTERVAL) {
 			return "";
 		}
-		DamiApp.getInstance().getPou().setLong(SPConst.KEY_READ_PHONE_NUM_TIME, System.currentTimeMillis());
 		ContentResolver contentResolver = getContentResolver();
 		String[] projection = { BaseColumns._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
 				ContactsContract.CommonDataKinds.Phone.DATA1, "sort_key",

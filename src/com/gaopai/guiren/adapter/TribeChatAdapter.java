@@ -56,7 +56,8 @@ public class TribeChatAdapter extends BaseChatAdapter implements View.OnClickLis
 		@Override
 		public boolean onLongClick(View v) {
 			MessageInfo messageInfo = (MessageInfo) v.getTag();
-			if (messageInfo.mIsShide == MessageState.MESSAGE_SHIDE) {
+			if (messageInfo.mIsShide == MessageState.MESSAGE_SHIDE
+					|| messageInfo.sendState == MessageState.STATE_SEND_FAILED) {
 				return true;
 			}
 			showActionWindow(v);

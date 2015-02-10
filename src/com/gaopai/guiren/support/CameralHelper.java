@@ -84,7 +84,7 @@ public class CameralHelper {
 
 	private void getImageFromCamera() {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
+		TEMP_FILE_NAME = FeatureFunction.getPhotoFileName();
 		if (FeatureFunction.newFolder(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY)) {
 			File out = new File(Environment.getExternalStorageDirectory() + FeatureFunction.PUB_TEMP_DIRECTORY,
 					TEMP_FILE_NAME);
@@ -169,19 +169,27 @@ public class CameralHelper {
 			break;
 		}
 	}
-	
+
 	public void retriveUri(Uri uri) {
 		imageCrop.retriveUri(uri);
 	}
-	
+
 	public void retriveCropPath(String path) {
 		this.cropPath = path;
 	}
-	
+
 	public String getCropPath() {
 		return cropPath;
 	}
 	
+	public void retriveTempPicName(String path) {
+		TEMP_FILE_NAME = path;
+	}
+	
+	public String getTempPicName() {
+		return TEMP_FILE_NAME;
+	}
+
 	public Uri getUri() {
 		return imageCrop.getUri();
 	}

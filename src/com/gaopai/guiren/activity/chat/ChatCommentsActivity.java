@@ -216,6 +216,15 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			hasIdentity = false;
 			getIdentity();
 		}
+		if (savedInstanceState != null) {
+			cameralHelper.retriveTempPicName(savedInstanceState.getString("tempPic"));
+		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("tempPic", cameralHelper.getTempPicName());
 	}
 
 	private boolean hasIdentity = false;
@@ -1384,6 +1393,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			}
 		} else if (type == MessageType.PICTURE) {
 			msg.imgUrlS = filePath;
+			msg.imgUrlL = filePath;
 			Point point = ChatMsgHelper.sizeOfPic(filePath);
 			msg.imgWidth = point.x;
 			msg.imgHeight = point.y;
@@ -1545,8 +1555,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				 * lead to a new http request. Just save the information into
 				 * database and fetch from Internet next time.
 				 */
-				tempInfo.imgUrlS = messageInfo.imgUrlS;
-				tempInfo.imgUrlL = messageInfo.imgUrlL;
+//				tempInfo.imgUrlS = messageInfo.imgUrlS;
+//				tempInfo.imgUrlL = messageInfo.imgUrlL;
 				tempInfo.imgWidth = messageInfo.imgWidth;
 				tempInfo.imgHeight = messageInfo.imgHeight;
 				tempInfo.content = messageInfo.content;
