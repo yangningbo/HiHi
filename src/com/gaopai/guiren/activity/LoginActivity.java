@@ -395,7 +395,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 	private void getLogin(final String type, final String sex, final String id, final String nickName,
 			final String head, final String password) {
 
-		String phone = getContacts(id);
+		String phone = "";
+		if (shouldReadContact(id)) {
+			phone = getContacts();
+			if (TextUtils.isEmpty(phone)) {
+				showToast(R.string.login_need_contact);
+				return;
+			}
+		}
 		DamiInfo.getLogin(type, sex, id, nickName, head, password, phone, MyUtils.getVersionName(mContext), "Android",
 				new IResponseListener() {
 					@Override
@@ -408,6 +415,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 						if (data.state != null && data.state.code == 0) {
 							if (data.data == null) {
 								showToast(R.string.login_error);
+								removeProgressDialog();
 								return;
 							}
 							User user = data.data;
@@ -489,12 +497,16 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 		return DamiApp.getInstance().getPou().getBoolean(SPConst.getRecKey(mContext), true);
 	}
 
-	private String getContacts(String keyId) {
+	private boolean shouldReadContact(String keyId) {
 		long lastTime = DamiApp.getInstance().getPou()
 				.getLong(SPConst.getCompositeKey(keyId, SPConst.KEY_READ_PHONE_NUM_TIME), 0L);
 		if (System.currentTimeMillis() - lastTime < DamiCommon.BASE_GET_PHONE_INTERVAL) {
-			return "";
+			return false;
 		}
+		return true;
+	}
+
+	private String getContacts() {
 		ContentResolver contentResolver = getContentResolver();
 		String[] projection = { BaseColumns._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
 				ContactsContract.CommonDataKinds.Phone.DATA1, "sort_key",

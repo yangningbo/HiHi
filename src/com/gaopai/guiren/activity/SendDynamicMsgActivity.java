@@ -268,7 +268,7 @@ public class SendDynamicMsgActivity extends BaseActivity implements OnClickListe
 		case R.id.btn_camera:
 			// showMoreWindow();
 			if (picList.size() >= 9) {
-				showToast(R.string.nine_pic_is_max);
+				showToast(R.string.nine_picture_at_most);
 				return;
 			}
 			cameralHelper.setCallback(callback);

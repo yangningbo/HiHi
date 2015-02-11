@@ -211,6 +211,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onDrag(float percent) {
+				if (page2 == null) {
+					return;
+				}
 				((DynamicFragment) page2).hideChatBox();
 			}
 		});
@@ -532,7 +535,6 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		layoutWelcome.setVisibility(View.GONE);
 		onNewIntent(notifyItent);
 		bindUserView();
-		dragLayout.close();
 		FeatureFunction.startService(MainActivity.this);
 		initPage();
 		checkUpdate();
@@ -551,8 +553,9 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 						DamiCommon.setToken(data.data.token);
 						SQLiteDatabase db = DBHelper.getInstance(MainActivity.this).getWritableDatabase();
 						MessageTable table = new MessageTable(db);
-						if (data.data.roomids != null)
+						if (data.data.roomids != null) {
 							table.deleteMore(data.data.roomids.tribelist, data.data.roomids.meetinglist);
+						}
 						onLoginSuccess();
 					}
 					return;
@@ -625,6 +628,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		switch (requestCode) {
 		case LOGIN_REQUEST:
+			dragLayout.closeQuick();
 			if (resultCode == RESULT_OK) {
 				// Login activity has sent broadcast
 			} else if (resultCode == UNLOGIN_REQUEST) {

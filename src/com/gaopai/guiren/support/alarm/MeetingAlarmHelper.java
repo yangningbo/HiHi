@@ -20,28 +20,29 @@ public class MeetingAlarmHelper {
 	 * 3, reset meeting start time
 	 * 4, agree join meeting, agree be guest or zhuchiren
 	 */
-	public static void setAlarmForMeeting(Context context, Tribe mMeeting) {
+	public static boolean setAlarmForMeeting(Context context, Tribe mMeeting) {
 		if (mMeeting == null) {
-			 return;
+			 return false;
 		}
 		if (mMeeting.start * 1000 < System.currentTimeMillis()) {
 			if (context instanceof BaseActivity) {
 				((BaseActivity) context).showToast(R.string.meeting_is_start);
 			}
-			return;
+			return false;
 		}
 		setAlarm(context, true, mMeeting.id);
+		Logger.d(MeetingAlarmHelper.class, "alarm true");
 		Intent intent = new Intent(context, AlarmReceiver.class); // 创建Intent对象
 		intent.putExtra("name", mMeeting.name);
 		intent.setAction(context.getPackageName() + ".meeting." + mMeeting.id);
-		PendingIntent pi = PendingIntent.getBroadcast(context, 199823, intent, 0);
+		PendingIntent pi = PendingIntent.getBroadcast(context, 199823, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		Logger.d("MeetingAlarmHelper",
 				"current=" + System.currentTimeMillis() + "   diff="
 						+ (System.currentTimeMillis() - mMeeting.start * 1000) / 1000);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, (mMeeting.start - 5 * 60) * 1000, pi); // 设置闹钟，当前时间就唤醒
-		// alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-		// + 10 * 1000, pi); // 设置闹钟，当前时间就唤醒
+//		 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10 * 1000, pi); // 设置闹钟，当前时间就唤醒
+		return true;
 	}
 
 	/**
@@ -49,15 +50,16 @@ public class MeetingAlarmHelper {
 	 * 1, quit meeting 
 	 * 2, has been kicked out of meeting
 	 */
-	public static void cancelMeetingAlarm(Context context, Tribe mMeeting) {
+	public static boolean cancelMeetingAlarm(Context context, Tribe mMeeting) {
 		if (mMeeting == null) {
-			 return;
+			 return false;
 		}
-		if (mMeeting.end * 1000 < System.currentTimeMillis()) {
+		Logger.d(MeetingAlarmHelper.class, "alarm false");
+		if (mMeeting.start * 1000 < System.currentTimeMillis()) {
 			if (context instanceof BaseActivity) {
-				((BaseActivity) context).showToast(R.string.meeting_is_over);
+				((BaseActivity) context).showToast(R.string.meeting_is_start);
 			}
-			return;
+			return false;
 		}
 		setAlarm(context, false, mMeeting.id);
 		Intent intent = new Intent(context, AlarmReceiver.class); // 创建Intent对象
@@ -65,6 +67,7 @@ public class MeetingAlarmHelper {
 		PendingIntent pi = PendingIntent.getBroadcast(context, 199823, intent, 0); // 创建PendingIntent
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(pi);
+		return true;
 	}
 	
 	public static void setAlarm(Context mContext, boolean isAlarm, String mMeetingID) {

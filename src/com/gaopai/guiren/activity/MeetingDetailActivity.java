@@ -406,11 +406,13 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 			break;
 		case R.id.grid_notify_meeting_start: {
 			if (isAlarm()) {
-				MeetingAlarmHelper.cancelMeetingAlarm(mContext, mMeeting);
-				showToast(R.string.switch_meeting_start_alarm_off);
+				if(MeetingAlarmHelper.cancelMeetingAlarm(mContext, mMeeting)){
+					showToast(R.string.switch_meeting_start_alarm_off);
+				}
 			} else {
-				MeetingAlarmHelper.setAlarmForMeeting(mContext, mMeeting);
-				showToast(R.string.switch_meeting_start_alarm_on);
+				if(MeetingAlarmHelper.setAlarmForMeeting(mContext, mMeeting)){
+					showToast(R.string.switch_meeting_start_alarm_on);
+				}
 			}
 			break;
 		}
@@ -583,7 +585,7 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 	// }
 
 	private boolean isAlarm() {
-		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM);
+		PreferenceOperateUtils po = new PreferenceOperateUtils(mContext, SPConst.SP_ALARM, SPConst.getMode());
 		return po.getBoolean(SPConst.getSingleSpId(mContext, mMeetingID), false);
 	}
 
@@ -767,16 +769,16 @@ public class MeetingDetailActivity extends BaseActivity implements OnClickListen
 		}
 	}
 
-//	private void changeAlarm(View v) {
-//		boolean isAlarm = isAlarm();
-//		setAlarm(!isAlarm);
-//		if (isAlarm) {
-//			showToast(R.string.switch_meeting_start_alarm_off);
-//		} else {
-//			showToast(R.string.switch_meeting_start_alarm_on);
-//		}
-//		setAlarm(v);
-//	}
+	// private void changeAlarm(View v) {
+	// boolean isAlarm = isAlarm();
+	// setAlarm(!isAlarm);
+	// if (isAlarm) {
+	// showToast(R.string.switch_meeting_start_alarm_off);
+	// } else {
+	// showToast(R.string.switch_meeting_start_alarm_on);
+	// }
+	// setAlarm(v);
+	// }
 
 	private void setAlarm(View v) {
 		boolean isAlarm = isAlarm();

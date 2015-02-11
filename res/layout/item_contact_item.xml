@@ -49,6 +49,7 @@
         android:layout_toRightOf="@id/layout_header_mvp"
         android:ellipsize="end"
         android:singleLine="true"
+        android:paddingRight="50dp"
         android:textColor="@color/content_gray_color"
         android:textSize="14sp" />
 

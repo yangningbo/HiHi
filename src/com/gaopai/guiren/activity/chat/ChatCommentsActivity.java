@@ -220,7 +220,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 			cameralHelper.retriveTempPicName(savedInstanceState.getString("tempPic"));
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -398,6 +398,19 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				if (user != null) {
 					removeZanMessage(user.uid);
 					bindZanView();
+				}
+			}
+		} else if (action.equals(ChatBaseActivity.ACTION_KICK_TRIBE)) {// send
+																		// by
+																		// SystemNotify
+			String id = intent.getStringExtra("id");
+			if (!TextUtils.isEmpty(id)) {
+				if (id.equals(mTribe.id)) {
+					if (mChatType == ChatTribeActivity.CHAT_TYPE_TRIBE) {
+						destoryDialog(mContext.getString(R.string.you_have_been_removed_from_tribe));
+					} else if (mChatType == ChatTribeActivity.CHAT_TYPE_MEETING) {
+						destoryDialog(mContext.getString(R.string.you_have_been_removed_from_meeting));
+					}
 				}
 			}
 		}
@@ -1401,6 +1414,7 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 		msg.isReadVoice = 1;// 自己的语音标记为已读
 		msg.fileType = type;
 		addSaveSendMessage(msg);
+		initialSendIdAndName();
 	}
 
 	protected MessageInfo buildMessage() {
@@ -1555,8 +1569,8 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 				 * lead to a new http request. Just save the information into
 				 * database and fetch from Internet next time.
 				 */
-//				tempInfo.imgUrlS = messageInfo.imgUrlS;
-//				tempInfo.imgUrlL = messageInfo.imgUrlL;
+				// tempInfo.imgUrlS = messageInfo.imgUrlS;
+				// tempInfo.imgUrlL = messageInfo.imgUrlL;
 				tempInfo.imgWidth = messageInfo.imgWidth;
 				tempInfo.imgHeight = messageInfo.imgHeight;
 				tempInfo.content = messageInfo.content;
@@ -1773,5 +1787,21 @@ public class ChatCommentsActivity extends BaseActivity implements OnClickListene
 	protected void onResume() {
 		super.onResume();
 		isLight = true;
+	}
+
+	// 被轰出去了
+	private void destoryDialog(String title) {
+		AlertDialog builder = new AlertDialog.Builder(this).create();
+		builder.setTitle(title);
+		builder.setButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				ChatCommentsActivity.this.finish();
+			}
+		});
+		builder.setCancelable(false);
+		builder.setCanceledOnTouchOutside(false);
+		builder.show();
 	}
 }

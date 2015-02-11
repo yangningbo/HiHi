@@ -69,7 +69,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(NotifyMessageTable.getDeleteTableSQLString());
 		db.execSQL(PromptTable.getDeleteTableSQLString());
 		db.execSQL(IdentityTable.getDeleteTableSQLString());
-//		db.execSQL(ContactUserTable.getCreateTableSQLString());
+		// db.execSQL(ContactUserTable.getCreateTableSQLString());
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.gaopai.guiren.activity.chat;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,8 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,10 +41,8 @@ import com.gaopai.guiren.service.type.XmppType;
 import com.gaopai.guiren.support.ActionHolder;
 import com.gaopai.guiren.support.CameralHelper;
 import com.gaopai.guiren.support.ConversationHelper;
-import com.gaopai.guiren.support.NotifyHelper;
 import com.gaopai.guiren.support.chat.ChatMsgHelper;
 import com.gaopai.guiren.utils.Logger;
-import com.gaopai.guiren.utils.MyUtils;
 import com.gaopai.guiren.view.pulltorefresh.PullToRefreshListView;
 import com.gaopai.guiren.volley.SimpleResponseListener;
 

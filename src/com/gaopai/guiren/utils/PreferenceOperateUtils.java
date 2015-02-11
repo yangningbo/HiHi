@@ -69,7 +69,7 @@ public class PreferenceOperateUtils {
 	}
 
 	public void setBoolean(String key, Boolean value) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stube
 		edit.putBoolean(key, value);
 		edit.commit();
 	}
