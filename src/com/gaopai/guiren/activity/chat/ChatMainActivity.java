@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.rtp.RtpStream;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -90,12 +91,23 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 		initViewComponent();
 	}
 
+	
+	public static interface LoadDataCallback {
+		public void onSuccess();
+		public void onFinish();
+	}
 	public class GetMessageListener extends SimpleResponseListener {
 		boolean isPullUp;
+		LoadDataCallback callback;
 
 		public GetMessageListener(Context context, boolean isPullUp) {
 			super(context);
 			this.isPullUp = isPullUp;
+		}
+		
+		public SimpleResponseListener setCallback(LoadDataCallback callback) {
+			this.callback = callback;
+			return this;
 		}
 
 		@Override
@@ -120,11 +132,15 @@ public abstract class ChatMainActivity extends ChatBaseActivity implements OnCli
 			} else {
 				otherCondition(data.state, ChatMainActivity.this);
 			}
+			
 		}
 
 		@Override
 		public void onFinish() {
 			mListView.onPullComplete();
+			if (callback != null) {
+				callback.onFinish();
+			}
 		}
 	}
 

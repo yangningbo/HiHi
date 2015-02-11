@@ -99,6 +99,7 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 	private Timer mTimer;
 	private TimerTask mTask;
 	private final int mRefreshTime = 10 * 1000;
+	private boolean isOnLookerFirstTimeRefresh = true;
 
 	private void startTimer() {
 		mTimer = new Timer();
@@ -109,7 +110,10 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 				getMessageList(true);
 			}
 		};
-		mTimer.schedule(mTask, 0, mRefreshTime);
+		if (isOnLookerFirstTimeRefresh) {
+			mListView.doPullRefreshing(true, 0);
+		}
+		mTimer.schedule(mTask, 500, mRefreshTime);
 	}
 
 	private void stopTimer() {
@@ -500,11 +504,24 @@ public class ChatTribeActivity extends ChatMainActivity implements OnClickListen
 		String maxID = getMessageMaxId();
 		Logger.d(this, "minId=" + minID + "  maxId=" + maxID);
 		if (isPullUp) {
-			DamiInfo.getMessageList(mChatType, mTribe.id, "", minID, new GetMessageListener(mContext, true));
+			DamiInfo.getMessageList(mChatType, mTribe.id, "", minID, new GetMessageListener(mContext, true).setCallback(onLookerCallback));
 		} else {
 			DamiInfo.getMessageList(mChatType, mTribe.id, maxID, "", new GetMessageListener(mContext, false));
 		}
 	}
+	
+	public LoadDataCallback onLookerCallback = new LoadDataCallback() {
+		@Override
+		public void onSuccess() {
+		}
+		
+		@Override
+		public void onFinish() {
+			if (isOnLookerFirstTimeRefresh) {
+				isOnLookerFirstTimeRefresh = false;
+			}
+		}
+	};
 
 	protected void updateIdentity(Identity mIdentity) {
 		SQLiteDatabase db = DBHelper.getInstance(mContext).getReadableDatabase();

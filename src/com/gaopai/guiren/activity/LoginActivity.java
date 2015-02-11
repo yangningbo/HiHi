@@ -400,6 +400,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener, OnTo
 			phone = getContacts();
 			if (TextUtils.isEmpty(phone)) {
 				showToast(R.string.login_need_contact);
+				removeProgressDialog();
 				return;
 			}
 		}
